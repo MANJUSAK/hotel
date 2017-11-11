@@ -12,4 +12,4 @@
         SELECT * FROM GS_COOKBOOK_TYPE
     </select>
 </mapper>
-<!--mapper 模板 end -->
+        <!--mapper 模板 end -->

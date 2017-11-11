@@ -63,7 +63,7 @@ public class MybatisConfig {
         properties.setProperty("offsetAsPageNum", "true");
         properties.setProperty("rowBoundsWithCount", "true");
         properties.setProperty("reasonable", "true");
-        properties.setProperty("helperDialect", "oracle");
+        properties.setProperty("helperDialect", "mysql");
         properties.setProperty("pageSizeZero", "true");
         pageHelper.setProperties(properties);
         sqlSessionFactory.setPlugins(new Interceptor[]{pageHelper});

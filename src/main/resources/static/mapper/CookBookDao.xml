@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--@author 严彬荣，version v1.0-->
+<!--mapper 模板 start -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<mapper namespace="com.goodsoft.hotel.domain.dao.CookBookDao">
+    <!--菜单子类型数据过滤-->
+    <resultMap id="MenuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
+        <result property="id" column="ID"/>
+        <result property="stName" column="STNAME"/>
+        <result property="sitd" column="STID"/>
+        <result property="tid" column="TID"/>
+    </resultMap>
+    <select id="queryMenuStypeByIdDao" parameterType="string" resultMap="MenuSubtypeInfo">
+        SELECT ID,STNAME FROM gs_cookbook_subtype
+        <where>
+            <if test="tid !=null and tid!=''">
+                TID=#{tid}
+            </if>
+        </where>
+    </select>
+    <!--菜单类型数据查询-->
+    <resultMap id="menuTypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuType">
+        <result column="ID" property="id"/>
+        <result column="TNAME" property="tName"/>
+        <result column="TID" property="tid"/>
+    </resultMap>
+    <select id="queryMenuTypeDao" resultMap="menuTypeInfo">
+        SELECT `ID`,`TNAME`,`TID` FROM `gs_cookbook_type`;
+    </select>
+    <!--菜单子类型数据查询-->
+    <resultMap id="menuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
+        <result property="id" column="ID"/>
+        <result property="stName" column="STNAME"/>
+        <result property="stid" column="STID"/>
+        <result property="tid" column="TID"/>
+    </resultMap>
+    <select id="queryMenuSubtypeDao" resultMap="menuSubtypeInfo" parameterType="string">
+        SELECT `ID`,`STNAME`,`STID`,`TID` FROM `gs_cookbook_subtype`
+        <where>
+            <if test="tid != null and tid !=''">
+                TID=#{tid}
+            </if>
+        </where>
+    </select>
+    <!--菜单数据查询-->
+    <resultMap id="menuInfo" type="com.goodsoft.hotel.domain.entity.cookbook.Menu">
+        <result column="ID" property="id"/>
+        <result column="CBID" property="cbid"/>
+        <result column="TID" property="tid"/>
+        <result column="STID" property="stid"/>
+        <result column="CBNAME" property="cbName"/>
+        <result column="CBPRICE" property="price"/>
+        <result column="INVENTORY" property="num"/>
+    </resultMap>
+    <select id="queryMenuDao" parameterType="string" resultMap="menuInfo">
+        SELECT `ID`,`CBID`,`TID`,`STID`,`CBNAME`,`CBPRICE`,`INVENTORY` FROM `gs_cookbook`
+        <where>
+            <if test="stid != null and stid !=''">
+                STID=#{stid}
+            </if>
+        </where>
+    </select>
+    <!--菜单做法数据查询-->
+    <resultMap id="menuMeansInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuMeans">
+        <result column="ID" property="id"/>
+        <result column="MNAME" property="mName"/>
+        <result column="CBID" property="cbid"/>
+        <result column="MID" property="mid"/>
+    </resultMap>
+    <select id="queryMenuMeansDao" parameterType="string" resultMap="menuMeansInfo">
+        SELECT `ID`,`MNAME`,`CBID`,`MID` FROM `gs_cookbook_means`
+        <where>
+            <if test="cbid != null and cbid !=''">
+                CBID=#{cbid}
+            </if>
+        </where>
+    </select>
+</mapper>
+        <!--mapper 模板 end -->

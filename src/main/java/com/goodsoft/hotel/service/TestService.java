@@ -1,8 +1,5 @@
 package com.goodsoft.hotel.service;
 
-
-
-
 import com.goodsoft.hotel.domain.entity.Test;
 
 import java.util.List;
@@ -15,4 +12,5 @@ import java.util.List;
  */
 public interface TestService {
     List<Test> queryTestService() throws Exception;
+
 }
