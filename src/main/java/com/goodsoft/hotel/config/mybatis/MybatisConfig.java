@@ -56,7 +56,7 @@ public class MybatisConfig {
         SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
         sqlSessionFactory.setDataSource(druidDataSource);
         sqlSessionFactory.setConfiguration(configuration);
-        sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath*:static/mapper/*.xml"));
+        sqlSessionFactory.setMapperLocations(applicationContext.getResources("classpath*:static/mapper/*/*.xml"));
         //分页插件
         PageInterceptor pageHelper = new PageInterceptor();
         Properties properties = new Properties();
