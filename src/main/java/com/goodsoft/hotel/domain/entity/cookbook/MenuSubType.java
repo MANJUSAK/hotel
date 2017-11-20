@@ -13,6 +13,7 @@ public class MenuSubType implements java.io.Serializable {
     private static final long serialVersionUID = 1604565411882057472L;
     private String id;
     private int stid;
+    private String tName;
     private String stName;
     private String tid;
 
@@ -32,12 +33,20 @@ public class MenuSubType implements java.io.Serializable {
         this.stid = stid;
     }
 
+    public String gettName() {
+        return tName;
+    }
+
+    public void settName(String tName) {
+        this.tName = tName == null ? null : tName.trim();
+    }
+
     public String getStName() {
         return stName;
     }
 
     public void setStName(String stName) {
-        this.stName = stName;
+        this.stName = stName == null ? null : stName.trim();
     }
 
     public String getTid() {

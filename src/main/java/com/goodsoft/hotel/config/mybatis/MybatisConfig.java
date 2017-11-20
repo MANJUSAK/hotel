@@ -41,7 +41,7 @@ public class MybatisConfig {
         configuration.setDefaultStatementTimeout(180);
         //允许嵌套语句中使用分页
         configuration.setSafeRowBoundsEnabled(true);
-        //开启驼峰命名
+        //开启驼峰命名（false为关闭）
         configuration.setMapUnderscoreToCamelCase(true);
         //设置参数为jdbc类型
         configuration.setJdbcTypeForNull(JdbcType.NULL);

@@ -37,7 +37,7 @@ public class MenuMeans implements java.io.Serializable {
     }
 
     public void setmName(String mName) {
-        this.mName = mName;
+        this.mName = mName == null ? null : mName.trim();
     }
 
     public String getCbid() {

@@ -38,6 +38,6 @@ public class UUIDUtil {
     public StringBuilder getUUID() {
         String str = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
         String str2 = str.substring(0, 2);
-        return new StringBuilder(str.replace(str2, "GS"));
+        return new StringBuilder(str.replace(str2, "CY"));
     }
 }

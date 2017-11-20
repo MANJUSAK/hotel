@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--@author 严彬荣，version v1.0-->
+<!--mapper 餐饮订单管理 start -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<mapper namespace="com.goodsoft.hotel.domain.dao.RepastOrderDao">
+    <!--第三方缓存技术支持-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <!--餐饮订单sql复用-->
+    <sql id="order_sql">
+    `ID`,`KZ_NUM`,`CONSUMER`,`KT_TIME`,`FW_RATE`,`CT_TYPE`,`SALEMANAGER`,`KT_NUM`,`PERSON_NUM`,
+    `KT_SHIFT`,`ZD_CONSUME`,`QD_DISCOUNT`,`DEPARTMENT`,`PART_HALL`,`VIP_NUM`,`VIP_TYPE`,`ZD_CONSUME_GIST`,
+    `DISCOUNT_SUM`,`ZQ_SUM`,`AOH`,`OPERATOR`,`KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`
+    </sql>
+    <!--餐饮订单查询-->
+    <select id="queryRepastOrderDao" parameterType="object"
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+        SELECT
+        <include refid="order_sql"/>
+        FROM `gs_repast_order`
+        <where>
+            <if test="id !=null and id !=''">
+                AND `ID`=#{id}
+            </if>
+            <if test="status &gt;=0">
+                AND `STATUS`=#{status}
+            </if>
+        </where>
+        ORDER BY `ID` DESC
+    </select>
+    <!--餐饮订单添加-->
+    <insert id="addRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+        INSERT INTO `gs_repast_order`
+        (<include refid="order_sql"/>)
+        VALUES
+        (#{id},#{kzNum},#{consumer},#{ktTime},#{fwRate},#{ctType},#{salemanager},#{ktNum},#{personNum},#{ktShift},
+        #{zdConsume},#{qdDiscount},#{department},#{partHall},#{vipNum},#{vipType},#{zdConsumeGist},#{discountSum},#{zqSum},
+        #{aoh},#{operator},#{ktSb},#{timeMinute},#{isServiceCharge},#{isZdConsume},#{paymentType},#{status},#{remarks})
+    </insert>
+    <!--餐饮订单食品sql复用-->
+    <sql id="order_goods_sql">
+    `ID`,`OID`,`CBNAME`,`SP_NUM`,`SPEC`,`SP_PRICE`,`UNIT`,`JJ_MEANS`,`DETAIL_ZQ_SUM`,`DETAIL_ZH_SUM`,`DISCOUNT`,`ZK_SUM`,
+    `IS_DISCOUNT`,`BATCH`,`REDOUBLE`,`RATED_SEAT`,`OPERATO`,`DC_TIME`,`WRITE_BILL`,`MENU_TYPE`,`DETAIL_REMARKS`
+    </sql>
+    <!--餐饮订单食品查询-->
+    <select id="queryRepastOrderGoodsDao" parameterType="string"
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderGoods">
+        SELECT
+        <include refid="order_goods_sql"/>
+        FROM `gs_repast_order_goods` WHERE `OID`=#{oid}
+    </select>
+    <!--餐饮订单食品数据添加-->
+    <insert id="addRepastOrderGoodsDao" parameterType="list">
+        INSERT INTO `gs_repast_order_goods` (<include refid="order_goods_sql"/>) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.oid},#{item.cbname},#{item.spNum},#{item.spec},#{item.unit},#{item.spPrice},#{item.jjMeans},
+            #{item.detailZqSum},#{item.detailZhSum},#{item.discount},#{item.zkSum},#{item.isDiscount},#{item.batch},#{item.redouble},
+            #{item.ratedSeat},#{item.operato},#{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks})
+        </foreach>
+    </insert>
+</mapper>
+        <!--mapper 餐饮订单管理 end -->
