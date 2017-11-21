@@ -113,7 +113,7 @@ public class BookingController {
     /**
      * 删除订单主要是修改订单的状态
      *
-     * @param id        订单号
+     * @param id        订单ID
      * @param bookingNo 订单编号
      * @return
      */
