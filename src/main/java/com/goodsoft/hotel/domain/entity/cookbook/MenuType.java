@@ -12,10 +12,10 @@ import java.util.Objects;
 public class MenuType implements java.io.Serializable {
 
     private static final long serialVersionUID = 6309767747012396344L;
-    private String id;
-    private int tid;
-    private String tName;
-    private List<MenuSubType> menuSubTypes;
+    private String id;//编号
+    private int tid;//类别编号
+    private String tName;//类别名称
+    private List<MenuSubType> menuSubTypes;//小类型实体容器
 
     public String getId() {
         return id;

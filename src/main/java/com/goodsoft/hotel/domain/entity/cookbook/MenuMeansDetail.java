@@ -11,10 +11,10 @@ import java.util.Objects;
 public class MenuMeansDetail implements java.io.Serializable {
 
     private static final long serialVersionUID = -320588136817271691L;
-    private String id;
-    private String mid;
-    private int mdid;
-    private String mdName;
+    private String id;//编号
+    private String mid;//做法明细编号
+    private int mdid;//关联做法表id
+    private String mdName;//名称
 
     public String getId() {
         return id;

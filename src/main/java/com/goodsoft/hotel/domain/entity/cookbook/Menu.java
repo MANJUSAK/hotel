@@ -11,24 +11,24 @@ import java.util.Objects;
 public class Menu implements java.io.Serializable {
 
     private static final long serialVersionUID = -2579296305533311577L;
-    private String id;
-    private int cbid;
-    private String tid;
-    private String stid;
-    private String cbName;
-    private double price1;
-    private double price2;
-    private double price3;
-    private double price4;
-    private double price5;
-    private int num;
-    private String unit;
-    private int isNo;
-    private String spec1;
-    private String spec2;
-    private String spec3;
-    private String spec4;
-    private String spec5;
+    private String id;//编号
+    private int cbid;//菜单编号
+    private String tid;//关联类别表id
+    private String stid;//关联小类别表id
+    private String cbName;//菜名
+    private double price1;//规格1价格
+    private double price2;//规格2价格
+    private double price3;//规格3价格
+    private double price4;//规格4价格
+    private double price5;//规格5价格
+    private int num;//库存量
+    private String unit;//单位
+    private int isNo;//可折否（0为true/1为false）
+    private String spec1;//规格1
+    private String spec2;//规格2
+    private String spec3;//规格3
+    private String spec4;//规格4
+    private String spec5;//规格5
 
     public String getId() {
         return id;
@@ -83,7 +83,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setUnit(String unit) {
-        this.unit = unit;
+        this.unit = unit == null ? "" : unit.trim();
     }
 
     public int getIsNo() {
@@ -99,7 +99,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice1(double price1) {
-        this.price1 = price1;
+        this.price1 = price1 <= 0 ? 0 : price1;
     }
 
     public double getPrice2() {
@@ -107,7 +107,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice2(double price2) {
-        this.price2 = price2;
+        this.price2 = price2 <= 0 ? 0 : price2;
     }
 
     public double getPrice3() {
@@ -115,7 +115,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice3(double price3) {
-        this.price3 = price3;
+        this.price3 = price3 <= 0 ? 0 : price3;
     }
 
     public double getPrice4() {
@@ -123,7 +123,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice4(double price4) {
-        this.price4 = price4;
+        this.price4 = price4 <= 0 ? 0 : price4;
     }
 
     public double getPrice5() {
@@ -131,7 +131,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice5(double price5) {
-        this.price5 = price5;
+        this.price5 = price5 <= 0 ? 0 : price5;
     }
 
     public String getSpec1() {
@@ -139,7 +139,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec1(String spec1) {
-        this.spec1 = spec1;
+        this.spec1 = spec1 == null ? "" : spec1.trim();
     }
 
     public String getSpec2() {
@@ -147,7 +147,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec2(String spec2) {
-        this.spec2 = spec2;
+        this.spec2 = spec2 == null ? "" : spec2.trim();
     }
 
     public String getSpec3() {
@@ -155,7 +155,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec3(String spec3) {
-        this.spec3 = spec3;
+        this.spec3 = spec3 == null ? "" : spec3.trim();
     }
 
     public String getSpec4() {
@@ -163,7 +163,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec4(String spec4) {
-        this.spec4 = spec4;
+        this.spec4 = spec4 == null ? "" : spec4.trim();
     }
 
     public String getSpec5() {
@@ -171,7 +171,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec5(String spec5) {
-        this.spec5 = spec5;
+        this.spec5 = spec5 == null ? "" : spec5.trim();
     }
 
     @Override

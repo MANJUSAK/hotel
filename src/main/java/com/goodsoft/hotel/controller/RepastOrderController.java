@@ -76,4 +76,27 @@ public class RepastOrderController {
         return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
     }
 
+    /**
+     * 餐饮订单添加（下订单）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     *
+     * @param order 订单信息
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/update/order/data.shtml", method = RequestMethod.POST)
+    public Status updateOrderService(Order order, RepastOrderParam msg) {
+        if (msg != null) {
+            List<OrderGoods> orderGoods = msg.getMsg();
+            if (orderGoods != null) {
+                try {
+                    return this.service.updateRepastOrderService(order, orderGoods);
+                } catch (Exception e) {
+                    this.logger.error(e.toString());
+                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                }
+            }
+            return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+    }
 }

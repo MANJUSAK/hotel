@@ -11,12 +11,12 @@ import java.util.Objects;
 public class SetMeal implements java.io.Serializable {
 
     private static final long serialVersionUID = 3883711168985410607L;
-    private String id;
-    private String smName;
-    private int smid;
-    private int isdd;
-    private int isNo;
-    private double stPrice;
+    private String id;//编号
+    private String smName;//套餐名
+    private int smid;//套餐编号
+    private int isdd;//是否可单点（0为true/1为false）
+    private int isNo;//是否打折（0为true/1为false）
+    private double stPrice;//套餐价格
 
     public String getId() {
         return id;

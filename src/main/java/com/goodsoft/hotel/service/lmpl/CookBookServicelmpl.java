@@ -50,11 +50,9 @@ public class CookBookServicelmpl implements CookBookService {
         List<MenuType> list = this.dao.queryMenuTypeDao();
         int len = list.size();
         if (len > 0) {
-            for (int i = 0; i < len; ++i) {
-                List<MenuSubType> list1 = this.dao.queryMenuSubtypeDao(list.get(i).getId());
-                if (list1.size() > 0) {
-                    list.get(i).setMenuSubTypes(list1);
-                }
+            List<MenuSubType> list1 = this.dao.queryMenuSubtypeDao(list.get(0).getId());
+            if (list1.size() > 0) {
+                list.get(0).setMenuSubTypes(list1);
             }
             PageInfo<MenuType> data = new PageInfo<MenuType>(list);
             return (T) new Result(0, data);

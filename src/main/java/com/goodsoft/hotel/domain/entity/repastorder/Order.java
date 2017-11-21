@@ -35,10 +35,10 @@ public class Order implements java.io.Serializable {
     private String operator;//开台操作员
     private String ktSb;//开台市别
     private String timeMinute;//计时分钟
-    private int isServiceCharge;//收服务费（0为否/1为是）
-    private int isZdConsume;//记最低消费（0为否/1为是）
+    private int isServiceCharge;//收服务费（0为true/1为false）
+    private int isZdConsume;//记最低消费（0为true/1为false）
     private String paymentType;//支付方式
-    private int status;//订单状态（0为未支付/1为已支付）
+    private int status;//订单状态（是否支付，0为true/1为false）
     private String remarks;//备注
     private List<OrderGoods> orderGoods;//订单明细容器
 
@@ -47,7 +47,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id == null ? "" : id.trim();
     }
 
     public String getKzNum() {
@@ -55,7 +55,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKzNum(String kzNum) {
-        this.kzNum = kzNum == null ? null : kzNum.trim();
+        this.kzNum = kzNum == null ? "" : kzNum.trim();
     }
 
     public String getConsumer() {
@@ -63,7 +63,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setConsumer(String consumer) {
-        this.consumer = consumer == null ? null : consumer.trim();
+        this.consumer = consumer == null ? "" : consumer.trim();
     }
 
     public String getKtTime() {
@@ -71,7 +71,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKtTime(String ktTime) {
-        this.ktTime = ktTime == null ? null : ktTime.trim();
+        this.ktTime = ktTime == null ? "" : ktTime.trim();
     }
 
     public String getCtType() {
@@ -79,7 +79,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setCtType(String ctType) {
-        this.ctType = ctType == null ? null : ctType.trim();
+        this.ctType = ctType == null ? "" : ctType.trim();
     }
 
     public String getSalemanager() {
@@ -87,7 +87,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setSalemanager(String salemanager) {
-        this.salemanager = salemanager == null ? null : salemanager.trim();
+        this.salemanager = salemanager == null ? "" : salemanager.trim();
     }
 
     public String getKtNum() {
@@ -95,23 +95,16 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKtNum(String ktNum) {
-        this.ktNum = ktNum == null ? null : ktNum.trim();
+        this.ktNum = ktNum == null ? "" : ktNum.trim();
     }
 
-    public Integer getPersonNum() {
-        return personNum;
-    }
-
-    public void setPersonNum(Integer personNum) {
-        this.personNum = personNum;
-    }
 
     public String getKtShift() {
         return ktShift;
     }
 
     public void setKtShift(String ktShift) {
-        this.ktShift = ktShift == null ? null : ktShift.trim();
+        this.ktShift = ktShift == null ? "" : ktShift.trim();
     }
 
     public String getDepartment() {
@@ -119,7 +112,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setDepartment(String department) {
-        this.department = department == null ? null : department.trim();
+        this.department = department == null ? "" : department.trim();
     }
 
     public String getPartHall() {
@@ -127,7 +120,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setPartHall(String partHall) {
-        this.partHall = partHall == null ? null : partHall.trim();
+        this.partHall = partHall == null ? "" : partHall.trim();
     }
 
     public String getVipNum() {
@@ -135,7 +128,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setVipNum(String vipNum) {
-        this.vipNum = vipNum == null ? null : vipNum.trim();
+        this.vipNum = vipNum == null ? "" : vipNum.trim();
     }
 
     public String getVipType() {
@@ -143,7 +136,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setVipType(String vipType) {
-        this.vipType = vipType == null ? null : vipType.trim();
+        this.vipType = vipType == null ? "" : vipType.trim();
     }
 
     public String getZdConsumeGist() {
@@ -151,7 +144,39 @@ public class Order implements java.io.Serializable {
     }
 
     public void setZdConsumeGist(String zdConsumeGist) {
-        this.zdConsumeGist = zdConsumeGist == null ? null : zdConsumeGist.trim();
+        this.zdConsumeGist = zdConsumeGist == null ? "" : zdConsumeGist.trim();
+    }
+
+    public int getPersonNum() {
+        return personNum;
+    }
+
+    public void setPersonNum(int personNum) {
+        this.personNum = personNum < 0 ? Math.abs(personNum) : personNum;
+    }
+
+    public int getIsServiceCharge() {
+        return isServiceCharge;
+    }
+
+    public void setIsServiceCharge(int isServiceCharge) {
+        this.isServiceCharge = isServiceCharge < 0 ? Math.abs(isServiceCharge) : isServiceCharge;
+    }
+
+    public int getIsZdConsume() {
+        return isZdConsume;
+    }
+
+    public void setIsZdConsume(int isZdConsume) {
+        this.isZdConsume = isZdConsume < 0 ? Math.abs(isZdConsume) : isZdConsume;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status < 0 ? Math.abs(status) : status;
     }
 
     public double getFwRate() {
@@ -159,11 +184,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setFwRate(double fwRate) {
-        this.fwRate = fwRate;
-    }
-
-    public void setPersonNum(int personNum) {
-        this.personNum = personNum;
+        this.fwRate = fwRate < 0 ? Math.abs(fwRate) : fwRate;
     }
 
     public double getZdConsume() {
@@ -171,7 +192,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setZdConsume(double zdConsume) {
-        this.zdConsume = zdConsume;
+        this.zdConsume = zdConsume < 0 ? Math.abs(zdConsume) : zdConsume;
     }
 
     public double getQdDiscount() {
@@ -179,7 +200,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setQdDiscount(double qdDiscount) {
-        this.qdDiscount = qdDiscount;
+        this.qdDiscount = qdDiscount < 0 ? Math.abs(qdDiscount) : qdDiscount;
     }
 
     public double getDiscountSum() {
@@ -187,7 +208,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setDiscountSum(double discountSum) {
-        this.discountSum = discountSum;
+        this.discountSum = discountSum < 0 ? Math.abs(discountSum) : discountSum;
     }
 
     public double getZqSum() {
@@ -195,19 +216,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setZqSum(double zqSum) {
-        this.zqSum = zqSum;
-    }
-
-    public void setIsServiceCharge(int isServiceCharge) {
-        this.isServiceCharge = isServiceCharge;
-    }
-
-    public void setIsZdConsume(int isZdConsume) {
-        this.isZdConsume = isZdConsume;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
+        this.zqSum = zqSum < 0 ? Math.abs(zqSum) : zqSum;
     }
 
     public String getAoh() {
@@ -215,7 +224,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setAoh(String aoh) {
-        this.aoh = aoh == null ? null : aoh.trim();
+        this.aoh = aoh == null ? "" : aoh.trim();
     }
 
     public String getOperator() {
@@ -223,7 +232,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setOperator(String operator) {
-        this.operator = operator == null ? null : operator.trim();
+        this.operator = operator == null ? "" : operator.trim();
     }
 
     public String getKtSb() {
@@ -231,7 +240,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKtSb(String ktSb) {
-        this.ktSb = ktSb == null ? null : ktSb.trim();
+        this.ktSb = ktSb == null ? "" : ktSb.trim();
     }
 
     public String getTimeMinute() {
@@ -239,23 +248,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setTimeMinute(String timeMinute) {
-        this.timeMinute = timeMinute == null ? null : timeMinute.trim();
-    }
-
-    public Integer getIsServiceCharge() {
-        return isServiceCharge;
-    }
-
-    public void setIsServiceCharge(Integer isServiceCharge) {
-        this.isServiceCharge = isServiceCharge;
-    }
-
-    public Integer getIsZdConsume() {
-        return isZdConsume;
-    }
-
-    public void setIsZdConsume(Integer isZdConsume) {
-        this.isZdConsume = isZdConsume;
+        this.timeMinute = timeMinute == null ? "" : timeMinute.trim();
     }
 
     public String getPaymentType() {
@@ -263,15 +256,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType == null ? null : paymentType.trim();
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+        this.paymentType = paymentType == null ? "" : paymentType.trim();
     }
 
     public String getRemarks() {
@@ -279,7 +264,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setRemarks(String remarks) {
-        this.remarks = remarks == null ? null : remarks.trim();
+        this.remarks = remarks == null ? "" : remarks.trim();
     }
 
     public List<OrderGoods> getOrderGoods() {

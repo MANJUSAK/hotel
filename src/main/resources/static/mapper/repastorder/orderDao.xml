@@ -58,5 +58,22 @@
             #{item.ratedSeat},#{item.operato},#{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks})
         </foreach>
     </insert>
+    <!--餐饮订单更新-->
+    <update id="updateRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+    UPDATE `gs_repast_order` SET
+    `FW_RATE` = #{fwRate},`QD_DISCOUNT` = #{qdDiscount},`VIP_NUM` = #{vipNum},`VIP_TYPE` = #{vipType},`DISCOUNT_SUM` = #{discountSum},
+    `ZQ_SUM` = #{zqSum},`PAYMENT_TYPE` = #{paymentType},`STATUS` = #{status}
+    WHERE `ID` = #{id}
+    </update>
+    <!--餐饮订单商品更新-->
+    <update id="updateRepastOrderGoodsDao" parameterType="list">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE `gs_repast_order_goods` SET
+            `CBNAME` = #{item.cbname},`SP_NUM` = #{item.spNum},`SPEC` = #{item.spec},`SP_PRICE`=#{item.spPrice},
+            `JJ_MEANS` = #{item.jjMeans},`DETAIL_ZQ_SUM` = #{item.detailZqSum},`DETAIL_ZH_SUM` =#{item.detailZhSum},
+            `DISCOUNT` =#{item.discount},`ZK_SUM` = #{item.zkSum}
+            WHERE `ID` = #{item.id}
+        </foreach>
+    </update>
 </mapper>
         <!--mapper 餐饮订单管理 end -->

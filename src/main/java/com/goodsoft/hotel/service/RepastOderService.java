@@ -3,6 +3,7 @@ package com.goodsoft.hotel.service;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
+import com.goodsoft.hotel.domain.entity.result.Status;
 
 import java.util.List;
 
@@ -33,5 +34,16 @@ public interface RepastOderService {
      * @throws Exception
      */
     void addOrderService(Order order, List<OrderGoods> orderGoods) throws Exception;
+
+    /**
+     * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
+     *
+     * @param msg        订单结算信息
+     * @param orderGoods 订单商品结算明细信息
+     * @return 结算信息
+     * @throws Exception
+     */
+    Status updateRepastOrderService(Order msg, List<OrderGoods> orderGoods) throws Exception;
+
 
 }

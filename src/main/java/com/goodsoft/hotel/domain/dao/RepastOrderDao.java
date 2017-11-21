@@ -29,4 +29,10 @@ public interface RepastOrderDao {
     //餐饮订单食品下单
     void addRepastOrderGoodsDao(List<OrderGoods> msg) throws Exception;
 
+    //餐饮订单更新（用于结算订单）
+    int updateRepastOrderDao(Order msg) throws Exception;
+
+    //餐饮订单商品更新（用于结算订单）
+    int updateRepastOrderGoodsDao(List<OrderGoods> msg) throws Exception;
+
 }

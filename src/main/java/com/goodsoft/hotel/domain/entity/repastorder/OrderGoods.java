@@ -23,13 +23,13 @@ public class OrderGoods implements java.io.Serializable {
     private double detailZhSum;//折后金额
     private String discount;//折扣
     private double zkSum;//金额折
-    private int isDiscount;//可折否
+    private int isDiscount;//可折否（0为true/1为false）
     private String batch;//批次
     private double redouble;//倍数
     private String ratedSeat;//客位
     private String operato;//点菜员
     private String dcTime;//点菜时间
-    private int writeBill;//手写单（0为否/1为是）
+    private int writeBill;//是否手写单（0为true/1为false）
     private String menuType;//部门类别
     private String detailRemarks;//备注
 
@@ -38,7 +38,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id == null ? " " : id.trim();
     }
 
     public String getOid() {
@@ -46,7 +46,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setOid(String oid) {
-        this.oid = oid == null ? null : oid.trim();
+        this.oid = oid == null ? " " : oid.trim();
     }
 
     public String getCbname() {
@@ -54,15 +54,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setCbname(String cbname) {
-        this.cbname = cbname == null ? null : cbname.trim();
-    }
-
-    public Integer getSpNum() {
-        return spNum;
-    }
-
-    public void setSpNum(Integer spNum) {
-        this.spNum = spNum;
+        this.cbname = cbname == null ? " " : cbname.trim();
     }
 
     public String getSpec() {
@@ -70,7 +62,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setSpec(String spec) {
-        this.spec = spec;
+        this.spec = spec == null ? " " : spec.trim();
     }
 
     public String getUnit() {
@@ -78,27 +70,16 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setUnit(String unit) {
-        this.unit = unit;
+        this.unit = unit == null ? " " : unit.trim();
     }
 
-    public void setDetailZhSum(Integer detailZhSum) {
-        this.detailZhSum = detailZhSum;
-    }
 
     public String getDiscount() {
         return discount;
     }
 
     public void setDiscount(String discount) {
-        this.discount = discount == null ? null : discount.trim();
-    }
-
-    public Integer getIsDiscount() {
-        return isDiscount;
-    }
-
-    public void setIsDiscount(Integer isDiscount) {
-        this.isDiscount = isDiscount;
+        this.discount = discount == null ? " " : discount.trim();
     }
 
     public String getBatch() {
@@ -106,11 +87,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setBatch(String batch) {
-        this.batch = batch == null ? null : batch.trim();
-    }
-
-    public void setSpNum(int spNum) {
-        this.spNum = spNum;
+        this.batch = batch == null ? " " : batch.trim();
     }
 
     public double getSpPrice() {
@@ -118,7 +95,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setSpPrice(double spPrice) {
-        this.spPrice = spPrice;
+        this.spPrice = spPrice < 0 ? Math.abs(spPrice) : spPrice;
     }
 
     public double getJjMeans() {
@@ -126,7 +103,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setJjMeans(double jjMeans) {
-        this.jjMeans = jjMeans;
+        this.jjMeans = jjMeans < 0 ? Math.abs(jjMeans) : jjMeans;
     }
 
     public double getDetailZqSum() {
@@ -134,7 +111,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setDetailZqSum(double detailZqSum) {
-        this.detailZqSum = detailZqSum;
+        this.detailZqSum = detailZqSum < 0 ? Math.abs(detailZqSum) : detailZqSum;
     }
 
     public double getDetailZhSum() {
@@ -142,7 +119,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setDetailZhSum(double detailZhSum) {
-        this.detailZhSum = detailZhSum;
+        this.detailZhSum = detailZhSum < 0 ? Math.abs(detailZhSum) : detailZhSum;
     }
 
     public double getZkSum() {
@@ -150,11 +127,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setZkSum(double zkSum) {
-        this.zkSum = zkSum;
-    }
-
-    public void setIsDiscount(int isDiscount) {
-        this.isDiscount = isDiscount;
+        this.zkSum = zkSum < 0 ? Math.abs(zkSum) : zkSum;
     }
 
     public double getRedouble() {
@@ -162,11 +135,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setRedouble(double redouble) {
-        this.redouble = redouble;
-    }
-
-    public void setWriteBill(int writeBill) {
-        this.writeBill = writeBill;
+        this.redouble = redouble < 0 ? Math.abs(redouble) : redouble;
     }
 
     public String getRatedSeat() {
@@ -174,7 +143,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setRatedSeat(String ratedSeat) {
-        this.ratedSeat = ratedSeat == null ? null : ratedSeat.trim();
+        this.ratedSeat = ratedSeat == null ? " " : ratedSeat.trim();
     }
 
     public String getOperato() {
@@ -182,7 +151,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setOperato(String operato) {
-        this.operato = operato == null ? null : operato.trim();
+        this.operato = operato == null ? " " : operato.trim();
     }
 
     public String getDcTime() {
@@ -190,15 +159,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setDcTime(String dcTime) {
-        this.dcTime = dcTime == null ? null : dcTime.trim();
-    }
-
-    public Integer getWriteBill() {
-        return writeBill;
-    }
-
-    public void setWriteBill(Integer writeBill) {
-        this.writeBill = writeBill;
+        this.dcTime = dcTime == null ? " " : dcTime.trim();
     }
 
     public String getMenuType() {
@@ -206,7 +167,7 @@ public class OrderGoods implements java.io.Serializable {
     }
 
     public void setMenuType(String menuType) {
-        this.menuType = menuType == null ? null : menuType.trim();
+        this.menuType = menuType == null ? " " : menuType.trim();
     }
 
     public String getDetailRemarks() {
@@ -215,6 +176,30 @@ public class OrderGoods implements java.io.Serializable {
 
     public void setDetailRemarks(String detailRemarks) {
         this.detailRemarks = detailRemarks;
+    }
+
+    public int getSpNum() {
+        return spNum;
+    }
+
+    public void setSpNum(int spNum) {
+        this.spNum = spNum < 0 ? Math.abs(spNum) : spNum;
+    }
+
+    public int getIsDiscount() {
+        return isDiscount;
+    }
+
+    public void setIsDiscount(int isDiscount) {
+        this.isDiscount = isDiscount < 0 ? Math.abs(isDiscount) : isDiscount;
+    }
+
+    public int getWriteBill() {
+        return writeBill;
+    }
+
+    public void setWriteBill(int writeBill) {
+        this.writeBill = writeBill < 0 ? Math.abs(writeBill) : writeBill;
     }
 
     @Override

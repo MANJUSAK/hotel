@@ -11,10 +11,10 @@ import java.util.Objects;
 public class Inventory implements java.io.Serializable {
 
     private static final long serialVersionUID = 901888118996173301L;
-    private String id;
-    private String cbid;
-    private String date;
-    private int num;
+    private String id;//编号
+    private String cbid;//关联菜单编号
+    private String date;//录入时间
+    private int num;//库存量
 
     public String getId() {
         return id;
@@ -45,7 +45,7 @@ public class Inventory implements java.io.Serializable {
     }
 
     public void setNum(int num) {
-        this.num = num;
+        this.num = num <= 0 ? 0 : num;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 餐饮订单查询业务方法，用于前台收银获取相关订单数据信息
      *
      * @param id     订单编号
-     * @param status 订单状态（0为未支付/1为已支付）
+     * @param status 订单状态（0为未支付/1为已支付），默认查询未支付订单
      * @return 查询数据
      * @throws Exception
      */
@@ -79,5 +79,26 @@ public class RepastOderServicelmpl implements RepastOderService {
         }
         this.dao.addRepastOrderDao(order);
         this.dao.addRepastOrderGoodsDao(orderGoods);
+    }
+
+    /**
+     * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
+     *
+     * @param msg        订单结算信息
+     * @param orderGoods 订单商品结算明细信息
+     * @return 结算信息
+     * @throws Exception
+     */
+    @Override
+    public Status updateRepastOrderService(Order msg, List<OrderGoods> orderGoods) throws Exception {
+        int num = this.dao.updateRepastOrderDao(msg);
+        if (num > 0) {
+            int num1 = this.dao.updateRepastOrderGoodsDao(orderGoods);
+            if (num1 > 0) {
+                return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            }
+            return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
+        }
+        return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
     }
 }

@@ -11,11 +11,11 @@ import java.util.Objects;
 public class MenuSubType implements java.io.Serializable {
 
     private static final long serialVersionUID = 1604565411882057472L;
-    private String id;
-    private int stid;
-    private String tName;
-    private String stName;
-    private String tid;
+    private String id;//编号
+    private int stid;//小类型编号
+    private String tName;//类型名称
+    private String stName;//小类型名称
+    private String tid;//关联类别表id
 
     public String getId() {
         return id;
