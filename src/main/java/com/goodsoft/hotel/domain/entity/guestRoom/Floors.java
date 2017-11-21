@@ -4,10 +4,10 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
  * Created by Administrator on 2017/11/9/009.
  */
 public class Floors {
-    private String id;
-    private String floorCode;
-    private String floorName;
-
+    private String id;              //ID
+    private String floorCode;       //楼层编号
+    private String floorName;       //楼层名称
+    private String floorId;         //楼层ID
 
     public String getId() {
         return id;
@@ -33,6 +33,14 @@ public class Floors {
         this.floorName = floorName;
     }
 
+    public String getFloorId() {
+        return floorId;
+    }
+
+    public void setFloorId(String floorId) {
+        this.floorId = floorId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,7 +50,8 @@ public class Floors {
 
         if (id != null ? !id.equals(floors.id) : floors.id != null) return false;
         if (floorCode != null ? !floorCode.equals(floors.floorCode) : floors.floorCode != null) return false;
-        return floorName != null ? floorName.equals(floors.floorName) : floors.floorName == null;
+        if (floorName != null ? !floorName.equals(floors.floorName) : floors.floorName != null) return false;
+        return floorId != null ? floorId.equals(floors.floorId) : floors.floorId == null;
     }
 
     @Override
@@ -50,6 +59,7 @@ public class Floors {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (floorCode != null ? floorCode.hashCode() : 0);
         result = 31 * result + (floorName != null ? floorName.hashCode() : 0);
+        result = 31 * result + (floorId != null ? floorId.hashCode() : 0);
         return result;
     }
 }

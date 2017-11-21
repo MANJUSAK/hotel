@@ -2,55 +2,95 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao">
-    <!--&lt;!&ndash;建筑类&ndash;&gt;-->
-    <!--<resultMap id="queryBuilding" type="com.goodsoft.hotel.domain.entity.Building">-->
-        <!--<id property="id" column="ID"/>                                 &lt;!&ndash; 建筑id&ndash;&gt;-->
-        <!--<result property="buildingCode" column="BUILDINGCODE"/>         &lt;!&ndash; 建筑编号&ndash;&gt;-->
-        <!--<result property="buildingName" column="BUILDINGNAME"/>         &lt;!&ndash; 建筑名称&ndash;&gt;-->
-    <!--</resultMap>-->
-    <!--&lt;!&ndash;楼层类&ndash;&gt;-->
-    <!--<resultMap id="queryFloors" type="com.goodsoft.hotel.domain.entity.guestRoom.Floors">-->
-         <!--<id property="id" column="ID"/>                                &lt;!&ndash; 楼层id&ndash;&gt;-->
-         <!--<result property="floorCode" column="FLOORCODE"/>              &lt;!&ndash; 楼层编号&ndash;&gt;-->
-         <!--<result property="floorName" column="FLOORNAME"/>              &lt;!&ndash; 楼层名称&ndash;&gt;-->
-     <!--</resultMap>-->
-    <!--房间类-->
-    <resultMap id="queryRoom" type="com.goodsoft.hotel.domain.entity.guestRoom.Room">
-        <id property="id" column="ID"/>                                 <!--房间id-->
-        <result property="roomType" column="ROOMTYPE"/>                 <!--房间类型-->
-        <result property="roomNo" column="ROOMNO"/>                     <!--房间号-->
-        <result property="cName" column="CNAME"/>                       <!--房间名字-->
-        <result property="rackRate" column="RACKRATE"/>                 <!--门市价-->
-        <result property="buildingCode" column="BUILDINGCODE"/>         <!--建筑编号-->
-        <result property="floorCode" column="FLOORCODE"/>               <!--楼层编号-->
-        <result property="status" column="STATUS"/>                     <!--房间状态-->
-        <result property="doorLockId" column="DOORLOCKID"/>             <!--房间锁-->
-    </resultMap>
-    <!--&lt;!&ndash;建筑start&ndash;&gt;-->
-    <!--<select id="queryBuildingDao" resultMap="queryBuilding">-->
-        <!--SELECT * FROM  GS_BUILDING-->
+
+    <select id="queryFloorMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        select DISTINCT b.FLOORCODE,b.FLOORNAME,b.FLOORID FROM gs_room a,gs_floor b where  a.FLOORCODE=b.FLOORCODE AND b.FLOORNAME !='业主自用房' ORDER BY b.FLOORID
+    </select>
+
+    <!--通过楼层号获取房间信息-->
+    <select id="queryFloorRoomMapper" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
+        SELECT id,roomid,roomtype,roomno,cname,buildingcode,floorcode,STATUS,doorlockid,remark,
+(case flag when '1' then '空房' when '2' then '散客' when '3' then '团体' when '4' then '自用' when '5' then '长包' when '6' then '赠送'  when '7' then '合约'  when '8' then '白日房'  when '8' then '司陪房'  else '熟客' end) as flag,
+(case flag when '1' then '脏房' when '2' then '维修房' when '3' then '停用房' when '4' then '空静房' when '5' then '预抵房' when '6' then '预留房' else '临时占房' end) as sflag  from gs_room where floorcode=#{_parameter}
+    </select>
+
+    <!--通过楼层名返回房间信息-->
+    <select id="queryRoomFloorNameMapper" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
+        select DISTINCT id,roomid,roomtype,roomno,cname,buildingcode,floorcode,STATUS,doorlockid,remark,
+(case flag when '1' then '空房' when '2' then '散客' when '3' then '团体' when '4' then '自用' when '5' then '长包' when '6' then '赠送'  when '7' then '合约'  when '8' then '白日房'  when '8' then '司陪房'  else '熟客' end) as flag,
+(case flag when '1' then '脏房' when '2' then '维修房' when '3' then '停用房' when '4' then '空静房' when '5' then '预抵房' when '6' then '预留房' else '临时占房' end) as sflag
+        FROM gs_room a,gs_floor b where  a.FLOORCODE=b.FLOORCODE AND b.FLOORNAME !='业主自用房'  AND b.FLOORNAME=#{_parameter}
+    </select>
+
+    <!--查询房间类型-->
+    <select id="queryRoomTypeMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
+        SELECT * from gs_roomtype
+    </select>
+
+    <!--快速预定的房态,左边的列表选择-->
+    <select id="queryRoomALLMapper" resultType="java.util.Map">
+        SELECT a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME,a.HOUSEPRICES,COUNT(b.FLAG) roomSum FROM gs_roomtype a,gs_room b where a.ROOMTYPE=b.ROOMTYPE AND b.FLAG='1' GROUP BY a.ROOMTYPE
+    </select>
+
+    <!--根据房间类型id获取房间号-->
+    <select id="selectKongMapper" resultType="java.util.Map">
+        SELECT a.roomid,a.ROOMNO,a.doorLockId,b.housePrices,b.typename,b.roomType FROM gs_room a,gs_roomtype b where
+        a.ROOMTYPE=b.ROOMTYPE AND a.FLAG='1'
+        AND b.typeId IN
+        <foreach collection="list" index="index" item="str" open="(" separator="," close=")">
+            #{str}
+        </foreach>
+    </select>
+
+    <!--<select id="selectFindFang" parameterType="java.lang.String" resultType="java.util.Map">-->
+    <!--SELECT * FROM GS_quickbooking where guesutname LIKE CONCAT(CONCAT('%',#{0}),'%') OR  bookingno LIKE CONCAT(CONCAT('%',#{0}),'%')-->
     <!--</select>-->
 
 
-    <!--&lt;!&ndash;建筑end&ndash;&gt;-->
-    <!--&lt;!&ndash;楼层start&ndash;&gt;-->
-    <!--<select id="queryFloorsDao" resultMap="queryFloors">-->
-        <!--SELECT * FROM  GS_FLOORS-->
-    <!--</select>-->
-
-
-
-
-    <!--&lt;!&ndash;建筑end&ndash;&gt;-->
-    <!--房间start-->
-    <select id="queryRoomDao" resultType="java.util.Map">
-        SELECT b.floorname,a.* FROM  GS_ROOM a,gs_floors b where a.floorcode=b.floorcode
-    </select>
-
-    <select id="queryFloorRoomMapper"  resultType="java.util.Map">
-        SELECT DISTINCT a.id,a.floorname,b.* from FLOOR a,ROOM b where  a.floorcode=b.floorcode
-    </select>
-
-
+    <!--<insert id="addQuickbooking" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking"-->
+    <!--useGeneratedKeys="true" keyProperty="bookingid">-->
+    <!--insert into gs_Quickbooking VALUES (#{id},#{bookingid},#{guesttype},#{guestname},#{startdate},#{enddate},#{roomno},#{doorlockid},#{releasetime},#{contractno},#{guestthno},#{membershipcard},#{phoneno},#{houseprices},#{discount},#{salesman},#{rentreson},#{markets},#{paymode},#{bookingtype},#{discauth},#{guestsource},#{viptype},#{bookingname},#{phone},#{bookingemail},#{remark})-->
+    <!--</insert>-->
     <!--房间end-->
+
+
+    <!--建筑添加信息-->
+    <insert id="insertBuild" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
+        INSERT INTO gs_building(ID,BUILDINGCODE,BUILDINGNAME) VALUES(#{ID},#{buildingCode},#{buildingName})
+    </insert>
+
+    <!--楼层添加信息-->
+    <insert id="insertFloor" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        INSERT INTO gs_floor(ID,FLOORCODE,FLOORNAME) VALUES(#{id},#{floorCode},#{floorName})
+    </insert>
+
+    <!--添加房间类型名称-->
+    <insert id="insertRoomType" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
+        insert into gs_roomtype(ID,ROOMTYPE,TYPENAME,HOUSEPRICES) VALUES(#{id},#{roomType},#{typeName},#{housePrices})
+    </insert>
+
+    <!--暂时没用到的接口,添加房间信息详情-->
+    <insert id="insertRoom" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
+        INSERT INTO gs_room(ID,ROOMTYPE,ROOMNO,CNAME,BUILDINGCODE,FLOORCODE,HOUSEPRICES,NIGHTS,STDPAX,MAXPAX,STATUS,DOORLOCKID,REMARK,FLAG,RACKPATE,RATECODE) VALUES
+        (#{id},#{roomType},#{roomNo},#{cName},#{buildingCode},#{floorCode},#{housePrices},#{nights},#{stdPax},#{maxPax},#{status},#{doorLockId},#{remark},#{flag},#{rackRate},#{rateCode})
+    </insert>
+
+
+
+
+    <!--<update id="" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Building" >-->
+    <!--UPDATE gs_building SET-->
+    <!--</update>-->
+
+
+    <!--测试数据-->
+    <select id="querycheshi" resultType="int">
+        SELECT  COUNT(ID)  FROM gs_room
+    </select>
+    <!--测试数据-->
+    <update id="updateRoomId">
+        update gs_room SET id=#{str} WHERE roomid=6
+    </update>
 </mapper>

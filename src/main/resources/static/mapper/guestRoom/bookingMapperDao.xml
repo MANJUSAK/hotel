@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.BookingDao">
+    <!--第三方缓存技术 ehcache-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <!--添加预定信息-->
+    <insert id="insertQuickBooking" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        INSERT INTO gs_quickbooking VALUES
+        (#{id},#{guestType},#{bookingNo},#{guestName},#{contractNo},#{guestThno},#{contractUnit},#{bookingUnit},
+        #{salesman},#{sex},#{registerNo},#{teamNo},#{reservationist},#{teamName},#{leaderName},
+        #{leaderPhone},#{leaderRoomNo},#{days},#{startDate},#{endDate},#{extraBed},#{discount},
+        #{discauth},#{rentreson},#{releasetTime},#{phoneNo},#{markets},#{guestSource},#{bookingType},#{receptionUnit},
+        #{bookingName},#{bookingPhone},#{bookingEmail},#{predeterMode},#{roomNum},#{remark},#{teamRemark},
+        #{bookingFlag},#{payMode},#{creditCardNo},#{periodValidity},#{authorizationNumber},#{lineCredit},
+        #{lineAdjustCredit})
+    </insert>
+
+    <!--添加预定信息的房间-->
+    <insert id="insertQuickBookingRoom" parameterType="java.util.List">
+        INSERT INTO gs_quickbooking_roomno VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.roomNo},#{item.typeName},#{item.doorLockId},#{item.housePrices},#{item.bookId})
+        </foreach>
+    </insert>
+
+    <!--修改预定信息的所有字段,根据ID或者预定单号-->
+    <update id="updateQuickBookingALL" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        update gs_quickbooking
+        <trim prefix="set" suffixOverrides=",">
+            <if test="guestType!=null">guestType=#{guestType}</if>
+            <if test="guestName!=null">guestName=#{guestName}</if>
+            <if test="contractNo!=null">contractNo=#{contractNo}</if>
+            <if test="guestThno!=null">guestThno=#{guestThno}</if>
+            <if test="contractUnit!=null">contractUnit=#{contractUnit}</if>
+            <if test="bookingUnit!=null">bookingUnit=#{bookingUnit}</if>
+            <if test="salesman!=null">salesman=#{salesman}</if>
+            <if test="sex!=null">sex=#{sex}</if>
+            <if test="registerNo!=null">registerNo=#{registerNo}</if>
+            <if test="teamNo!=null">teamNo=#{teamNo}</if>
+            <if test="reservationist!=null">reservationist=#{reservationist}</if>
+            <if test="leaderName!=null">leaderName=#{leaderName}</if>
+            <if test="leaderPhone!=null">leaderPhone=#{leaderPhone}</if>
+            <if test="leaderRoomNo!=null">leaderRoomNo=#{leaderRoomNo}</if>
+            <if test="days!=null">days=#{days}</if>
+            <if test="startDate!=null">startDate=#{startDate}</if>
+            <if test="endDate!=null">endDate=#{endDate}</if>
+            <if test="extraBed!=null">extraBed=#{extraBed}</if>
+            <if test="discount!=nunll">discount=#{discount}</if>
+            <if test="discauth!=null">discauth=#{discauth}</if>
+            <if test="rentreson!=null">rentreson=#{rentreson}</if>
+            <if test="releasetTime!=null">releasetTime=#{releasetTime}</if>
+            <if test="phoneNo!=null">phoneNo=#{phoneNo}</if>
+            <if test="markets!=null">markets=#{markets}</if>
+            <if test="guestSource!=null">guestSource=#{guestSource}</if>
+            <if test="bookingType!=null">bookingType=#{bookingType}</if>
+            <if test="receptionUnit!=null">receptionUnit=#{receptionUnit}</if>
+            <if test="reservationist!=null">RESERVATIONIST=#{reservationist}</if>
+            <if test="bookingName!=null">bookingName=#{bookingName}</if>
+            <if test="bookingPhone!=null">bookingPhone=#{bookingPhone}</if>
+            <if test="bookingEmail!=null">bookingEmail=#{bookingEmail}</if>
+            <if test="predeterMode!=null">predeterMode=#{predeterMode}</if>
+            <if test="roomNum!=null">roomNum=#{roomNum}</if>
+            <if test="remark!=null">remark=#{remark}</if>
+            <if test="teamRemark!=null">teamRemark=#{teamRemark}</if>
+            <if test="bookingFlag!=null">bookingFlag=#{bookingFlag}</if>
+        </trim>
+        WHERE id=#{id} OR bookingNo=#{bookingNo}
+    </update>
+
+
+    <!--修改预定信息的房间-->
+    <update id="updateBookingRoom" parameterType="java.util.List">
+        update gs_quickbooking_roomno
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="set" suffixOverrides=",">
+                <if test="item.roomNo !=null">roomno=#{item.roomNo}</if>
+                <if test="item.roomType != null" >roomType=#{item.roomType}</if>
+                <if test="item.doorLockId !=null">doorLockId=#{item.doorLockId}</if>
+                <if test="item.housePrices">housePrices=#{item.housePrices}</if>
+            </trim>
+            where bookId = #{item.bookId}
+        </foreach>
+    </update>
+
+
+    <!--查询预定信息-->
+    <select id="selectrQuickbookings" parameterType="java.util.Map"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        select * from gs_quickbooking where 1=1
+        <if test="startdate!=null and enddate!=null">
+            and startdate &gt; #{stratdate} and startdate &lt; #{enddate}
+        </if>
+        <if test="startdate!=null and enddate=null">
+            and startdate &gt; #{stratdate}
+        </if>
+        <if test="startdate=null and enddate!=null">
+            and startdate &lt; #{enddate}
+        </if>
+
+        <if test="limit!=null and length!=null">
+            limit #{limit},#{length}
+        </if>
+
+
+    </select>
+
+
+    <!--查询预定房间信息-->
+    <select id="selectrQuickbookingRooms" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+        select * from gs_quickbooking_roomno where bookid=#{_parameter}
+    </select>
+
+</mapper>

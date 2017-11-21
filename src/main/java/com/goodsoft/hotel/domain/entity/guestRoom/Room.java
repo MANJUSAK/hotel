@@ -7,15 +7,24 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 
 public class Room {
-    private String id;
-    private String roomType;
-    private String roomNo;
-    private String cName;
+    private String id;              //id
+    private int roomId;             //房间ID
+    private String roomType;        //房间类型
+    private String roomNo;          //房间编号
+    private String cName;           //别名
+    private String buildingCode;    //建筑编号
+    private String floorCode;       //楼层编号
+    private String housePrices;     //房价
+    private String nights;          //夜晚
+    private String stdPax;          //正常人数
+    private String maxPax;          //最大人数
+    private String status;          //状态
+    private String doorLockId;      //门锁ID
+    private String remark;          //备注
+    private String flag;            //状态(显示空房,散客,团体.....)
+    private String sFlag;           //房间状态(显示脏房,空净房.....)
     private String rackRate;
-    private String buildingCode;
-    private String floorCode;
-    private String status;
-    private String doorLockId;
+    private String rateCode;
 
     public String getId() {
         return id;
@@ -23,6 +32,14 @@ public class Room {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
     }
 
     public String getRoomType() {
@@ -49,14 +66,6 @@ public class Room {
         this.cName = cName;
     }
 
-    public String getRackRate() {
-        return rackRate;
-    }
-
-    public void setRackRate(String rackRate) {
-        this.rackRate = rackRate;
-    }
-
     public String getBuildingCode() {
         return buildingCode;
     }
@@ -71,6 +80,38 @@ public class Room {
 
     public void setFloorCode(String floorCode) {
         this.floorCode = floorCode;
+    }
+
+    public String getHousePrices() {
+        return housePrices;
+    }
+
+    public void setHousePrices(String housePrices) {
+        this.housePrices = housePrices;
+    }
+
+    public String getNights() {
+        return nights;
+    }
+
+    public void setNights(String nights) {
+        this.nights = nights;
+    }
+
+    public String getStdPax() {
+        return stdPax;
+    }
+
+    public void setStdPax(String stdPax) {
+        this.stdPax = stdPax;
+    }
+
+    public String getMaxPax() {
+        return maxPax;
+    }
+
+    public void setMaxPax(String maxPax) {
+        this.maxPax = maxPax;
     }
 
     public String getStatus() {
@@ -89,35 +130,67 @@ public class Room {
         this.doorLockId = doorLockId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public String getRemark() {
+        return remark;
+    }
 
-        Room room = (Room) o;
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
-        if (id != null ? !id.equals(room.id) : room.id != null) return false;
-        if (roomType != null ? !roomType.equals(room.roomType) : room.roomType != null) return false;
-        if (roomNo != null ? !roomNo.equals(room.roomNo) : room.roomNo != null) return false;
-        if (cName != null ? !cName.equals(room.cName) : room.cName != null) return false;
-        if (rackRate != null ? !rackRate.equals(room.rackRate) : room.rackRate != null) return false;
-        if (buildingCode != null ? !buildingCode.equals(room.buildingCode) : room.buildingCode != null) return false;
-        if (floorCode != null ? !floorCode.equals(room.floorCode) : room.floorCode != null) return false;
-        if (status != null ? !status.equals(room.status) : room.status != null) return false;
-        return doorLockId != null ? doorLockId.equals(room.doorLockId) : room.doorLockId == null;
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public String getsFlag() {
+        return sFlag;
+    }
+
+    public void setsFlag(String sFlag) {
+        this.sFlag = sFlag;
+    }
+
+    public String getRackRate() {
+        return rackRate;
+    }
+
+    public void setRackRate(String rackRate) {
+        this.rackRate = rackRate;
+    }
+
+    public String getRateCode() {
+        return rateCode;
+    }
+
+    public void setRateCode(String rateCode) {
+        this.rateCode = rateCode;
     }
 
     @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (roomType != null ? roomType.hashCode() : 0);
-        result = 31 * result + (roomNo != null ? roomNo.hashCode() : 0);
-        result = 31 * result + (cName != null ? cName.hashCode() : 0);
-        result = 31 * result + (rackRate != null ? rackRate.hashCode() : 0);
-        result = 31 * result + (buildingCode != null ? buildingCode.hashCode() : 0);
-        result = 31 * result + (floorCode != null ? floorCode.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (doorLockId != null ? doorLockId.hashCode() : 0);
-        return result;
+    public String toString() {
+        return "Room{" +
+                "id='" + id + '\'' +
+                ", roomId=" + roomId +
+                ", roomType='" + roomType + '\'' +
+                ", roomNo='" + roomNo + '\'' +
+                ", cName='" + cName + '\'' +
+                ", buildingCode='" + buildingCode + '\'' +
+                ", floorCode='" + floorCode + '\'' +
+                ", housePrices='" + housePrices + '\'' +
+                ", nights='" + nights + '\'' +
+                ", stdPax='" + stdPax + '\'' +
+                ", maxPax='" + maxPax + '\'' +
+                ", status='" + status + '\'' +
+                ", doorLockId='" + doorLockId + '\'' +
+                ", remark='" + remark + '\'' +
+                ", flag='" + flag + '\'' +
+                ", sFlag='" + sFlag + '\'' +
+                ", rackRate='" + rackRate + '\'' +
+                ", rateCode='" + rateCode + '\'' +
+                '}';
     }
 }
