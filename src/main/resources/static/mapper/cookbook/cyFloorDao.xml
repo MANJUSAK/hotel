@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goodsoft.hotel.domain.dao.cyFloorDao">
+
+    <!--d &gt;  x &lt;-->
+
+
+    <!--查询所有餐台-->
+    <select id="selectTableInfos" parameterType="java.util.Map" resultType="java.util.Map">
+    select DISTINCT s.*,t.* from
+    (
+    select a.hall_name hall_name ,b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status from
+    (select * from gs_hall where 1=1
+     <if test="hallId!=null and hallId!=''">
+     and  id=#{hallId}
+     </if>
+     <if test="hallName!=null and hallName!=''">
+     and hall_name like '%${hallName}%'
+     </if>
+    ) a
+    left join (
+    select b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status ,b.HALL_ID
+    from  gs_diningtable b  where b.status!=0) b on a.id=b.hall_id)s
+    left join
+    (select a.customer_name,b.table_id,a.contact_number,b.reserve_start_time,b.reserve_end_time
+    from gs_restaurant_reservation a ,reserve_halls b
+    where a.id=b.reserve_id and a.state='1' and b.reserve_hall_status='1'
+    and ((UNIX_TIMESTAMP(b.reserve_start_time)-UNIX_TIMESTAMP(now()))/3600 between 0 and 5) ) t
+    on s.id=t.table_id  order by s.table_name
+    </select>
+
+
+</mapper>
+
+
