@@ -1,7 +1,7 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
-import com.goodsoft.hotel.domain.dao.cyFloorDao;
+import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,7 +21,7 @@ public class cyFloorController {
 
 
     @Resource
-    cyFloorDao cyFloorDao;
+    CyFloorDao CyFloorDao;
 
     @Resource
     CyReserveDao cyReserveDao;
@@ -41,7 +41,7 @@ public class cyFloorController {
         }
 
 
-        List<Map> infos = cyFloorDao.selectTableInfos(paramMap);
+        List<Map> infos = CyFloorDao.selectTableInfos(paramMap);
         System.out.println(infos.toString());
 
         List<Map> returnList=new LinkedList<Map>();

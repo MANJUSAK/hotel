@@ -364,14 +364,14 @@
 
                                 <%--预订--%>
                                 <c:when test="${not empty halllist.customer_name}">
-                                    <li  class="floorLi reserveLi"   title="预订人:${halllist.customer_name}"
+                                    <li  class="floorLi reserveLi"  name="3"  title="预订人:${halllist.customer_name}"
                                          data-container="body" data-trigger="hover" data-toggle="popover" data-placement="top"
                                          data-content="人数:${halllist.people_number} &nbsp;&nbsp;电话:${halllist.contact_number}&nbsp;&nbsp;  用餐时间:${halllist.reserve_start_time}"
                                          style="background-color: #3399FF;">
                                         ${halllist.table_codee}
                                         ${halllist.table_name}<br/>
                                     </li>
-                                    <input value="${halllist.reserveId}" type="hidden">
+                                    <input name="reservId" value="${halllist.reserveId}" type="hidden">
                                 </c:when>
 
                                 <%--空净--%>
@@ -457,7 +457,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel">开台</h4>
                 </div>
-                <div style="height: 300px;width: 500px" class="modal-body">
+                <div style="height: 200px;width: 500px" class="modal-body">
                     <form id="ktform">
 
 
@@ -489,11 +489,43 @@
         $(".floorLi").on("click",function(){
             //空净开台
             if($(this).attr("name")==1){
-            $("#ktform").append('<span>客人姓名</span><input type="text" name="consumer"/> <span>人数</span><input type="text" name="personNum"/> ');
+                var tableid= $(this).siblings("input[name='tableId']").val();
+                var tableName= $(this).siblings("input[name='tableName']").val();
+                var hallName= $(this).siblings("input[name='hallName']").val();
+                var minimumConsumption= $(this).siblings("input[name='minimumConsumption']").val();
+                var serviceCharge= $(this).siblings("input[name='serviceCharge']").val();
+                $("#ktform").html("");
+            $("#ktform").append('<span>客人姓名</span><input type="text" name="consumer"/> <span>人数</span><input type="text" name="personNum"/> ' +
+                '<input type="hidden" name="aoh" value="'+tableName+'"/>' +
+                '<input type="hidden" name="ctType" value="'+hallName+'"/>' +
+                '<input type="hidden" name="fwRate" value="'+serviceCharge+'"/>' +
+                '<input type="hidden" name="zdConsume" value="'+minimumConsumption+'"/>' +
+                '<input type="hidden" name="tableId" value="'+tableid+'"/>'   );
             $("#kaitaibut").val("开台");
             $("#myModal").modal("show");
             }
 
+            //预订开台
+            if($(this).attr("name")==3){
+            var reserveId=$(this).siblings("input[name='reservId']").val();
+
+                $.ajax({
+                    url: "<%=basePath%>/restaurantReservation/selectReserveInfo",
+                    type: "get",
+                    data: {"reserveId":reserveId},
+                    dataType: "json",
+                    success: function (data) {
+                    console.log(data);
+                    }
+                });
+
+                }
+        });
+
+
+        //开台提交按钮
+        $("#kaitaibut").on("click",function () {
+            console.log( $("#ktform").serialize());
         });
 
 
@@ -526,7 +558,6 @@
             <ul>
                 <li><div><img src="<%=basePath%>/floor/icon/zf.png">未买单</div><div><img src="<%=basePath%>/floor/icon/wxf.png">维修</div></li>
                 <li><div><img src="<%=basePath%>/floor/icon/dyf.png">清洁中</div><div><img src="<%=basePath%>/floor/icon/lszf.png">正在操作</div></li>
-
 
             </ul>
         </div>

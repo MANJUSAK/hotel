@@ -158,7 +158,6 @@ public class CyReserveController {
                 }
                 integer1 = cyReserveDao.insertReserveHalls(list);
             }
-
             System.out.println("插入厅台:"+integer1);
             model.addAttribute("addResult","添加成功");
         }else{

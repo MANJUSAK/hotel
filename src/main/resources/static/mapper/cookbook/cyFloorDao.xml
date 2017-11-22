@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.goodsoft.hotel.domain.dao.cyFloorDao">
+<mapper namespace="com.goodsoft.hotel.domain.dao.CyFloorDao">
 
     <!--d &gt;  x &lt;-->
 
@@ -30,6 +30,10 @@
     on s.id=t.table_id  order by s.table_name
     </select>
 
+    <!--修改餐台状态-->
+    <update id="updateTableState" parameterType="java.util.Map">
+        update gs_diningtable set  status=#{status} where id=#{tableId}
+    </update>
 
 </mapper>
 
