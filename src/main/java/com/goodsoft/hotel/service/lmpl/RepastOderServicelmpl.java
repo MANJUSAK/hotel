@@ -63,6 +63,23 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
+     * 餐饮预订单开台订单添加（下订单）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     *
+     * @param order 订单信息
+     * @throws Exception
+     */
+    @Override
+    public <T> T addOrderService(Order order) throws Exception {
+        String id = this.orderId.getOrderId().toString();
+        order.setId(id);
+        int row = this.dao.addRepastOrderDao(order);
+        if (row > 0) {
+            return (T) new Result(0, id);
+        }
+        return (T) new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+    }
+
+    /**
      * 餐饮订单添加（下订单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      *
      * @param order      订单信息
@@ -70,7 +87,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @throws Exception
      */
     @Override
-    public void addOrderService(Order order, List<OrderGoods> orderGoods) throws Exception {
+    public void addOrderGoodsService(Order order, List<OrderGoods> orderGoods) throws Exception {
         String id = this.orderId.getOrderId().toString();
         order.setId(id);
         for (int i = 0, len = orderGoods.size(); i < len; ++i) {

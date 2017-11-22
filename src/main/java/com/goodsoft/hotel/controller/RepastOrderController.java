@@ -52,6 +52,23 @@ public class RepastOrderController {
     }
 
     /**
+     * 餐饮预订单开台订单添加（下订单）接口，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     *
+     * @param order 订单信息
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/add/order/goods/data.shtml", method = RequestMethod.POST)
+    public Status addOrderService(Order order) {
+        try {
+            return this.service.addOrderService(order);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+        }
+    }
+
+    /**
      * 餐饮订单添加（下订单）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      *
      * @param order 订单信息
@@ -64,7 +81,7 @@ public class RepastOrderController {
             List<OrderGoods> orderGoods = msg.getMsg();
             if (orderGoods != null) {
                 try {
-                    this.service.addOrderService(order, orderGoods);
+                    this.service.addOrderGoodsService(order, orderGoods);
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 } catch (Exception e) {
                     this.logger.error(e.toString());

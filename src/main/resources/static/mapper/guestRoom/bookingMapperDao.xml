@@ -2,6 +2,7 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.BookingDao">
     <!--第三方缓存技术 ehcache-->
     <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
@@ -76,7 +77,7 @@
         <foreach collection="list" item="item" separator=",">
             <trim prefix="set" suffixOverrides=",">
                 <if test="item.roomNo !=null">roomno=#{item.roomNo}</if>
-                <if test="item.roomType != null" >roomType=#{item.roomType}</if>
+                <if test="item.roomType != null">roomType=#{item.roomType}</if>
                 <if test="item.doorLockId !=null">doorLockId=#{item.doorLockId}</if>
                 <if test="item.housePrices">housePrices=#{item.housePrices}</if>
             </trim>

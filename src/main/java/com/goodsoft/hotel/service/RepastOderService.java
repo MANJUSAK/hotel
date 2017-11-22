@@ -14,6 +14,7 @@ import java.util.List;
  * @author 严彬荣 Created on 2017-11-15 9:32
  * @version V1.0
  */
+@SuppressWarnings("ALL")
 public interface RepastOderService {
 
     /**
@@ -27,13 +28,21 @@ public interface RepastOderService {
     <T> T queryOrderService(String id, PageParam page) throws Exception;
 
     /**
+     * 餐饮预订单开台订单添加（下订单）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     *
+     * @param order 订单信息
+     * @throws Exception
+     */
+    <T> T addOrderService(Order order) throws Exception;
+
+    /**
      * 餐饮订单添加（下订单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      *
      * @param order      订单信息
      * @param orderGoods 订单食品明细信息
      * @throws Exception
      */
-    void addOrderService(Order order, List<OrderGoods> orderGoods) throws Exception;
+    void addOrderGoodsService(Order order, List<OrderGoods> orderGoods) throws Exception;
 
     /**
      * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单

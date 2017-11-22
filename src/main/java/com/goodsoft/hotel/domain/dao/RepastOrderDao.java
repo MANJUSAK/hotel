@@ -24,7 +24,7 @@ public interface RepastOrderDao {
     List<OrderGoods> queryRepastOrderGoodsDao(@Param("oid") String oid) throws Exception;
 
     //餐饮订单下单
-    void addRepastOrderDao(Order msg) throws Exception;
+    int addRepastOrderDao(Order msg) throws Exception;
 
     //餐饮订单食品下单
     void addRepastOrderGoodsDao(List<OrderGoods> msg) throws Exception;

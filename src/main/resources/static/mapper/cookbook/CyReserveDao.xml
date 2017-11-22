@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.CyReserveDao">
 
 
@@ -10,25 +11,28 @@
     </select>
 
     <!--通过厅获取所有餐台-->
-    <select id="selectTablesByHall" parameterType="java.lang.String"  resultType="java.util.Map">
+    <select id="selectTablesByHall" parameterType="java.lang.String" resultType="java.util.Map">
         select id,table_codee,table_name from gs_diningtable where hall_id=#{_parameter}
     </select>
 
 
-
     <resultMap id="skReserve" type="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
-        <result column="id" property="id"/>   <result column="customer_type" property="customer_type"/>
-        <result column="customer_name" property="customer_name"/>   <result column="people_number" property="people_number"/>
-        <result column="sales_manager" property="sales_manager"/>   <result column="atthe_time" property="atthe_time"/>
+        <result column="id" property="id"/>
+        <result column="customer_type" property="customer_type"/>
+        <result column="customer_name" property="customer_name"/>
+        <result column="people_number" property="people_number"/>
+        <result column="sales_manager" property="sales_manager"/>
+        <result column="atthe_time" property="atthe_time"/>
         <result column="state" property="state"/>
     </resultMap>
     <!--查询散客预订信息-->
-    <select id="selectSkReserves" parameterType="java.util.Map" resultMap="skReserve" >
+    <select id="selectSkReserves" parameterType="java.util.Map" resultMap="skReserve">
 
-        select id,customer_type,customer_name,people_number,sales_manager,atthe_time,state from GS_RESTAURANT_RESERVATION
+        select id,customer_type,customer_name,people_number,sales_manager,atthe_time,state from
+        GS_RESTAURANT_RESERVATION
         where state =#{state}
         <if test="staetTime !=null and staetTime!=''">
-        and ATTHE_TIME &gt; #{staetTime}
+            and ATTHE_TIME &gt; #{staetTime}
         </if>
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
@@ -38,17 +42,28 @@
 
     <resultMap id="skReserveInfo" type="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
         <result column="id" property="id"/>
-        <result column="customer_type" property="customer_type"/>   <result column="entry_date" property="entry_date"/>
-        <result column="customer_name" property="customer_name"/>   <result column="people_number" property="people_number"/>
-        <result column="appointment_length" property="appointment_length"/>   <result column="member_card" property="member_card"/>
-        <result column="contract_unit" property="contract_unit"/>   <result column="standard_meal" property="standard_meal"/>
-        <result column="corporate_name" property="corporate_name"/>   <result column="seats_num" property="seats_num"/>
-        <result column="contacts" property="contacts"/>   <result column="contact_number" property="contact_number"/>
-        <result column="sales_manager" property="sales_manager"/>   <result column="remarks" property="remarks"/>
-        <result column="atthe_time" property="atthe_time"/>   <result column="end_date" property="end_date"/>
-        <result column="record_operator" property="record_operator"/>   <result column="recording_time" property="recording_time"/>
-        <result column="final_amendment" property="final_amendment"/>   <result column="last_modified_time" property="last_modified_time"/>
-        <result column="cancellation_reason" property="cancellation_reason"/>   <result column="state" property="state"/>
+        <result column="customer_type" property="customer_type"/>
+        <result column="entry_date" property="entry_date"/>
+        <result column="customer_name" property="customer_name"/>
+        <result column="people_number" property="people_number"/>
+        <result column="appointment_length" property="appointment_length"/>
+        <result column="member_card" property="member_card"/>
+        <result column="contract_unit" property="contract_unit"/>
+        <result column="standard_meal" property="standard_meal"/>
+        <result column="corporate_name" property="corporate_name"/>
+        <result column="seats_num" property="seats_num"/>
+        <result column="contacts" property="contacts"/>
+        <result column="contact_number" property="contact_number"/>
+        <result column="sales_manager" property="sales_manager"/>
+        <result column="remarks" property="remarks"/>
+        <result column="atthe_time" property="atthe_time"/>
+        <result column="end_date" property="end_date"/>
+        <result column="record_operator" property="record_operator"/>
+        <result column="recording_time" property="recording_time"/>
+        <result column="final_amendment" property="final_amendment"/>
+        <result column="last_modified_time" property="last_modified_time"/>
+        <result column="cancellation_reason" property="cancellation_reason"/>
+        <result column="state" property="state"/>
     </resultMap>
     <!--查询单条散客预订信息全部内容-->
     <select id="selectSkReserveById" parameterType="java.lang.String" resultMap="skReserveInfo">
@@ -67,9 +82,10 @@
     </select>
 
     <!--查询所有酒席预订信息-->
-    <select id="selectJxReserves" parameterType="java.util.Map" resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
-    select CUSTOMER_TYPE,CUSTOMER_NAME,PEOPLE_NUMBER,SALES_MANAGER,ATTHE_TIME,STATE from GS_BANQUET_RESERVATION
-    where state =#{state}  and ATTHE_TIME &gt; #{staetTime}  order by ATTHE_TIME
+    <select id="selectJxReserves" parameterType="java.util.Map"
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
+        select CUSTOMER_TYPE,CUSTOMER_NAME,PEOPLE_NUMBER,SALES_MANAGER,ATTHE_TIME,STATE from GS_BANQUET_RESERVATION
+        where state =#{state} and ATTHE_TIME &gt; #{staetTime} order by ATTHE_TIME
 
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
@@ -77,7 +93,8 @@
 
     </select>
     <!--查询单条酒席预订信息全部内容-->
-    <select id="selectJxReserveById" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
+    <select id="selectJxReserveById" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
         select * from GS_BANQUET_RESERVATION
         where id=#{_parameter}
     </select>
@@ -88,16 +105,18 @@
     </select>
 
     <!--查询所有宴会预订信息-->
-    <select id="selectYhReserves" parameterType="java.util.Map" resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
-      select CUSTOMER_TYPE,CUSTOMER_NAME,PEOPLE_NUMBER,SALES_MANAGER,ATTHE_TIME,STATE from GS_YANHUI_RESERVATION
-       where state =#{state}  and ATTHE_TIME &gt; #{staetTime}
+    <select id="selectYhReserves" parameterType="java.util.Map"
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
+        select CUSTOMER_TYPE,CUSTOMER_NAME,PEOPLE_NUMBER,SALES_MANAGER,ATTHE_TIME,STATE from GS_YANHUI_RESERVATION
+        where state =#{state} and ATTHE_TIME &gt; #{staetTime}
 
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
         </if>
     </select>
     <!--查询单条宴会预订信息全部内容-->
-    <select id="selectYhReserveById" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
+    <select id="selectYhReserveById" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
         select * from GS_YANHUI_RESERVATION
         where id=#{_parameter}
     </select>
@@ -108,18 +127,23 @@
     </select>
 
     <resultMap id="reserveHalls" type="com.goodsoft.hotel.domain.entity.restaurantReservation.ReservationHalls">
-        <result column="reserve_hall" property="reserve_hall"></result>  <result column="reserve_table" property="reserve_table"></result>
-        <result column="reserve_start_time" property="reserve_start_time"></result>  <result column="reserve_end_time" property="reserve_end_time"></result>
-        <result column="shibie" property="shibie"></result>  <result column="reserve_hall_status" property="reserve_hall_status"></result>
-        <result column="reserve_id" property="reserve_id"></result> <result column="table_id" property="table_id"></result>
+        <result column="reserve_hall" property="reserve_hall"></result>
+        <result column="reserve_table" property="reserve_table"></result>
+        <result column="reserve_start_time" property="reserve_start_time"></result>
+        <result column="reserve_end_time" property="reserve_end_time"></result>
+        <result column="shibie" property="shibie"></result>
+        <result column="reserve_hall_status" property="reserve_hall_status"></result>
+        <result column="reserve_id" property="reserve_id"></result>
+        <result column="table_id" property="table_id"></result>
     </resultMap>
     <!--查询预订厅台-->
-    <select id="selectReserveHalls" parameterType="java.lang.String" resultMap="reserveHalls" >
+    <select id="selectReserveHalls" parameterType="java.lang.String" resultMap="reserveHalls">
         select * from RESERVE_HALLS where RESERVE_ID = #{_parameter}
     </select>
 
     <!--插入散客预订信息-->
-    <insert id="insertReserveInfo" parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation" >
+    <insert id="insertReserveInfo"
+            parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
         insert into GS_RESTAURANT_RESERVATION values(
         #{id},#{customer_type},#{entry_date},#{customer_name},#{people_number},#{appointment_length},
         #{member_card},#{contract_unit},#{standard_meal},#{corporate_name},#{seats_num},#{contacts},#{contact_number},
@@ -129,7 +153,8 @@
     </insert>
 
     <!--修改散客预订信息-->
-    <insert id="updateReserveInfo" parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation" >
+    <insert id="updateReserveInfo"
+            parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
         update  GS_RESTAURANT_RESERVATION set
         customer_type=#{customer_type},entry_date=#{entry_date},customer_name=#{customer_name},
         people_number=#{people_number},appointment_length=#{appointment_length},
@@ -144,26 +169,25 @@
     <!--修改预订单状态-->
     <update id="updateReserveState" parameterType="java.util.Map">
         update GS_RESTAURANT_RESERVATION set state=#{state} where id in
-        <foreach collection="reserveIds" item="item" open="(" close=")" separator="," >
+        <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
             #{item}
         </foreach>
 
     </update>
 
 
-     <!--插入预订分厅信息-->
+    <!--插入预订分厅信息-->
     <insert id="insertReserveHalls" parameterType="java.util.List">
         insert into RESERVE_HALLS VALUES
-        <foreach collection="list" item="item" separator="," >
+        <foreach collection="list" item="item" separator=",">
             ('',#{item.reserve_hall},#{item.reserve_table},#{item.reserve_start_time},#{item.reserve_end_time},#{item.shibie},#{item.reserve_hall_status},#{item.reserve_id},#{item.table_id})
         </foreach>
     </insert>
 
-     <!--删除预订分厅信息-->
+    <!--删除预订分厅信息-->
     <delete id="deleteReserveHalls" parameterType="java.lang.String">
         delete from RESERVE_HALLS where reserve_id =#{_parameter}
     </delete>
-
 
 
 </mapper>
