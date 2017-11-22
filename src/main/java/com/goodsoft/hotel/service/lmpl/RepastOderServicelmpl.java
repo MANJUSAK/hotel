@@ -3,6 +3,7 @@ package com.goodsoft.hotel.service.lmpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
@@ -30,6 +31,8 @@ import java.util.List;
 public class RepastOderServicelmpl implements RepastOderService {
     @Resource
     private RepastOrderDao dao;
+    @Resource
+    private CyFloorDao cydao;
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
     //实例化订单编号生成工具类
@@ -108,6 +111,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     public Status updateRepastOrderService(Order msg) throws Exception {
         int row = this.dao.updateRepastOrderDao(msg);
         if (row > 0) {
+            /*int row1 = this.cydao;*/
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }
         return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());

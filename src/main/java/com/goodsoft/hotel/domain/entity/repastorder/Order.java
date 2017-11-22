@@ -43,6 +43,7 @@ public class Order implements java.io.Serializable {
     private int status;//订单状态（是否支付，0为true/1为false）
     private String remarks;//备注
     private int placeNum;//席数
+    private String ctid;//餐台编号
     private List<OrderGoods> orderGoods;//订单明细容器
 
     public Order() {
@@ -280,6 +281,14 @@ public class Order implements java.io.Serializable {
 
     public void setPlaceNum(int placeNum) {
         this.placeNum = placeNum < 0 ? Math.abs(placeNum) : placeNum;
+    }
+
+    public String getCtid() {
+        return ctid;
+    }
+
+    public void setCtid(String ctid) {
+        this.ctid = ctid == null ? " " : ctid.trim();
     }
 
     public List<OrderGoods> getOrderGoods() {

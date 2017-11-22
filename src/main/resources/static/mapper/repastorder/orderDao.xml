@@ -8,9 +8,9 @@
     <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
     <!--餐饮订单sql复用-->
     <sql id="order_sql">
-    `ID`,`KZ_NUM`,`CONSUMER`,`KT_TIME`,`FW_RATE`,`CT_TYPE`,`SALEMANAGER`,`KT_NUM`,`PERSON_NUM`,
-    `KT_SHIFT`,`ZD_CONSUME`,`QD_DISCOUNT`,`DEPARTMENT`,`PART_HALL`,`VIP_NUM`,`VIP_TYPE`,`ZD_CONSUME_GIST`,
-    `DISCOUNT_SUM`,`ZQ_SUM`,`AOH`,`OPERATOR`,`KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`,`PLACE_NUM`
+    `ID`,`KZ_NUM`,`CONSUMER`,`KT_TIME`,`FW_RATE`,`CT_TYPE`,`SALEMANAGER`,`KT_NUM`,`PERSON_NUM`,`KT_SHIFT`,`ZD_CONSUME`,
+    `QD_DISCOUNT`,`DEPARTMENT`,`PART_HALL`,`VIP_NUM`,`VIP_TYPE`,`ZD_CONSUME_GIST`,`DISCOUNT_SUM`,`ZQ_SUM`,`AOH`,`OPERATOR`,
+    `KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`,`PLACE_NUM`,`CTID`
     </sql>
     <!--餐饮订单查询-->
     <select id="queryRepastOrderDao" parameterType="object"
@@ -71,7 +71,7 @@
             <if test="ktNum !=null and ktNum !=''">`KT_NUM`=#{ktNum},</if>
             <if test="partHall !=null and partHall !=''">`PART_HALL`= #{partHall},</if>
             <if test="placeNum !=null and placeNum !=''">`PLACE_NUM`= #{placeNum},</if>
-            <if test="aoh !=null and aoh !=''">`AOH`= #{aoh}</if>
+            <if test="ctid !=null and ctid !=''">`AOH`= #{aoh},CTID=#{ctid}</if>
             <if test="status &lt;=1 ">`STATUS` = #{status}</if>
         </set>
         WHERE `ID` = #{id}
