@@ -10,7 +10,7 @@ import java.util.Map;
  * 餐饮楼面
  */
 @Repository
-public interface cyFloorDao {
+public interface CyFloorDao {
 
     //查询所有餐台
     public List<Map> selectTableInfos(Map map);
