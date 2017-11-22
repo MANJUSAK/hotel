@@ -10,7 +10,7 @@
     <sql id="order_sql">
     `ID`,`KZ_NUM`,`CONSUMER`,`KT_TIME`,`FW_RATE`,`CT_TYPE`,`SALEMANAGER`,`KT_NUM`,`PERSON_NUM`,
     `KT_SHIFT`,`ZD_CONSUME`,`QD_DISCOUNT`,`DEPARTMENT`,`PART_HALL`,`VIP_NUM`,`VIP_TYPE`,`ZD_CONSUME_GIST`,
-    `DISCOUNT_SUM`,`ZQ_SUM`,`AOH`,`OPERATOR`,`KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`
+    `DISCOUNT_SUM`,`ZQ_SUM`,`AOH`,`OPERATOR`,`KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`,`PLACE_NUM`
     </sql>
     <!--餐饮订单查询-->
     <select id="queryRepastOrderDao" parameterType="object"
@@ -60,10 +60,21 @@
     </insert>
     <!--餐饮订单更新-->
     <update id="updateRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
-    UPDATE `gs_repast_order` SET
-    `FW_RATE` = #{fwRate},`QD_DISCOUNT` = #{qdDiscount},`VIP_NUM` = #{vipNum},`VIP_TYPE` = #{vipType},`DISCOUNT_SUM` = #{discountSum},
-    `ZQ_SUM` = #{zqSum},`PAYMENT_TYPE` = #{paymentType},`STATUS` = #{status}
-    WHERE `ID` = #{id}
+        UPDATE `gs_repast_order`
+        <set>
+            <if test="qdDiscount !=null and qdDiscount !=''">`QD_DISCOUNT` = #{qdDiscount},</if>
+            <if test="vipNum !=null and vipNum !=''">`VIP_NUM` = #{vipNum},</if>
+            <if test="vipType !=null and vipType !=''">`VIP_TYPE` =#{vipType},</if>
+            <if test="discountSum !=null and discountSum !=''">`DISCOUNT_SUM` = #{discountSum},</if>
+            <if test="zqSum !=null and zqSum !=''">`ZQ_SUM` = #{zqSum},</if>
+            <if test="paymentType !=null and paymentType !=''">`PAYMENT_TYPE` = #{paymentType},</if>
+            <if test="ktNum !=null and ktNum !=''">`KT_NUM`=#{ktNum},</if>
+            <if test="partHall !=null and partHall !=''">`PART_HALL`= #{partHall},</if>
+            <if test="placeNum !=null and placeNum !=''">`PLACE_NUM`= #{placeNum},</if>
+            <if test="aoh !=null and aoh !=''">`AOH`= #{aoh}</if>
+            <if test="status &lt;=1 ">`STATUS` = #{status}</if>
+        </set>
+        WHERE `ID` = #{id}
     </update>
     <!--餐饮订单商品更新-->
     <update id="updateRepastOrderGoodsDao" parameterType="list">
@@ -75,5 +86,9 @@
             WHERE `ID` = #{item.id}
         </foreach>
     </update>
+    <!--删除餐饮订单-->
+    <delete id="deleteOrderDao" parameterType="string">
+        DELETE FROM `gs_repast_order` WHERE `ID`=#{id}
+    </delete>
 </mapper>
         <!--mapper 餐饮订单管理 end -->

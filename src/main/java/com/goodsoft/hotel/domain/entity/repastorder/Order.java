@@ -1,5 +1,7 @@
 package com.goodsoft.hotel.domain.entity.repastorder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ public class Order implements java.io.Serializable {
     private double fwRate;//服务费率
     private String ctType;//餐台类型
     private String salemanager;//营业经理
-    private String ktNum;//开台号
+    private String ktNum;//开台卡号
     private int personNum;//人数
     private String ktShift;//开台班次
     private double zdConsume;//最低消费
@@ -40,7 +42,12 @@ public class Order implements java.io.Serializable {
     private String paymentType;//支付方式
     private int status;//订单状态（是否支付，0为true/1为false）
     private String remarks;//备注
+    private int placeNum;//席数
     private List<OrderGoods> orderGoods;//订单明细容器
+
+    public Order() {
+        this.ktTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
 
     public String getId() {
         return id;
@@ -71,7 +78,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKtTime(String ktTime) {
-        this.ktTime = ktTime == null ? "" : ktTime.trim();
+        this.ktTime = ktTime;
     }
 
     public String getCtType() {
@@ -265,6 +272,14 @@ public class Order implements java.io.Serializable {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? "" : remarks.trim();
+    }
+
+    public int getPlaceNum() {
+        return placeNum;
+    }
+
+    public void setPlaceNum(int placeNum) {
+        this.placeNum = placeNum < 0 ? Math.abs(placeNum) : placeNum;
     }
 
     public List<OrderGoods> getOrderGoods() {
