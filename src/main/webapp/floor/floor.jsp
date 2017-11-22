@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.sql.Connection" %><%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2017/11/20
@@ -22,11 +22,15 @@
     <link rel="stylesheet" href="<%=basePath%>/floor/css/bootstrap.css">
     <link rel="stylesheet" href="<%=basePath%>/floor/css/bootstrap-select.css">
     <script type="text/javascript" src="<%=basePath%>/floor/js/jquery.min.js"></script>
-    <script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>
+    <%--<script src="http://www.jq22.com/jquery/bootstrap-3.3.4.js"></script>--%>
     <script src="<%=basePath%>/floor/js/bootstrap-select.js"></script>
-    <script type="text/javascript" src="<%=basePath%>/floor/js/jquery-1.4.2.min.js"></script>
+    <%--<script type="text/javascript" src="<%=basePath%>/floor/js/jquery-1.4.2.min.js"></script>--%>
+    <script type="text/javascript" src="<%=basePath%>/floor/js/jquery-2.2.2.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>/floor/js/jquery.datePicker-min.js"></script>
     <link type="text/css" href="<%=basePath%>/floor/css.css" rel="stylesheet" />
+    <script type="text/javascript" src="<%=basePath%>/floor/js/bootstrap.js"></script>
+
+
     <style type="text/css">
         *{
             margin: 0;
@@ -309,6 +313,9 @@
             color: white;
         }
 
+        .floorLi{
+            cursor: pointer;
+        }
 
     </style>
 </head>
@@ -317,18 +324,13 @@
 
     $(document).ready(function(){
         $(".datepicker").datePicker({
-
             inline:true,
-
             selectMultiple:false
-
         });
 
 
         $("#datepicker").datePicker({
-
             clickInput:true
-
         });
     });
 
@@ -342,7 +344,6 @@
             <div class="demodiv" style="width: 100%;height: 200px;">
                 <div style="width: 10%;height: 100%;margin: 0;float: left">
                     ${hall.hall_name}
-
                 </div>
 
                 <div class="contentdiv" style="float: left;width: 90%;margin:0">
@@ -363,23 +364,34 @@
 
                                 <%--预订--%>
                                 <c:when test="${not empty halllist.customer_name}">
-                                    <li  title="${halllist.customer_name}"
+                                    <li  class="floorLi reserveLi"   title="预订人:${halllist.customer_name}"
                                          data-container="body" data-trigger="hover" data-toggle="popover" data-placement="top"
-                                         data-content="人数:${halllist.people_number} 电话:${halllist.contact_number}" style="background-color: #3399FF;">
+                                         data-content="人数:${halllist.people_number} &nbsp;&nbsp;电话:${halllist.contact_number}&nbsp;&nbsp;  用餐时间:${halllist.reserve_start_time}"
+                                         style="background-color: #3399FF;">
                                         ${halllist.table_codee}
                                         ${halllist.table_name}<br/>
                                     </li>
+                                    <input value="${halllist.reserveId}" type="hidden">
                                 </c:when>
 
                                 <%--空净--%>
                                 <c:when test="${halllist.status==1}">
-                        <li style="background-color: #b7b7b7;">
+                        <li class="floorLi" name="1"  title="基本信息"
+                                    data-container="body" data-trigger="hover" data-toggle="popover" data-placement="top"
+                            data-content="服务费:<c:if test="${halllist.service_charge==0}">无</c:if> <c:if test="${halllist.service_charge!=0}">${halllist.service_charge}%</c:if>
+                                          &nbsp;&nbsp;最低消费: ${halllist.minimum_consumption}"
+                                style="background-color: #b7b7b7;">
                                 ${halllist.table_codee}
                                 ${halllist.table_name}
                         </li>
+                                <input value="${halllist.id}" name="tableId" type="hidden">
+                                <input value="${halllist.table_name}" name="tableName" type="hidden">
+                                <input value="${halllist.hall_name}" name="hallName" type="hidden">
+                                <input value="${halllist.minimum_consumption}" name="minimumConsumption" type="hidden"> <%-- 最低消费--%>
+                                <input value="${halllist.service_charge}" name="serviceCharge" type="hidden"> <%-- 服务费率--%>
                                 </c:when>
 
-                                <%--维修--%>
+                                <%--维修 --%>
                                 <c:when test="${halllist.status==2}">
                                     <li style="background-color: #3333CC;">
                                             ${halllist.table_codee}
@@ -419,7 +431,6 @@
                                 </li>
                             </c:if>
 
-
                         </c:forEach>
                         </c:if>
 
@@ -435,10 +446,57 @@
 
         </div>
     </div>
+
+
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">开台</h4>
+                </div>
+                <div style="height: 300px;width: 500px" class="modal-body">
+                    <form id="ktform">
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button id="kaitaibut" type="button" class="btn btn-primary">开台</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+
+
+
     <script>
         $(".demodiv").each(function () {
             $(this).height($(this).children(".contentdiv").height());
         });
+
+        //显示标签
+        $(function () {
+            $("[data-toggle='popover']").popover();
+        });
+
+        //显示开台
+        $(".floorLi").on("click",function(){
+            //空净开台
+            if($(this).attr("name")==1){
+            $("#ktform").append('<span>客人姓名</span><input type="text" name="consumer"/> <span>人数</span><input type="text" name="personNum"/> ');
+            $("#kaitaibut").val("开台");
+            $("#myModal").modal("show");
+            }
+
+        });
+
+
     </script>
     <div id="right">
         <div class="top">
