@@ -76,46 +76,72 @@ public class RepastOderServicelmpl implements RepastOderService {
         if (row > 0) {
             return (T) new Result(0, id);
         }
-        return (T) new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+        return (T) new Status(StatusEnum.NO_ORDER.getCODE(), StatusEnum.NO_ORDER.getEXPLAIN());
     }
 
     /**
-     * 餐饮订单添加（下订单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮订单商品添加（下订单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      *
      * @param order      订单信息
      * @param orderGoods 订单食品明细信息
      * @throws Exception
      */
     @Override
-    public void addOrderGoodsService(Order order, List<OrderGoods> orderGoods) throws Exception {
-        String id = this.orderId.getOrderId().toString();
-        order.setId(id);
+    public void addOrderGoodsService(List<OrderGoods> orderGoods) throws Exception {
+        String id = orderGoods.get(0).getId();
         for (int i = 0, len = orderGoods.size(); i < len; ++i) {
             orderGoods.get(i).setId(this.uuid.getUUID().toString());
             orderGoods.get(i).setOid(id);
         }
-        this.dao.addRepastOrderDao(order);
         this.dao.addRepastOrderGoodsDao(orderGoods);
     }
 
     /**
-     * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
+     * 餐饮预订单开台订单修改（修改订单）业务方法，用于处理预订之后的顾客临时调整用餐信息时,
+     * 产生相应订单以便于收银获取相关订单数据信息
      *
-     * @param msg        订单结算信息
+     * @param msg 订单结算信息
+     * @return 更新结果
+     * @throws Exception
+     */
+    @Override
+    public Status updateRepastOrderService(Order msg) throws Exception {
+        int row = this.dao.updateRepastOrderDao(msg);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
+    }
+
+    /**
+     * 餐饮订单商品更新（结算订单）业务方法，用于前台收银结算相关订单
+     *
      * @param orderGoods 订单商品结算明细信息
      * @return 结算信息
      * @throws Exception
      */
     @Override
-    public Status updateRepastOrderService(Order msg, List<OrderGoods> orderGoods) throws Exception {
-        int num = this.dao.updateRepastOrderDao(msg);
-        if (num > 0) {
-            int num1 = this.dao.updateRepastOrderGoodsDao(orderGoods);
-            if (num1 > 0) {
-                return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
-            }
-            return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
+    public Status updateRepastOrderService(List<OrderGoods> orderGoods) throws Exception {
+        int row = this.dao.updateRepastOrderGoodsDao(orderGoods);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }
         return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
+    }
+
+    /**
+     * 餐饮订单删除（取消订单）业务方法，用于预订单处于取消状态时删除该预订单所产生的记录数据
+     *
+     * @param id 订单编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Override
+    public Status deteleRepastOrderServicr(String id) throws Exception {
+        int row = this.dao.deleteRepastOrderDao(id);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DEL_ORDER.getCODE(), StatusEnum.DEL_ORDER.getEXPLAIN());
     }
 }

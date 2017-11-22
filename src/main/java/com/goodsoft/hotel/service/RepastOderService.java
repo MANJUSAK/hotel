@@ -36,23 +36,41 @@ public interface RepastOderService {
     <T> T addOrderService(Order order) throws Exception;
 
     /**
-     * 餐饮订单添加（下订单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮订单商品添加（下订单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      *
      * @param order      订单信息
      * @param orderGoods 订单食品明细信息
      * @throws Exception
      */
-    void addOrderGoodsService(Order order, List<OrderGoods> orderGoods) throws Exception;
+    void addOrderGoodsService(List<OrderGoods> orderGoods) throws Exception;
 
     /**
-     * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
+     * 餐饮预订单开台订单修改（下订单）业务方法，用于处理预订之后的顾客临时调整用餐信息已产生相应订单以便于收银获取相关订单数据信息
+     *
+     * @param msg 订单结算信息
+     * @return 更新结果
+     * @throws Exception
+     */
+    Status updateRepastOrderService(Order msg) throws Exception;
+
+    /**
+     * 餐饮订单商品更新（结算订单）业务方法，用于前台收银结算相关订单
      *
      * @param msg        订单结算信息
      * @param orderGoods 订单商品结算明细信息
      * @return 结算信息
      * @throws Exception
      */
-    Status updateRepastOrderService(Order msg, List<OrderGoods> orderGoods) throws Exception;
+    Status updateRepastOrderService(List<OrderGoods> orderGoods) throws Exception;
+
+    /**
+     * 餐饮订单删除（取消订单）业务方法，用于预订单处于取消状态时删除该预订单所产生的记录数据
+     *
+     * @param id 订单编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    Status deteleRepastOrderServicr(String id) throws Exception;
 
 
 }

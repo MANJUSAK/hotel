@@ -35,4 +35,7 @@ public interface RepastOrderDao {
     //餐饮订单商品更新（用于结算订单）
     int updateRepastOrderGoodsDao(List<OrderGoods> msg) throws Exception;
 
+    //餐饮订单取消
+    int deleteRepastOrderDao(@Param("id") String id) throws Exception;
+
 }
