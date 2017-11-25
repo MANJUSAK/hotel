@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -109,13 +110,20 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/update/order/goods/data.shtml", method = RequestMethod.POST)
-    public Status updateOrderService(@RequestBody List<OrderGoods> msg) {
-        try {
-            return this.service.updateRepastOrderService(msg);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+    public Status updateOrderService(Order order, RepastOrderParam msg) {
+        if (msg != null) {
+            List<OrderGoods> orderGoods = msg.getMsg();
+            if (orderGoods.size() > 0) {
+                try {
+                    return this.service.updateRepastOrderService(order, orderGoods);
+                } catch (Exception e) {
+                    this.logger.error(e.toString());
+                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                }
+            }
+            return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
         }
+        return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
     }
 
     /**

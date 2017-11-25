@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.goodsoft.hotel.domain.dao.CookBookDao;
 import com.goodsoft.hotel.domain.entity.cookbook.*;
+import com.goodsoft.hotel.domain.entity.param.MeansParam;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -85,9 +86,11 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T queryMenuTypeService() throws Exception {
-        List<MenuType> data = this.dao.queryMenuTypeDao();
-        if (data.size() > 0) {
+    public <T> T queryMenuTypeService(PageParam page) throws Exception {
+        Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
+        List<MenuType> list = this.dao.queryMenuTypeDao();
+        if (list.size() > 0) {
+            PageInfo<MenuType> data = new PageInfo<MenuType>(list);
             return (T) new Result(0, data);
         }
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -192,6 +195,31 @@ public class CookBookServicelmpl implements CookBookService {
     }
 
     /**
+     * 餐饮套餐查询业务方法，用于前台点餐时具体获取套餐系列菜品以及获取套餐具体明细
+     *
+     * @param page 分页信息
+     * @param <T>
+     * @return 查询结果
+     * @throws Exception
+     */
+    @Override
+    public <T> T querySetMealDao(PageParam page) throws Exception {
+        Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
+        List<SetMeal> list = this.dao.querySetMealDao();
+        int len = list.size();
+        if (len > 0) {
+            for (int i = 0; i < len; ++i) {
+                List<SetMealDetail> detailList = this.dao.querySetMealDetailDao(list.get(i).getId());
+                list.get(i).setMealDetails(detailList);
+            }
+            PageInfo<SetMeal> data = new PageInfo<SetMeal>(list);
+            return (T) new Result(0, data);
+        }
+        return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+    }
+
+
+    /**
      * 菜单类别与小类数据添加
      *
      * @param msg1 菜单类别及小类数据
@@ -199,18 +227,14 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     @Transactional
-    public void addMenuTypeService(List<MenuSubType> msg1) throws Exception {
-        if (msg1 != null) {
-            //设置菜单类别编号用于关联小类别表
-            String id = this.uuid.getUUID().toString();
-            //实例化类别实体用于设置类别数据
-            MenuType msg = new MenuType();
-            msg.setId(id);
-            msg.settName(msg1.get(0).gettName());
-            //移除集合中的类别数据
-            msg1.remove(0);
-            int len = msg1.size();
+    public void addMenuTypeService(MenuType msg) throws Exception {
+        //设置菜单类别编号用于关联小类别表
+        String id = this.uuid.getUUID().toString();
+        msg.setId(id);
+        if (msg.getMenuSubTypes() != null) {
+            int len = msg.getMenuSubTypes().size();
             if (len > 0) {
+                List<MenuSubType> msg1 = msg.getMenuSubTypes();
                 for (int i = 0; i < len; ++i) {
                     msg1.get(i).setId(this.uuid.getUUID().toString());
                     //设置小类别表关联类别表id
@@ -219,9 +243,9 @@ public class CookBookServicelmpl implements CookBookService {
                 //小类别数据添加
                 this.dao.addMenuSubtypeDao(msg1);
             }
-            //类别数据添加
-            this.dao.addMenuTypeDao(msg);
         }
+        //类别数据添加
+        this.dao.addMenuTypeDao(msg);
     }
 
     /**
@@ -232,43 +256,37 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     @Transactional
-    public void addMenuService(List<Menu> msg) throws Exception {
-        if (msg != null) {
-            //获取类别编号用于关联类别表
-            String tid = msg.get(0).getTid();
-            //获取小类别编号用于关联小类别表
-            String stid = msg.get(0).getStid();
-            //移除集合中类别与小类别数据
-            msg.remove(0);
-            int len = msg.size();
-            //设置菜单添加时间
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            if (len > 0) {
-                //设置库存量数据集合容器
-                List<Inventory> msg1 = new ArrayList<Inventory>();
-                for (int i = 0; i < len; ++i) {
-                    //实例化库存量实体，用于设置菜单库存量数据
-                    Inventory inv = new Inventory();
-                    //设置菜单数据编号
-                    String id = this.uuid.getUUID().toString();
-                    //设置库存量数据编号
-                    String ids = this.uuid.getUUID().toString();
-                    msg.get(i).setId(id);
-                    msg.get(i).setTid(tid);
-                    msg.get(i).setStid(stid);
-                    inv.setId(ids);
-                    inv.setNum(msg.get(i).getNum());
-                    inv.setDate(date);
-                    //设置关联菜单表id
-                    inv.setCbid(id);
-                    msg1.add(inv);
-                }
-                //库存量数据添加
-                this.dao.addInventoryDao(msg1);
-            }
-            //菜单数据添加
-            this.dao.addMenuDao(msg);
+    public void addMenuService(MenuSubType msg) throws Exception {
+        List<Menu> menus = msg.getMenus();
+        //获取类别编号用于关联类别表
+        String tid = msg.getTid();
+        //获取小类别编号用于关联小类别表
+        String stid = msg.getSbid();
+        //设置菜单添加时间
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        //设置库存量数据集合容器
+        List<Inventory> msg1 = new ArrayList<Inventory>();
+        for (int i = 0, len = menus.size(); i < len; ++i) {
+            //实例化库存量实体，用于设置菜单库存量数据
+            Inventory inv = new Inventory();
+            //设置菜单数据编号
+            String id = this.uuid.getUUID().toString();
+            //设置库存量数据编号
+            String ids = this.uuid.getUUID().toString();
+            menus.get(i).setId(id);
+            menus.get(i).setTid(tid);
+            menus.get(i).setStid(stid);
+            inv.setId(ids);
+            inv.setNum(menus.get(i).getNum());
+            inv.setDate(date);
+            //设置关联菜单表id
+            inv.setCbid(id);
+            msg1.add(inv);
         }
+        //库存量数据添加
+        this.dao.addInventoryDao(msg1);
+        //菜单数据添加
+        this.dao.addMenuDao(menus);
     }
 
     /**
@@ -279,22 +297,16 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     @Transactional
-    public void addMenuMeansService(List<MenuMeans> msg) throws Exception {
-        if (msg != null) {
-            //获取菜单编号用于关联菜单表，并移除集合中的菜单编号
-            String cbid = msg.get(0).getCbid();
-            msg.remove(0);
-            int len = msg.size();
-            //设置做法数据
-            if (len > 0) {
-                for (int i = 0; i < len; ++i) {
-                    msg.get(i).setId(this.uuid.getUUID().toString());
-                    //设置关联菜单表id
-                    msg.get(i).setCbid(cbid);
-                }
-                this.dao.addMenuMeansDao(msg);
-            }
+    public void addMenuMeansService(MeansParam msg) throws Exception {
+        //获取菜单编号用于关联菜单表，并移除集合中的菜单编号
+        String cbid = msg.getCbid();
+        List<MenuMeans> means = msg.getMeans();
+        for (int i = 0, len = means.size(); i < len; ++i) {
+            means.get(i).setId(this.uuid.getUUID().toString());
+            //设置关联菜单表id
+            means.get(i).setCbid(cbid);
         }
+        this.dao.addMenuMeansDao(means);
     }
 
     /**
@@ -305,21 +317,17 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Transactional
     @Override
-    public void addMenuMeansDetailService(List<MenuMeansDetail> msg) throws Exception {
+    public void addMenuMeansDetailService(MenuMeans msg) throws Exception {
         if (msg != null) {
             //获取做法编号用于关联详细做法，并移除集合中的做法编号
-            String mid = msg.get(0).getMid();
-            msg.remove(0);
-            int len = msg.size();
-            //设置详细做法数据
-            if (len > 0) {
-                for (int i = 0; i < len; ++i) {
-                    msg.get(i).setId(this.uuid.getUUID().toString());
-                    //设置关联做法表id
-                    msg.get(i).setMid(mid);
-                }
-                this.dao.addMenuMeansDetailDao(msg);
+            String mid = msg.getMdid();
+            List<MenuMeansDetail> mdt = msg.getMeansDetails();
+            for (int i = 0, len = mdt.size(); i < len; ++i) {
+                mdt.get(i).setId(this.uuid.getUUID().toString());
+                //设置关联做法表id
+                mdt.get(i).setMid(mid);
             }
+            this.dao.addMenuMeansDetailDao(mdt);
         }
     }
 
@@ -331,37 +339,20 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     @Transactional
-    public void addSetMealService(List<SetMealDetail> msg) throws Exception {
-        if (msg != null) {
-            //设置套餐编号，用于关联套餐明细表
-            String id = this.uuid.getUUID().toString();
-            //设置套餐数据
-            SetMeal meal = new SetMeal();
-            meal.setId(id);
-            meal.setSmName(msg.get(0).getSmName());
-            meal.setIsdd(msg.get(0).getIsdd());
-            meal.setIsNo(msg.get(0).getIsNo());
-            meal.setStPrice(msg.get(0).getStPrice());
-            //设置套餐明细数据，需移除套餐数据以保证数据单一性
-            msg.remove(0);
-            int len = msg.size();
-            if (len > 0) {
-                for (int i = 0; i < len; ++i) {
-                    //若明细数据不合法需移除
-                    if (msg.get(i).getCbid() == null) {
-                        msg.remove(i);
-                        --i;
-                        len = msg.size();
-                    }
-                    msg.get(i).setId(this.uuid.getUUID().toString());
-                    //关联套餐编号
-                    msg.get(i).setSmid(id);
-                }
-                //套餐明细数据添加
-                this.dao.addSetMealDetailDao(msg);
-            }
-            //套餐数据添加
-            this.dao.addSetMealDao(meal);
+    public void addSetMealService(SetMeal msg) throws Exception {
+        //设置套餐编号，用于关联套餐明细表
+        String id = this.uuid.getUUID().toString();
+        msg.setId(id);
+        List<SetMealDetail> mealDetails = msg.getMealDetails();
+        for (int i = 0, len = mealDetails.size(); i < len; ++i) {
+            mealDetails.get(i).setId(this.uuid.getUUID().toString());
+            //关联套餐编号
+            mealDetails.get(i).setSmid(id);
         }
+        //套餐明细数据添加
+        this.dao.addSetMealDetailDao(mealDetails);
+        //套餐数据添加
+        this.dao.addSetMealDao(msg);
     }
+
 }

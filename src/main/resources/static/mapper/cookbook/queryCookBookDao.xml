@@ -115,5 +115,23 @@
             </if>
         </where>
     </select>
+    <!--套餐数据查询-->
+    <resultMap id="setMealInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
+        <id property="smid" column="SMID"/>
+        <result property="id" column="ID"/>
+        <result property="smName" column="SMNAME"/>
+        <result property="stPrice" column="TC_PRICE"/>
+        <result property="isNo" column="SM_ID_DISCOUNT"/>
+        <result property="isdd" column="IS_DD"/>
+        <result property="smUnit" column="SM_UNIT"/>
+    </resultMap>
+    <select id="querySetMealDao" resultMap="setMealInfo">
+    SELECT `ID`,`SMID`,`SMNAME`,`TC_PRICE`,`SM_ID_DISCOUNT`,`IS_DD`,`SM_UNIT` FROM `gs_cookbook_setmeal` ORDER BY `SMID` DESC
+    </select>
+    <!--套餐详情数据查询-->
+    <select id="querySetMealDetailDao" parameterType="string" resultMap="menuInfo">
+    SELECT b.CBID,b.CBNAME,b.UNIT,b.IS_DISCOUNT,b.SPEC1,b.SPEC2,b.SPEC3,b.SPEC4,b.SPEC5,b.PRICE1,b.PRICE2,b.PRICE3,
+    b.PRICE4,b.PRICE5 FROM gs_cookbook_setmeal_detal a LEFT JOIN gs_cookbook b ON a.CBID=b.ID WHERE a.SMID=#{smid}
+    </select>
 </mapper>
         <!--mapper 菜单管理数据查询 end -->

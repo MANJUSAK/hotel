@@ -1,5 +1,6 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,6 +18,8 @@ public class SetMeal implements java.io.Serializable {
     private int isdd;//是否可单点（0为true/1为false）
     private int isNo;//是否打折（0为true/1为false）
     private double stPrice;//套餐价格
+    private String smUnit;//套餐单位
+    private List<SetMealDetail> mealDetails;
 
     public String getId() {
         return id;
@@ -66,17 +69,34 @@ public class SetMeal implements java.io.Serializable {
         this.stPrice = stPrice;
     }
 
+    public String getSmUnit() {
+        return smUnit;
+    }
+
+    public void setSmUnit(String smUnit) {
+        this.smUnit = smUnit;
+    }
+
+    public List<SetMealDetail> getMealDetails() {
+        return mealDetails;
+    }
+
+    public void setMealDetails(List<SetMealDetail> mealDetails) {
+        this.mealDetails = mealDetails;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SetMeal)) return false;
         SetMeal setMeal = (SetMeal) o;
         return Objects.equals(id, setMeal.id) &&
+                Objects.equals(smUnit, setMeal.smUnit) &&
                 Objects.equals(smName, setMeal.smName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, smName);
+        return Objects.hash(id, smUnit, smName);
     }
 }

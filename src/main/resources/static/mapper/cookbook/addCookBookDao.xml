@@ -51,7 +51,7 @@
     </insert>
     <!--套餐数据添加-->
     <insert id="addSetMealDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
-    INSERT INTO `gs_cookbook_setmeal`(`ID`,`SMNAME`,`TC_PRICE`,`SM_ID_DISCOUNT`,`IS_DD`) VALUES (#{id},#{smName},#{stPrice},#{isNo},#{isdd})
+    INSERT INTO `gs_cookbook_setmeal`(`ID`,`SMNAME`,`TC_PRICE`,`SM_ID_DISCOUNT`,`IS_DD`,`SM_UNIT`) VALUES (#{id},#{smName},#{stPrice},#{isNo},#{isdd},#{smUnit})
     </insert>
     <!--套餐内容数据添加-->
     <insert id="addSetMealDetailDao" parameterType="list">

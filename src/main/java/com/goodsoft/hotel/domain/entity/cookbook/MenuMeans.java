@@ -1,5 +1,6 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -15,6 +16,8 @@ public class MenuMeans implements java.io.Serializable {
     private int mid;//做法编号
     private String mName;//做法名
     private String cbid;//关联菜单表id
+    private String mdid;//做法编号，用于获取前台传入的做法编号
+    private List<MenuMeansDetail> meansDetails;
 
     public String getId() {
         return id;
@@ -48,6 +51,22 @@ public class MenuMeans implements java.io.Serializable {
         this.cbid = cbid;
     }
 
+    public String getMdid() {
+        return mdid;
+    }
+
+    public void setMdid(String mdid) {
+        this.mdid = mdid;
+    }
+
+    public List<MenuMeansDetail> getMeansDetails() {
+        return meansDetails;
+    }
+
+    public void setMeansDetails(List<MenuMeansDetail> meansDetails) {
+        this.meansDetails = meansDetails;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,11 +75,12 @@ public class MenuMeans implements java.io.Serializable {
         return mid == menuMeans.mid &&
                 Objects.equals(id, menuMeans.id) &&
                 Objects.equals(mName, menuMeans.mName) &&
+                Objects.equals(mdid, menuMeans.mdid) &&
                 Objects.equals(cbid, menuMeans.cbid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mid, mName, cbid);
+        return Objects.hash(id, mid, mName, mdid, cbid);
     }
 }

@@ -61,7 +61,7 @@ public interface RepastOderService {
      * @return 结算信息
      * @throws Exception
      */
-    Status updateRepastOrderService(List<OrderGoods> orderGoods) throws Exception;
+    Status updateRepastOrderService(Order order, List<OrderGoods> orderGoods) throws Exception;
 
     /**
      * 餐饮订单删除（取消订单）业务方法，用于预订单处于取消状态时删除该预订单所产生的记录数据

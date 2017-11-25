@@ -30,6 +30,14 @@ public class Menu implements java.io.Serializable {
     private String spec4;//规格4
     private String spec5;//规格5
 
+    public Menu() {
+        this.spec1 = "小";
+        this.spec2 = "中";
+        this.spec3 = "大";
+        this.spec4 = " ";
+        this.spec5 = " ";
+    }
+
     public String getId() {
         return id;
     }
@@ -83,7 +91,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setUnit(String unit) {
-        this.unit = unit == null ? "" : unit.trim();
+        this.unit = unit == null ? " " : unit.trim();
     }
 
     public int getIsNo() {
@@ -99,7 +107,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice1(double price1) {
-        this.price1 = price1 <= 0 ? 0 : price1;
+        this.price1 = price1 < 0 ? Math.abs(price1) : price1;
     }
 
     public double getPrice2() {
@@ -107,7 +115,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice2(double price2) {
-        this.price2 = price2 <= 0 ? 0 : price2;
+        this.price2 = price2 < 0 ? Math.abs(price2) : price2;
     }
 
     public double getPrice3() {
@@ -115,7 +123,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setPrice3(double price3) {
-        this.price3 = price3 <= 0 ? 0 : price3;
+        this.price3 = price3 < 0 ? Math.abs(price3) : price3;
     }
 
     public double getPrice4() {
@@ -139,7 +147,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec1(String spec1) {
-        this.spec1 = spec1 == null ? "" : spec1.trim();
+        this.spec1 = spec1 == null ? " " : spec1.trim();
     }
 
     public String getSpec2() {
@@ -147,7 +155,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec2(String spec2) {
-        this.spec2 = spec2 == null ? "" : spec2.trim();
+        this.spec2 = spec2 == null ? " " : spec2.trim();
     }
 
     public String getSpec3() {
@@ -155,7 +163,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec3(String spec3) {
-        this.spec3 = spec3 == null ? "" : spec3.trim();
+        this.spec3 = spec3 == null ? " " : spec3.trim();
     }
 
     public String getSpec4() {
@@ -163,7 +171,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec4(String spec4) {
-        this.spec4 = spec4 == null ? "" : spec4.trim();
+        this.spec4 = spec4 == null ? " " : spec4.trim();
     }
 
     public String getSpec5() {
@@ -171,7 +179,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setSpec5(String spec5) {
-        this.spec5 = spec5 == null ? "" : spec5.trim();
+        this.spec5 = spec5 == null ? " " : spec5.trim();
     }
 
     @Override

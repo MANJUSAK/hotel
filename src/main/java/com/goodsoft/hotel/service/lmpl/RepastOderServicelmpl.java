@@ -77,6 +77,7 @@ public class RepastOderServicelmpl implements RepastOderService {
         order.setId(id);
         int row = this.dao.addRepastOrderDao(order);
         if (row > 0) {
+            this.cydao.updateTableState(order.getCtid(), "4");
             return (T) new Result(0, id);
         }
         return (T) new Status(StatusEnum.NO_ORDER.getCODE(), StatusEnum.NO_ORDER.getEXPLAIN());
@@ -111,24 +112,29 @@ public class RepastOderServicelmpl implements RepastOderService {
     public Status updateRepastOrderService(Order msg) throws Exception {
         int row = this.dao.updateRepastOrderDao(msg);
         if (row > 0) {
-            /*int row1 = this.cydao;*/
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }
         return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
     }
 
     /**
-     * 餐饮订单商品更新（结算订单）业务方法，用于前台收银结算相关订单
+     * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
      *
      * @param orderGoods 订单商品结算明细信息
      * @return 结算信息
      * @throws Exception
      */
     @Override
-    public Status updateRepastOrderService(List<OrderGoods> orderGoods) throws Exception {
-        int row = this.dao.updateRepastOrderGoodsDao(orderGoods);
+    public Status updateRepastOrderService(Order order, List<OrderGoods> orderGoods) throws Exception {
+        int row = this.dao.updateRepastOrderDao(order);
         if (row > 0) {
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            int row1 = this.dao.updateRepastOrderGoodsDao(orderGoods);
+            if (row1 > 0) {
+                //更新餐台状态为清洁中
+                this.cydao.updateTableState(order.getCtid(), "7");
+                return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            }
+            return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
         }
         return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
     }

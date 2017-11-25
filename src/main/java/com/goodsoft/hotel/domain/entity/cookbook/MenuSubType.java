@@ -1,5 +1,6 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,6 +17,8 @@ public class MenuSubType implements java.io.Serializable {
     private String tName;//类型名称
     private String stName;//小类型名称
     private String tid;//关联类别表id
+    private String sbid;//前台传入小类编号
+    private List<Menu> menus;//菜单信息容器
 
     public String getId() {
         return id;
@@ -57,6 +60,22 @@ public class MenuSubType implements java.io.Serializable {
         this.tid = tid;
     }
 
+    public String getSbid() {
+        return sbid;
+    }
+
+    public void setSbid(String sbid) {
+        this.sbid = sbid;
+    }
+
+    public List<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(List<Menu> menus) {
+        this.menus = menus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,11 +84,12 @@ public class MenuSubType implements java.io.Serializable {
         return stid == that.stid &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(stName, that.stName) &&
+                Objects.equals(sbid, that.sbid) &&
                 Objects.equals(tid, that.tid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, stid, stName, tid);
+        return Objects.hash(id, stid, stName, stid, tid);
     }
 }

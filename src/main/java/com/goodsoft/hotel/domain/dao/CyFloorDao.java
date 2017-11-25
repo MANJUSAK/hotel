@@ -1,5 +1,6 @@
 package com.goodsoft.hotel.domain.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,10 +19,12 @@ public interface CyFloorDao {
 
     /**
      * 修改餐台状态
-     * @param map  tableId  status
+     *
+     * @param tableId
+     * @param status
      * @return
      */
-    public Integer updateTableState(Map map);
+    public Integer updateTableState(@Param("tableId") String tableId, @Param("status") String status);
 
 
 }

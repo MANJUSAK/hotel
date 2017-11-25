@@ -15,7 +15,7 @@ public class Order implements java.io.Serializable {
 
     private static final long serialVersionUID = -5502168041100514292L;
     private String id;//订单编号
-    private String kzNum;//可账号
+    private String kzNum;//客账号
     private String consumer;//客人姓名
     private String ktTime;//开台时间
     private double fwRate;//服务费率
@@ -323,11 +323,11 @@ public class Order implements java.io.Serializable {
                 Objects.equals(timeMinute, order.timeMinute) &&
                 Objects.equals(paymentType, order.paymentType) &&
                 Objects.equals(remarks, order.remarks) &&
-                Objects.equals(orderGoods, order.orderGoods);
+                Objects.equals(ctid, order.ctid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, orderGoods);
+        return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, ctid);
     }
 }

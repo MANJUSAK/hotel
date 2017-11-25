@@ -37,6 +37,12 @@ public interface CookBookDao {
     //菜单做法详情查询，用于前台点餐时具体做法数据展示
     List<MenuMeansDetail> queryMenuMeansDetailDao(@Param("mid") String mid) throws Exception;
 
+    //餐饮套餐查询，用于前台点餐时具体获取套餐系列菜品
+    List<SetMeal> querySetMealDao() throws Exception;
+
+    //餐饮套餐详细菜品查询，用于前台点餐时具体获取套餐系列具体菜品数据
+    List<SetMealDetail> querySetMealDetailDao(@Param("smid") String smid) throws Exception;
+
     //类别数据添加
     void addMenuTypeDao(MenuType msg) throws Exception;
 
