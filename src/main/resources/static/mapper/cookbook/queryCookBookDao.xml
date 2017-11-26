@@ -7,35 +7,31 @@
     <!--第三方缓存技术 ehcache-->
     <cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>
     <!--菜单子类型数据过滤-->
-    <resultMap id="MenuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
+    <resultMap id="menuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
+        <id property="sitd" column="STID"/>
         <result property="id" column="ID"/>
         <result property="stName" column="STNAME"/>
-        <result property="sitd" column="STID"/>
         <result property="tid" column="TID"/>
     </resultMap>
-    <select id="queryMenuStypeByIdDao" parameterType="string" resultMap="MenuSubtypeInfo">
+    <select id="queryMenuStypeByIdDao" parameterType="string" resultMap="menuSubtypeInfo">
         SELECT ID,STNAME FROM gs_cookbook_subtype
         <include refid="query_menu_subtype_condition"/>
+        ORDER BY `STID` DESC
     </select>
     <!--菜单类型数据查询-->
     <resultMap id="menuTypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuType">
+        <id column="TID" property="tid"/>
         <result column="ID" property="id"/>
         <result column="TNAME" property="tName"/>
-        <result column="TID" property="tid"/>
     </resultMap>
     <select id="queryMenuTypeDao" resultMap="menuTypeInfo">
-        SELECT `ID`,`TNAME`,`TID` FROM `gs_cookbook_type`
+        SELECT `ID`,`TNAME`,`TID` FROM `gs_cookbook_type` ORDER BY `TID` DESC
     </select>
     <!--菜单子类型数据查询-->
-    <resultMap id="menuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
-        <result property="id" column="ID"/>
-        <result property="stName" column="STNAME"/>
-        <result property="stid" column="STID"/>
-        <result property="tid" column="TID"/>
-    </resultMap>
     <select id="queryMenuSubtypeDao" resultMap="menuSubtypeInfo" parameterType="string">
         SELECT `ID`,`STNAME`,`STID`,`TID` FROM `gs_cookbook_subtype`
         <include refid="query_menu_subtype_condition"/>
+        ORDER BY `STID` DESC
     </select>
     <!--查询子类型数据条件sql复用-->
     <sql id="query_menu_subtype_condition">
@@ -56,6 +52,7 @@
                 AND TID=#{tid}
             </if>
         </where>
+        ORDER BY `CBID` DESC
     </select>
     <!--菜单数据查询-->
     <resultMap id="menuInfo" type="com.goodsoft.hotel.domain.entity.cookbook.Menu">
@@ -90,10 +87,10 @@
     </select>
     <!--菜单做法数据查询-->
     <resultMap id="menuMeansInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuMeans">
+        <id column="MID" property="mid"/>
         <result column="ID" property="id"/>
         <result column="MNAME" property="mName"/>
         <result column="CBID" property="cbid"/>
-        <result column="MID" property="mid"/>
     </resultMap>
     <select id="queryMenuMeansDao" parameterType="string" resultMap="menuMeansInfo">
         SELECT `ID`,`MNAME`,`CBID`,`MID` FROM `gs_cookbook_means`
@@ -102,10 +99,14 @@
                 `CBID`=#{cbid}
             </if>
         </where>
+        ORDER BY `MID` DESC
     </select>
     <!--菜单做法详情数据查询-->
     <resultMap id="menuMeansDetailInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetail">
-        <result property="" column=""/>
+        <id column="MDID" property="mdid"/>
+        <result column="ID" property="id"/>
+        <result column="MDNAME" property="mdName"/>
+        <result column="MID" property="mid"/>
     </resultMap>
     <select id="queryMenuMeansDetailDao" parameterType="string" resultMap="menuMeansDetailInfo">
         SELECT `ID`,`MID`,`MDID`,`MDNAME` FROM `gs_cookbook_means_detal`
@@ -114,6 +115,7 @@
                 AND `MID`=#{mid}
             </if>
         </where>
+        ORDER BY `MDID` DESC
     </select>
     <!--套餐数据查询-->
     <resultMap id="setMealInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">

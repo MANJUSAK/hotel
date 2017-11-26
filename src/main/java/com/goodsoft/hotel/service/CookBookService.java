@@ -6,6 +6,7 @@ import com.goodsoft.hotel.domain.entity.cookbook.MenuType;
 import com.goodsoft.hotel.domain.entity.cookbook.SetMeal;
 import com.goodsoft.hotel.domain.entity.param.MeansParam;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.result.Status;
 
 /**
  * description:
@@ -57,5 +58,41 @@ public interface CookBookService {
 
     //套餐数据添加
     void addSetMealService(SetMeal msg) throws Exception;
+
+    //菜单类别与小类数据更新
+    Status updateMenuTypeService(MenuType msg) throws Exception;
+
+    //菜单数据、库存量数据更新
+    Status updateMenuService(MenuSubType msg) throws Exception;
+
+    //菜单做法数据更新
+    Status updateMenuMeansService(MeansParam msg) throws Exception;
+
+    //菜单详细做法数据更新
+    Status updateMenuMeansDetailService(MenuMeans msg) throws Exception;
+
+    //套餐数据更新
+    Status updateSetMealService(SetMeal msg) throws Exception;
+
+    //部门类别数据删除
+    Status deleteMenuTypeService(String... id) throws Exception;
+
+    //小类数据删除
+    Status deleteMenuSubTypeService(String... id) throws Exception;
+
+    //菜单数据、库存量数据删除
+    Status deleteMenuService(String... id) throws Exception;
+
+    //菜单做法数据删除
+    Status deleteMenuMeansService(String... id) throws Exception;
+
+    //菜单详细做法数据删除
+    Status deleteMenuMeansDetailService(String... id) throws Exception;
+
+    //套餐数据删除
+    Status deleteSetMealService(String... id) throws Exception;
+
+    //套餐明细数据删除
+    Status deleteSetMealDetailService(String... id) throws Exception;
 
 }

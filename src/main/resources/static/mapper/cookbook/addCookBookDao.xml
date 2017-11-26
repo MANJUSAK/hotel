@@ -30,34 +30,35 @@
     </insert>
     <!--菜单库存量添加-->
     <insert id="addInventoryDao" parameterType="list">
-        INSERT INTO `gs_cookbook_inventory` (`ID`,`KC_DATE`,`KC_NUM`,`CBID`) VALUES
+        INSERT INTO `gs_cookbook_inventory` (`ID`,`KC_DATE`,`KC_NUM`,`TID`,`STID`,`CBID`) VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.date},#{item.num},#{item.cbid})
+            (#{item.id},#{item.date},#{item.num},#{item.tid},#{item.stid},#{item.cbid})
         </foreach>
     </insert>
     <!--菜单做法添加-->
     <insert id="addMenuMeansDao" parameterType="list">
-        INSERT INTO `gs_cookbook_means` (`ID`,`MNAME`,`CBID`) VALUES
+        INSERT INTO `gs_cookbook_means` (`ID`,`MNAME`,`TID`,`STID`,`CBID`) VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.mName},#{item.cbid})
+            (#{item.id},#{item.mName},#{item.tid},#{item.stid},#{item.cbid})
         </foreach>
     </insert>
     <!--菜单做法详情添加-->
     <insert id="addMenuMeansDetailDao" parameterType="list">
-        INSERT INTO `gs_cookbook_means_detal` (`ID`,`MID`,`MDNAME`) VALUES
+        INSERT INTO `gs_cookbook_means_detal` (`ID`,`TID`,`STID`,`CBID`,`MID`,`MDNAME`) VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.mid},#{item.mdName})
+            (#{item.id},#{item.tid},#{item.stid},#{item.cbid},#{item.mid},#{item.mdName})
         </foreach>
     </insert>
     <!--套餐数据添加-->
     <insert id="addSetMealDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
-    INSERT INTO `gs_cookbook_setmeal`(`ID`,`SMNAME`,`TC_PRICE`,`SM_ID_DISCOUNT`,`IS_DD`,`SM_UNIT`) VALUES (#{id},#{smName},#{stPrice},#{isNo},#{isdd},#{smUnit})
+    INSERT INTO `gs_cookbook_setmeal`(`ID`,`SMNAME`,`TC_PRICE`,`SM_ID_DISCOUNT`,`IS_DD`,`SM_UNIT`)
+    VALUES (#{id},#{smName},#{stPrice},#{isNo},#{isdd},#{smUnit})
     </insert>
     <!--套餐内容数据添加-->
     <insert id="addSetMealDetailDao" parameterType="list">
-        INSERT INTO `gs_cookbook_setmeal_detal`(`ID`,`CBID`,`SMID`) VALUES
+        INSERT INTO `gs_cookbook_setmeal_detal`(`ID`,`TID`,`STID`,`CBID`,`SMID`) VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.cbid},#{item.smid})
+            (#{item.id},#{item.tid},#{item.stid},#{item.cbid},#{item.smid})
         </foreach>
     </insert>
 </mapper>

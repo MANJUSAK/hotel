@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--@author 严彬荣，version v1.0-->
+<!--mapper 菜单管理数据删除 start -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<mapper namespace="com.goodsoft.hotel.domain.dao.CookBookDao">
+    <!--第三方缓存技术 ehcache-->
+    <cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>
+    <!--
+    if标签中rel数字解释说明：
+    0：代表本表删除。
+    1：代表父表删除
+    2：代表子表删除
+    3：代表子孙表删除
+    4：代表子孙子表删除
+    10：代表套餐明细表关联菜品表菜品父表删除数据
+    11：代表套餐明细表关联菜品表菜品子表删除数据
+    12：代表套餐明细表关联菜品表菜品表删除数据
+    -->
+    <!--级联删除sql复用-->
+    <sql id="delete_relevance">
+        IN (
+        <foreach collection="id" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </sql>
+    <!--部门类别删除-->
+    <delete id="deleteMenuTypeDao" parameterType="java.util.Arrays">
+        DELETE FROM `gs_cookbook_type` WHERE `ID`
+        <include refid="delete_relevance"/>
+    </delete>
+    <!--小类删除-->
+    <delete id="deleteMenuSubTypeDao" parameterType="object">
+        DELETE FROM `gs_cookbook_subtype` WHERE
+        <if test="rel ==0">
+            `ID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==1">
+            `TID`
+            <include refid="delete_relevance"/>
+        </if>
+    </delete>
+    <!--菜品删除-->
+    <delete id="deleteMenuDao" parameterType="object">
+        DELETE FROM `gs_cookbook` WHERE
+        <if test="rel ==0">
+            `ID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==1">
+            `TID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==2">
+            `STID`
+            <include refid="delete_relevance"/>
+        </if>
+        ;
+        DELETE FROM `gs_cookbook_inventory`
+        WHERE
+        <if test="rel ==0">
+            `CBID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==1">
+            `TID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==2">
+            `STID`
+            <include refid="delete_relevance"/>
+        </if>
+    </delete>
+    <!--菜品做法删除-->
+    <delete id="deleteMenuMeansDao" parameterType="object">
+        DELETE FROM `gs_cookbook_means` WHERE
+        <if test="rel ==0">
+            `ID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==1">
+            `TID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==2">
+            `STID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==3">
+            `CBID`
+            <include refid="delete_relevance"/>
+        </if>
+    </delete>
+    <!--菜品做法明细删除-->
+    <delete id="deleteMenuMeansDetailDao" parameterType="object">
+        DELETE FROM `gs_cookbook_means_detal` WHERE
+        <if test="rel ==0">
+            `ID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==1">
+            `TID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==2">
+            `STID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==3">
+            `CBID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==4">
+            `MID`
+            <include refid="delete_relevance"/>
+        </if>
+    </delete>
+    <!--套餐删除-->
+    <delete id="deleteSetMealDao" parameterType="java.util.Arrays">
+        DELETE FROM `gs_cookbook_setmeal` WHERE `ID`
+        <include refid="delete_relevance"/>
+    </delete>
+    <!--套餐明细删除-->
+    <delete id="deleteSetMealDetailDao" parameterType="object">
+        DELETE FROM `gs_cookbook_setmeal_detal` WHERE
+        <if test="rel ==0">
+            `ID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==1">
+            `SMID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==10">
+            `TID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==11">
+            `STID`
+            <include refid="delete_relevance"/>
+        </if>
+        <if test="rel ==12">
+            `CBID`
+            <include refid="delete_relevance"/>
+        </if>
+    </delete>
+</mapper>
+        <!--mapper 菜单管理数据删除 end -->

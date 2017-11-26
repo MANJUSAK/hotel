@@ -25,7 +25,7 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = id == null ? " " : id.trim();
     }
 
     public int getStid() {
@@ -41,7 +41,7 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void settName(String tName) {
-        this.tName = tName == null ? null : tName.trim();
+        this.tName = tName == null ? " " : tName.trim();
     }
 
     public String getStName() {
@@ -49,7 +49,7 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void setStName(String stName) {
-        this.stName = stName == null ? null : stName.trim();
+        this.stName = stName == null ? " " : stName.trim();
     }
 
     public String getTid() {
@@ -57,7 +57,7 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void setTid(String tid) {
-        this.tid = tid;
+        this.tid = tid == null ? " " : tid.trim();
     }
 
     public String getSbid() {
@@ -65,7 +65,7 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void setSbid(String sbid) {
-        this.sbid = sbid;
+        this.sbid = sbid == null ? " " : sbid.trim();
     }
 
     public List<Menu> getMenus() {

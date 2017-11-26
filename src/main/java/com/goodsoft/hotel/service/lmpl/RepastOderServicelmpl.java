@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
 import com.goodsoft.hotel.domain.entity.result.Result;
@@ -66,9 +67,11 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
-     * 餐饮预订单开台订单添加（下订单）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮预订单开台订单添加（开台）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 返回该订单号用于添加商品明细或者修改订单
      *
      * @param order 订单信息
+     * @return 下单状态
      * @throws Exception
      */
     @Override
@@ -84,27 +87,30 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
-     * 餐饮订单商品添加（下订单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮订单商品添加（打单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 用于开台后用户点餐之后数据的提交
      *
      * @param order      订单信息
      * @param orderGoods 订单食品明细信息
      * @throws Exception
      */
     @Override
-    public void addOrderGoodsService(List<OrderGoods> orderGoods) throws Exception {
-        String id = orderGoods.get(0).getId();
+    public void addOrderGoodsService(RepastOrderParam msg) throws Exception {
+        String id = msg.getId();
+        List<OrderGoods> orderGoods = msg.getMsg();
         for (int i = 0, len = orderGoods.size(); i < len; ++i) {
             orderGoods.get(i).setId(this.uuid.getUUID().toString());
             orderGoods.get(i).setOid(id);
         }
         this.dao.addRepastOrderGoodsDao(orderGoods);
+        this.cydao.updateTableState(msg.getCtid(), "8");
     }
 
     /**
-     * 餐饮预订单开台订单修改（修改订单）业务方法，用于处理预订之后的顾客临时调整用餐信息时,
+     * 餐饮预订单开台订单修改（开台后修改订单）业务方法，用于处理预订之后的顾客临时调整用餐信息时,
      * 产生相应订单以便于收银获取相关订单数据信息
      *
-     * @param msg 订单结算信息
+     * @param msg 订单信息
      * @return 更新结果
      * @throws Exception
      */
@@ -120,21 +126,17 @@ public class RepastOderServicelmpl implements RepastOderService {
     /**
      * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
      *
-     * @param orderGoods 订单商品结算明细信息
-     * @return 结算信息
+     * @param order 订单结算信息
+     * @return 结算结果
      * @throws Exception
      */
     @Override
-    public Status updateRepastOrderService(Order order, List<OrderGoods> orderGoods) throws Exception {
+    public Status checkoutRepastOrderService(Order order) throws Exception {
         int row = this.dao.updateRepastOrderDao(order);
         if (row > 0) {
-            int row1 = this.dao.updateRepastOrderGoodsDao(orderGoods);
-            if (row1 > 0) {
-                //更新餐台状态为清洁中
-                this.cydao.updateTableState(order.getCtid(), "7");
-                return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
-            }
-            return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
+            //更新餐台状态为清洁中
+            this.cydao.updateTableState(order.getCtid(), "7");
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }
         return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
     }

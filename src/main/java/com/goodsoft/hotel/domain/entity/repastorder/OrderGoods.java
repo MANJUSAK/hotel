@@ -13,7 +13,7 @@ public class OrderGoods implements java.io.Serializable {
     private static final long serialVersionUID = 6551389333680604804L;
     private String id;//订单食品编号
     private String oid;//订单编号
-    private String stid;//套餐编号
+    private String tcid;//套餐编号
     private String cbname;//食品名称
     private int spNum;//数量
     private String spec;//规格
@@ -51,12 +51,12 @@ public class OrderGoods implements java.io.Serializable {
         this.oid = oid == null ? " " : oid.trim();
     }
 
-    public String getStid() {
-        return stid;
+    public String getTcid() {
+        return tcid;
     }
 
-    public void setStid(String stid) {
-        this.stid = stid == null ? " " : stid.trim();
+    public void setTcid(String tcid) {
+        this.tcid = tcid == null ? " " : tcid.trim();
     }
 
     public String getCbname() {
@@ -226,7 +226,7 @@ public class OrderGoods implements java.io.Serializable {
         OrderGoods that = (OrderGoods) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(oid, that.oid) &&
-                Objects.equals(stid, that.stid) &&
+                Objects.equals(tcid, that.tcid) &&
                 Objects.equals(cbname, that.cbname) &&
                 Objects.equals(spec, that.spec) &&
                 Objects.equals(unit, that.unit) &&
@@ -242,6 +242,6 @@ public class OrderGoods implements java.io.Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, oid, stid, cbname, spec, unit, means, discount, batch, ratedSeat, operato, dcTime, menuType, detailRemarks);
+        return Objects.hash(id, oid, tcid, cbname, spec, unit, means, discount, batch, ratedSeat, operato, dcTime, menuType, detailRemarks);
     }
 }

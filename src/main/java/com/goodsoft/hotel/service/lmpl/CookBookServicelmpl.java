@@ -277,6 +277,8 @@ public class CookBookServicelmpl implements CookBookService {
             menus.get(i).setTid(tid);
             menus.get(i).setStid(stid);
             inv.setId(ids);
+            inv.setTid(tid);
+            inv.setStid(stid);
             inv.setNum(menus.get(i).getNum());
             inv.setDate(date);
             //设置关联菜单表id
@@ -298,11 +300,14 @@ public class CookBookServicelmpl implements CookBookService {
     @Override
     @Transactional
     public void addMenuMeansService(MeansParam msg) throws Exception {
-        //获取菜单编号用于关联菜单表，并移除集合中的菜单编号
+        String tid = msg.getTid();
+        String stid = msg.getStid();
         String cbid = msg.getCbid();
         List<MenuMeans> means = msg.getMeans();
         for (int i = 0, len = means.size(); i < len; ++i) {
             means.get(i).setId(this.uuid.getUUID().toString());
+            means.get(i).setTid(tid);
+            means.get(i).setStid(stid);
             //设置关联菜单表id
             means.get(i).setCbid(cbid);
         }
@@ -321,11 +326,17 @@ public class CookBookServicelmpl implements CookBookService {
         if (msg != null) {
             //获取做法编号用于关联详细做法，并移除集合中的做法编号
             String mid = msg.getMdid();
+            String tid = msg.getTid();
+            String stid = msg.getStid();
+            String cbid = msg.getCbid();
             List<MenuMeansDetail> mdt = msg.getMeansDetails();
             for (int i = 0, len = mdt.size(); i < len; ++i) {
                 mdt.get(i).setId(this.uuid.getUUID().toString());
                 //设置关联做法表id
                 mdt.get(i).setMid(mid);
+                mdt.get(i).setTid(tid);
+                mdt.get(i).setStid(stid);
+                mdt.get(i).setCbid(cbid);
             }
             this.dao.addMenuMeansDetailDao(mdt);
         }
@@ -353,6 +364,201 @@ public class CookBookServicelmpl implements CookBookService {
         this.dao.addSetMealDetailDao(mealDetails);
         //套餐数据添加
         this.dao.addSetMealDao(msg);
+    }
+
+    @Override
+    public Status updateMenuTypeService(MenuType msg) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Status updateMenuService(MenuSubType msg) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Status updateMenuMeansService(MeansParam msg) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Status updateMenuMeansDetailService(MenuMeans msg) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Status updateSetMealService(SetMeal msg) throws Exception {
+        return null;
+    }
+
+    /**
+     * 删除部门类别业务方法
+     *
+     * @param id 数据编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Transactional
+    @Override
+    public Status deleteMenuTypeService(String... id) throws Exception {
+        int row = this.dao.deleteMenuTypeDao(id);
+        if (row > 0) {
+            //删除部门类别数据同时删除该部门类别数据下所有相关联的数据
+            try {
+                //小类数据
+                this.dao.deleteMenuSubTypeDao(id, 1);
+                //菜品数据
+                this.dao.deleteMenuDao(id, 1);
+                //菜品做法数据
+                this.dao.deleteMenuMeansDao(id, 1);
+                //菜品明细做法数据
+                this.dao.deleteMenuMeansDetailDao(id, 1);
+                //套餐明细数据
+                this.dao.deleteSetMealDetailDao(id, 10);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+    }
+
+    /**
+     * 删除小类业务方法
+     *
+     * @param id 数据id
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Transactional
+    @Override
+    public Status deleteMenuSubTypeService(String... id) throws Exception {
+        int row = this.dao.deleteMenuSubTypeDao(id, 0);
+        if (row > 0) {
+            //删除小类数据同时删除该小类下所有相关联数据
+            try {
+                //菜品数据
+                this.dao.deleteMenuDao(id, 2);
+                //菜品做法数据
+                this.dao.deleteMenuMeansDao(id, 2);
+                //菜品做法明细数据
+                this.dao.deleteMenuMeansDetailDao(id, 2);
+                //套餐明细数据
+                this.dao.deleteSetMealDetailDao(id, 11);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+    }
+
+    /**
+     * 删除菜品数据业务方法
+     *
+     * @param id 数据编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Transactional
+    @Override
+    public Status deleteMenuService(String... id) throws Exception {
+        int row = this.dao.deleteMenuDao(id, 0);
+        if (row > 0) {
+            //删除菜品数据同时删除该菜品下关联的所有数据
+            try {
+                //做法数据
+                this.dao.deleteMenuMeansDao(id, 3);
+                //明细做法数据
+                this.dao.deleteMenuMeansDetailDao(id, 3);
+                //套餐明细数据
+                this.dao.deleteSetMealDetailDao(id, 12);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+    }
+
+    /**
+     * 删除菜品做法业务方法
+     *
+     * @param id 数据编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Transactional
+    @Override
+    public Status deleteMenuMeansService(String... id) throws Exception {
+        int row = this.dao.deleteMenuMeansDao(id, 0);
+        if (row > 0) {
+            //删除菜品做法数据同时删除该做法下所有相关数据
+            try {
+                this.dao.deleteMenuMeansDetailDao(id, 4);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+    }
+
+    /**
+     * 删除菜品明细做法业务方法
+     *
+     * @param id 数据编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Transactional
+    @Override
+    public Status deleteMenuMeansDetailService(String... id) throws Exception {
+        int row = this.dao.deleteMenuMeansDetailDao(id, 0);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+    }
+
+    /**
+     * 删除套餐数据业务方法
+     *
+     * @param id 数据编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Transactional
+    @Override
+    public Status deleteSetMealService(String... id) throws Exception {
+        int row = this.dao.deleteSetMealDao(id);
+        if (row > 0) {
+            //删除套餐数据同时删除与此套餐相关联数据
+            try {
+                this.dao.deleteSetMealDetailDao(id, 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+    }
+
+    /**
+     * 删除套餐明细数据业务方法
+     *
+     * @param id 数据编号
+     * @return 删除结果
+     * @throws Exception
+     */
+    @Transactional
+    @Override
+    public Status deleteSetMealDetailService(String... id) throws Exception {
+        int row = this.dao.deleteSetMealDetailDao(id, 0);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
     }
 
 }

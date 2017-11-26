@@ -14,8 +14,26 @@ import java.util.Objects;
 public class MeansParam implements java.io.Serializable {
 
     private static final long serialVersionUID = -1491761767077326645L;
+    private String tid;
+    private String stid;
     private String cbid;
     private List<MenuMeans> means;
+
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
+
+    public String getStid() {
+        return stid;
+    }
+
+    public void setStid(String stid) {
+        this.stid = stid;
+    }
 
     public String getCbid() {
         return cbid;
@@ -37,12 +55,14 @@ public class MeansParam implements java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MeansParam)) return false;
-        MeansParam meansParam = (MeansParam) o;
-        return Objects.equals(cbid, meansParam.cbid);
+        MeansParam that = (MeansParam) o;
+        return Objects.equals(tid, that.tid) &&
+                Objects.equals(stid, that.stid) &&
+                Objects.equals(cbid, that.cbid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cbid);
+        return Objects.hash(tid, stid, cbid);
     }
 }

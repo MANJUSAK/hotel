@@ -15,6 +15,8 @@ public class Inventory implements java.io.Serializable {
     private String cbid;//关联菜单编号
     private String date;//录入时间
     private int num;//库存量
+    private String tid;//部门类别id
+    private String stid;//小类id
 
     public String getId() {
         return id;
@@ -48,19 +50,36 @@ public class Inventory implements java.io.Serializable {
         this.num = num <= 0 ? 0 : num;
     }
 
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
+
+    public String getStid() {
+        return stid;
+    }
+
+    public void setStid(String stid) {
+        this.stid = stid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Inventory)) return false;
         Inventory inventory = (Inventory) o;
-        return num == inventory.num &&
-                Objects.equals(id, inventory.id) &&
+        return Objects.equals(id, inventory.id) &&
                 Objects.equals(cbid, inventory.cbid) &&
-                Objects.equals(date, inventory.date);
+                Objects.equals(date, inventory.date) &&
+                Objects.equals(tid, inventory.tid) &&
+                Objects.equals(stid, inventory.stid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cbid, date, num);
+        return Objects.hash(id, cbid, date, tid, stid);
     }
 }

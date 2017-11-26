@@ -15,8 +15,10 @@ public enum StatusEnum {
     NO_DATA(404, "无数据"),
     NO_GOODS(404, "订单无效"),
     NO_ORDER(404, "生成订单失败，无法开台"),
+    ERROR_ORDER(500, "生成订单失败，无法开台"),
     DEL_ORDER(404, "订单取消失败，没有该条订单数据信息"),
     PAYZ_THE_BILL(0, "订单结算失败,没有该订单数据信息"),
+    DELETE_DEFEAT(404, "删除失败！未获取到该条数据信息"),
     NO_PRAM(400, "参数错误");
 
 

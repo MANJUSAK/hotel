@@ -12,6 +12,8 @@ public class SetMealDetail implements java.io.Serializable {
 
     private static final long serialVersionUID = 6070489500037427371L;
     private String id;//编号
+    private String tid;//部门类别编号
+    private String stid;//小类编号
     private String cbid;//关联菜单表id
     private String smid;//关联套餐表id
 
@@ -20,7 +22,23 @@ public class SetMealDetail implements java.io.Serializable {
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id == null ? " " : id.trim();
+    }
+
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid == null ? " " : tid.trim();
+    }
+
+    public String getStid() {
+        return stid;
+    }
+
+    public void setStid(String stid) {
+        this.stid = stid == null ? " " : stid.trim();
     }
 
     public String getCbid() {
@@ -28,7 +46,7 @@ public class SetMealDetail implements java.io.Serializable {
     }
 
     public void setCbid(String cbid) {
-        this.cbid = cbid == null ? null : cbid.trim();
+        this.cbid = cbid == null ? " " : cbid.trim();
     }
 
     public String getSmid() {
@@ -36,7 +54,7 @@ public class SetMealDetail implements java.io.Serializable {
     }
 
     public void setSmid(String smid) {
-        this.smid = smid == null ? null : smid.trim();
+        this.smid = smid == null ? " " : smid.trim();
     }
 
     @Override
@@ -45,12 +63,14 @@ public class SetMealDetail implements java.io.Serializable {
         if (!(o instanceof SetMealDetail)) return false;
         SetMealDetail that = (SetMealDetail) o;
         return Objects.equals(id, that.id) &&
+                Objects.equals(tid, that.tid) &&
+                Objects.equals(stid, that.stid) &&
                 Objects.equals(cbid, that.cbid) &&
                 Objects.equals(smid, that.smid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cbid, smid);
+        return Objects.hash(id, tid, stid, cbid, smid);
     }
 }

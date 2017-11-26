@@ -315,4 +315,16 @@ public class CookBookController {
             return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
         }
     }
+
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/menu/type/data.shtml", method = RequestMethod.GET)
+    public Status deleteMenuType(String... id) {
+        try {
+            return this.service.deleteMenuTypeService(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+        }
+    }
 }

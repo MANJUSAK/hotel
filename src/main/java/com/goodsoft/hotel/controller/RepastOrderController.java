@@ -3,7 +3,6 @@ package com.goodsoft.hotel.controller;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
-import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.service.RepastOderService;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * description:
@@ -49,42 +47,52 @@ public class RepastOrderController {
     }
 
     /**
-     * 餐饮预订单开台订单添加（下订单）接口，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮预订单开台订单添加（开台）接口，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 返回该订单号用于添加商品明细或者修改订单
      *
      * @param order 订单信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/order/data.shtml", method = RequestMethod.POST)
-    public Status addOrderService(Order order) {
+    public Object addOrderService(Order order) {
         try {
             return this.service.addOrderService(order);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+            return new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
         }
     }
 
     /**
-     * 餐饮订单商品添加（下订单）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮订单商品添加（打单）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 用于开台后用户点餐之后数据的提交
      *
      * @param msg 订单商品信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/order/goods/data.shtml", method = RequestMethod.POST)
-    public Status addOrderService(@RequestBody List<OrderGoods> msg) {
-        try {
-            this.service.addOrderGoodsService(msg);
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+    public Status addOrderService(@RequestBody RepastOrderParam msg) {
+        if (msg.getMsg() != null) {
+            if (msg.getMsg().size() > 0) {
+                try {
+                    this.service.addOrderGoodsService(msg);
+                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                } catch (Exception e) {
+                    this.logger.error(e.toString());
+                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                }
+            } else {
+                return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
+            }
+        } else {
+            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
         }
     }
 
     /**
-     * 餐饮预订单开台订单修改（修改订单）接口，用于处理预订之后的顾客临时调整用餐信息时,
+     * 餐饮预订单开台订单修改（开台后修改订单）接口，用于处理预订之后的顾客临时调整用餐信息时,
      * 产生相应订单以便于收银获取相关订单数据信息
      *
      * @param order 订单信息
@@ -103,27 +111,20 @@ public class RepastOrderController {
     }
 
     /**
-     * 餐饮订单商品修改（下订单）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮订单更新（结算订单）接口，用于前台收银结算相关订单
      *
-     * @param msg 订单商品信息
+     * @param order 订单结算信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
-    @RequestMapping(value = "/update/order/goods/data.shtml", method = RequestMethod.POST)
-    public Status updateOrderService(Order order, RepastOrderParam msg) {
-        if (msg != null) {
-            List<OrderGoods> orderGoods = msg.getMsg();
-            if (orderGoods.size() > 0) {
-                try {
-                    return this.service.updateRepastOrderService(order, orderGoods);
-                } catch (Exception e) {
-                    this.logger.error(e.toString());
-                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
-                }
-            }
-            return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
+    @RequestMapping(value = "/checkout/order/data.shtml", method = RequestMethod.POST)
+    public Status checkoutOrderService(Order order) {
+        try {
+            return this.service.checkoutRepastOrderService(order);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
         }
-        return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
     }
 
     /**

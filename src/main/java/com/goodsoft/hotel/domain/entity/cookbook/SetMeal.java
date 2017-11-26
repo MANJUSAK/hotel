@@ -26,7 +26,7 @@ public class SetMeal implements java.io.Serializable {
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id == null ? " " : id.trim();
     }
 
     public String getSmName() {
@@ -34,7 +34,7 @@ public class SetMeal implements java.io.Serializable {
     }
 
     public void setSmName(String smName) {
-        this.smName = smName == null ? null : smName.trim();
+        this.smName = smName == null ? " " : smName.trim();
     }
 
     public int getSmid() {
@@ -66,7 +66,7 @@ public class SetMeal implements java.io.Serializable {
     }
 
     public void setStPrice(double stPrice) {
-        this.stPrice = stPrice;
+        this.stPrice = stPrice < 0 ? Math.abs(stPrice) : stPrice;
     }
 
     public String getSmUnit() {
@@ -74,7 +74,7 @@ public class SetMeal implements java.io.Serializable {
     }
 
     public void setSmUnit(String smUnit) {
-        this.smUnit = smUnit;
+        this.smUnit = smUnit == null ? " " : smUnit.trim();
     }
 
     public List<SetMealDetail> getMealDetails() {
@@ -89,14 +89,14 @@ public class SetMeal implements java.io.Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SetMeal)) return false;
-        SetMeal setMeal = (SetMeal) o;
-        return Objects.equals(id, setMeal.id) &&
-                Objects.equals(smUnit, setMeal.smUnit) &&
-                Objects.equals(smName, setMeal.smName);
+        SetMeal meal = (SetMeal) o;
+        return Objects.equals(id, meal.id) &&
+                Objects.equals(smName, meal.smName) &&
+                Objects.equals(smUnit, meal.smUnit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, smUnit, smName);
+        return Objects.hash(id, smName, smUnit);
     }
 }
