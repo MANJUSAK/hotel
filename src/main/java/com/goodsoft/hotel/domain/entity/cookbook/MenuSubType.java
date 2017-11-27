@@ -1,5 +1,6 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,13 +17,15 @@ public class MenuSubType implements java.io.Serializable {
     private String tName;//类型名称
     private String stName;//小类型名称
     private String tid;//关联类别表id
+    private String sbid;//前台传入小类编号
+    private List<Menu> menus;//菜单信息容器
 
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = id == null ? " " : id.trim();
     }
 
     public int getStid() {
@@ -38,7 +41,7 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void settName(String tName) {
-        this.tName = tName == null ? null : tName.trim();
+        this.tName = tName == null ? " " : tName.trim();
     }
 
     public String getStName() {
@@ -46,7 +49,7 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void setStName(String stName) {
-        this.stName = stName == null ? null : stName.trim();
+        this.stName = stName == null ? " " : stName.trim();
     }
 
     public String getTid() {
@@ -54,7 +57,23 @@ public class MenuSubType implements java.io.Serializable {
     }
 
     public void setTid(String tid) {
-        this.tid = tid;
+        this.tid = tid == null ? " " : tid.trim();
+    }
+
+    public String getSbid() {
+        return sbid;
+    }
+
+    public void setSbid(String sbid) {
+        this.sbid = sbid == null ? " " : sbid.trim();
+    }
+
+    public List<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(List<Menu> menus) {
+        this.menus = menus;
     }
 
     @Override
@@ -65,11 +84,12 @@ public class MenuSubType implements java.io.Serializable {
         return stid == that.stid &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(stName, that.stName) &&
+                Objects.equals(sbid, that.sbid) &&
                 Objects.equals(tid, that.tid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, stid, stName, tid);
+        return Objects.hash(id, stid, stName, stid, tid);
     }
 }

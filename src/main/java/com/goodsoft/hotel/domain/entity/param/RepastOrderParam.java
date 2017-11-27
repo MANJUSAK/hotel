@@ -14,7 +14,34 @@ import java.util.Objects;
 public class RepastOrderParam implements java.io.Serializable {
 
     private static final long serialVersionUID = 5280307344852398777L;
+    private String id;//订单号
+    private String ctid;//餐台编号
+    private double orderPrice;//订单总价
     private List<OrderGoods> msg;//用于接收前台传入的餐饮订单明细数据容器
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCtid() {
+        return ctid;
+    }
+
+    public void setCtid(String ctid) {
+        this.ctid = ctid;
+    }
+
+    public double getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(double orderPrice) {
+        this.orderPrice = orderPrice;
+    }
 
     public List<OrderGoods> getMsg() {
         return msg;
@@ -29,11 +56,12 @@ public class RepastOrderParam implements java.io.Serializable {
         if (this == o) return true;
         if (!(o instanceof RepastOrderParam)) return false;
         RepastOrderParam that = (RepastOrderParam) o;
-        return Objects.equals(msg, that.msg);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(ctid, that.ctid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(msg);
+        return Objects.hash(id, ctid);
     }
 }

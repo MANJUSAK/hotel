@@ -37,6 +37,12 @@ public interface CookBookDao {
     //菜单做法详情查询，用于前台点餐时具体做法数据展示
     List<MenuMeansDetail> queryMenuMeansDetailDao(@Param("mid") String mid) throws Exception;
 
+    //餐饮套餐查询，用于前台点餐时具体获取套餐系列菜品
+    List<SetMeal> querySetMealDao() throws Exception;
+
+    //餐饮套餐详细菜品查询，用于前台点餐时具体获取套餐系列具体菜品数据
+    List<SetMealDetail> querySetMealDetailDao(@Param("smid") String smid) throws Exception;
+
     //类别数据添加
     void addMenuTypeDao(MenuType msg) throws Exception;
 
@@ -60,5 +66,47 @@ public interface CookBookDao {
 
     //套餐明细数据添加
     void addSetMealDetailDao(List<SetMealDetail> msg) throws Exception;
+
+    //部门类别更新
+    int updateMenuTypeDao(MenuType msg) throws Exception;
+
+    //小类更新
+    int updateMenuSubTypeDao(MenuSubType msg) throws Exception;
+
+    //菜品更新
+    int updateMenuDao(Menu msg) throws Exception;
+
+    //菜品做法更新
+    int updateMenuMeansDao(MenuMeans msg) throws Exception;
+
+    //菜品做法明细更新
+    int updateMenuMeansDetailDao(MenuMeansDetail msg) throws Exception;
+
+    //套餐更新
+    int updateSetMealDao(SetMeal msg) throws Exception;
+
+    //套餐明细更新
+    int updateSetMealDetailDao(SetMealDetail msg) throws Exception;
+
+    //部门类别删除
+    int deleteMenuTypeDao(@Param("id") String... id) throws Exception;
+
+    //小类删除
+    int deleteMenuSubTypeDao(@Param("id") String[] id, @Param("rel") int rel) throws Exception;
+
+    //菜品删除
+    int deleteMenuDao(@Param("id") String[] id, @Param("rel") int rel) throws Exception;
+
+    //菜品做法删除
+    int deleteMenuMeansDao(@Param("id") String[] id, @Param("rel") int rel) throws Exception;
+
+    //菜品做法明细删除
+    int deleteMenuMeansDetailDao(@Param("id") String[] id, @Param("rel") int rel) throws Exception;
+
+    //套餐删除
+    int deleteSetMealDao(String... id) throws Exception;
+
+    //套餐明细删除
+    int deleteSetMealDetailDao(@Param("id") String[] id, @Param("rel") int rel) throws Exception;
 
 }

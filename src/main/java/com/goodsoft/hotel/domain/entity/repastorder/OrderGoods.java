@@ -13,12 +13,14 @@ public class OrderGoods implements java.io.Serializable {
     private static final long serialVersionUID = 6551389333680604804L;
     private String id;//订单食品编号
     private String oid;//订单编号
+    private String tcid;//套餐编号
     private String cbname;//食品名称
     private int spNum;//数量
     private String spec;//规格
     private String unit;//单位
     private double spPrice;//价格
     private double jjMeans;//做法加价
+    private String means;//做法
     private double detailZqSum;//折前金额
     private double detailZhSum;//折后金额
     private String discount;//折扣
@@ -49,6 +51,14 @@ public class OrderGoods implements java.io.Serializable {
         this.oid = oid == null ? " " : oid.trim();
     }
 
+    public String getTcid() {
+        return tcid;
+    }
+
+    public void setTcid(String tcid) {
+        this.tcid = tcid == null ? " " : tcid.trim();
+    }
+
     public String getCbname() {
         return cbname;
     }
@@ -73,7 +83,6 @@ public class OrderGoods implements java.io.Serializable {
         this.unit = unit == null ? " " : unit.trim();
     }
 
-
     public String getDiscount() {
         return discount;
     }
@@ -96,6 +105,14 @@ public class OrderGoods implements java.io.Serializable {
 
     public void setSpPrice(double spPrice) {
         this.spPrice = spPrice < 0 ? Math.abs(spPrice) : spPrice;
+    }
+
+    public String getMeans() {
+        return means;
+    }
+
+    public void setMeans(String means) {
+        this.means = means == null ? " " : means.trim();
     }
 
     public double getJjMeans() {
@@ -209,9 +226,11 @@ public class OrderGoods implements java.io.Serializable {
         OrderGoods that = (OrderGoods) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(oid, that.oid) &&
+                Objects.equals(tcid, that.tcid) &&
                 Objects.equals(cbname, that.cbname) &&
                 Objects.equals(spec, that.spec) &&
                 Objects.equals(unit, that.unit) &&
+                Objects.equals(means, that.means) &&
                 Objects.equals(discount, that.discount) &&
                 Objects.equals(batch, that.batch) &&
                 Objects.equals(ratedSeat, that.ratedSeat) &&
@@ -223,6 +242,6 @@ public class OrderGoods implements java.io.Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, oid, cbname, spec, unit, discount, batch, ratedSeat, operato, dcTime, menuType, detailRemarks);
+        return Objects.hash(id, oid, tcid, cbname, spec, unit, means, discount, batch, ratedSeat, operato, dcTime, menuType, detailRemarks);
     }
 }

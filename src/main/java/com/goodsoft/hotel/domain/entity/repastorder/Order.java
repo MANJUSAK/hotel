@@ -15,9 +15,9 @@ public class Order implements java.io.Serializable {
 
     private static final long serialVersionUID = -5502168041100514292L;
     private String id;//订单编号
-    private String kzNum;//可账号
+    private String kzNum;//客账号
     private String consumer;//客人姓名
-    private String ktTime;//开台时间
+    private String ktTime;//开台时间（订单生成时间）
     private double fwRate;//服务费率
     private String ctType;//餐台类型
     private String salemanager;//营业经理
@@ -44,6 +44,7 @@ public class Order implements java.io.Serializable {
     private String remarks;//备注
     private int placeNum;//席数
     private String ctid;//餐台编号
+    private double orderPrice;//订单总价
     private List<OrderGoods> orderGoods;//订单明细容器
 
     public Order() {
@@ -291,6 +292,14 @@ public class Order implements java.io.Serializable {
         this.ctid = ctid == null ? " " : ctid.trim();
     }
 
+    public double getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(double orderPrice) {
+        this.orderPrice = orderPrice < 0 ? Math.abs(orderPrice) : orderPrice;
+    }
+
     public List<OrderGoods> getOrderGoods() {
         return orderGoods;
     }
@@ -323,11 +332,11 @@ public class Order implements java.io.Serializable {
                 Objects.equals(timeMinute, order.timeMinute) &&
                 Objects.equals(paymentType, order.paymentType) &&
                 Objects.equals(remarks, order.remarks) &&
-                Objects.equals(orderGoods, order.orderGoods);
+                Objects.equals(ctid, order.ctid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, orderGoods);
+        return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, ctid);
     }
 }

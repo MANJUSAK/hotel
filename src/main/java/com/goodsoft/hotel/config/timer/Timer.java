@@ -1,37 +1,60 @@
 package com.goodsoft.hotel.config.timer;
 
-import com.goodsoft.hotel.domain.dao.CyReserveDao;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.concurrent.Executor;
 
 /**
  * description:
- * ===>定时任务处理类
+ * ===>定时器配置类
  *
  * @author 严彬荣 Created on 2017-11-12 10:58
  * @version v1.0
  */
-/*@Configuration
-@EnableScheduling*/
-public class Timer {
+@Configuration
+@EnableAsync
+public class Timer implements AsyncConfigurer, SchedulingConfigurer {
 
-    @Resource
-    CyReserveDao cyReserveDao;
-
-    //每天凌晨1点执行一次
-    /*@Scheduled(cron = "0 59 23 * * ?")*/
-    public void timer(){
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        System.out.println("执行时间为：" + date);
+    @Bean
+    public ThreadPoolTaskScheduler taskScheduler() {
+        //定时器线程池调度器配置
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setPoolSize(10);
+        scheduler.setAwaitTerminationSeconds(60);
+        scheduler.setWaitForTasksToCompleteOnShutdown(true);
+        return scheduler;
     }
 
-    //定时更新预订单状态
-    @Scheduled(cron = "0 59 23 * * ?")
-    public void reserveStateUpdate(){
-    cyReserveDao.updateReserveReState();
+    @Override
+    public Executor getAsyncExecutor() {
+        //线程池执行器
+        /*ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(20);
+        executor.setQueueCapacity(35);
+        executor.setAwaitTerminationSeconds(60);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();*/
+        Executor scheduler = this.taskScheduler();
+        return scheduler;
     }
 
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return null;
+    }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+        TaskScheduler taskScheduler = this.taskScheduler();
+        scheduledTaskRegistrar.setTaskScheduler(taskScheduler);
+    }
 }

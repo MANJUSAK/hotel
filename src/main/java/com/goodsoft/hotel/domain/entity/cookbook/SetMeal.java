@@ -1,5 +1,6 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,13 +18,15 @@ public class SetMeal implements java.io.Serializable {
     private int isdd;//是否可单点（0为true/1为false）
     private int isNo;//是否打折（0为true/1为false）
     private double stPrice;//套餐价格
+    private String smUnit;//套餐单位
+    private List<SetMealDetail> mealDetails;
 
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id == null ? " " : id.trim();
     }
 
     public String getSmName() {
@@ -31,7 +34,7 @@ public class SetMeal implements java.io.Serializable {
     }
 
     public void setSmName(String smName) {
-        this.smName = smName == null ? null : smName.trim();
+        this.smName = smName == null ? " " : smName.trim();
     }
 
     public int getSmid() {
@@ -63,20 +66,37 @@ public class SetMeal implements java.io.Serializable {
     }
 
     public void setStPrice(double stPrice) {
-        this.stPrice = stPrice;
+        this.stPrice = stPrice < 0 ? Math.abs(stPrice) : stPrice;
+    }
+
+    public String getSmUnit() {
+        return smUnit;
+    }
+
+    public void setSmUnit(String smUnit) {
+        this.smUnit = smUnit == null ? " " : smUnit.trim();
+    }
+
+    public List<SetMealDetail> getMealDetails() {
+        return mealDetails;
+    }
+
+    public void setMealDetails(List<SetMealDetail> mealDetails) {
+        this.mealDetails = mealDetails;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SetMeal)) return false;
-        SetMeal setMeal = (SetMeal) o;
-        return Objects.equals(id, setMeal.id) &&
-                Objects.equals(smName, setMeal.smName);
+        SetMeal meal = (SetMeal) o;
+        return Objects.equals(id, meal.id) &&
+                Objects.equals(smName, meal.smName) &&
+                Objects.equals(smUnit, meal.smUnit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, smName);
+        return Objects.hash(id, smName, smUnit);
     }
 }

@@ -12,19 +12,33 @@ public class SetMealDetail implements java.io.Serializable {
 
     private static final long serialVersionUID = 6070489500037427371L;
     private String id;//编号
+    private String tid;//部门类别编号
+    private String stid;//小类编号
     private String cbid;//关联菜单表id
     private String smid;//关联套餐表id
-    private String smName;//套餐名
-    private int isdd;//是否可单点（0为true/1为false）
-    private int isNo;//是否打折（0为true/1为false）
-    private double stPrice;//套餐价格
 
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id == null ? " " : id.trim();
+    }
+
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid == null ? " " : tid.trim();
+    }
+
+    public String getStid() {
+        return stid;
+    }
+
+    public void setStid(String stid) {
+        this.stid = stid == null ? " " : stid.trim();
     }
 
     public String getCbid() {
@@ -32,7 +46,7 @@ public class SetMealDetail implements java.io.Serializable {
     }
 
     public void setCbid(String cbid) {
-        this.cbid = cbid == null ? null : cbid.trim();
+        this.cbid = cbid == null ? " " : cbid.trim();
     }
 
     public String getSmid() {
@@ -40,39 +54,7 @@ public class SetMealDetail implements java.io.Serializable {
     }
 
     public void setSmid(String smid) {
-        this.smid = smid == null ? null : smid.trim();
-    }
-
-    public String getSmName() {
-        return smName;
-    }
-
-    public void setSmName(String smName) {
-        this.smName = smName == null ? null : smName.trim();
-    }
-
-    public int getIsdd() {
-        return isdd;
-    }
-
-    public void setIsdd(int isdd) {
-        this.isdd = isdd;
-    }
-
-    public int getIsNo() {
-        return isNo;
-    }
-
-    public void setIsNo(int isNo) {
-        this.isNo = isNo;
-    }
-
-    public double getStPrice() {
-        return stPrice;
-    }
-
-    public void setStPrice(double stPrice) {
-        this.stPrice = stPrice;
+        this.smid = smid == null ? " " : smid.trim();
     }
 
     @Override
@@ -81,13 +63,14 @@ public class SetMealDetail implements java.io.Serializable {
         if (!(o instanceof SetMealDetail)) return false;
         SetMealDetail that = (SetMealDetail) o;
         return Objects.equals(id, that.id) &&
+                Objects.equals(tid, that.tid) &&
+                Objects.equals(stid, that.stid) &&
                 Objects.equals(cbid, that.cbid) &&
-                Objects.equals(smid, that.smid) &&
-                Objects.equals(smName, that.smName);
+                Objects.equals(smid, that.smid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cbid, smid, smName);
+        return Objects.hash(id, tid, stid, cbid, smid);
     }
 }
