@@ -8,6 +8,7 @@ import com.goodsoft.hotel.domain.entity.param.MeansParam;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
+import com.goodsoft.hotel.exception.HotelException;
 import com.goodsoft.hotel.service.CookBookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -316,13 +317,23 @@ public class CookBookController {
         }
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/update/menu/type/data.shtml", method = RequestMethod.POST)
+    public Status updateMenuType(MenuType msg) {
+        try {
+            return this.service.updateMenuTypeService(msg);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/type/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuType(String... id) {
         try {
             return this.service.deleteMenuTypeService(id);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (HotelException e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
         }

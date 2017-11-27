@@ -10,8 +10,12 @@ import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
+import com.goodsoft.hotel.exception.HotelException;
 import com.goodsoft.hotel.service.CookBookService;
 import com.goodsoft.hotel.util.UUIDUtil;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +39,8 @@ public class CookBookServicelmpl implements CookBookService {
 
     @Resource
     private CookBookDao dao;
+    @Resource
+    private SqlSessionTemplate sqlSessionTemplate;
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
 
@@ -71,7 +77,6 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuStypeService(String tid) throws Exception {
-        System.out.println(Thread.currentThread().getName());
         List<MenuSubType> data = this.dao.queryMenuStypeByIdDao(tid);
         if (data.size() > 0) {
             return (T) new Result(0, data);
@@ -88,7 +93,6 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuTypeService(PageParam page) throws Exception {
-        System.out.println(Thread.currentThread().getName());
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuType> list = this.dao.queryMenuTypeDao();
         if (list.size() > 0) {
@@ -369,8 +373,13 @@ public class CookBookServicelmpl implements CookBookService {
     }
 
     @Override
+    @Transactional
     public Status updateMenuTypeService(MenuType msg) throws Exception {
-        return null;
+        int row = this.dao.updateMenuTypeDao(msg);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.UPDATE_DEFEAT.getCODE(), StatusEnum.UPDATE_DEFEAT.getEXPLAIN());
     }
 
     @Override
@@ -400,29 +409,31 @@ public class CookBookServicelmpl implements CookBookService {
      * @return 删除结果
      * @throws Exception
      */
-    @Transactional
     @Override
-    public Status deleteMenuTypeService(String... id) throws Exception {
-        int row = this.dao.deleteMenuTypeDao(id);
-        if (row > 0) {
+    public Status deleteMenuTypeService(String... id) throws HotelException {
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+        CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
+        try {
             //删除部门类别数据同时删除该部门类别数据下所有相关联的数据
-            try {
-                //小类数据
-                this.dao.deleteMenuSubTypeDao(id, 1);
-                //菜品数据
-                this.dao.deleteMenuDao(id, 1);
-                //菜品做法数据
-                this.dao.deleteMenuMeansDao(id, 1);
-                //菜品明细做法数据
-                this.dao.deleteMenuMeansDetailDao(id, 1);
-                //套餐明细数据
-                this.dao.deleteSetMealDetailDao(id, 10);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            cbDao.deleteMenuTypeDao(id);
+            //小类数据
+            cbDao.deleteMenuSubTypeDao(id, 1);
+            //菜品数据
+            cbDao.deleteMenuDao(id, 1);
+            //菜品做法数据
+            cbDao.deleteMenuMeansDao(id, 1);
+            //菜品明细做法数据
+            cbDao.deleteMenuMeansDetailDao(id, 1);
+            //套餐明细数据
+            cbDao.deleteSetMealDetailDao(id, 10);
+            sqlSession.commit();
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        } catch (Exception e) {
+            sqlSession.rollback();
+            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } finally {
+            sqlSession.close();
         }
-        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
     }
 
     /**
@@ -432,27 +443,30 @@ public class CookBookServicelmpl implements CookBookService {
      * @return 删除结果
      * @throws Exception
      */
-    @Transactional
     @Override
-    public Status deleteMenuSubTypeService(String... id) throws Exception {
-        int row = this.dao.deleteMenuSubTypeDao(id, 0);
-        if (row > 0) {
+    public Status deleteMenuSubTypeService(String... id) throws HotelException {
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+        CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
+        try {
             //删除小类数据同时删除该小类下所有相关联数据
-            try {
-                //菜品数据
-                this.dao.deleteMenuDao(id, 2);
-                //菜品做法数据
-                this.dao.deleteMenuMeansDao(id, 2);
-                //菜品做法明细数据
-                this.dao.deleteMenuMeansDetailDao(id, 2);
-                //套餐明细数据
-                this.dao.deleteSetMealDetailDao(id, 11);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            cbDao.deleteMenuSubTypeDao(id, 0);
+            //菜品数据
+            cbDao.deleteMenuDao(id, 2);
+            //菜品做法数据
+            cbDao.deleteMenuMeansDao(id, 2);
+            //菜品做法明细数据
+            cbDao.deleteMenuMeansDetailDao(id, 2);
+            //套餐明细数据
+            cbDao.deleteSetMealDetailDao(id, 11);
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
+            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } finally {
+            sqlSession.close();
         }
-        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+
     }
 
     /**
@@ -462,25 +476,28 @@ public class CookBookServicelmpl implements CookBookService {
      * @return 删除结果
      * @throws Exception
      */
-    @Transactional
     @Override
-    public Status deleteMenuService(String... id) throws Exception {
-        int row = this.dao.deleteMenuDao(id, 0);
-        if (row > 0) {
+    public Status deleteMenuService(String... id) throws HotelException {
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+        CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
+        try {
             //删除菜品数据同时删除该菜品下关联的所有数据
-            try {
-                //做法数据
-                this.dao.deleteMenuMeansDao(id, 3);
-                //明细做法数据
-                this.dao.deleteMenuMeansDetailDao(id, 3);
-                //套餐明细数据
-                this.dao.deleteSetMealDetailDao(id, 12);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            cbDao.deleteMenuDao(id, 0);
+            //做法数据
+            cbDao.deleteMenuMeansDao(id, 3);
+            //明细做法数据
+            cbDao.deleteMenuMeansDetailDao(id, 3);
+            //套餐明细数据
+            cbDao.deleteSetMealDetailDao(id, 12);
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
+            e.printStackTrace();
+            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } finally {
+            sqlSession.close();
         }
-        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
     /**
@@ -490,20 +507,23 @@ public class CookBookServicelmpl implements CookBookService {
      * @return 删除结果
      * @throws Exception
      */
-    @Transactional
     @Override
-    public Status deleteMenuMeansService(String... id) throws Exception {
-        int row = this.dao.deleteMenuMeansDao(id, 0);
-        if (row > 0) {
+    public Status deleteMenuMeansService(String... id) throws HotelException {
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+        CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
+        try {
             //删除菜品做法数据同时删除该做法下所有相关数据
-            try {
-                this.dao.deleteMenuMeansDetailDao(id, 4);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            cbDao.deleteMenuMeansDao(id, 0);
+            cbDao.deleteMenuMeansDetailDao(id, 4);
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
+            e.printStackTrace();
+            throw new HotelException(StatusEnum.UPDATE_DEFEAT.getEXPLAIN());
+        } finally {
+            sqlSession.close();
         }
-        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
     /**
@@ -532,18 +552,22 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Transactional
     @Override
-    public Status deleteSetMealService(String... id) throws Exception {
-        int row = this.dao.deleteSetMealDao(id);
-        if (row > 0) {
+    public Status deleteSetMealService(String... id) throws HotelException {
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+        CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
+        try {
             //删除套餐数据同时删除与此套餐相关联数据
-            try {
-                this.dao.deleteSetMealDetailDao(id, 1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            cbDao.deleteSetMealDao(id);
+            cbDao.deleteSetMealDetailDao(id, 1);
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
+            e.printStackTrace();
+            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } finally {
+            sqlSession.close();
         }
-        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
     /**

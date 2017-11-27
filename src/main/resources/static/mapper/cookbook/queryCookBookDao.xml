@@ -8,7 +8,7 @@
     <cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>
     <!--菜单子类型数据过滤-->
     <resultMap id="menuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
-        <id property="sitd" column="STID"/>
+        <id property="stid" column="STID"/>
         <result property="id" column="ID"/>
         <result property="stName" column="STNAME"/>
         <result property="tid" column="TID"/>
