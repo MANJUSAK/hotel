@@ -25,10 +25,9 @@ public class Timer implements AsyncConfigurer, SchedulingConfigurer {
 
     @Bean
     public ThreadPoolTaskScheduler taskScheduler() {
-        //定时器线程池配置
+        //定时器线程池调度器配置
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(10);
-        scheduler.setThreadNamePrefix("task-hotel-");
         scheduler.setAwaitTerminationSeconds(60);
         scheduler.setWaitForTasksToCompleteOnShutdown(true);
         return scheduler;
@@ -36,12 +35,11 @@ public class Timer implements AsyncConfigurer, SchedulingConfigurer {
 
     @Override
     public Executor getAsyncExecutor() {
-        //spring线程池
+        //线程池执行器
         /*ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(20);
         executor.setQueueCapacity(35);
-        executor.setThreadNamePrefix("spring-thread-");
         executor.setAwaitTerminationSeconds(60);
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.initialize();*/

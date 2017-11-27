@@ -71,6 +71,7 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuStypeService(String tid) throws Exception {
+        System.out.println(Thread.currentThread().getName());
         List<MenuSubType> data = this.dao.queryMenuStypeByIdDao(tid);
         if (data.size() > 0) {
             return (T) new Result(0, data);
@@ -87,6 +88,7 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuTypeService(PageParam page) throws Exception {
+        System.out.println(Thread.currentThread().getName());
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuType> list = this.dao.queryMenuTypeDao();
         if (list.size() > 0) {
