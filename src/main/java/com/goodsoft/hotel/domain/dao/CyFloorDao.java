@@ -24,4 +24,7 @@ public interface CyFloorDao {
     public Integer updateTableState(Map map);
 
 
+    //查询餐台各状态数量
+    public Map<String,Integer> selectTableStateForNumber();
+
 }

@@ -30,7 +30,10 @@
 
         select id,customer_type,customer_name,people_number,sales_manager,atthe_time,state from
         GS_RESTAURANT_RESERVATION
-        where state =#{state}
+        where 1=1
+        <if test="state!=null and state!=''">
+        and state =#{state}
+        </if>
         <if test="staetTime !=null and staetTime!=''">
             and ATTHE_TIME &gt; #{staetTime}
         </if>
@@ -75,7 +78,10 @@
     <select id="selectSkReservesNum" parameterType="java.util.Map" resultType="java.lang.Integer">
 
         select count(1) from GS_RESTAURANT_RESERVATION
-        where state =#{state}
+        where 1=1
+        <if test="state!=null and state!=''">
+            and state =#{state}
+        </if>
         <if test="staetTime !=null and staetTime!=''">
             and ATTHE_TIME &gt; #{staetTime}
         </if>
@@ -83,10 +89,15 @@
 
     <!--查询所有酒席预订信息-->
     <select id="selectJxReserves" parameterType="java.util.Map"
-            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
-        select CUSTOMER_TYPE,CUSTOMER_NAME,PEOPLE_NUMBER,SALES_MANAGER,ATTHE_TIME,STATE from GS_BANQUET_RESERVATION
-        where state =#{state} and ATTHE_TIME &gt; #{staetTime} order by ATTHE_TIME
-
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.BanquetReservation">
+        select id,customer_type,customer_name,people_number,sales_manager,atthe_time,state from gs_banquet_reservation
+        where 1=1
+        <if test="state!=null and state!=''">
+            and state =#{state}
+        </if>
+        <if test="staetTime !=null and staetTime!=''">
+            and ATTHE_TIME &gt; #{staetTime}
+        </if>
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
         </if>
@@ -94,36 +105,54 @@
     </select>
     <!--查询单条酒席预订信息全部内容-->
     <select id="selectJxReserveById" parameterType="java.lang.String"
-            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.BanquetReservation">
         select * from GS_BANQUET_RESERVATION
         where id=#{_parameter}
     </select>
     <!--查询酒席预订信息总数量  -分页-->
     <select id="selectJxReservesNum" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(1) from GS_BANQUET_RESERVATION
-        where state =#{state}  and ATTHE_TIME &gt; #{staetTime}
+        where 1=1
+        <if test="state!=null and state!=''">
+            and state =#{state}
+        </if>
+        <if test="staetTime !=null and staetTime!=''">
+            and ATTHE_TIME &gt; #{staetTime}
+        </if>
     </select>
 
     <!--查询所有宴会预订信息-->
     <select id="selectYhReserves" parameterType="java.util.Map"
-            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
-        select CUSTOMER_TYPE,CUSTOMER_NAME,PEOPLE_NUMBER,SALES_MANAGER,ATTHE_TIME,STATE from GS_YANHUI_RESERVATION
-        where state =#{state} and ATTHE_TIME &gt; #{staetTime}
-
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.YanhuiReservation">
+        select id,CUSTOMER_TYPE,CUSTOMER_NAME,PEOPLE_NUMBER,SALES_MANAGER,ATTHE_TIME,STATE from GS_YANHUI_RESERVATION
+        where 1=1
+        <if test="state!=null and state!=''">
+            and state =#{state}
+        </if>
+        <if test="staetTime !=null and staetTime!=''">
+            and ATTHE_TIME &gt; #{staetTime}
+        </if>
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
         </if>
     </select>
     <!--查询单条宴会预订信息全部内容-->
     <select id="selectYhReserveById" parameterType="java.lang.String"
-            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
+            resultType="com.goodsoft.hotel.domain.entity.restaurantReservation.YanhuiReservation">
         select * from GS_YANHUI_RESERVATION
         where id=#{_parameter}
     </select>
     <!--查询宴会信息总数量 -分页-->
     <select id="selectYhReservesNum" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(1) from GS_YANHUI_RESERVATION
-        where state =#{state}  and ATTHE_TIME &gt; #{staetTime}
+        where 1=1
+        <if test="state!=null and state!=''">
+            and state =#{state}
+        </if>
+        <if test="staetTime !=null and staetTime!=''">
+            and ATTHE_TIME &gt; #{staetTime}
+        </if>
+
     </select>
 
     <resultMap id="reserveHalls" type="com.goodsoft.hotel.domain.entity.restaurantReservation.ReservationHalls">
@@ -141,6 +170,8 @@
         select * from RESERVE_HALLS where RESERVE_ID = #{_parameter}
     </select>
 
+
+
     <!--插入散客预订信息-->
     <insert id="insertReserveInfo"
             parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
@@ -152,8 +183,42 @@
         )
     </insert>
 
+
+
+    <!--插入酒席预订信息-->
+    <insert id="insertJxReserveInfo" parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.BanquetReservation">
+        insert into gs_banquet_reservation values(
+#{id},#{customerType},#{entryDate},#{customerName},#{peopleNumber},#{salesManager},#{contacts},#{contactsNumber},#{appointmentLength},#{attheTime},
+#{endDate},#{memberCard},#{contractUnit},#{corporateName},#{seatsNum},#{winePosition},#{isbilling},#{floatNum},#{invitationNum},
+#{floatCharge},#{invitationCharge},#{corsagesCharge},#{artlayoutCharge},#{cakeCharge},#{meloncandyCharge},#{drinksDiscount},#{attendancebookCharge},
+#{ceremoniesCharge},#{temporaryworkerCharge},#{lightingCharge},#{loadingCharge},#{paymentMethod},#{cancellationReasons},#{authorizedPerson},#{dish},#{drinks},#{flower},
+#{cigarette},#{gift},#{printMenu},#{roomProgram},#{auditoriumProgram},#{siteLayout},#{frozenTowel},#{others},#{remarks},#{monogram},
+#{tableCard},#{indicator},#{projector},#{paperandpen},#{parkingLot},#{backgroundFrame},#{floralPlantBack},#{teaBreak},#{etiquetteService},#{lnkjetInstallation},#{ledScreen},
+#{welcomePlaque},#{revolvingStage},#{tableSign},#{liCard},#{perform},#{clothField},#{rentalFee},#{gateAdvertisement},#{rainbowArchedEntrance},
+#{flyingBalloon},#{romeFlag},#{rentIncluded},#{videoAndAudio},#{otherRequirements},#{state}
+        )
+    </insert>
+
+    <!--插入宴会预订信息-->
+    <insert id="insertYhReserveInfo" parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.YanhuiReservation">
+        insert into GS_YANHUI_RESERVATION values(
+#{id},#{customerType},#{customerName},#{entryDate},#{peopleNumber},
+#{salesManager},#{contacts},#{contactsNumber},#{appointmentLength},#{attheTime},
+#{endDate},#{memberCard},#{contractUnit},#{corporateName},#{seatsNum},#{winePosition},
+#{isbilling},#{floatNum},#{invitationNum},#{paymentMethod},
+#{cancellationReasons},#{authorizedPerson},#{openTime},#{activity},#{validSignature},
+#{place},#{guaranteeNumber},#{tableType},#{electronicScreenContent},#{venueLayout1},
+#{venueLayout2},#{paymentInstructions1},#{paymentInstructions2},#{paymentInstructions3},
+#{otherEquirements},#{engineeringDpartment1},#{engineeringEpartment2},#{securityEpartment1},
+#{securityEpartment2},#{financeEpartment1},#{financeEpartment2},#{reception1},#{reception2},
+#{keepingDpartment1},#{keepingDpartment2},#{remarks},#{state}
+        )
+    </insert>
+
+
+
     <!--修改散客预订信息-->
-    <insert id="updateReserveInfo"
+    <update id="updateReserveInfo"
             parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.FitReservation">
         update  GS_RESTAURANT_RESERVATION set
         customer_type=#{customer_type},entry_date=#{entry_date},customer_name=#{customer_name},
@@ -164,16 +229,98 @@
         record_operator=#{record_operator},recording_time=#{recording_time},final_amendment=#{final_amendment},
         last_modified_time=#{last_modified_time},cancellation_reason=#{cancellation_reason}
         where id=#{id}
-    </insert>
+    </update>
 
-    <!--修改预订单状态-->
+
+    <!--修改酒席预订信息-->
+    <update id="updateJxReserveInfo" parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.BanquetReservation">
+     update gs_banquet_reservation  set
+     CUSTOMER_TYPE=#{customerType},ENTRY_DATE=#{entryDate},CUSTOMER_NAME=#{customerName},PEOPLE_NUMBER=#{peopleNumber},
+     SALES_MANAGER=#{salesManager},CONTACTS=#{contacts},CONTACTS_NUMBER=#{contactsNumber},APPOINTMENT_LENGTH=#{appointmentLength},
+     ATTHE_TIME=#{attheTime},END_DATE=#{endDate},MEMBER_CARD=#{memberCard},CONTRACT_UNIT=#{contractUnit},CORPORATE_NAME=#{corporateName},
+     SEATS_NUM= #{seatsNum} ,WINE_POSITION=#{winePosition},ISBILLING=#{isbilling},FLOAT_NUM=#{floatNum},INVITATION_NUM=#{invitationNum},FLOAT_CHARGE=#{floatCharge},
+     INVITATION_CHARGE=#{invitationCharge},CORSAGES_CHARGE=#{corsagesCharge},ARTLAYOUT_CHARGE=#{artlayoutCharge},CAKE_CHARGE=#{cakeCharge},
+     MELONCANDY_CHARGE=#{meloncandyCharge},DRINKS_DISCOUNT=#{drinksDiscount},ATTENDANCEBOOK_CHARGE=#{attendancebookCharge},
+     CEREMONIES_CHARGE=#{ceremoniesCharge},TEMPORARYWORKER_CHARGE=#{temporaryworkerCharge},LIGHTING_CHARGE=#{lightingCharge},
+     LOADING_CHARGE=#{loadingCharge},PAYMENT_METHOD=#{paymentMethod},CANCELLATION_REASONS=#{cancellationReasons},AUTHORIZED_PERSON=#{authorizedPerson},
+     dish=#{dish},drinks=#{drinks},flower=#{flower},cigarette=#{cigarette},gift=#{gift},PRINT_MENU=#{printMenu},ROOM_PROGRAM=#{roomProgram},
+     AUDITORIUM_PROGRAM=#{auditoriumProgram},SITE_LAYOUT=#{siteLayout},FROZEN_TOWEL=#{frozenTowel},others=#{others},remarks=#{remarks},
+     monogram=#{monogram},TABLE_CARD=#{tableCard},INDICATOR=#{indicator},projector=#{projector},paperandpen=#{paperandpen},
+     PARKING_LOT=#{parkingLot},BACKGROUND_FRAME=#{backgroundFrame},FLORAL_PLANT_BACK=#{floralPlantBack},TEA_BREAK=#{teaBreak},
+     ETIQUETTE_SERVICE=#{etiquetteService},LNKJET_INSTALLATION=#{lnkjetInstallation},LED_SCREEN=#{ledScreen},WELCOME_PLAQUE=#{welcomePlaque},
+     REVOLVING_STAGE=#{revolvingStage},TABLE_SIGN=#{tableSign},LI_CARD=#{liCard},perform=#{perform},CLOTH_FIELD=#{clothField},RENTAL_FEE=#{rentalFee},
+     GATE_ADVERTISEMENT=#{gateAdvertisement},RAINBOW_ARCHED_ENTRANCE=#{rainbowArchedEntrance},FLYING_BALLOON=#{flyingBalloon},
+     ROME_FLAG=#{romeFlag},RENT_INCLUDED=#{rentIncluded},VIDEO_AND_AUDIO=#{videoAndAudio},OTHER_REQUIREMENTS=#{otherRequirements}
+     where id=#{id}
+    </update>
+
+
+    <!--修改宴会预订信息-->
+    <update id="updateYhReserveInfo" parameterType="com.goodsoft.hotel.domain.entity.restaurantReservation.YanhuiReservation">
+    update GS_YANHUI_RESERVATION  set
+    CUSTOMER_TYPE=#{customerType},CUSTOMER_NAME=#{customerName},ENTRY_DATE=#{entryDate},PEOPLE_NUMBER=#{peopleNumber},
+SALES_MANAGER=#{salesManager},CONTACTS=#{contacts},CONTACTS_NUMBER=#{contactsNumber},APPOINTMENT_LENGTH=#{appointmentLength},ATTHE_TIME=#{attheTime},
+END_DATE=#{endDate},MEMBER_CARD=#{memberCard},CONTRACT_UNIT=#{contractUnit},CORPORATE_NAME=#{corporateName},SEATS_NUM=#{seatsNum},WINE_POSITION=#{winePosition},
+ISBILLING=#{isbilling},FLOAT_NUM=#{floatNum},INVITATION_NUM=#{invitationNum},PAYMENT_METHOD=#{paymentMethod},
+CANCELLATION_REASONS=#{cancellationReasons},AUTHORIZED_PERSON=#{authorizedPerson},OPEN_TIME=#{openTime},ACTIVITY=#{activity},VALID_SIGNATURE=#{validSignature},
+PLACE=#{place},GUARANTEE_NUMBER=#{guaranteeNumber},TABLE_TYPE=#{tableType},ELECTRONIC_SCREEN_CONTENT=#{electronicScreenContent},
+VENUE_LAYOUT_1=#{venueLayout1},VENUE_LAYOUT_2=#{venueLayout2},PAYMENT_INSTRUCTIONS_1=#{paymentInstructions1},PAYMENT_INSTRUCTIONS_2=#{paymentInstructions2},
+PAYMENT_INSTRUCTIONS_3=#{paymentInstructions3},OTHER_EQUIREMENTS=#{otherEquirements},ENGINEERING_DPARTMENT_1=#{engineeringDpartment1},ENGINEERING_EPARTMENT_2=#{engineeringEpartment2},
+SECURITY_EPARTMENT_1=#{securityEpartment1},SECURITY_EPARTMENT_2=#{securityEpartment2},FINANCE_EPARTMENT_1=#{financeEpartment1},
+FINANCE_EPARTMENT_2=#{financeEpartment2},RECEPTION_1=#{reception1},RECEPTION_2=#{reception2},
+KEEPING_DPARTMENT_1=#{keepingDpartment1},KEEPING_DPARTMENT_2=#{keepingDpartment2},REMARKS=#{remarks}
+where id=#{id}
+</update>
+
+    <!--修改散客预订单状态-->
     <update id="updateReserveState" parameterType="java.util.Map">
         update GS_RESTAURANT_RESERVATION set state=#{state} where id in
         <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
             #{item}
         </foreach>
-
     </update>
+
+    <!--修改酒席预订单状态-->
+    <update id="updateJxReserveState" parameterType="java.util.Map">
+        update GS_BANQUET_RESERVATION set state=#{state} where id in
+        <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--修改宴会预订单状态-->
+    <update id="updateYhReserveState" parameterType="java.util.Map">
+        update GS_YANHUI_RESERVATION set state=#{state} where id in
+        <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+
+     <!--修改散客预订单取消原因-->
+    <update id="updateReserveReason" parameterType="java.util.Map" >
+     update GS_RESTAURANT_RESERVATION set  cancellation_reason=#{cancellationReason} where id in
+        <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--修改酒席预订单取消原因-->
+    <update id="updateJxReserveReason" parameterType="java.util.Map" >
+        update GS_BANQUET_RESERVATION set  cancellation_reasons=#{cancellationReasons} where id in
+        <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--修改宴会预订单取消原因-->
+    <update id="updateYhReserveReason" parameterType="java.util.Map" >
+        update GS_YANHUI_RESERVATION set  cancellation_reasons=#{cancellationReasons} where id in
+        <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
 
 
     <!--插入预订分厅信息-->
@@ -184,10 +331,29 @@
         </foreach>
     </insert>
 
+    <!--修改预订分厅状态-->
+    <update id="updateReserveHallState" parameterType="string">
+      update  reserve_halls set reserve_hall_status=#{state} where reserve_id=#{reserveId}
+    </update>
+
+
     <!--删除预订分厅信息-->
     <delete id="deleteReserveHalls" parameterType="java.lang.String">
         delete from RESERVE_HALLS where reserve_id =#{_parameter}
     </delete>
+
+    <!--查询厅台入入席时间差小于5小时-->
+    <select id="joinTableAndDate" parameterType="string" resultType="java.lang.Integer">
+        select count(1) from reserve_halls where reserve_hall_status='1' and   table_id=#{tableId}  and  UNIX_TIMESTAMP(RESERVE_START_TIME) &gt; UNIX_TIMESTAMP(now())
+        and abs((UNIX_TIMESTAMP(RESERVE_START_TIME)-UNIX_TIMESTAMP('${startTime}'))/3600) &lt;=5
+    </select>
+
+
+    <!--更新预订单到期未到状态-->
+    <update id="updateReserveReState">
+        update GS_RESTAURANT_RESERVATION set state=4 where
+        state=1 and UNIX_TIMESTAMP(ATTHE_TIME) &lt;UNIX_TIMESTAMP(now())
+    </update>
 
 
 </mapper>

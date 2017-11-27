@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
         <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.CyFloorDao">
 
     <!--d &gt;  x &lt;-->
@@ -10,23 +11,21 @@
     <select id="selectTableInfos" parameterType="java.util.Map" resultType="java.util.Map">
     select DISTINCT s.*,t.* from
     (
+    select ab.*,geo.id orderNumber from (
     select a.hall_name hall_name ,b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status from
-    (select * from gs_hall where 1=1
-     <if test="hallId!=null and hallId!=''">
-     and  id=#{hallId}
-     </if>
-     <if test="hallName!=null and hallName!=''">
-     and hall_name like '%${hallName}%'
-     </if>
-    ) a
+    (select * from gs_hall where 1=1) a
     left join (
     select b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status ,b.HALL_ID
-    from  gs_diningtable b  where b.status!=0) b on a.id=b.hall_id)s
+    from  gs_diningtable b  where b.status!=0) b
+    on a.id=b.hall_id)ab  left join GS_REPAST_ORDER geo on ab.id=geo.ctid
+    )s
     left join
-    (select a.id reserveId,a.customer_name,a.people_number,b.table_id,a.contact_number,b.reserve_start_time,b.reserve_end_time
+    (
+    select a.id reserveId,a.customer_name,a.people_number,b.table_id,a.contact_number,b.reserve_start_time,b.reserve_end_time
     from gs_restaurant_reservation a ,reserve_halls b
     where a.id=b.reserve_id and a.state='1' and b.reserve_hall_status='1'
-    and ((UNIX_TIMESTAMP(b.reserve_start_time)-UNIX_TIMESTAMP(now()))/3600 between 0 and 5) ) t
+    and ((UNIX_TIMESTAMP(b.reserve_start_time)-UNIX_TIMESTAMP(now()))/3600 between 0 and 5)
+    ) t
     on s.id=t.table_id  order by s.table_name
     </select>
 
@@ -34,6 +33,14 @@
     <update id="updateTableState" parameterType="java.util.Map">
         update gs_diningtable set  status=#{status} where id=#{tableId}
     </update>
+
+    <!--查询餐台各状态数量-->
+    <select id="selectTableStateForNumber" resultType="java.util.Map">
+    select sum(case when status=1 then 1 else 0 end) clean,sum(case when status=2 then 1 else 0 end) repair,sum(case when status=3 then 1 else 0 end)reserve,
+    sum(case when status=4 then 1 else 0 end)sit,sum(case when status=5 then 1 else 0 end)ldto,sum(case when status=6 then 1 else 0 end)mdto,
+    sum(case when status=7 then 1 else 0 end)cleaning,sum(case when status=8 then 1 else 0 end) operated
+    from gs_diningtable;
+    </select>
 
 </mapper>
 

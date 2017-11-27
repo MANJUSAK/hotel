@@ -32,7 +32,6 @@ public class FitReservation {
     private String last_modified_time; //最后修改时间.
     private String cancellation_reason; //取消原因
     private String state;               //状态
-
     private Integer reserveType;   //预订类型
 
     public Integer getReserveType() {

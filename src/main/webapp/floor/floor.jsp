@@ -289,13 +289,10 @@
             justify-content: center;
             align-items: center;
             color: white;
-
         }
         .left_b div div:nth-child(2){
             width: 92%;
             float: left;
-
-
         }
         .left_b div div:nth-child(2) ul{
             width: 100%;
@@ -315,6 +312,15 @@
 
         .floorLi{
             cursor: pointer;
+        }
+
+        .lebal{
+            margin-left: 10px;
+            margin-top: 5px;
+        }
+        .resInfo{
+        text-align: center;
+            margin-top: 5px;
         }
 
     </style>
@@ -372,6 +378,11 @@
                                         ${halllist.table_name}<br/>
                                     </li>
                                     <input name="reservId" value="${halllist.reserveId}" type="hidden">
+                                    <input value="${halllist.id}" name="tableId" type="hidden">
+                                    <input value="${halllist.table_name}" name="tableName" type="hidden">
+                                    <input value="${halllist.hall_name}" name="hallName" type="hidden">
+                                    <input value="${halllist.minimum_consumption}" name="minimumConsumption" type="hidden"> <%-- 最低消费--%>
+                                    <input value="${halllist.service_charge}" name="serviceCharge" type="hidden"> <%-- 服务费率--%>
                                 </c:when>
 
                                 <%--空净--%>
@@ -434,7 +445,6 @@
                         </c:forEach>
                         </c:if>
 
-
                     </ul>
 
                 </div>
@@ -457,7 +467,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel">开台</h4>
                 </div>
-                <div style="height: 200px;width: 500px" class="modal-body">
+                <div id="ktformdiv" style="height: 200px;width: 570px" class="modal-body">
                     <form id="ktform">
 
 
@@ -489,37 +499,71 @@
         $(".floorLi").on("click",function(){
             //空净开台
             if($(this).attr("name")==1){
+                $("#ktformdiv").css("height","200px");
                 var tableid= $(this).siblings("input[name='tableId']").val();
                 var tableName= $(this).siblings("input[name='tableName']").val();
                 var hallName= $(this).siblings("input[name='hallName']").val();
                 var minimumConsumption= $(this).siblings("input[name='minimumConsumption']").val();
                 var serviceCharge= $(this).siblings("input[name='serviceCharge']").val();
                 $("#ktform").html("");
-            $("#ktform").append('<span>客人姓名</span><input type="text" name="consumer"/> <span>人数</span><input type="text" name="personNum"/> ' +
+            $("#ktform").append('<span>客人姓名</span><input type="text" name="consumer" value="自来客"/> <span>人数</span><input type="text" name="personNum"/> ' +
                 '<input type="hidden" name="aoh" value="'+tableName+'"/>' +
                 '<input type="hidden" name="ctType" value="'+hallName+'"/>' +
                 '<input type="hidden" name="fwRate" value="'+serviceCharge+'"/>' +
                 '<input type="hidden" name="zdConsume" value="'+minimumConsumption+'"/>' +
-                '<input type="hidden" name="tableId" value="'+tableid+'"/>'   );
-            $("#kaitaibut").val("开台");
+                '<input type="hidden" name="ctid" value="'+tableid+'"/>'   );
+            $("#kaitaibut").html("开台");
             $("#myModal").modal("show");
             }
 
             //预订开台
             if($(this).attr("name")==3){
             var reserveId=$(this).siblings("input[name='reservId']").val();
-
+                var tableid= $(this).siblings("input[name='tableId']").val();
+                var tableName= $(this).siblings("input[name='tableName']").val();
+                var hallName= $(this).siblings("input[name='hallName']").val();
+                var minimumConsumption= $(this).siblings("input[name='minimumConsumption']").val();
+                var serviceCharge= $(this).siblings("input[name='serviceCharge']").val();
                 $.ajax({
                     url: "<%=basePath%>/restaurantReservation/selectReserveInfo",
                     type: "get",
                     data: {"reserveId":reserveId},
                     dataType: "json",
                     success: function (data) {
-                    console.log(data);
-                    console.log(123);
+                    var resInfo = data.reserve;
+                    if(resInfo.seats_num==null){
+                        resInfo.seats_num='';
+                    }
+                    $("#ktformdiv").css("height","400px");
+                        $("#ktform").html("");
+                        $("#ktform").append('' +
+                        '<span class="lebal">顾客类型&#12288;</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.customer_type+'" />' +
+                         '<span class="lebal">客人姓名&#12288;</span><input class="resInfo" type="text" readonly="readonly" name="consumer" value="'+resInfo.customer_name+'" /><br/>' +
+                         '<span class="lebal">人&#12288;&#12288;数&#12288;</span><input class="resInfo" type="text" readonly="readonly" name="personNum" value="'+resInfo.people_number+'" />' +
+                         '<span class="lebal">预约时长&#12288;</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.appointment_length+'" /><br/>' +
+                         '<span class="lebal">会员卡号&#12288;</span><input class="resInfo" type="text" readonly="readonly" name="vipNum" value="'+resInfo.member_card+'" />' +
+                         '<span class="lebal">公司名称&#12288;</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.corporate_name+'" /><br/>' +
+                         '<span class="lebal">联系电话&#12288;</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.contact_number+'" />' +
+                         '<span class="lebal">合约单位&#12288;</span><input class="resInfo" type="text" readonly="readonly" name="department" value="'+resInfo.contract_unit+'" /><br/>' +
+                            '<span class="lebal">席&#12288;&#12288;数&#12288;</span><input class="resInfo" type="text" readonly="readonly" name="placeNum" value="'+resInfo.seats_num+'" />' +
+                            '<span class="lebal">营业经理&#12288;</span><input class="resInfo" type="text" readonly="readonly" name="salemanager" value="'+resInfo.sales_manager+'" /><br/>' +
+                            '<span class="lebal">备&#12288;&#12288;注&#12288;</span><input style="width:395px" class="resInfo" type="text" readonly="readonly" name="remarks" value="'+resInfo.remarks+'" /><br/>' +
+                            '<span class="lebal">入席时间&#12288;</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.atthe_time+'" />' +
+                            '<span class="lebal">结束日期&#12288;</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.atthe_time+'" /><br/>' +
+                            '<span class="lebal">记录操作人</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.record_operator+'" />' +
+                            '<span class="lebal">记录时间&#12288;</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.recording_time+'" /><br/>' +
+                            '<span class="lebal">最后修改人</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.final_amendment+'" />' +
+                            '<span class="lebal">最后修改时间</span><input class="resInfo" type="text" readonly="readonly" value="'+resInfo.last_modified_time+'" />' +
+                            '<input type="hidden" name="aoh" value="'+tableName+'"/>' +
+                            '<input type="hidden" name="ctType" value="'+hallName+'"/>' +
+                            '<input type="hidden" name="fwRate" value="'+serviceCharge+'"/>' +
+                            '<input type="hidden" name="zdConsume" value="'+minimumConsumption+'"/>' +
+                            '<input type="hidden" name="ctid" value="'+tableid+'"/>')
+
+                        $("#kaitaibut").html("预订开台");
+                        $("#myModal").modal("show");
                     }
                 });
-
                 }
         });
 
@@ -528,7 +572,6 @@
         $("#kaitaibut").on("click",function () {
             console.log( $("#ktform").serialize());
         });
-
 
     </script>
     <div id="right">
@@ -544,7 +587,6 @@
                 <li>
                     <select style="width: 85%;position: relative;left: -5px;" id="hallList">
                         <option>全部</option>
-
                     </select>
                 </li>
 
@@ -559,14 +601,12 @@
             <ul>
                 <li><div><img src="<%=basePath%>/floor/icon/zf.png">未买单</div><div><img src="<%=basePath%>/floor/icon/wxf.png">维修</div></li>
                 <li><div><img src="<%=basePath%>/floor/icon/dyf.png">清洁中</div><div><img src="<%=basePath%>/floor/icon/lszf.png">正在操作</div></li>
-
             </ul>
         </div>
         <div class="top_d" style="margin-top: -10%">
             <ul>
                 <li><div><input type="checkbox" style="width: 15px;height: 15px" />关联预定</div><div><input type="checkbox" style="width: 15px;height: 15px" />包含假房</div></li>
                 <li><div><input type="checkbox" style="width: 15px;height: 15px" />自动刷新</div><div><select><option>1分钟</option><option>2分钟</option><option>5分钟</option><option>10分钟</option><option>1小时</option></select></div></li>
-
             </ul>
         </div>
         <div class="top_b">
