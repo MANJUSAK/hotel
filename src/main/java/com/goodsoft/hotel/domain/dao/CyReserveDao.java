@@ -65,6 +65,9 @@ public interface CyReserveDao {
     //修改散客预订单状态
     public Integer updateReserveState(Map map);
 
+    //修改单条散客预订单状态
+    public Integer updateAloneReserveState(@Param("state") String state,@Param("reserveId") String reserveId);
+
     //修改酒席预订单状态
     public Integer updateJxReserveState(Map map);
 

@@ -353,14 +353,15 @@
                 </div>
 
                 <div class="contentdiv" style="float: left;width: 90%;margin:0">
-                    <%--<li><div>空净</div><div style="background-color: #F1F1F1"></div><div><span>2256间</span></div></li>--%>
-                    <%--<li><div>维修</div><div style="background-color: #3333CC"></div><div><span>56间</span></div></li>--%>
-                    <%--<li><div>预订</div><div style="background-color: #3399FF"></div><div><span>1236间</span></div></li>--%>
-                    <%--<li><div>就座</div><div style="background-color: #660099"></div><div><span>226间</span></div></li>--%>
-                    <%--<li><div>落单超时</div><div style="background-color: #CCCC00"></div><div><span>26间</span></div></li>--%>
-                    <%--<li><div>打单超时未买单</div><div style="background-color: #33FF00"></div><div><span>26间</span></div></li>--%>
-                    <%--<li><div>清洁中</div><div style="background-color: #FF6600"></div><div><span>26间</span></div></li>--%>
-                    <%--<li><div>正在操作</div><div style="background-color: #FF3333"></div><div><span>26间</span></div></li>--%>
+                   <%-- <li><div>空净</div><div style="background-color: #F1F1F1"></div><div><span>2256间</span></div></li>
+                    <li><div>维修</div><div style="background-color: #3333CC"></div><div><span>56间</span></div></li>
+                    <li><div>预订</div><div style="background-color: #3399FF"></div><div><span>1236间</span></div></li>
+                    <li><div>就座</div><div style="background-color: #660099"></div><div><span>226间</span></div></li>
+                    <li><div>落单超时</div><div style="background-color: #CCCC00"></div><div><span>26间</span></div></li>
+                    <li><div>打单超时未买单</div><div style="background-color: #33FF00"></div><div><span>26间</span></div></li>
+                    <li><div>清洁中</div><div style="background-color: #FF6600"></div><div><span>26间</span></div></li>
+                    <li><div>正在操作</div><div style="background-color: #FF3333"></div><div><span>26间</span></div></li>--%>
+
                     <ul class="ul123">
                         <c:if test="${fn:length(hall.hallList)>0}">
                         <c:forEach items="${hall.hallList}" var="halllist">
@@ -480,9 +481,6 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
-
-
-
 
 
     <script>

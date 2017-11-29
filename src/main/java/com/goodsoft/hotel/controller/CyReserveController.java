@@ -525,7 +525,6 @@ public class CyReserveController {
     }
 
 
-
    private String formatDate(Date date){
        SimpleDateFormat sf=new SimpleDateFormat("YYYY-MM-dd 00:00");
         return sf.format(date);

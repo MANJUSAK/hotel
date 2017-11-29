@@ -13,10 +13,21 @@
     (
     select ab.*,geo.id orderNumber from (
     select a.hall_name hall_name ,b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status from
-    (select * from gs_hall where 1=1) a
+    (select * from gs_hall where 1=1
+        <if test="hallId!=null and hallId!=''">
+         and id=#{hallId}
+        </if>
+        <if test="hallName!=null and hallName!=''">
+            and hall_name like '%${hallName}%'
+        </if>
+    )a
     left join (
     select b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status ,b.HALL_ID
-    from  gs_diningtable b  where b.status!=0) b
+    from  gs_diningtable b  where b.status!=0
+        <if test="state!=null and state!=''">
+         and   b.status=#{state}
+        </if>
+        ) b
     on a.id=b.hall_id)ab  left join GS_REPAST_ORDER geo on ab.id=geo.ctid
     )s
     left join
@@ -25,14 +36,17 @@
     from gs_restaurant_reservation a ,reserve_halls b
     where a.id=b.reserve_id and a.state='1' and b.reserve_hall_status='1'
     and ((UNIX_TIMESTAMP(b.reserve_start_time)-UNIX_TIMESTAMP(now()))/3600 between 0 and 5)
-    ) t
-    on s.id=t.table_id  order by s.table_name
+    )t
+    on s.id=t.table_id
     </select>
 
+
+
     <!--修改餐台状态-->
-    <update id="updateTableState" parameterType="java.util.Map">
+    <update id="updateTableState" parameterType="string">
         update gs_diningtable set  status=#{status} where id=#{tableId}
     </update>
+
 
     <!--查询餐台各状态数量-->
     <select id="selectTableStateForNumber" resultType="java.util.Map">

@@ -144,7 +144,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
 <div style="width: 100%;height: 800px;min-width: 600px;">
 
     <div class="butt" style="width: 100%;height: 100px;">
-        <div style="float:left;margin-left:40px;"><select id="reserveTypeOption" name="sign">
+        <div style="float:left;margin-left:40px;"><select style="width:100px;height:34px;border-radius:4px;padding-left: 10px" id="reserveTypeOption" name="sign">
             <option <c:if test="${sign==1}">selected="selected"</c:if> value="1">散客</option>
             <option <c:if test="${sign==2}">selected="selected"</c:if> value="2">酒席</option>
             <option <c:if test="${sign==3}">selected="selected"</c:if> value="3">宴会</option></select> </div>
@@ -166,15 +166,15 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
             $(".selectStateRadio").on("click",function(){
               window.location.href="<%=basePath%>/reserve?state="+$(this).val()+"&staetTime=1<c:if test="${sign!=null}">&sign=${sign}</c:if>";
             });
-
         </script>
 
-        <div class="input-group"style="width: 400px;float: right;">
+        <div class="input-group"style="width: 299px;float: left;margin-left:300px">
             <input type="text" class="form-control">
             <span class="input-group-btn">
                         <button class="btn btn-default" type="button">搜索</button>
                     </span>
         </div>
+
         <button name="update" type="button" class="jnog btn btn-info">修改</button>
         <button name="delete" type="button" class="jnog btn btn-info">取消</button>
         <button name="add" type="button" class="jnog btn btn-info">新增</button>
@@ -243,6 +243,9 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
             });
         </script>
 
+
+        <div style="height: 100px;width: 100%;position: fixed;left: 0px;bottom: 0px; ">
+
         <%--每页显示条数--%>
         <div style="float: left;margin-left: 40px;margin-top: 42px;font-size: 17px">
             每页显示:<select class="pageSizeOption">
@@ -264,18 +267,69 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
 
                 <script>
                     $(".pagination").append('<li> <a href="<%=basePath%>/reserve?currentPage=${pageBean.previousPage}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">上一页</a> </li>');
+
+                    <c:if test="${pageBean.pageTotal<7}">
                     for(var i=1;i<=${pageBean.pageTotal};i++){
+
                         if(i==${pageBean.currentPage}){
                             $(".pagination").append('<li class="active"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
                         }else {
                             $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=' + i + '&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">' + i + '</a> </li>');
                         }
                     }
+                    </c:if>
+
+
+                    <c:if test="${pageBean.pageTotal>6}">
+
+                    <c:if test="${pageBean.currentPage<5}">
+                    for(var i=1;i<=5;i++){
+                        var active='pointtln';
+                        if(i==${pageBean.currentPage}){active='active';}
+                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
+                    }
+                    $(".pagination").append('<li><a>......</a> </li>');
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage='+'${pageBean.pageTotal}'+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'${pageBean.pageTotal}'+'</a> </li>');
+                    </c:if>
+
+                    <c:if test="${pageBean.currentPage>=5 && pageBean.currentPage<=pageBean.pageTotal-5}">
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=1&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'1'+'</a> </li>');
+                    $(".pagination").append('<li><a>......</a> </li>');
+
+                    for(var i=${pageBean.currentPage-1};i<=${pageBean.currentPage+1};i++){
+                        var active='pointtln';
+                        if(i==${pageBean.currentPage}){active='active';}
+                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
+                    }
+
+                    $(".pagination").append('<li><a>......</a> </li>');
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage='+'${pageBean.pageTotal}'+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'${pageBean.pageTotal}'+'</a> </li>');
+
+                    </c:if>
+
+
+                    <c:if test="${ pageBean.currentPage>pageBean.pageTotal-5 && pageBean.currentPage>=5}">
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=1&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'1'+'</a> </li>');
+                    $(".pagination").append('<li><a>......</a> </li>');
+
+                    for(var i=${pageBean.pageTotal-5};i<=${pageBean.pageTotal};i++){
+                        var active='pointtln';
+                        if(i==${pageBean.currentPage}){active='active';}
+                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
+                    }
+                    </c:if>
+
+
+                    </c:if>
+
+
                     $(".pagination").append('<li> <a href="<%=basePath%>/reserve?currentPage=${pageBean.nextPage}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">下一页</a> </li>');
                 </script>
 
             </ul>
         </div>
+        </div>
+
     </div>
 
     <!--弹出框-->
@@ -996,7 +1050,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
             '<td><select name="reserve_table" class="optionTable">' + hallsTabletring + '</select></td>' +
             '<td><input class="notnull sknotnull" type="text" name="reserve_start_time" value="'+st+'"/></td>'+
             '<td><input class="notnull sknotnull" type="text" name="reserve_end_time"  value="'+et+'"/></td>'+
-            '<td><select name="shibie"><option>早市</option> <option>晚市</option></select></td>' +
+            '<td><select name="shibie"><option>早市</option><option>中市</option> <option>晚市</option></select></td>' +
             '<td><input name="reserve_hall_status" type="hidden" value="未到"/>未到</td></tr>');
 
         $(".scrollse").scrollTop($(".scrollse")[0].scrollHeight);
@@ -1445,9 +1499,11 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
 
 
             if (data5.halls[i].shibie == "早市") {
-                shibies = '<td><select name="shibie"><option selected="selected">早市</option> <option>晚市</option></select></td>'
+                shibies = '<td><select name="shibie"><option selected="selected">早市</option> <option>中市</option><option>晚市</option></select></td>'
             } else if (data5.halls[i].shibie == "晚市") {
-                shibies = '<td><select name="shibie"><option >早市</option> <option selected="selected">晚市</option></select></td>'
+                shibies = '<td><select name="shibie"><option >早市</option> <option>中市</option><option selected="selected">晚市</option></select></td>'
+            }else if(data5.halls[i].shibie == "中市"){
+                shibies = '<td><select name="shibie"><option >早市</option> <option selected="selected">中市</option><option selected="selected">晚市</option></select></td>'
             }
 
             var ft = '';

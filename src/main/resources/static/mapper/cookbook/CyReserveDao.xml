@@ -280,6 +280,11 @@ where id=#{id}
         </foreach>
     </update>
 
+    <!--修改单条散客预订单状态-->
+    <update id="updateAloneReserveState" parameterType="string">
+         update GS_RESTAURANT_RESERVATION set state=#{state} where id =#{reserveId}
+    </update>
+
     <!--修改酒席预订单状态-->
     <update id="updateJxReserveState" parameterType="java.util.Map">
         update GS_BANQUET_RESERVATION set state=#{state} where id in
