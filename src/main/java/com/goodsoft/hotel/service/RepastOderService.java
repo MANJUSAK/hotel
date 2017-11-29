@@ -4,6 +4,7 @@ import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.result.Status;
+import com.goodsoft.hotel.exception.HotelDataBaseException;
 
 /**
  * description:
@@ -18,12 +19,22 @@ public interface RepastOderService {
     /**
      * 餐饮订单查询业务方法，用于前台收银获取相关订单数据信息
      *
-     * @param id  订单编号
+     * @param id   订单编号
+     * @param page 分页信息
      * @param <T>
      * @return 查询数据
      * @throws Exception
      */
     <T> T queryOrderService(String id, PageParam page) throws Exception;
+
+    /**
+     * 通过订单号查询餐饮订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
+     *
+     * @param id 订单编号
+     * @return 查询数据
+     * @throws Exception
+     */
+    <T> T queryOrderByIdService(String id) throws Exception;
 
     /**
      * 餐饮预订单开台订单添加（开台）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
@@ -43,7 +54,7 @@ public interface RepastOderService {
      * @param orderGoods 订单食品明细信息
      * @throws Exception
      */
-    void addOrderGoodsService(RepastOrderParam msg) throws Exception;
+    void addOrderGoodsService(RepastOrderParam msg) throws HotelDataBaseException;
 
     /**
      * 餐饮预订单开台订单修改（开台修改订单）业务方法，用于处理预订之后的顾客临时调整用餐信息时,

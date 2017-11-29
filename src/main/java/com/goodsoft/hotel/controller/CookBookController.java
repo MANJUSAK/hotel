@@ -8,7 +8,7 @@ import com.goodsoft.hotel.domain.entity.param.MeansParam;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
-import com.goodsoft.hotel.exception.HotelException;
+import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.CookBookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -333,7 +333,7 @@ public class CookBookController {
     public Status deleteMenuType(String... id) {
         try {
             return this.service.deleteMenuTypeService(id);
-        } catch (HotelException e) {
+        } catch (HotelDataBaseException e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
         }

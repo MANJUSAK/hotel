@@ -5,6 +5,7 @@ import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
+import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.RepastOderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,25 @@ public class RepastOrderController {
             return this.service.queryOrderService(id, page);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+    }
+
+    /**
+     * 通过订单号查询餐饮订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
+     *
+     * @param id 订单编号
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("/query/order/by/id/data.shtml")
+    public Object queryOrderController(String id) {
+        try {
+            return this.service.queryOrderByIdService(id);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
     }
@@ -79,9 +98,9 @@ public class RepastOrderController {
                 try {
                     this.service.addOrderGoodsService(msg);
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
-                } catch (Exception e) {
+                } catch (HotelDataBaseException e) {
                     this.logger.error(e.toString());
-                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                    return new Status(StatusEnum.DEFEAT.getCODE(), e.toString());
                 }
             } else {
                 return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());

@@ -20,6 +20,9 @@ public interface RepastOrderDao {
     //餐饮订单查询
     List<Order> queryRepastOrderDao(@Param("id") String id, @Param("status") int status) throws Exception;
 
+    //餐饮订单查询通过订单编号
+    Order queryRepastOrderByIdDao(@Param("id") String id) throws Exception;
+
     //餐饮订单食品查询
     List<OrderGoods> queryRepastOrderGoodsDao(@Param("oid") String oid) throws Exception;
 

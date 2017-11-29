@@ -1,5 +1,7 @@
 package com.goodsoft.hotel.domain.entity.repastorder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -34,6 +36,10 @@ public class OrderGoods implements java.io.Serializable {
     private int writeBill;//是否手写单（0为true/1为false）
     private String menuType;//部门类别
     private String detailRemarks;//备注
+
+    public OrderGoods() {
+        this.dcTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
 
     public String getId() {
         return id;

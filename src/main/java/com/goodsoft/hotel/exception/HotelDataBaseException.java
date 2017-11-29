@@ -7,7 +7,7 @@ package com.goodsoft.hotel.exception;
  * @author 严彬荣 Created on 2017-11-27 10:04
  * @version V1.0
  */
-public class HotelException extends Exception {
+public class HotelDataBaseException extends Exception {
 
     private static final long serialVersionUID = -7899357411871887321L;
 
@@ -16,7 +16,7 @@ public class HotelException extends Exception {
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public HotelException() {
+    public HotelDataBaseException() {
     }
 
     /**
@@ -27,7 +27,7 @@ public class HotelException extends Exception {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public HotelException(String message) {
+    public HotelDataBaseException(String message) {
         super(message);
     }
 
