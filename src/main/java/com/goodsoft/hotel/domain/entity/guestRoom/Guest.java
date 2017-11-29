@@ -1,7 +1,8 @@
 package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
- * Created by Administrator on 2017/11/15/015.
+ * 客人信息表
+ * Created by 王智 on 2017/11/15/015.
  */
 
 public class Guest {
@@ -11,7 +12,7 @@ public class Guest {
     private String englishName;  //英语名
     private String marital;     //婚姻状况
     private String nationality;     //国籍
-    private String language;        //语言
+    private String languages;        //语言
     private String cardType;        //证件类型
     private String ethnic;      //民族
     private String documentNo;      //证件号码
@@ -43,12 +44,14 @@ public class Guest {
     private String arrivalFlight;    //	抵达航班
     private String whereToGo;        //到何处去
     private String leaveFlight;    //	离开航班
-    private String position;        //位置
+    private String positions;        //位置
     private String carType;      //车型
     private String carPlateNumber;  //车牌号
     private String specialDemand;        //特殊要求
     private String hobby;        //兴趣爱好
     private String taboo;        //忌讳
+    private String bookId;       //预定单编号
+    private String vipId;        //会员卡ID
 
 
     public String getId() {
@@ -99,12 +102,12 @@ public class Guest {
         this.nationality = nationality;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getLanguages() {
+        return languages;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLanguages(String languages) {
+        this.languages = languages;
     }
 
     public String getCardType() {
@@ -355,12 +358,12 @@ public class Guest {
         this.leaveFlight = leaveFlight;
     }
 
-    public String getPosition() {
-        return position;
+    public String getPositions() {
+        return positions;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setPositions(String positions) {
+        this.positions = positions;
     }
 
     public String getCarType() {
@@ -403,6 +406,22 @@ public class Guest {
         this.taboo = taboo;
     }
 
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public String getVipId() {
+        return vipId;
+    }
+
+    public void setVipId(String vipId) {
+        this.vipId = vipId;
+    }
+
     @Override
     public String toString() {
         return "Guest{" +
@@ -412,7 +431,7 @@ public class Guest {
                 ", englishName='" + englishName + '\'' +
                 ", marital='" + marital + '\'' +
                 ", nationality='" + nationality + '\'' +
-                ", language='" + language + '\'' +
+                ", languages='" + languages + '\'' +
                 ", cardType='" + cardType + '\'' +
                 ", ethnic='" + ethnic + '\'' +
                 ", documentNo='" + documentNo + '\'' +
@@ -444,12 +463,14 @@ public class Guest {
                 ", arrivalFlight='" + arrivalFlight + '\'' +
                 ", whereToGo='" + whereToGo + '\'' +
                 ", leaveFlight='" + leaveFlight + '\'' +
-                ", position='" + position + '\'' +
+                ", positions='" + positions + '\'' +
                 ", carType='" + carType + '\'' +
                 ", carPlateNumber='" + carPlateNumber + '\'' +
                 ", specialDemand='" + specialDemand + '\'' +
                 ", hobby='" + hobby + '\'' +
                 ", taboo='" + taboo + '\'' +
+                ", bookId='" + bookId + '\'' +
+                ", vipId='" + vipId + '\'' +
                 '}';
     }
 
@@ -466,7 +487,7 @@ public class Guest {
         if (englishName != null ? !englishName.equals(guest.englishName) : guest.englishName != null) return false;
         if (marital != null ? !marital.equals(guest.marital) : guest.marital != null) return false;
         if (nationality != null ? !nationality.equals(guest.nationality) : guest.nationality != null) return false;
-        if (language != null ? !language.equals(guest.language) : guest.language != null) return false;
+        if (languages != null ? !languages.equals(guest.languages) : guest.languages != null) return false;
         if (cardType != null ? !cardType.equals(guest.cardType) : guest.cardType != null) return false;
         if (ethnic != null ? !ethnic.equals(guest.ethnic) : guest.ethnic != null) return false;
         if (documentNo != null ? !documentNo.equals(guest.documentNo) : guest.documentNo != null) return false;
@@ -502,14 +523,16 @@ public class Guest {
             return false;
         if (whereToGo != null ? !whereToGo.equals(guest.whereToGo) : guest.whereToGo != null) return false;
         if (leaveFlight != null ? !leaveFlight.equals(guest.leaveFlight) : guest.leaveFlight != null) return false;
-        if (position != null ? !position.equals(guest.position) : guest.position != null) return false;
+        if (positions != null ? !positions.equals(guest.positions) : guest.positions != null) return false;
         if (carType != null ? !carType.equals(guest.carType) : guest.carType != null) return false;
         if (carPlateNumber != null ? !carPlateNumber.equals(guest.carPlateNumber) : guest.carPlateNumber != null)
             return false;
         if (specialDemand != null ? !specialDemand.equals(guest.specialDemand) : guest.specialDemand != null)
             return false;
         if (hobby != null ? !hobby.equals(guest.hobby) : guest.hobby != null) return false;
-        return taboo != null ? taboo.equals(guest.taboo) : guest.taboo == null;
+        if (taboo != null ? !taboo.equals(guest.taboo) : guest.taboo != null) return false;
+        if (bookId != null ? !bookId.equals(guest.bookId) : guest.bookId != null) return false;
+        return vipId != null ? vipId.equals(guest.vipId) : guest.vipId == null;
     }
 
     @Override
@@ -520,7 +543,7 @@ public class Guest {
         result = 31 * result + (englishName != null ? englishName.hashCode() : 0);
         result = 31 * result + (marital != null ? marital.hashCode() : 0);
         result = 31 * result + (nationality != null ? nationality.hashCode() : 0);
-        result = 31 * result + (language != null ? language.hashCode() : 0);
+        result = 31 * result + (languages != null ? languages.hashCode() : 0);
         result = 31 * result + (cardType != null ? cardType.hashCode() : 0);
         result = 31 * result + (ethnic != null ? ethnic.hashCode() : 0);
         result = 31 * result + (documentNo != null ? documentNo.hashCode() : 0);
@@ -552,12 +575,15 @@ public class Guest {
         result = 31 * result + (arrivalFlight != null ? arrivalFlight.hashCode() : 0);
         result = 31 * result + (whereToGo != null ? whereToGo.hashCode() : 0);
         result = 31 * result + (leaveFlight != null ? leaveFlight.hashCode() : 0);
-        result = 31 * result + (position != null ? position.hashCode() : 0);
+        result = 31 * result + (positions != null ? positions.hashCode() : 0);
         result = 31 * result + (carType != null ? carType.hashCode() : 0);
         result = 31 * result + (carPlateNumber != null ? carPlateNumber.hashCode() : 0);
         result = 31 * result + (specialDemand != null ? specialDemand.hashCode() : 0);
         result = 31 * result + (hobby != null ? hobby.hashCode() : 0);
         result = 31 * result + (taboo != null ? taboo.hashCode() : 0);
+        result = 31 * result + (bookId != null ? bookId.hashCode() : 0);
+        result = 31 * result + (vipId != null ? vipId.hashCode() : 0);
         return result;
     }
+
 }

@@ -1,7 +1,8 @@
 package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
- * Created by Administrator on 2017/11/9/009.
+ * 楼层信息表
+ * Created by 王智 on 2017/11/9/009.
  */
 public class Floors {
     private String id;              //ID

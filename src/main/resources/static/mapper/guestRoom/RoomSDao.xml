@@ -3,57 +3,148 @@
 
 <mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao">
 
+    <!--主页面房态信息 start-->
+
+    <!--房态 主页面 获取楼层信息-->
     <select id="queryFloorMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
         select DISTINCT b.FLOORCODE,b.FLOORNAME,b.FLOORID FROM gs_room a,gs_floor b where  a.FLOORCODE=b.FLOORCODE AND b.FLOORNAME !='业主自用房' ORDER BY b.FLOORID
     </select>
 
-    <!--通过楼层号获取房间信息-->
-    <select id="queryFloorRoomMapper" parameterType="java.lang.String"
-            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
-        SELECT id,roomid,roomtype,roomno,cname,buildingcode,floorcode,STATUS,doorlockid,remark,
-(case flag when '1' then '空房' when '2' then '散客' when '3' then '团体' when '4' then '自用' when '5' then '长包' when '6' then '赠送'  when '7' then '合约'  when '8' then '白日房'  when '8' then '司陪房'  else '熟客' end) as flag,
-(case flag when '1' then '脏房' when '2' then '维修房' when '3' then '停用房' when '4' then '空静房' when '5' then '预抵房' when '6' then '预留房' else '临时占房' end) as sflag  from gs_room where floorcode=#{_parameter}
+
+    <!--房态 主页面 通过楼层号获取房间信息-->
+    <select id="queryFloorRoomMapper" parameterType="java.util.Map"
+            resultType="java.util.Map">
+        SELECT * FROM
+        (select id,roomNo,doorlockId,remark,flag,sFlag from gs_room
+        where floorcode=#{floorcode} AND floorcode!='202'
+        ) x
+        LEFT JOIN
+        (SELECT a.guestName,a.startDate,a.endDate,b.roomId FROM gs_quickbooking a,gs_quickbooking_roomno b WHERE a.id = b.bookid AND
+        unix_timestamp(NOW()) &lt;  unix_timestamp(a.enddate) AND
+        unix_timestamp(NOW())  &gt; unix_timestamp(a.startdate)) y
+        ON x.id = y.roomid
     </select>
 
-    <!--通过楼层名返回房间信息-->
-    <select id="queryRoomFloorNameMapper" parameterType="java.lang.String"
-            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
-        select DISTINCT id,roomid,roomtype,roomno,cname,buildingcode,floorcode,STATUS,doorlockid,remark,
-(case flag when '1' then '空房' when '2' then '散客' when '3' then '团体' when '4' then '自用' when '5' then '长包' when '6' then '赠送'  when '7' then '合约'  when '8' then '白日房'  when '8' then '司陪房'  else '熟客' end) as flag,
-(case flag when '1' then '脏房' when '2' then '维修房' when '3' then '停用房' when '4' then '空静房' when '5' then '预抵房' when '6' then '预留房' else '临时占房' end) as sflag
-        FROM gs_room a,gs_floor b where  a.FLOORCODE=b.FLOORCODE AND b.FLOORNAME !='业主自用房'  AND b.FLOORNAME=#{_parameter}
+
+    <!--房态右边下拉框 获取楼层名-->
+    <select id="findFloorAllMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        select floorCode,floorName FROM gs_floor
     </select>
 
-    <!--查询房间类型-->
+    <!--房态右边下拉框楼层名获取房间信息 显示到左边-->
+    <select id="findFloorNameGetRoomMapper" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT * FROM
+        (select id,roomNo,doorlockId,remark,flag,sFlag from gs_room
+        where floorcode=#{floorcode} AND floorcode!='202'
+        ) x
+        LEFT JOIN
+        (SELECT a.guestName,a.startDate,a.endDate,b.roomId FROM gs_quickbooking a,gs_quickbooking_roomno b WHERE a.id = b.bookid AND
+        unix_timestamp(NOW()) &lt;  unix_timestamp(a.enddate) AND
+        unix_timestamp(NOW())  &gt; unix_timestamp(a.startdate)) y
+        ON x.id = y.roomid
+    </select>
+
+    <!--房态:右边下拉框 获取房间类型 -->
     <select id="queryRoomTypeMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
         SELECT * from gs_roomtype
     </select>
 
+    <!--房态:右边下拉框 通过房间类型 获取房间信息-->
+    <select id="queryRoomTypeGetRoomMapper" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT * FROM
+        (select id,roomNo,doorlockId,remark,flag,sFlag from gs_room
+        where roomtype=#{roomType} AND floorcode!='202'
+        ) x
+        LEFT JOIN
+        (SELECT a.guestName,a.startDate,a.endDate,b.roomId FROM gs_quickbooking a,gs_quickbooking_roomno b WHERE a.id = b.bookid AND
+        unix_timestamp(NOW()) &lt;  unix_timestamp(a.enddate) AND
+        unix_timestamp(NOW())  &gt; unix_timestamp(a.startdate)) y
+        ON x.id = y.roomid
+    </select>
+
+    <!--主界面房态信息   end-->
+
+    <!--***************************************************我是分割线***************************************************-->
+
+    <!--快速预定房间信息start-->
+
     <!--快速预定的房态,左边的列表选择-->
     <select id="queryRoomALLMapper" resultType="java.util.Map">
-        SELECT a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME,a.HOUSEPRICES,COUNT(b.FLAG) roomSum FROM gs_roomtype a,gs_room b where a.ROOMTYPE=b.ROOMTYPE AND b.FLAG='1' GROUP BY a.ROOMTYPE
+        SELECT a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME,a.HOUSEPRICES,COUNT(b.FLAG) roomSum FROM gs_roomtype a,gs_room b where a.ROOMTYPE=b.ROOMTYPE AND b.FLAG='空房' GROUP BY a.ROOMTYPE
     </select>
 
     <!--根据房间类型id获取房间号-->
     <select id="selectKongMapper" resultType="java.util.Map">
-        SELECT a.roomid,a.ROOMNO,a.doorLockId,b.housePrices,b.typename,b.roomType FROM gs_room a,gs_roomtype b where
-        a.ROOMTYPE=b.ROOMTYPE AND a.FLAG='1'
+        SELECT a.id,a.roomid,a.ROOMNO,a.doorLockId,b.housePrices,b.typename,b.roomType FROM gs_room a,gs_roomtype b where
+        a.ROOMTYPE=b.ROOMTYPE AND a.FLAG='空房'
         AND b.typeId IN
         <foreach collection="list" index="index" item="str" open="(" separator="," close=")">
             #{str}
         </foreach>
     </select>
 
-    <!--<select id="selectFindFang" parameterType="java.lang.String" resultType="java.util.Map">-->
-    <!--SELECT * FROM GS_quickbooking where guesutname LIKE CONCAT(CONCAT('%',#{0}),'%') OR  bookingno LIKE CONCAT(CONCAT('%',#{0}),'%')-->
-    <!--</select>-->
+    <!--快速预定房间信息 end-->
+
+    <!--***************************************************我是分割线***************************************************-->
+
+    <!--快速分房接口Start-->
+
+    <!--右边第一个房间类型-->
+    <select id="findRoomTypeFenFangMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
+        select * FROM gs_roomtype
+    </select>
+
+    <!--右边第二个建筑楼层-->
+    <select id="findBuildingFenFangMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
+        select DISTINCT a.* FROM gs_building a,gs_room b WHERE a.buildingcode = b.buildingcode
+            AND b.roomType = #{_parameter}
+    </select>
+
+    <!--右边第三个获取楼层-->
+    <select id="findFloorsFenFangMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        select DISTINCT a.* FROM gs_floor a,gs_room b WHERE a.floorcode = b.floorcode
+            AND b.buildingcode = #{_parameter}
+    </select>
+    
+    <!--左边房间查询房间-->
+    <select id="findRoomFenFangMapper" parameterType="java.util.Map" resultType="java.util.Map" >
+        select * from
+        (
+        SELECT c.buildingname,d.floorname,b.typename,a.id,a.roomno,a.remark,a.flag,a.sflag from gs_room a,gs_roomtype b,gs_building c ,gs_floor d
+        WHERE a.roomtype=b.roomtype AND a.buildingcode = c.buildingcode AND a.floorcode = d.floorcode AND
+        <if test="roomType != null and roomType !='' ">
+            AND a.roomType = #{roomType}
+        </if>
+        <if test="buildingCode !=null and buildingCode !='' ">
+            AND a.buildingCode=#{buildingCode}
+        </if>
+        <if test="floorCode !=null and floorCode !='' ">
+            AND a.floorCode = #{floorCode}
+        </if>
+        <if test="flag !=null and flag !='' ">
+            and a.flag= #{flag}
+        </if>
+        <if test="sflag != null and flag != '' ">
+            and a.sflag= #{sflag}
+        </if>
+        ) x
+        LEFT JOIN
+        (
+        select w.roomid,q.bookingno,q.guestname,q.markets,q.salesman,q.startdate,q.enddate,q.releasetime,q.days,q.remark,w.roomno
+        from gs_quickbooking q ,gs_quickbooking_roomno w where q.id = w.bookid
+        <if test="startDate !=null and startDate != ''">
+            AND unix_timestamp(q.startdate) &gt;= unix_timestamp(#{endDate})
+        </if>
+        <if test="endDate !=null and endDate != '' ">
+            and unix_timestamp(q.enddate) &lt;= unix_timestamp(#{endDate})
+        </if>
+        ) y
+        ON x.roomno = y.roomid
+    </select>
+    <!--快速分房接口end-->
 
 
-    <!--<insert id="addQuickbooking" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking"-->
-    <!--useGeneratedKeys="true" keyProperty="bookingid">-->
-    <!--insert into gs_Quickbooking VALUES (#{id},#{bookingid},#{guesttype},#{guestname},#{startdate},#{enddate},#{roomno},#{doorlockid},#{releasetime},#{contractno},#{guestthno},#{membershipcard},#{phoneno},#{houseprices},#{discount},#{salesman},#{rentreson},#{markets},#{paymode},#{bookingtype},#{discauth},#{guestsource},#{viptype},#{bookingname},#{phone},#{bookingemail},#{remark})-->
-    <!--</insert>-->
-    <!--房间end-->
+    <!--***************************************************我是分割线***************************************************-->
 
 
     <!--建筑添加信息-->
@@ -71,6 +162,7 @@
         insert into gs_roomtype(ID,ROOMTYPE,TYPENAME,HOUSEPRICES) VALUES(#{id},#{roomType},#{typeName},#{housePrices})
     </insert>
 
+
     <!--暂时没用到的接口,添加房间信息详情-->
     <insert id="insertRoom" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
         INSERT INTO gs_room(ID,ROOMTYPE,ROOMNO,CNAME,BUILDINGCODE,FLOORCODE,HOUSEPRICES,NIGHTS,STDPAX,MAXPAX,STATUS,DOORLOCKID,REMARK,FLAG,RACKPATE,RATECODE) VALUES
@@ -79,18 +171,11 @@
 
 
 
+    <!--添加房价信息-->
 
-    <!--<update id="" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Building" >-->
-    <!--UPDATE gs_building SET-->
-    <!--</update>-->
+    <insert id="addRoomPricesMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomPrices">
+        insert INTO gs_roomprices VALUES (#{id},#{roomTypeId},#{setStartTime},#{roomPrices})
+    </insert>
 
 
-    <!--测试数据-->
-    <select id="querycheshi" resultType="int">
-        SELECT  COUNT(ID)  FROM gs_room
-    </select>
-    <!--测试数据-->
-    <update id="updateRoomId">
-        update gs_room SET id=#{str} WHERE roomid=6
-    </update>
 </mapper>
