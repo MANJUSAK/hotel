@@ -121,8 +121,11 @@ public class CyFloorController {
         }catch (Exception e){
             return new Status(StatusEnum.DEFEAT.getCODE(),StatusEnum.DEFEAT.getEXPLAIN());
         }
+
         return new Result(StatusEnum.SUCCESS.getCODE(),stringIntegerMap);
     }
+
+
 
 
     //分类厅堂信息
@@ -132,7 +135,6 @@ public class CyFloorController {
 
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CyFloorDao mapper = sqlSession.getMapper(CyFloorDao.class);
-
         try {
             for (int i = 0; i < infos.size(); i++) {
                 Map returnMap = new HashMap();
@@ -145,7 +147,7 @@ public class CyFloorController {
                         }
                     }
                     //判断超过预定时间 未开台
-                    if(String.valueOf(infos.get(i).get("status")).equals("3") && infos.get(i).get("reserveId")==null) {
+                    if(String.valueOf(infos.get(i).get("status")).equals("3") && infos.get(i).get("reserveId")==null){
                         infos.get(i).put("status", "1");
                         mapper.updateTableState(String.valueOf(infos.get(i).get("id")), "1");
                     }
@@ -153,7 +155,7 @@ public class CyFloorController {
                     for (int j = i + 1; j < infos.size(); j++){
                         if (infos.get(j) != null && infos.get(i).get("hall_name").equals(infos.get(j).get("hall_name"))) {
                             //判断餐台是否有预订信息
-                            if(infos.get(j).get("reserveId")!=null&&!"".equals(infos.get(j).get("reserveId")) ){
+                            if(infos.get(j).get("reserveId")!=null&&!"".equals(infos.get(j).get("reserveId"))){
                                 if(String.valueOf(infos.get(j).get("status")).equals("1")) {
                                     infos.get(j).put("status", "3");
                                     mapper.updateTableState(String.valueOf(infos.get(j).get("id")), "3");
