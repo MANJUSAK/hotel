@@ -10,7 +10,7 @@ import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
-import com.goodsoft.hotel.exception.HotelException;
+import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.CookBookService;
 import com.goodsoft.hotel.util.UUIDUtil;
 import org.apache.ibatis.session.ExecutorType;
@@ -410,7 +410,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public Status deleteMenuTypeService(String... id) throws HotelException {
+    public Status deleteMenuTypeService(String... id) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
@@ -430,7 +430,7 @@ public class CookBookServicelmpl implements CookBookService {
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
             sqlSession.rollback();
-            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
         } finally {
             sqlSession.close();
         }
@@ -444,7 +444,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public Status deleteMenuSubTypeService(String... id) throws HotelException {
+    public Status deleteMenuSubTypeService(String... id) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
@@ -461,7 +461,7 @@ public class CookBookServicelmpl implements CookBookService {
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
-            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
         } finally {
             sqlSession.close();
         }
@@ -477,7 +477,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public Status deleteMenuService(String... id) throws HotelException {
+    public Status deleteMenuService(String... id) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
@@ -493,7 +493,7 @@ public class CookBookServicelmpl implements CookBookService {
         } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
-            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
         } finally {
             sqlSession.close();
         }
@@ -508,7 +508,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public Status deleteMenuMeansService(String... id) throws HotelException {
+    public Status deleteMenuMeansService(String... id) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
@@ -519,7 +519,7 @@ public class CookBookServicelmpl implements CookBookService {
         } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
-            throw new HotelException(StatusEnum.UPDATE_DEFEAT.getEXPLAIN());
+            throw new HotelDataBaseException(StatusEnum.UPDATE_DEFEAT.getEXPLAIN());
         } finally {
             sqlSession.close();
         }
@@ -552,7 +552,7 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Transactional
     @Override
-    public Status deleteSetMealService(String... id) throws HotelException {
+    public Status deleteSetMealService(String... id) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
@@ -563,7 +563,7 @@ public class CookBookServicelmpl implements CookBookService {
         } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
-            throw new HotelException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
         } finally {
             sqlSession.close();
         }

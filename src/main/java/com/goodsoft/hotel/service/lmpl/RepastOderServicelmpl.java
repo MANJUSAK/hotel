@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.goodsoft.hotel.domain.dao.CyFloorDao;
+import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
 import com.goodsoft.hotel.domain.entity.param.PageParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
@@ -12,10 +13,15 @@ import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
+import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.RepastOderService;
 import com.goodsoft.hotel.util.OrderIdutil;
 import com.goodsoft.hotel.util.UUIDUtil;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,6 +40,10 @@ public class RepastOderServicelmpl implements RepastOderService {
     private RepastOrderDao dao;
     @Resource
     private CyFloorDao cydao;
+    @Resource
+    private CyReserveDao cyReserveDao;
+    @Resource
+    private SqlSessionTemplate sqlSessionTemplate;
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
     //实例化订单编号生成工具类
@@ -67,6 +77,22 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
+     * 通过订单号查询餐饮订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
+     *
+     * @param id 订单编号
+     * @return 查询数据
+     * @throws Exception
+     */
+    @Override
+    public <T> T queryOrderByIdService(String id) throws Exception {
+        Order data = this.dao.queryRepastOrderByIdDao(id);
+        if (data != null) {
+            return (T) new Result(0, data);
+        }
+        return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+    }
+
+    /**
      * 餐饮预订单开台订单添加（开台）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
      * 返回该订单号用于添加商品明细或者修改订单
      *
@@ -78,9 +104,10 @@ public class RepastOderServicelmpl implements RepastOderService {
     public <T> T addOrderService(Order order) throws Exception {
         String id = this.orderId.getOrderId().toString();
         order.setId(id);
+        order.setStatus(1);
         int row = this.dao.addRepastOrderDao(order);
         if (row > 0) {
-            this.cydao.updateTableState(order.getCtid(), "4");
+            this.cydao.updateTableState(order.getCtid(), "8");
             return (T) new Result(0, id);
         }
         return (T) new Status(StatusEnum.NO_ORDER.getCODE(), StatusEnum.NO_ORDER.getEXPLAIN());
@@ -94,16 +121,35 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @param orderGoods 订单食品明细信息
      * @throws Exception
      */
+    @Transactional
     @Override
-    public void addOrderGoodsService(RepastOrderParam msg) throws Exception {
+    public void addOrderGoodsService(RepastOrderParam msg) throws HotelDataBaseException {
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        RepastOrderDao orderDao = sqlSession.getMapper(RepastOrderDao.class);
         String id = msg.getId();
+        Order order = new Order();
+        order.setId(id);
+        order.setAoh(msg.getAoh());
+        order.setOrderPrice(msg.getOrderPrice());
+        order.setCtid(msg.getCtid());
+        order.setCtType(msg.getCtType());
+        order.setStatus(1);
         List<OrderGoods> orderGoods = msg.getMsg();
         for (int i = 0, len = orderGoods.size(); i < len; ++i) {
             orderGoods.get(i).setId(this.uuid.getUUID().toString());
             orderGoods.get(i).setOid(id);
         }
-        this.dao.addRepastOrderGoodsDao(orderGoods);
-        this.cydao.updateTableState(msg.getCtid(), "8");
+        try {
+            orderDao.addRepastOrderGoodsDao(orderGoods);
+            orderDao.updateRepastOrderDao(order);
+            this.cydao.updateTableState(msg.getCtid(), "4");
+            sqlSession.commit();
+        } catch (Exception e) {
+            sqlSession.rollback();
+            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } finally {
+            sqlSession.close();
+        }
     }
 
     /**

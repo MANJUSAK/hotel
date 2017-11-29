@@ -17,6 +17,8 @@ public class RepastOrderParam implements java.io.Serializable {
     private String id;//订单号
     private String ctid;//餐台编号
     private double orderPrice;//订单总价
+    private String aoh;//台号
+    private String ctType;//分厅
     private List<OrderGoods> msg;//用于接收前台传入的餐饮订单明细数据容器
 
     public String getId() {
@@ -43,6 +45,22 @@ public class RepastOrderParam implements java.io.Serializable {
         this.orderPrice = orderPrice;
     }
 
+    public String getAoh() {
+        return aoh;
+    }
+
+    public void setAoh(String aoh) {
+        this.aoh = aoh;
+    }
+
+    public String getCtType() {
+        return ctType;
+    }
+
+    public void setCtType(String ctType) {
+        this.ctType = ctType;
+    }
+
     public List<OrderGoods> getMsg() {
         return msg;
     }
@@ -57,11 +75,13 @@ public class RepastOrderParam implements java.io.Serializable {
         if (!(o instanceof RepastOrderParam)) return false;
         RepastOrderParam that = (RepastOrderParam) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(ctid, that.ctid);
+                Objects.equals(ctid, that.ctid) &&
+                Objects.equals(aoh, that.aoh) &&
+                Objects.equals(ctType, that.ctType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ctid);
+        return Objects.hash(id, ctid, aoh, ctType);
     }
 }
