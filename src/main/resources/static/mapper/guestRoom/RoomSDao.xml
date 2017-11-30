@@ -14,15 +14,15 @@
     <!--房态 主页面 通过楼层号获取房间信息-->
     <select id="queryFloorRoomMapper" parameterType="java.util.Map"
             resultType="java.util.Map">
-        SELECT * FROM
-        (select id,roomNo,doorlockId,remark,flag,sFlag from gs_room
-        where floorcode=#{floorcode} AND floorcode!='202'
-        ) x
-        LEFT JOIN
-        (SELECT a.guestName,a.startDate,a.endDate,b.roomId FROM gs_quickbooking a,gs_quickbooking_roomno b WHERE a.id = b.bookid AND
-        unix_timestamp(NOW()) &lt;  unix_timestamp(a.enddate) AND
-        unix_timestamp(NOW())  &gt; unix_timestamp(a.startdate)) y
-        ON x.id = y.roomid
+      select a.*,b.* from (
+      select b.buildingname,c.floorname,d.typename,d.houseprices,a.id,a.roomno,a.roomtype,a.buildingcode,a.floorcode,a.stdpax,a.maxpax,a.doorlockid,a.flag,a.sflag
+      from gs_room a ,gs_building b,gs_floor c,gs_roomtype d
+      where a.buildingcode=b.buildingcode and a.floorcode =c.floorcode and a.roomtype=d.roomtype ) a
+      left join
+      (
+      select  a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid from gs_quickbooking a,gs_quickbooking_roomno b  where a.id=b.bookid and a.startdate = date_format(now(),'%y-%m-%d')
+      )b
+      on a.id =b.roomid
     </select>
 
 
@@ -59,6 +59,22 @@
         (SELECT a.guestName,a.startDate,a.endDate,b.roomId FROM gs_quickbooking a,gs_quickbooking_roomno b WHERE a.id = b.bookid AND
         unix_timestamp(NOW()) &lt;  unix_timestamp(a.enddate) AND
         unix_timestamp(NOW())  &gt; unix_timestamp(a.startdate)) y
+        ON x.id = y.roomid
+    </select>
+
+    <!--房态右边查询-->
+    <select id="queryFuzzyRoomMapper" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT * FROM
+        (select id,roomNo,doorlockId,remark,flag,sFlag from gs_room
+        where  floorcode!='202'
+        ) x
+        LEFT JOIN
+        (SELECT a.guestName,a.startDate,a.endDate,b.roomId FROM gs_quickbooking a,gs_quickbooking_roomno b WHERE a.id = b.bookid AND
+         unix_timestamp(NOW()) &lt;  unix_timestamp(a.enddate) and
+        a.guestName LIKE CONCAT(CONCAT('%', #{0}), '%')
+        OR a.bookingNo LIKE CONCAT(CONCAT('%', #{0}), '%')
+        OR a.remark LIKE CONCAT(CONCAT('%', #{0}), '%')
+        ) y
         ON x.id = y.roomid
     </select>
 

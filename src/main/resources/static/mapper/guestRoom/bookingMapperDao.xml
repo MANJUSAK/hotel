@@ -31,7 +31,7 @@
         <!--(select b.ROOMNO from gs_quickbooking a LEFT JOIN gs_quickbooking_roomno b on a.ID = b.BOOKID AND a.id = #{_parameter} AND a.bookingflag = '1')-->
     <!--</select>-->
 
-    <!--修改预定信息的房间状态-->
+    <!--修改预定信息的房间状态 未使用-->
     <update id="updateRoomFlag" parameterType="java.lang.String">
         UPDATE gs_room a  RIGHT JOIN  (
         select DISTINCT b.roomid from gs_quickbooking a
@@ -41,7 +41,7 @@
         SET SFLAG='预抵',flag =
     </update>
 
-    <!--修改预定信息的所有字段,根据ID或者预定单号-->
+    <!--修改预定信息的所有字段,根据ID或者预定单号  未使用-->
     <update id="updateQuickBookingALL" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
         update gs_quickbooking
         <trim prefix="set" suffixOverrides=",">
@@ -87,7 +87,7 @@
     </update>
 
 
-    <!--修改预定信息的房间-->
+    <!--修改预定信息的房间  未使用-->
     <update id="updateBookingRoom" parameterType="java.util.List">
         update gs_quickbooking_roomno
         <foreach collection="list" item="item" separator=",">
@@ -101,7 +101,7 @@
         </foreach>
     </update>
 
-    <!--取消订单-->
+    <!--取消订单    未使用-->
     <update id="updateFlagQuxiaoMapper" parameterType="list">
         UPDATE  gs_quickbooking
         <foreach collection="list" item="item">
@@ -116,34 +116,34 @@
 
     </update>
 
-    <!--取消订单恢复-->
+    <!--取消订单恢复   未使用-->
     <update id="updateFlagQuXiaoHuiFuMapper" parameterType="java.lang.String">
         update gs_quickbooking SET bookingFlag = '1' WHERE bookid = #{_parameter}
     </update>
 
-    <!--订单删除(修改状态)-->
+    <!--订单删除(修改状态)  未使用-->
     <update id="updateFlagDeleteMapper" parameterType="java.lang.String">
         UPDATE gs_quickbooking SET bookingFlag = '3' WHERE bookid = #{_parameter}
     </update>
 
-    <!--订单恢复(修改状态)-->
+    <!--订单恢复(修改状态)  未使用-->
     <update id="updateFlagDeleteHuiFuMapper" parameterType="java.lang.String">
         UPDATE gs_quickbooking SET bookingFlag = '1' WHERE bookid = #{_parameter}
     </update>
 
 
-    <!--彻底删除预定信息-->
+    <!--彻底删除预定信息    未使用-->
     <delete id="deleteBookingMapper" parameterType="java.lang.String">
           DELETE FROM gs_quickbooking WHERE id=#{_parameter}
     </delete>
 
 
-    <!--彻底删除预定房间信息-->
+    <!--彻底删除预定房间信息   未使用-->
     <delete id="deleteBookingRoomMapper" parameterType="java.lang.String">
           DELETE from gs_quickbooking_roomno WHERE bookid=#{_parameter}
     </delete>
 
-    <!--查询预定信息-->
+    <!--查询预定信息 未使用-->
     <select id="selectrQuickbookings" parameterType="java.util.Map"
             resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
         select * from gs_quickbooking where 1=1
@@ -169,19 +169,9 @@
         select * from gs_quickbooking_roomno where bookid=#{_parameter}
     </select>
 
-    <!--&lt;!&ndash;预订入住&ndash;&gt;-->
-    <!--<update id="bookingRuZhuMapper" parameterType="java.util.List">-->
-        <!--update gs_quickbooking a RIGHT JOIN(-->
-        <!--select * from gs_quickbooking a ,gs_quickbooking_roomno b  where a.id=b.bookid-->
-      <!--<foreach collection="list" item="item">-->
-           <!--and b.roomno = #{item}-->
-      <!--</foreach>-->
-        <!--)b on a.id = b.bookid SET a.bookingflag='4'-->
-
-    <!--</update>-->
 
 
-    <!--添加客人信息-->
+    <!--添加客人信息  未使用-->
     <insert id="addGuestMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Guest">
         insert INTO gs_guest VALUES (#{id},#{guestName},#{nickName},#{englishName},#{marital},#{nationality},#{languages},#{cardType},#{ethnic},
         #{documentNo},#{nativePlace},#{sex},#{occupation},#{birthDay},#{workUnit},#{cityProper},#{work},#{regional},#{stopCause},#{postalCode}
@@ -198,7 +188,7 @@
     </select>
 
 
-    <!--会员卡信息添加-->
+    <!--会员卡信息添加  未使用-->
     <insert id="addVipCardMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard" >
         INSERT INTO gs_vipCard VALUES (#{id},#{vipNo},#{vipType},#{vipName},
         #{vipPhone},#{vipAddress},#{vipRegisterDate},#{vipRechargeDate},#{vipRechargeAmount},
@@ -206,7 +196,7 @@
     </insert>
 
 
-    <!--会员卡信息修改-->
+    <!--会员卡信息修改  未使用-->
     <update id="updateVipCardMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard" >
         UPDATE  gs_vipCard
         <set>
@@ -229,25 +219,25 @@
     </update>
 
 
-    <!--会员卡信息查询,按照会员卡名字查询-->
+    <!--会员卡信息查询,按照会员卡名字查询  未使用-->
     <select id="findVipCardVipNameMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard">
         select *  FROM  gs_vipcard WHERE vipName=#{_parameter}
     </select>
 
 
-    <!--会员卡信息查询,按照会员卡号查询-->
+    <!--会员卡信息查询,按照会员卡号查询  未使用-->
     <select id="findVipCardVipNoMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard">
         select *  FROM  gs_vipcard WHERE vipNo=#{_parameter}
     </select>
 
 
-    <!--会员卡信息查询,按照会员卡电话查询-->
+    <!--会员卡信息查询,按照会员卡电话查询  未使用-->
     <select id="findVipCardVipPhoneMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard">
         select *  FROM  gs_vipcard WHERE vipPhone=#{_parameter}
     </select>
 
 
-    <!--删除会员卡信息-->
+    <!--删除会员卡信息 未使用-->
     <delete id="deleteVipCardMapper" parameterType="java.lang.String" >
         DELETE FROM gs_vipcard WHERE id=#{_parameter}
     </delete>
@@ -265,6 +255,7 @@
     </select>
 
 
+
     <!--预定入住修改房间状态-->
     <update id="updateRoomFlagRuZhu" parameterType="java.util.Map" >
            update gs_room SET flag = #{markets} WHERE id=#{id}
@@ -275,11 +266,7 @@
 
     </update>
 
-    <!--update-->
-    <!--gs_room a,gs_quickbooking b,gs_quickbooking_roomno s-->
-    <!--SET a.flag = b.markets  where a.id = s.roomid and b.id = s.bookid-->
-    <!--and s.bookId = #{bookId}-->
-    <!--AND s.roomNo = #{roomNo}-->
+
 
     <!--公共信息发布添加-->
     <insert id="addMsgMapper"  parameterType="com.goodsoft.hotel.domain.entity.guestRoom.GsPublicMsgIssuance" >

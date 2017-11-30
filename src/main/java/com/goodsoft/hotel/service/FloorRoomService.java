@@ -1,7 +1,6 @@
 package com.goodsoft.hotel.service;
 
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
-import com.goodsoft.hotel.domain.entity.result.Status;
 
 import java.util.List;
 import java.util.Map;
@@ -11,8 +10,8 @@ import java.util.Map;
  */
 
 public interface FloorRoomService {
-    public List<Map<String,Object>> findsFang1() throws Exception;
 
+    //公共信息发布 添加
     public void addMsgMapper(GsPublicMsgIssuance gsPublicMsgIssuance) throws Exception;
 
     //预定信息添加

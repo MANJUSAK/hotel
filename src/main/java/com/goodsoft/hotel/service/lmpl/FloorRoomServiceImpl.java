@@ -3,19 +3,15 @@ package com.goodsoft.hotel.service.lmpl;
 import com.goodsoft.hotel.domain.dao.guestRoom.BookingDao;
 import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
-import com.goodsoft.hotel.domain.entity.result.Status;
-import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.service.FloorRoomService;
 import com.goodsoft.hotel.util.UUIDUtil;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.sql.SQLSyntaxErrorException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -34,23 +30,12 @@ public class FloorRoomServiceImpl implements FloorRoomService {
     @Resource
     SqlSessionTemplate sqlSessionTemplate;
 
-    //
-    @Override
-    public List<Map<String, Object>> findsFang1() throws Exception {
-////        Map<String,Object> map = this.roomSDao.findFang1();
-//        return null;
-//    }
-//
-//    public List<Room> getRooms(String floorCode ){
-//        List<Room> list = null;
-//        try {
-//             list = this.roomSDao.queryFloorRoomMapper(floorCode);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        return null;
-    }
 
+    /**
+     * 公共信息发布   添加
+     * @param gsPublicMsgIssuance
+     * @throws Exception
+     */
     @Transactional
     @Override
     public void addMsgMapper(GsPublicMsgIssuance gsPublicMsgIssuance) throws Exception {
@@ -89,7 +74,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
         }
 
         String uuid = UUIDUtil.getInstance().getUUID().toString();
-        String bookingNo = this.getCodes();
+        String bookingNo = this.getsbs();
         quickbooking.setId(uuid);
         quickbooking.setBookingNo(bookingNo);
         quickbooking.setBookingFlag("明确预定");
@@ -135,26 +120,38 @@ public class FloorRoomServiceImpl implements FloorRoomService {
     }
 
 
-    /**
-     * char 数组  用于生成随机数
-     */
-    public static char[] codeSequence = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-            'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-    public String getCodes() {
+    /**
+     * 预订单生成预定单号
+     * @return 预定单号
+     */
+    public String getsbs() {
+
+        //char 数组  用于生成随机数
+        char[] chars = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+                'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+
+        //生成系统时间的时间戳
         SimpleDateFormat dateS = new SimpleDateFormat("yyyyMMddHHmmss");
         String str = dateS.format(new Date());
-        StringBuffer code = new StringBuffer("KF");
-        code.append(str);
+        //开始用客房的拼音
+        StringBuffer sb = new StringBuffer("KF");
+        sb.append(str);
+        //预定单号长度20位  再加4个随机数  避免重复
         for (int i = 0; i < 4; i++) {
-            int num = (int) (Math.random() * (codeSequence.length - 1));
-            code.append(codeSequence[num]);
+            int num = (int) (Math.random() * (chars.length - 1));
+            sb.append(chars[num]);
         }
-        return code.toString();
+        return sb.toString();
     }
 
+    /**
+     * 预定单生成登记号
+     * @return  登记号
+     */
     public String getNubmer() {
+        //当天的时间戳
         SimpleDateFormat dateS = new SimpleDateFormat("ddHHmmss");
         String str = dateS.format(new Date());
         return str;

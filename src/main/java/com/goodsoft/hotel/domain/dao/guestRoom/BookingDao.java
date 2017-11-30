@@ -57,7 +57,6 @@ public interface BookingDao {
     //判断预定房间重复
     public Integer joinRoomIdResves(Map map);
 
-
     //查询入住信息的房间ID
     public List<Map> selectRuZhuRoomIdMapper(Map map) ;
 
@@ -67,12 +66,12 @@ public interface BookingDao {
     //预定入住
     public Integer updateRoomFlagRuZhu(Map<String,Object> map);
 
-
     //会员信息添加
     public void addVipCardMapper(VipCard vipCard);
 
     //会员信息修改
     public void updateVipCardMapper(VipCard vipCard);
+
 
     /**
      * 会员卡查询
@@ -88,6 +87,7 @@ public interface BookingDao {
 
     //删除会员卡信息
     public void deleteVipCardMapper(String id);
+
 
     /**
      * 公共信息发布

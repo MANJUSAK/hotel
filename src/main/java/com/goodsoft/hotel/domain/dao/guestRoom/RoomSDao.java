@@ -41,6 +41,8 @@ public interface RoomSDao {
     public List<Map<String, Object>> queryRoomTypeGetRoomMapper(String roomType) throws Exception;
 
 
+    //房态右边的条件查询
+    public List<Map> queryFuzzyRoomMapper(String str) throws Exception;
     /*
     房态 end
      */

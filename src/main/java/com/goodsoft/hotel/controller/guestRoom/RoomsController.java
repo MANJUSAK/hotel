@@ -41,37 +41,59 @@ public class RoomsController {
      */
 
     /**
-     * 房态:获取房间房态信息
+     * 房态:获取房间房态信息 --主页面
      *
      * @return 房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/roomType")
-    public Object getFang() {
+    public Object getFang(){
         List<Map<String, Object>> list = null;
 
         //参数map
         Map<String,Object> paramMap =new HashMap<String,Object>();
-        Map<String, Object> map = null;
 
         try {
-            List<Floors> floors = this.roomSDao.queryFloorMapper();
-            list = new ArrayList<Map<String, Object>>();
-            for (Floors f : floors) {
-                map = new HashMap<String, Object>();
-                map.put("FloorName", f.getFloorName());
-                paramMap.put("floorcode", f.getFloorCode());
-                List<Map<String,Object>> rooms =  this.roomSDao.queryFloorRoomMapper(paramMap);
-                map.put("Rooms",rooms);
-                list.add(map);
-            }
-            return list;
+            List<Map<String, Object>> list1 = roomSDao.queryFloorRoomMapper(paramMap);
+            return joinTypeRoom(list1);
         } catch (Exception e) {
             e.printStackTrace();
            return new Status(StatusEnum.ERROR.getCODE(),StatusEnum.ERROR.getEXPLAIN());
         }
     }
 
+
+    /**
+     * 2017-11-30 分类?
+     * @param list
+     * @return
+     */
+    private List<Map> joinTypeRoom(List<Map<String,Object>> list) {
+
+        List<Map> returnList=new LinkedList<Map>();
+
+        for(int i=0;i<list.size();i++){
+            if(list.get(i)!=null) {
+
+                Map typeMap =new HashMap();
+                List typeList =new LinkedList();
+                typeList.add(list.get(i));
+                for (int j = i + 1; j < list.size(); j++) {
+                if(list.get(j)!=null && list.get(i).get("floorname").equals(list.get(j).get("floorname"))){
+                    typeList.add(list.get(j));
+                    list.set(j,null);
+                }
+                }
+                typeMap.put("type",list.get(i).get("floorname"));
+                typeMap.put("typeList",typeList);
+                list.set(i,null);
+                returnList.add(typeMap);
+            }
+        }
+
+
+        return returnList;
+    }
 
 
     /**
@@ -93,7 +115,7 @@ public class RoomsController {
 
 
     /**
-     * 房态 : 通过右边楼层名 获取到房间信息
+     * 房态 : 通过右边楼层名 获取到房间信息  --不合理
      * @param floorCode 下拉框中的楼层名字对应的编号
      * @return 房间信息 OR 错误代码
      */
@@ -126,7 +148,7 @@ public class RoomsController {
     }
 
     /**
-     * 房态 : 通过右边房间类型 获取到房间信息
+     * 房态 : 通过右边房间类型 获取到房间信息  --不合理
      * @param roomType 获取到右边下拉框信息
      * @return 返回房间信息
      */
@@ -144,16 +166,34 @@ public class RoomsController {
     /**
      * 房态:前台查询的获取--还没编写
      *
-     * @param str
-     * @return
+     * @param strs  前台传递的参数
+     * @return  房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/roomTypeName/find")
-    public Status findFangTai(@Param("str") String str) {
-        String str1 = str.trim();
-        System.out.println(str1);
-        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+    public Object findFangTai(@Param("strs") String strs) {
+        String str = "";
+        if(strs != null && !("".equals(strs))){
+            str = strs.trim();
+        }
+        System.out.println(str);
+        StringBuffer sb = new StringBuffer("");
+        for(int i = 0;i<str.length();i++){
+            sb.append(str.charAt(i));
+            if(i<str.length()-1){
+                sb.append("%");
+            }
+        }
+        System.out.println(String.valueOf(sb));
+        try {
+            return this.roomSDao.queryFuzzyRoomMapper(String.valueOf(sb));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
+        }
+
     }
+
 
     /**
      * ****************************************************************************************
@@ -170,7 +210,7 @@ public class RoomsController {
 
 
     /**
-     * 预定:快速预定的房态,左边的列表
+     * 预定:预定页面中 点击房间号之后显示的页面,左边的列表
      *
      * @return 房间类型信息
      */
@@ -188,10 +228,11 @@ public class RoomsController {
 
 
     /**
+     * * 预定:预定页面中 点击房间号之后显示的页面,右边的房间号
      * 预定:传递空房信息  获取类型id 动态传递
      * 根据选择的房间类型 查看空房信息
-     *
-     * @return 空房数据
+     * @param typeId 预定页面中 点击房间号之后显示的页面,左边的列表 复选框中的ID
+     * @return 房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/roomTypeName/kong")
@@ -319,7 +360,7 @@ public class RoomsController {
      * *****************************************************************************************
      */
     /**
-     * 快速分房右边的房类信息的接口
+     * 快速分房右边的房类信息的接口  快速分房 (页面修改为工作流展示该接口联通但未使用)
      * @return 房类信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -330,7 +371,7 @@ public class RoomsController {
     }
 
     /**
-     * 快速分房右边的建筑的接口
+     * 快速分房右边的建筑的接口  快速分房 (页面修改为工作流展示该接口联通但未使用)
      * @param roomType 房类的类型编号
      * @return 建筑信息
      */
@@ -345,7 +386,7 @@ public class RoomsController {
     }
 
     /**
-     * 快速分房右边的楼层的接口
+     * 快速分房右边的楼层的接口 快速分房 (页面修改为工作流展示该接口联通但未使用)
      * @param buildingCode 建筑的编号
      * @return 楼层信息
      */
@@ -362,7 +403,7 @@ public class RoomsController {
 
     /**
      *
-     *快速分房筛选的房态信息
+     *快速分房筛选的房态信息  快速分房 (页面修改为工作流展示该接口没有联通使用)
      *
      * @param roomType  房间类型
      * @param buildingCode 建筑编号
@@ -434,7 +475,7 @@ public class RoomsController {
 
 
     /**
-     * 保存房价信息
+     * 保存房价信息---没有接通  房价政策
      * @param roomPrices
      * @return
      */

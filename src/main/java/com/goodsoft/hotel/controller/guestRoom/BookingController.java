@@ -96,7 +96,7 @@ public class BookingController {
 
 
     /**
-     * 预定信息修改接口
+     * 预定信息修改接口   ---还没使用
      * .*
      *
      * @param quickbooking 传入的需要修改的对象
@@ -117,7 +117,7 @@ public class BookingController {
 
 
     /**
-     * 取消预定单
+     * 取消预定单   ---还没使用
      *
      * @param bookid 预定单号
      * @param reason 取消的原因
@@ -139,7 +139,7 @@ public class BookingController {
     }
 
     /**
-     * 预定单号修改状态(取消恢复,取消删除)
+     * 预定单号修改状态(取消恢复,取消删除)  ---还没使用
      *
      * @param bookid 预定单号
      * @return 响应结果
@@ -159,7 +159,7 @@ public class BookingController {
     }
 
     /**
-     * 预定单号修改状态(删除订单)
+     * 预定单号修改状态(删除订单)  ---还没使用
      *
      * @param bookid 预定单号
      * @return 响应结果
@@ -179,7 +179,7 @@ public class BookingController {
 
 
     /**
-     * 彻底删除预订信息 (不建议使用)
+     * 彻底删除预订信息 (不建议使用)  ---还没使用
      *
      * @param str 传回的id
      * @return 响应结果
@@ -198,7 +198,7 @@ public class BookingController {
     }
 
     /**
-     * 删除订单主要是修改订单的状态
+     * 删除订单主要是修改订单的状态   ---还没使用
      *
      * @param id        订单ID
      * @param bookingNo 订单编号
@@ -220,7 +220,7 @@ public class BookingController {
 
 
     /**
-     * 查询预定信息接口
+     * 查询预定信息接口   ---还没使用
      *
      * @param startDate 入住时间
      * @param endDate   离开时间
@@ -249,7 +249,7 @@ public class BookingController {
     }
 
     /**
-     * 添加客人信息
+     * 添加客人信息   ---还没使用
      *
      * @param guest
      * @return
@@ -262,7 +262,7 @@ public class BookingController {
     }
 
 
-    //获取标准时间格式
+    //获取标准时间格式   ---还没使用
     private String dateFormat(Date date) {
         SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sim.format(date);
@@ -270,7 +270,7 @@ public class BookingController {
 
 
     /**
-     * 会员卡信息添加
+     * 会员卡信息添加   ---还没使用
      *
      * @return 响应的结果
      */
@@ -286,7 +286,7 @@ public class BookingController {
     }
 
     /**
-     * 会员信息修改
+     * 会员信息修改    ---还没使用
      *
      * @param vipCard 需要修改的类
      * @return 返回结果
@@ -303,7 +303,7 @@ public class BookingController {
 
 
     /**
-     * 查询会员卡信息
+     * 查询会员卡信息  ---还没使用
      *
      * @param vipName  会员名
      * @param vipNo    会员卡号
@@ -332,7 +332,7 @@ public class BookingController {
 
 
     /**
-     * 删除会员信息
+     * 删除会员信息   ---还没使用
      *
      * @param id
      * @return
@@ -356,7 +356,7 @@ public class BookingController {
      * 预定入住
      *
      * @param msg 接收传入的预定信息
-     * @return
+     * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("booking/bookingRuZhu")
@@ -393,13 +393,13 @@ public class BookingController {
             return new Status(0, "成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return new Status(500, "失败");
+            return new Status(500, "添加失败");
         }
 
     }
 
     /**
-     * 公共信息发布修改
+     * 公共信息发布修改  ---还没使用
      *
      * @param gsPublicMsgIssuance
      * @return
@@ -412,7 +412,7 @@ public class BookingController {
         try {
             this.bookingDao.updateMsgMapper(gsPublicMsgIssuance);
             map.put("success", "0");
-            map.put("success", "成都");
+            map.put("success", "成功");
             list.add(map);
         } catch (Exception e) {
             e.printStackTrace();
