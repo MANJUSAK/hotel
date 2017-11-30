@@ -34,7 +34,6 @@ public class CyReserveController {
     public ModelAndView reserveHome(PageBean<FitReservation> pageBean,Integer sign,String state,String staetTime){
         ModelAndView model=new ModelAndView("views/restaurantReservation.jsp");
 
-
         //参数map
         Map<String,Object> paramMap =new HashMap<String,Object>();
         //返回list

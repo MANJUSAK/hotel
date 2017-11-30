@@ -1,6 +1,6 @@
 package com.goodsoft.hotel.controller;
 
-import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.param.HotelParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -37,7 +37,7 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/data.shtml")
-    public Object queryOrderController(String id, PageParam page) {
+    public Object queryOrderController(String id, HotelParam page) {
         try {
             return this.service.queryOrderService(id, page);
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class RepastOrderController {
     }
 
     /**
-     * 通过订单号查询餐饮订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
+     * 通过订单号查询餐饮订单接口，用于开台跳转点餐页面获取该消费者订单信息
      *
      * @param id 订单编号
      * @return 响应结果
@@ -137,12 +137,30 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status checkoutOrderService(Order order) {
+    public Status checkoutOrderController(Order order) {
         try {
             return this.service.checkoutRepastOrderService(order);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 餐饮订单更新（反结账）接口，用于前台收银相关订单结算错误回滚到可修改状态
+     *
+     * @param oid    订单编号
+     * @param reason 反结账原因
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/counter/checkout/order/data.shtml", method = RequestMethod.POST)
+    public Status counterCheckoutController(String oid, String reason) {
+        try {
+            return this.service.counterCheckoutService(oid, reason);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 

@@ -25,13 +25,13 @@
         <result column="TNAME" property="tName"/>
     </resultMap>
     <select id="queryMenuTypeDao" resultMap="menuTypeInfo">
-        SELECT `ID`,`TNAME`,`TID` FROM `gs_cookbook_type` ORDER BY `TID` DESC
+        SELECT `ID`,`TNAME`,`TID` FROM `gs_cookbook_type` ORDER BY `TID` ASC
     </select>
     <!--菜单子类型数据查询-->
     <select id="queryMenuSubtypeDao" resultMap="menuSubtypeInfo" parameterType="string">
         SELECT `ID`,`STNAME`,`STID`,`TID` FROM `gs_cookbook_subtype`
         <include refid="query_menu_subtype_condition"/>
-        ORDER BY `STID` DESC
+        ORDER BY `STID` ASC
     </select>
     <!--查询子类型数据条件sql复用-->
     <sql id="query_menu_subtype_condition">
@@ -56,7 +56,8 @@
     </select>
     <!--菜单数据查询-->
     <resultMap id="menuInfo" type="com.goodsoft.hotel.domain.entity.cookbook.Menu">
-        <result column="CBID" property="cbid"/>
+        <id column="CBID" property="cbid"/>
+        <result column="ID" property="id"/>
         <result column="CBNAME" property="cbName"/>
         <result column="KC_NUM" property="num"/>
         <result column="IS_DISCOUNT" property="isNo"/>
@@ -73,7 +74,7 @@
         <result column="SPEC5" property="spec5"/>
     </resultMap>
     <select id="queryMenuDetailDao" parameterType="string" resultMap="menuInfo">
-        SELECT a.CBID,a.CBNAME,a.UNIT,a.IS_DISCOUNT,a.SPEC1,a.SPEC2,a.SPEC3,a.SPEC4,a.SPEC5,
+        SELECT a.ID,a.CBID,a.CBNAME,a.UNIT,a.IS_DISCOUNT,a.SPEC1,a.SPEC2,a.SPEC3,a.SPEC4,a.SPEC5,
         a.PRICE1,a.PRICE2,a.PRICE3,a.PRICE4,a.PRICE5,b.KC_DATE,b.KC_NUM FROM `gs_cookbook` a
         LEFT JOIN `gs_cookbook_inventory` b ON a.ID = b.CBID
         <where>

@@ -6,7 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
-import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.param.HotelParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,7 +60,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @throws Exception
      */
     @Override
-    public <T> T queryOrderService(String id, PageParam page) throws Exception {
+    public <T> T queryOrderService(String id, HotelParam page) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         int status = page.getStatus();
         List<Order> list = this.dao.queryRepastOrderDao(id, status);
@@ -100,13 +102,16 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @return 下单状态
      * @throws Exception
      */
+    @Transactional
     @Override
     public <T> T addOrderService(Order order) throws Exception {
         String id = this.orderId.getOrderId().toString();
+        String ydid = order.getId();
         order.setId(id);
         order.setStatus(1);
         int row = this.dao.addRepastOrderDao(order);
         if (row > 0) {
+            this.cyReserveDao.updateAloneReserveState("3", ydid);
             this.cydao.updateTableState(order.getCtid(), "8");
             return (T) new Result(0, id);
         }
@@ -124,7 +129,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     @Transactional
     @Override
     public void addOrderGoodsService(RepastOrderParam msg) throws HotelDataBaseException {
-        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao orderDao = sqlSession.getMapper(RepastOrderDao.class);
         String id = msg.getId();
         Order order = new Order();
@@ -178,13 +183,36 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Override
     public Status checkoutRepastOrderService(Order order) throws Exception {
+        order.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         int row = this.dao.updateRepastOrderDao(order);
         if (row > 0) {
             //更新餐台状态为清洁中
-            this.cydao.updateTableState(order.getCtid(), "7");
+            try {
+                this.cydao.updateTableState(order.getCtid(), "7");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }
         return new Status(StatusEnum.PAYZ_THE_BILL.getCODE(), StatusEnum.PAYZ_THE_BILL.getEXPLAIN());
+    }
+
+    /**
+     * 餐饮订单更新（反结账）业务方法，用于前台收银相关订单结算错误回滚到可修改状态
+     *
+     * @param oid    订单编号
+     * @param reason 反结账原因
+     * @return 反结账果
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public Status counterCheckoutService(String oid, String reason) throws Exception {
+        int row = this.dao.updateOrderStatusDao(oid, 2, reason);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
     }
 
     /**

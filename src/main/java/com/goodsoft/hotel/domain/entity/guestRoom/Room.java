@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 房间实体类
- * Created by Administrator on 2017/11/9/009.
+ * Created by 王智 on 2017/11/9/009.
  */
 
 
@@ -25,6 +25,9 @@ public class Room {
     private String sFlag;           //房间状态(显示脏房,空净房.....)
     private String rackRate;
     private String rateCode;
+
+
+
 
     public String getId() {
         return id;

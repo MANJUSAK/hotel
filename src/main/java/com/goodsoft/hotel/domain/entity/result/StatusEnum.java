@@ -31,7 +31,11 @@ public enum StatusEnum {
     PAYZ_THE_BILL(200404, "订单结算失败！没有该订单数据信息"),
     DELETE_DEFEAT(200404, "删除失败！未获取到该条数据信息"),
     UPDATE_DEFEAT(200404, "更新失败！更新过程中未获取到需要更新的数据"),
-    NO_PRAM(400400, "参数错误");
+    NO_PRAM(400400, "参数错误"),
+    NO_FILE(100404, "文件不能为空"),
+    FILE_FORMAT(100603, "文件格式不正确"),
+    FILE_SIZE(100601, "文件大小不符合要求"),
+    FILE_UPLOAD(100600, "文件上传失败");
 
 
     private final int CODE;

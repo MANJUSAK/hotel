@@ -1,11 +1,11 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.entity.cookbook.MenuMeans;
-import com.goodsoft.hotel.domain.entity.cookbook.MenuSubType;
 import com.goodsoft.hotel.domain.entity.cookbook.MenuType;
 import com.goodsoft.hotel.domain.entity.cookbook.SetMeal;
+import com.goodsoft.hotel.domain.entity.param.HotelParam;
 import com.goodsoft.hotel.domain.entity.param.MeansParam;
-import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.param.MenuParam;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * description:
@@ -38,7 +39,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/index/mean/type/data.shtml")
-    public Object queryMenuTypeAndSubtypeController(PageParam page) {
+    public Object queryMenuTypeAndSubtypeController(HotelParam page) {
         try {
             return this.service.queryTypeAndSubtypeService(page);
         } catch (Exception e) {
@@ -73,7 +74,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/type/data.shtml")
-    public Object queryMenuTypeController(PageParam page) {
+    public Object queryMenuTypeController(HotelParam page) {
         try {
             return this.service.queryMenuTypeService(page);
         } catch (Exception e) {
@@ -92,7 +93,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/sub/type/data.shtml")
-    public Object queryMenuStypeController(String tid, PageParam page) {
+    public Object queryMenuStypeController(String tid, HotelParam page) {
         try {
             return this.service.queryMenuStypeService(tid, page);
         } catch (Exception e) {
@@ -130,9 +131,13 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/detail/data.shtml")
-    public Object queryMenuDetailController(String stid, String tid, PageParam page) {
+    public Object queryMenuDetailController(HttpServletRequest request, String stid, String tid, HotelParam page) {
         try {
-            return this.service.queryMenuDetailDao(stid, tid, page);
+            if (page.getSetFindFile() > 0) {
+                return this.service.queryMenuDetailDao(stid, tid, page, request, false);
+            } else {
+                return this.service.queryMenuDetailDao(stid, tid, page, request, true);
+            }
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
@@ -149,7 +154,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/data.shtml")
-    public Object queryMenuMeansController(String cbid, PageParam page) {
+    public Object queryMenuMeansController(String cbid, HotelParam page) {
         try {
             return this.service.queryMenuMeansService(cbid, page);
         } catch (Exception e) {
@@ -168,7 +173,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/detail/data.shtml")
-    public Object queryMenuMeansDetailController(String mid, PageParam page) {
+    public Object queryMenuMeansDetailController(String mid, HotelParam page) {
         try {
             return this.service.queryMenuMeansDetailService(mid, page);
         } catch (Exception e) {
@@ -186,7 +191,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/setmeal/data.shtml")
-    public Object queryMenuSetmealController(PageParam page) {
+    public Object queryMenuSetmealController(HotelParam page) {
         try {
             return this.service.querySetMealDao(page);
         } catch (Exception e) {
@@ -221,18 +226,17 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/menu/data.shtml", method = RequestMethod.POST)
-    public Status addMenuService(@RequestBody MenuSubType msg) {
-        if (msg.getMenus() != null) {
-            if (msg.getMenus().size() > 0) {
+    public Status addMenuService(MenuParam msg) {
+        if (msg.getMenu() != null) {
+            if (msg.getMenu().size() > 0) {
                 try {
-                    this.service.addMenuService(msg);
-                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                    return this.service.addMenuService(msg);
                 } catch (Exception e) {
                     this.logger.error(e.toString());
-                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                    return new Status(StatusEnum.DEFEAT.getCODE(), e.getMessage());
                 }
             } else {
-                return new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
             }
         } else {
             return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
