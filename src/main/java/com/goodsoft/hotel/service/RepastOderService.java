@@ -1,6 +1,6 @@
 package com.goodsoft.hotel.service;
 
-import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.param.HotelParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -25,7 +25,7 @@ public interface RepastOderService {
      * @return 查询数据
      * @throws Exception
      */
-    <T> T queryOrderService(String id, PageParam page) throws Exception;
+    <T> T queryOrderService(String id, HotelParam page) throws Exception;
 
     /**
      * 通过订单号查询餐饮订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
@@ -74,6 +74,16 @@ public interface RepastOderService {
      * @throws Exception
      */
     Status checkoutRepastOrderService(Order order) throws Exception;
+
+    /**
+     * 餐饮订单更新（反结账）业务方法，用于前台收银相关订单结算错误回滚到可修改状态
+     *
+     * @param oid    订单编号
+     * @param reason 反结账原因
+     * @return 反结账果
+     * @throws Exception
+     */
+    Status counterCheckoutService(String oid, String reason) throws Exception;
 
     /**
      * 餐饮订单删除（取消订单）业务方法，用于预订单处于取消状态时删除该预订单所产生的记录数据

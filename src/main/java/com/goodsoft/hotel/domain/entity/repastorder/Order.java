@@ -45,6 +45,8 @@ public class Order implements java.io.Serializable {
     private int placeNum;//席数
     private String ctid;//餐台编号
     private double orderPrice;//订单总价
+    private String mdTime;//买单时间
+    private String fjzReason;//反结账说明
     private List<OrderGoods> orderGoods;//订单明细容器
 
     public Order() {
@@ -193,6 +195,10 @@ public class Order implements java.io.Serializable {
     }
 
     public void setFwRate(double fwRate) {
+        //服务费率小于或等于0，改变收取服务费为1
+        if (fwRate <= 0) {
+            this.isServiceCharge = 1;
+        }
         this.fwRate = fwRate < 0 ? Math.abs(fwRate) : fwRate;
     }
 
@@ -201,6 +207,9 @@ public class Order implements java.io.Serializable {
     }
 
     public void setZdConsume(double zdConsume) {
+        if (zdConsume <= 0) {
+            this.isZdConsume = 1;
+        }
         this.zdConsume = zdConsume < 0 ? Math.abs(zdConsume) : zdConsume;
     }
 
@@ -296,8 +305,25 @@ public class Order implements java.io.Serializable {
         return orderPrice;
     }
 
+    public String getMdTime() {
+        return mdTime;
+    }
+
+    public void setMdTime(String mdTime) {
+        this.mdTime = mdTime == null ? " " : mdTime.trim();
+    }
+
+    public String getFjzReason() {
+        return fjzReason;
+    }
+
+    public void setFjzReason(String fjzReason) {
+        this.fjzReason = fjzReason == null ? " " : fjzReason.trim();
+    }
+
     public void setOrderPrice(double orderPrice) {
         this.orderPrice = orderPrice < 0 ? Math.abs(orderPrice) : orderPrice;
+
     }
 
     public List<OrderGoods> getOrderGoods() {
@@ -332,11 +358,13 @@ public class Order implements java.io.Serializable {
                 Objects.equals(timeMinute, order.timeMinute) &&
                 Objects.equals(paymentType, order.paymentType) &&
                 Objects.equals(remarks, order.remarks) &&
+                Objects.equals(mdTime, order.mdTime) &&
+                Objects.equals(fjzReason, order.fjzReason) &&
                 Objects.equals(ctid, order.ctid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, ctid);
+        return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, ctid, mdTime, fjzReason);
     }
 }

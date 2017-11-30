@@ -6,16 +6,13 @@ package com.goodsoft.hotel.domain.entity.param;
  *
  * @author 严彬荣 Created on 2017-11-11 17:07
  */
-public class PageParam implements java.io.Serializable {
+public class HotelParam implements java.io.Serializable {
 
     private static final long serialVersionUID = -6999200450727024154L;
     private int page;//页码
-    private int total;//每页显示记录数
+    private int total = 20;//每页显示记录数
     private int status;//状态参数
-
-    public PageParam() {
-        this.total = 20;
-    }
+    private int setFindFile = 1;//是否查找图片
 
     public int getPage() {
         return page;
@@ -39,5 +36,13 @@ public class PageParam implements java.io.Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getSetFindFile() {
+        return setFindFile;
+    }
+
+    public void setSetFindFile(int setFindFile) {
+        this.setFindFile = setFindFile;
     }
 }

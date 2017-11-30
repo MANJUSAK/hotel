@@ -1,5 +1,8 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,6 +32,8 @@ public class Menu implements java.io.Serializable {
     private String spec3;//规格3
     private String spec4;//规格4
     private String spec5;//规格5
+    private List<String> picture;//菜品图片文件（用于查询）
+    private MultipartFile[] files;//获取上传的菜品图片（用于上传）
 
     public Menu() {
         this.spec1 = "小";
@@ -180,6 +185,22 @@ public class Menu implements java.io.Serializable {
 
     public void setSpec5(String spec5) {
         this.spec5 = spec5 == null ? " " : spec5.trim();
+    }
+
+    public List<String> getPicture() {
+        return picture;
+    }
+
+    public void setPicture(List<String> picture) {
+        this.picture = picture;
+    }
+
+    public MultipartFile[] getFiles() {
+        return files;
+    }
+
+    public void setFiles(MultipartFile[] files) {
+        this.files = files;
     }
 
     @Override

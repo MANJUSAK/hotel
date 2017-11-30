@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * description:
@@ -26,6 +27,9 @@ public interface RepastOrderDao {
     //餐饮订单食品查询
     List<OrderGoods> queryRepastOrderGoodsDao(@Param("oid") String oid) throws Exception;
 
+    //查询开台后的订单时间，用于判断是否已达超时时间
+    List<Map> queryKtOrderTimeDao() throws Exception;
+
     //餐饮订单下单
     int addRepastOrderDao(Order msg) throws Exception;
 
@@ -34,6 +38,9 @@ public interface RepastOrderDao {
 
     //餐饮订单更新（用于结算订单）
     int updateRepastOrderDao(Order msg) throws Exception;
+
+    //反结账
+    int updateOrderStatusDao(@Param("id") String id, @Param("status") int status, @Param("fjzReason") String fjzReason) throws Exception;
 
     //餐饮订单商品更新（用于结算订单）
     int updateRepastOrderGoodsDao(List<OrderGoods> msg) throws Exception;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<!--@author 严彬荣，version v1.0-->
+<!--文件管理mapper start-->
+<mapper namespace="com.goodsoft.hotel.domain.dao.FileDao">
+    <!--使用mybatis二级缓存-->
+    <!--mybatis缓存-->
+    <!--<cache eviction="FIFO" flushInterval="60000" readOnly="false" size="1024"/>-->
+    <!--第三方缓存技术 ehcache-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <!--文件查询结果映射 start-->
+    <resultMap id="fileData" type="com.goodsoft.hotel.domain.entity.file.FileData">
+        <result property="path" column="path"/>
+        <result property="bases" column="bases"/>
+    </resultMap>
+    <!--文件查询结果映射 end-->
+    <!--文件查询sql start-->
+    <select id="queryFileDao" parameterType="java.lang.String" resultMap="fileData">
+        SELECT `path`,`bases` FROM gs_file_data WHERE fileId=#{fileId}
+    </select>
+    <!--文件查询sql end-->
+    <!--单文件查询sql start-->
+    <select id="queryFileOneDao" parameterType="java.lang.String" resultMap="fileData">
+        SELECT `path`,`bases` FROM gs_file_data WHERE fileId=#{fileId}
+    </select>
+    <!--单文件查询sql end-->
+    <!--文件信息保存sql start-->
+    <insert id="saveFileDao" parameterType="java.util.List">
+        insert into gs_file_data (`fileId`,`path`,`bases`,`sort`,`fileName`,`newFileName`,`suffix`)
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.fileId},#{item.path},#{item.bases},#{item.sort},#{item.fileName},#{item.newFileName},#{item.suffix})
+        </foreach>
+    </insert>
+    <!--文件信息保存sql end-->
+    <!--文件删除sql start-->
+    <delete id="deleteFileDao" parameterType="java.util.Arrays">
+        DELETE FROM gs_file_data WHERE fileId IN
+        <foreach collection="fileId" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <!--文件删除sql end-->
+</mapper>
+        <!--文件管理mapper end-->

@@ -102,8 +102,10 @@ public class DruidDBConfig {
         datasource.setRemoveAbandonedTimeout(this.removeAbandonedTimeout);
         datasource.setLogAbandoned(this.logAbandoned);
         datasource.setConnectionProperties(connectionProperties);
+        datasource.setAsyncInit(true);
+        //datasource.setDefaultAutoCommit(false);
         //添加druid过滤器 设置运行批量更新
-       List filter = Arrays.asList(wallFilter);
+        List filter = Arrays.asList(wallFilter);
         datasource.setProxyFilters(filter);
         try {
             datasource.setFilters(filters);

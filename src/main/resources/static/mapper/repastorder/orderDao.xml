@@ -10,7 +10,8 @@
     <sql id="order_sql">
     `ID`,`KZ_NUM`,`CONSUMER`,`KT_TIME`,`FW_RATE`,`CT_TYPE`,`SALEMANAGER`,`KT_NUM`,`PERSON_NUM`,`KT_SHIFT`,`ZD_CONSUME`,
     `QD_DISCOUNT`,`DEPARTMENT`,`PART_HALL`,`VIP_NUM`,`VIP_TYPE`,`ZD_CONSUME_GIST`,`DISCOUNT_SUM`,`ZQ_SUM`,`AOH`,`OPERATOR`,
-    `KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`,`PLACE_NUM`,`CTID`,`ORDER_PRICE`
+    `KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`,`PLACE_NUM`,`CTID`,`ORDER_PRICE`,
+    `MD_TIME`,`FJZ_REASON`
     </sql>
     <!--餐饮订单查询-->
     <select id="queryRepastOrderDao" parameterType="object"
@@ -35,6 +36,10 @@
         <include refid="order_sql"/>
         FROM `gs_repast_order` WHERE `ID`=#{id} AND `STATUS`=1 ORDER BY `ID` DESC
     </select>
+    <!--查询开台还未结账时的订单时间-->
+    <select id="queryKtOrderTimeDao" resultType="map">
+        SELECT `ID`,`KT_TIME` FROM `gs_repast_order` WHERE  `STATUS`=1 ORDER BY `ID` DESC
+    </select>
     <!--餐饮订单添加-->
     <insert id="addRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
         INSERT INTO `gs_repast_order`
@@ -42,7 +47,8 @@
         VALUES
         (#{id},#{kzNum},#{consumer},#{ktTime},#{fwRate},#{ctType},#{salemanager},#{ktNum},#{personNum},#{ktShift},
         #{zdConsume},#{qdDiscount},#{department},#{partHall},#{vipNum},#{vipType},#{zdConsumeGist},#{discountSum},#{zqSum},
-        #{aoh},#{operator},#{ktSb},#{timeMinute},#{isServiceCharge},#{isZdConsume},#{paymentType},#{status},#{remarks},#{placeNum},#{ctid},#{orderPrice})
+        #{aoh},#{operator},#{ktSb},#{timeMinute},#{isServiceCharge},#{isZdConsume},#{paymentType},#{status},#{remarks},
+        #{placeNum},#{ctid},#{orderPrice},#{mdTime},#{fjzReason})
     </insert>
     <!--餐饮订单食品sql复用-->
     <sql id="order_goods_sql">
@@ -83,6 +89,19 @@
             <if test="status &lt;=1 ">`STATUS` = #{status}</if>
         </set>
         WHERE `ID` = #{id}
+    </update>
+    <!--修改订单状态，用于反结账或订单超时-->
+    <update id="updateOrderStatusDao" parameterType="object">
+        UPDATE `gs_repast_order`
+        <set>
+            <if test="status &gt;0">
+                `STATUS` = #{status},
+            </if>
+            <if test="fjzReason !=null and fjzReason !=''">
+                `FJZ_REASON`=#{fjzReason}
+            </if>
+        </set>
+        WHERE `ID`=#{id}
     </update>
     <!--餐饮订单商品更新-->
     <update id="updateRepastOrderGoodsDao" parameterType="list">

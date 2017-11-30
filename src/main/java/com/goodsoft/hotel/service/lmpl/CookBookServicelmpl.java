@@ -4,14 +4,18 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.goodsoft.hotel.domain.dao.CookBookDao;
+import com.goodsoft.hotel.domain.dao.FileDao;
 import com.goodsoft.hotel.domain.entity.cookbook.*;
+import com.goodsoft.hotel.domain.entity.param.HotelParam;
 import com.goodsoft.hotel.domain.entity.param.MeansParam;
-import com.goodsoft.hotel.domain.entity.param.PageParam;
+import com.goodsoft.hotel.domain.entity.param.MenuParam;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.CookBookService;
+import com.goodsoft.hotel.service.FileService;
+import com.goodsoft.hotel.service.supp.ServicelmplGetFileSupp;
 import com.goodsoft.hotel.util.UUIDUtil;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +46,12 @@ public class CookBookServicelmpl implements CookBookService {
     private CookBookDao dao;
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
+    @Resource
+    private FileService fileService;
+    @Resource
+    private FileDao fileDao;
+    @Resource
+    private ServicelmplGetFileSupp getFileSupp;
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
 
@@ -52,7 +63,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T queryTypeAndSubtypeService(PageParam page) throws Exception {
+    public <T> T queryTypeAndSubtypeService(HotelParam page) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuType> list = this.dao.queryMenuTypeDao();
         int len = list.size();
@@ -92,7 +103,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T queryMenuTypeService(PageParam page) throws Exception {
+    public <T> T queryMenuTypeService(HotelParam page) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuType> list = this.dao.queryMenuTypeDao();
         if (list.size() > 0) {
@@ -112,7 +123,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T queryMenuStypeService(String tid, PageParam page) throws Exception {
+    public <T> T queryMenuStypeService(String tid, HotelParam page) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuSubType> list = this.dao.queryMenuSubtypeDao(tid);
         if (list.size() > 0) {
@@ -150,10 +161,17 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T queryMenuDetailDao(String stid, String tid, PageParam page) throws Exception {
+    public <T> T queryMenuDetailDao(String stid, String tid, HotelParam page, HttpServletRequest request, boolean setFindFiles) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<Menu> list = this.dao.queryMenuDetailDao(stid, tid);
-        if (list.size() > 0) {
+        int len = list.size();
+        if (len > 0) {
+            if (setFindFiles) {
+                for (int i = 0; i < len; ++i) {
+                    List<String> picture = this.getFileSupp.getFileData(request, list.get(i).getId());
+                    list.get(i).setPicture(picture);
+                }
+            }
             PageInfo<Menu> data = new PageInfo<Menu>(list);
             return (T) new Result(0, data);
         }
@@ -170,7 +188,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T queryMenuMeansService(String cbid, PageParam page) throws Exception {
+    public <T> T queryMenuMeansService(String cbid, HotelParam page) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuMeans> list = this.dao.queryMenuMeansDao(cbid);
         if (list.size() > 0) {
@@ -190,7 +208,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T queryMenuMeansDetailService(String mid, PageParam page) throws Exception {
+    public <T> T queryMenuMeansDetailService(String mid, HotelParam page) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuMeansDetail> list = this.dao.queryMenuMeansDetailDao(mid);
         if (list.size() > 0) {
@@ -209,7 +227,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public <T> T querySetMealDao(PageParam page) throws Exception {
+    public <T> T querySetMealDao(HotelParam page) throws Exception {
         Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<SetMeal> list = this.dao.querySetMealDao();
         int len = list.size();
@@ -262,12 +280,12 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     @Transactional
-    public void addMenuService(MenuSubType msg) throws Exception {
-        List<Menu> menus = msg.getMenus();
+    public Status addMenuService(MenuParam msg) throws Exception {
+        List<Menu> menus = msg.getMenu();
         //获取类别编号用于关联类别表
         String tid = msg.getTid();
         //获取小类别编号用于关联小类别表
-        String stid = msg.getSbid();
+        String stid = msg.getStid();
         //设置菜单添加时间
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         //设置库存量数据集合容器
@@ -279,6 +297,14 @@ public class CookBookServicelmpl implements CookBookService {
             String id = this.uuid.getUUID().toString();
             //设置库存量数据编号
             String ids = this.uuid.getUUID().toString();
+            //文件上传
+            int arg = this.fileService.fileUploadService(menus.get(i).getFiles(), "images", id);
+            switch (arg) {
+                case 603:
+                    return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
+                case 601:
+                    return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+            }
             menus.get(i).setId(id);
             menus.get(i).setTid(tid);
             menus.get(i).setStid(stid);
@@ -295,6 +321,7 @@ public class CookBookServicelmpl implements CookBookService {
         this.dao.addInventoryDao(msg1);
         //菜单数据添加
         this.dao.addMenuDao(menus);
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
     /**
