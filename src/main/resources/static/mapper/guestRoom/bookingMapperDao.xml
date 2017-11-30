@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
+<!--王智  预订信息-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.BookingDao">
-    <!--第三方缓存技术 ehcache-->
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
     <!--添加预定信息-->
     <insert id="insertQuickBooking" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
         INSERT INTO gs_quickbooking VALUES
         (#{id},#{guestType},#{bookingNo},#{guestName},#{contractNo},#{guestThno},#{contractUnit},#{bookingUnit},
         #{salesman},#{sex},#{registerNo},#{teamNo},#{reservationist},#{teamName},#{leaderName},
-        #{leaderPhone},#{leaderRoomNo},#{days},#{startDate},#{endDate},#{extraBed},#{discount},
+        #{leaderPhone},#{leaderRoomNo},#{startDate},#{endDate},#{days},#{extraBed},#{discount},
         #{discauth},#{rentreson},#{releasetTime},#{phoneNo},#{markets},#{guestSource},#{bookingType},#{receptionUnit},
         #{bookingName},#{bookingPhone},#{bookingEmail},#{predeterMode},#{roomNum},#{remark},#{teamRemark},
-        #{bookingFlag},#{payMode},#{creditCardNo},#{periodValidity},#{authorizationNumber},#{lineCredit},
-        #{lineAdjustCredit})
+        #{bookingFlag},#{reason},#{payMode},#{creditCardNo},#{periodValidity},#{authorizationNumber},#{lineCredit},
+        #{lineAdjustCredit},#{relationNo},#{attendantNo})
     </insert>
 
     <!--添加预定信息的房间-->
     <insert id="insertQuickBookingRoom" parameterType="java.util.List">
         INSERT INTO gs_quickbooking_roomno VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.roomNo},#{item.typeName},#{item.doorLockId},#{item.housePrices},#{item.bookId})
+            (#{item.roomNo},#{item.typeName},#{item.doorLockId},#{item.housePrices},#{item.bookId},#{item.roomId})
         </foreach>
     </insert>
 
-    <!--修改预定信息的所有字段,根据ID或者预定单号-->
+    <!--&lt;!&ndash;查询预订单的房间号码&ndash;&gt;-->
+    <!--<select id="findRoomNoMapper" parameterType="java.lang.String" resultType="java.util.List">-->
+        <!--select ROOMNO from gs_room WHERE ROOMNO IN-->
+        <!--(select b.ROOMNO from gs_quickbooking a LEFT JOIN gs_quickbooking_roomno b on a.ID = b.BOOKID AND a.id = #{_parameter} AND a.bookingflag = '1')-->
+    <!--</select>-->
+
+    <!--修改预定信息的房间状态 未使用-->
+    <update id="updateRoomFlag" parameterType="java.lang.String">
+        UPDATE gs_room a  RIGHT JOIN  (
+        select DISTINCT b.roomid from gs_quickbooking a
+        LEFT JOIN gs_quickbooking_roomno b on a.ID = b.BOOKID
+        AND a.id = #{_parameter} AND  DATEDIFF(a.STARTDATE,NOW()) &lt;=1 ) b
+        ON a.roomno = b.roomid AND a.SFLAG = '净房'
+        SET SFLAG='预抵',flag =
+    </update>
+
+    <!--修改预定信息的所有字段,根据ID或者预定单号  未使用-->
     <update id="updateQuickBookingALL" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
         update gs_quickbooking
         <trim prefix="set" suffixOverrides=",">
@@ -66,12 +81,13 @@
             <if test="remark!=null">remark=#{remark}</if>
             <if test="teamRemark!=null">teamRemark=#{teamRemark}</if>
             <if test="bookingFlag!=null">bookingFlag=#{bookingFlag}</if>
+            <if test="reason!=null" >reason=#{reason}</if>
         </trim>
         WHERE id=#{id} OR bookingNo=#{bookingNo}
     </update>
 
 
-    <!--修改预定信息的房间-->
+    <!--修改预定信息的房间  未使用-->
     <update id="updateBookingRoom" parameterType="java.util.List">
         update gs_quickbooking_roomno
         <foreach collection="list" item="item" separator=",">
@@ -85,26 +101,65 @@
         </foreach>
     </update>
 
+    <!--取消订单    未使用-->
+    <update id="updateFlagQuxiaoMapper" parameterType="list">
+        UPDATE  gs_quickbooking
+        <foreach collection="list" item="item">
+            <set>
+                bookingFlag = '2',
+                <if test="reason!=null">
+                    reason = #{item.reason}
+                </if>
+            </set>
+            WHERE bookid = #{item.bookid}
+        </foreach>
 
-    <!--查询预定信息-->
+    </update>
+
+    <!--取消订单恢复   未使用-->
+    <update id="updateFlagQuXiaoHuiFuMapper" parameterType="java.lang.String">
+        update gs_quickbooking SET bookingFlag = '1' WHERE bookid = #{_parameter}
+    </update>
+
+    <!--订单删除(修改状态)  未使用-->
+    <update id="updateFlagDeleteMapper" parameterType="java.lang.String">
+        UPDATE gs_quickbooking SET bookingFlag = '3' WHERE bookid = #{_parameter}
+    </update>
+
+    <!--订单恢复(修改状态)  未使用-->
+    <update id="updateFlagDeleteHuiFuMapper" parameterType="java.lang.String">
+        UPDATE gs_quickbooking SET bookingFlag = '1' WHERE bookid = #{_parameter}
+    </update>
+
+
+    <!--彻底删除预定信息    未使用-->
+    <delete id="deleteBookingMapper" parameterType="java.lang.String">
+          DELETE FROM gs_quickbooking WHERE id=#{_parameter}
+    </delete>
+
+
+    <!--彻底删除预定房间信息   未使用-->
+    <delete id="deleteBookingRoomMapper" parameterType="java.lang.String">
+          DELETE from gs_quickbooking_roomno WHERE bookid=#{_parameter}
+    </delete>
+
+    <!--查询预定信息 未使用-->
     <select id="selectrQuickbookings" parameterType="java.util.Map"
             resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
         select * from gs_quickbooking where 1=1
         <if test="startdate!=null and enddate!=null">
-            and startdate &gt; #{stratdate} and startdate &lt; #{enddate}
+            and startdate  &gt; #{stratdate} and startdate &lt;  #{enddate}
         </if>
         <if test="startdate!=null and enddate=null">
-            and startdate &gt; #{stratdate}
+            and startdate  &gt; #{stratdate}
         </if>
         <if test="startdate=null and enddate!=null">
-            and startdate &lt; #{enddate}
+            and startdate &lt;  #{enddate}
         </if>
 
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
         </if>
-
-
     </select>
 
 
@@ -113,5 +168,144 @@
             resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
         select * from gs_quickbooking_roomno where bookid=#{_parameter}
     </select>
+
+
+
+    <!--添加客人信息  未使用-->
+    <insert id="addGuestMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Guest">
+        insert INTO gs_guest VALUES (#{id},#{guestName},#{nickName},#{englishName},#{marital},#{nationality},#{languages},#{cardType},#{ethnic},
+        #{documentNo},#{nativePlace},#{sex},#{occupation},#{birthDay},#{workUnit},#{cityProper},#{work},#{regional},#{stopCause},#{postalCode}
+        ,#{address},#{officePhone},#{phoneNumber},#{telePhone},#{visaAgency},#{visaType},#{visaNumber},#{visaDate},#{periodValidity},#{entryTime},#{entryPorts},
+        #{newspaperType},#{religiousBelief},#{secondCard},#{comeFrom},#{arrivalFlight},#{whereToGo},#{leaveFlight},#{positions},#{carType},#{carPlateNumber},
+        #{specialDemand},#{hobby},#{taboo})
+    </insert>
+
+
+    <!--判断预定房间号是否重复-->
+    <select id="joinRoomIdResves" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from gs_quickbooking_roomno a,gs_quickbooking b where b.id=a.bookid and  (unix_timestamp(b.startdate)+86399)  &gt; unix_timestamp(now())
+        and  floor((unix_timestamp(b.startdate)-unix_timestamp(now()))/86400) &lt;=1 and roomid=#{roomid}
+    </select>
+
+
+    <!--会员卡信息添加  未使用-->
+    <insert id="addVipCardMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard" >
+        INSERT INTO gs_vipCard VALUES (#{id},#{vipNo},#{vipType},#{vipName},
+        #{vipPhone},#{vipAddress},#{vipRegisterDate},#{vipRechargeDate},#{vipRechargeAmount},
+        #{vipEndConsumeDate},#{vipExpireDate},#{vipConsumeCount},#{vipPaymentCount},#{vipBalance},#{blackList},#{mark})
+    </insert>
+
+
+    <!--会员卡信息修改  未使用-->
+    <update id="updateVipCardMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard" >
+        UPDATE  gs_vipCard
+        <set>
+            <if test="vipType !=null" >vipType=#{vipType}</if>
+            <if test="vipName !=null">vipName = #{vipName}</if>
+            <if test="vipPhone !=null">vipPhone =#{vipPhone}</if>
+            <if test="vipAddress !=null" >vipAddress=#{vipAddress}</if>
+            <if test="vipRegisterDate !=null" >vipRegisterDate=#{vipRegisterDate}</if>
+            <if test="vipRechargeDate !=null" >vipRechargeDate=#{vipRechargeDate}</if>
+            <if test="vipRechargeAmount != null" >vipRechargeAmount =#{vipRechargeAmount}</if>
+            <if test="vipEndConsumeDate != null" >vipEndConsumeDate =#{vipEndConsumeDate}</if>
+            <if test="vipExpireDate != null" >vipExpireDate =#{vipExpireDate}</if>
+            <if test="vipConsumeCount != null" >vipConsumeCount =#{vipConsumeCount}</if>
+            <if test="vipPaymentCount != null" >vipPaymentCount =#{vipPaymentCount}</if>
+            <if test="vipBalance != null" >vipBalance =#{vipBalance}</if>
+            <if test="blackList != null" >blackList =#{blackList}</if>
+            <if test="mark != null" >mark =#{mark}</if>
+        </set>
+        WHERE  id=#{id}
+    </update>
+
+
+    <!--会员卡信息查询,按照会员卡名字查询  未使用-->
+    <select id="findVipCardVipNameMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard">
+        select *  FROM  gs_vipcard WHERE vipName=#{_parameter}
+    </select>
+
+
+    <!--会员卡信息查询,按照会员卡号查询  未使用-->
+    <select id="findVipCardVipNoMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard">
+        select *  FROM  gs_vipcard WHERE vipNo=#{_parameter}
+    </select>
+
+
+    <!--会员卡信息查询,按照会员卡电话查询  未使用-->
+    <select id="findVipCardVipPhoneMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard">
+        select *  FROM  gs_vipcard WHERE vipPhone=#{_parameter}
+    </select>
+
+
+    <!--删除会员卡信息 未使用-->
+    <delete id="deleteVipCardMapper" parameterType="java.lang.String" >
+        DELETE FROM gs_vipcard WHERE id=#{_parameter}
+    </delete>
+
+
+
+
+    <!--预定入住查询-->
+    <select id="selectRoomRuZhu"   resultType="java.util.Map">
+        SELECT a.markets,c.id,a.id FROM gs_quickbooking a,gs_quickbooking_roomno b,gs_room c
+        where a.id = b.bookid and b.roomid = c.id AND b.roomno IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+
+    <!--预定入住修改房间状态-->
+    <update id="updateRoomFlagRuZhu" parameterType="java.util.Map" >
+           update gs_room SET flag = #{markets} WHERE id=#{id}
+    </update>
+
+    <!--预定入住修改预定状态-->
+    <update id="updateRoomFlagRuZhuBooking" parameterType="java.util.Map">
+
+    </update>
+
+
+
+    <!--公共信息发布添加-->
+    <insert id="addMsgMapper"  parameterType="com.goodsoft.hotel.domain.entity.guestRoom.GsPublicMsgIssuance" >
+        insert into GS_PUBLIC_MSG_ISSUANCE VALUES(#{id},#{msgType},#{msgKeyWord},#{msgTheme},#{msgContent},#{msgRemark},#{examineTime},#{examinePeople},#{createPeople},#{createTime})
+    </insert>
+
+    <!--公共信息发布修改-->
+    <update id="updateMsgMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.GsPublicMsgIssuance">
+        UPDATE GS_PUBLIC_MSG_ISSUANCE
+        <set>
+        <if test="msgType!=null and msgType!= '' ">
+            msgType = #{msgType},
+        </if>
+        <if test="msgKeyWord !=null and msgKeyWord != '' ">
+            msgKeyWord = #{msgKeyWord},
+        </if>
+        <if test="msgTheme !=null and msgTheme !='' " >
+            msgTheme = #{msgTheme},
+        </if>
+        <if test="msgContent !=null and msgContent !='' " >
+            msgContent = #{msgContent},
+        </if>
+        <if test="msgRemark !=null and msgRemark !='' " >
+            msgRemark = #{msgRemark},
+        </if>
+        <if test="examineTime !=null and examineTime !='' " >
+            examineTime = #{examineTime},
+        </if>
+        <if test="examinePeople !=null and examinePeople !='' " >
+            examinePeople = #{examinePeople},
+        </if>
+        <if test="examineTime !=null and examineTime !='' " >
+            examineTime = #{examineTime},
+        </if>
+        <if test="createTime !=null and createTime !='' " >
+            createTime = #{createTime}
+        </if>
+        </set>
+        WHERE id = #{id}
+    </update>
 
 </mapper>

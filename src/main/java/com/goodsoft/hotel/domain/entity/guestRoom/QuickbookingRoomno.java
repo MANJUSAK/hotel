@@ -2,14 +2,18 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 
 /**
- * Created by Administrator on 2017/11/18/018.
+ * 预定房间信息表
+ * Created by 王智 on 2017/11/18/018.
  */
 public class QuickbookingRoomno {
+
     private String roomNo;              //房间号
     private String typeName;            //房间类型
     private String doorLockId;          //门锁ID
     private String housePrices;         //标准房价
     private String bookId;              //预定表单ID
+    private String roomId;              //房间id
+
 
     public String getRoomNo() {
         return roomNo;
@@ -51,14 +55,23 @@ public class QuickbookingRoomno {
         this.bookId = bookId;
     }
 
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
     @Override
     public String toString() {
         return "QuickbookingRoomno{" +
                 "roomNo='" + roomNo + '\'' +
-                ", roomType='" + typeName + '\'' +
+                ", typeName='" + typeName + '\'' +
                 ", doorLockId='" + doorLockId + '\'' +
-                ", housePrices=" + housePrices +
+                ", housePrices='" + housePrices + '\'' +
                 ", bookId='" + bookId + '\'' +
+                ", roomId='" + roomId + '\'' +
                 '}';
     }
 }

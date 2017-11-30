@@ -13,24 +13,76 @@ import java.util.Map;
 
 @Repository
 public interface RoomSDao {
-    //   public Map<String,Object>  findFang1() throws Exception;
+    /*
+    房态  start
+     */
+
     //   获取楼层所有信息
     public List<Floors> queryFloorMapper() throws Exception;
 
     //   通过楼层号获取到房间所有信息
-    public List<Room> queryFloorRoomMapper(String floorCode) throws Exception;
+    public List<Map<String, Object>> queryFloorRoomMapper(Map map) throws Exception;
 
-    //   房间类型
+    //  获取房间总条数
+    public Integer queryFloorRoomCountMapper(Map map) throws Exception;
+
+
+    //房态 右边下拉框 楼层信息
+    public List<Floors> findFloorAllMapper() throws Exception;
+
+    //通过房态右边下拉框楼层信息 获取到该楼层房间信息
+    public List<Map<String, Object>> findFloorNameGetRoomMapper(String floorCode) throws Exception;
+
+
+    // 房态 右边下拉框 房间类型信息
     public List<RoomType> queryRoomTypeMapper() throws Exception;
 
-    //   通过楼层名字返回房间信息
-    public List<Room> queryRoomFloorNameMapper(String floorName) throws Exception;
+    // 通过房态右边下拉框 房间类型信息 获取到该类型房间信息
+    public List<Map<String, Object>> queryRoomTypeGetRoomMapper(String roomType) throws Exception;
+
+
+    //房态右边的条件查询
+    public List<Map> queryFuzzyRoomMapper(String str) throws Exception;
+    /*
+    房态 end
+     */
+
+    /*
+    快速预定  房间 start
+     */
 
     //   快速预定中的房态信息,左边的列表
     public List<Map<String, Object>> queryRoomALLMapper() throws Exception;
 
-    //   查询空房有多少
+    //   预定中 房间信息 通过左边的房间类型状态来判断
     public List<Map<String, Object>> selectKongMapper(List<Integer> typeIds) throws Exception;
+
+    /*
+    快速预定房间信息 end
+     */
+
+
+
+
+
+    /*
+      快速分房
+     */
+    //快速分房右边下拉框房类接口
+    public List<RoomType> findRoomTypeFenFangMapper();
+
+    //快速分房建筑 楼的信息 需要传入 房类接口
+    public List<Building> findBuildingFenFangMapper(String roomType);
+
+    //快速分房楼层 需要传入 建筑编号
+    public List<Floors> findFloorsFenFangMapper(String buildingCode);
+
+    //快速分房通过查询 获取房间显示到左边
+    public Map findRoomFenFangMapper(Map map);
+
+    //添加房间的房间价格
+    public void addRoomPricesMapper(RoomPrices roomPrices) throws Exception;
+
 
 
     //建筑信息添加
@@ -41,8 +93,5 @@ public interface RoomSDao {
 
     //房间类型信息的添加
     public void insertRoomType(RoomType roomType) throws Exception;
-//   房间信息添加
-//   public void  insertRoom(Room room) throws Exception;
-
 
 }

@@ -3,7 +3,8 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/11/16/016.
+ * 快速预定信息表
+ * Created by 王智 on 2017/11/16/016.
  */
 public class Quickbooking {
     private String id;              //ID
@@ -44,14 +45,40 @@ public class Quickbooking {
     private String remark;          //备注
     private String teamRemark;      //团队备注
     private String bookingFlag;     //状态
+    private String reason;          //取消原因
     private String payMode;         //付款方式
     private String creditCardNo;    //信用卡号
     private String periodValidity;  //有效期
     private String authorizationNumber;     //授权号
     private String lineCredit;          //信用额度
     private String lineAdjustCredit;        //信用调节额度
+    private String relationNo;                  //关联号
+    private String attendantNo;                 //随行号
     private List<QuickbookingRoomno> roomno;  //房间号表
 
+    public String getRelationNo() {
+        return relationNo;
+    }
+
+    public void setRelationNo(String relationNo) {
+        this.relationNo = relationNo;
+    }
+
+    public String getAttendantNo() {
+        return attendantNo;
+    }
+
+    public void setAttendantNo(String attendantNo) {
+        this.attendantNo = attendantNo;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
     public String getId() {
         return id;
@@ -447,19 +474,22 @@ public class Quickbooking {
                 ", bookingType='" + bookingType + '\'' +
                 ", receptionUnit='" + receptionUnit + '\'' +
                 ", bookingName='" + bookingName + '\'' +
-                ", phone='" + bookingPhone + '\'' +
+                ", bookingPhone='" + bookingPhone + '\'' +
                 ", bookingEmail='" + bookingEmail + '\'' +
                 ", predeterMode='" + predeterMode + '\'' +
                 ", roomNum='" + roomNum + '\'' +
                 ", remark='" + remark + '\'' +
                 ", teamRemark='" + teamRemark + '\'' +
                 ", bookingFlag='" + bookingFlag + '\'' +
+                ", reason='" + reason + '\'' +
                 ", payMode='" + payMode + '\'' +
                 ", creditCardNo='" + creditCardNo + '\'' +
                 ", periodValidity='" + periodValidity + '\'' +
                 ", authorizationNumber='" + authorizationNumber + '\'' +
                 ", lineCredit='" + lineCredit + '\'' +
                 ", lineAdjustCredit='" + lineAdjustCredit + '\'' +
+                ", relationNo='" + relationNo + '\'' +
+                ", attendantNo='" + attendantNo + '\'' +
                 ", roomno=" + roomno +
                 '}';
     }
