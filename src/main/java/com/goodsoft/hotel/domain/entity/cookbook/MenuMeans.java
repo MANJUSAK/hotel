@@ -19,6 +19,9 @@ public class MenuMeans implements java.io.Serializable {
     private int mid;//做法编号
     private String mName;//做法名
     private String mdid;//做法编号，用于获取前台传入的做法编号
+    private String tName;//部门类别（仅用于查询）
+    private String stName;//小类（仅用于查询）
+    private String cbName;//菜品名（仅用于查询）
     private List<MenuMeansDetail> meansDetails;
 
     public String getId() {
@@ -77,6 +80,30 @@ public class MenuMeans implements java.io.Serializable {
         this.mdid = mdid;
     }
 
+    public String gettName() {
+        return tName;
+    }
+
+    public void settName(String tName) {
+        this.tName = tName;
+    }
+
+    public String getStName() {
+        return stName;
+    }
+
+    public void setStName(String stName) {
+        this.stName = stName;
+    }
+
+    public String getCbName() {
+        return cbName;
+    }
+
+    public void setCbName(String cbName) {
+        this.cbName = cbName;
+    }
+
     public List<MenuMeansDetail> getMeansDetails() {
         return meansDetails;
     }
@@ -96,11 +123,14 @@ public class MenuMeans implements java.io.Serializable {
                 Objects.equals(stid, menuMeans.stid) &&
                 Objects.equals(cbid, menuMeans.cbid) &&
                 Objects.equals(mName, menuMeans.mName) &&
+                Objects.equals(tName, menuMeans.tName) &&
+                Objects.equals(stName, menuMeans.stName) &&
+                Objects.equals(cbName, menuMeans.cbName) &&
                 Objects.equals(mdid, menuMeans.mdid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, stid, cbid, mName, mdid);
+        return Objects.hash(id, tid, stid, cbid, mName, tName, stName, mdid, cbName);
     }
 }

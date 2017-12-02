@@ -13,7 +13,7 @@ public class MenuSubType implements java.io.Serializable {
     private static final long serialVersionUID = 1604565411882057472L;
     private String id;//编号
     private int stid;//小类型编号
-    private String tName;//类型名称
+    private String tName;//部门类别（仅用于查询）
     private String stName;//小类型名称
     private String tid;//关联类别表id
     private String sbid;//前台传入小类编号

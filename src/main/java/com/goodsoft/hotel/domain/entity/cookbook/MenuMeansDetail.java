@@ -1,6 +1,5 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
-import java.beans.Transient;
 import java.util.Objects;
 
 /**
@@ -18,7 +17,12 @@ public class MenuMeansDetail implements java.io.Serializable {
     private String cbid;//菜单编号
     private String mid;//做法明细编号
     private int mdid;//关联做法表id
-    private String mdName;//名称
+    private String mdName;//做法详情
+    private String tName;//部门类别（仅用于查询）
+    private String stName;//小类（仅用于查询）
+    private String cbName;//菜品名（仅用于查询）
+    private String mName;//做法名（仅用于查询）
+
 
     public String getId() {
         return id;
@@ -28,7 +32,6 @@ public class MenuMeansDetail implements java.io.Serializable {
         this.id = id;
     }
 
-    @Transient
     public String getTid() {
         return tid;
     }
@@ -37,7 +40,6 @@ public class MenuMeansDetail implements java.io.Serializable {
         this.tid = tid;
     }
 
-    @Transient
     public String getStid() {
         return stid;
     }
@@ -46,7 +48,6 @@ public class MenuMeansDetail implements java.io.Serializable {
         this.stid = stid;
     }
 
-    @Transient
     public String getCbid() {
         return cbid;
     }
@@ -55,7 +56,6 @@ public class MenuMeansDetail implements java.io.Serializable {
         this.cbid = cbid;
     }
 
-    @Transient
     public String getMid() {
         return mid;
     }
@@ -80,6 +80,38 @@ public class MenuMeansDetail implements java.io.Serializable {
         this.mdName = mdName == null ? null : mdName.trim();
     }
 
+    public String gettName() {
+        return tName;
+    }
+
+    public void settName(String tName) {
+        this.tName = tName;
+    }
+
+    public String getStName() {
+        return stName;
+    }
+
+    public void setStName(String stName) {
+        this.stName = stName;
+    }
+
+    public String getCbName() {
+        return cbName;
+    }
+
+    public void setCbName(String cbName) {
+        this.cbName = cbName;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,11 +122,15 @@ public class MenuMeansDetail implements java.io.Serializable {
                 Objects.equals(stid, that.stid) &&
                 Objects.equals(cbid, that.cbid) &&
                 Objects.equals(mid, that.mid) &&
+                Objects.equals(tName, that.tName) &&
+                Objects.equals(stName, that.stName) &&
+                Objects.equals(cbName, that.cbName) &&
+                Objects.equals(mName, that.mName) &&
                 Objects.equals(mdName, that.mdName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, stid, cbid, mid, mdName);
+        return Objects.hash(id, tid, stid, cbid, mid, mdName, tName, stName, cbName, mName);
     }
 }

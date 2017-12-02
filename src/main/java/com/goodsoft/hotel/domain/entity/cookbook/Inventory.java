@@ -11,8 +11,7 @@ import java.util.Objects;
 public class Inventory implements java.io.Serializable {
 
     private static final long serialVersionUID = 901888118996173301L;
-    private String id;//编号
-    private String cbid;//关联菜单编号
+    private String id;//关联菜单编号
     private String date;//录入时间
     private int num;//库存量
     private String tid;//部门类别id
@@ -24,14 +23,6 @@ public class Inventory implements java.io.Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getCbid() {
-        return cbid;
-    }
-
-    public void setCbid(String cbid) {
-        this.cbid = cbid;
     }
 
     public String getDate() {
@@ -72,7 +63,6 @@ public class Inventory implements java.io.Serializable {
         if (!(o instanceof Inventory)) return false;
         Inventory inventory = (Inventory) o;
         return Objects.equals(id, inventory.id) &&
-                Objects.equals(cbid, inventory.cbid) &&
                 Objects.equals(date, inventory.date) &&
                 Objects.equals(tid, inventory.tid) &&
                 Objects.equals(stid, inventory.stid);
@@ -80,6 +70,6 @@ public class Inventory implements java.io.Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cbid, date, tid, stid);
+        return Objects.hash(id, date, tid, stid);
     }
 }

@@ -1,5 +1,7 @@
 package com.goodsoft.hotel.domain.entity.cookbook;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +21,11 @@ public class SetMeal implements java.io.Serializable {
     private int isNo;//是否打折（0为true/1为false）
     private double stPrice;//套餐价格
     private String smUnit;//套餐单位
-    private List<SetMealDetail> mealDetails;
+    private String fileId;//文件编号
+    private List<SetMealDetail> mealDetails;//套餐明细
+    private List<String> picture;//套餐图片容器
+    private MultipartFile[] files;//套餐文件上传
+
 
     public String getId() {
         return id;
@@ -77,12 +83,36 @@ public class SetMeal implements java.io.Serializable {
         this.smUnit = smUnit == null ? " " : smUnit.trim();
     }
 
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
     public List<SetMealDetail> getMealDetails() {
         return mealDetails;
     }
 
     public void setMealDetails(List<SetMealDetail> mealDetails) {
         this.mealDetails = mealDetails;
+    }
+
+    public List<String> getPicture() {
+        return picture;
+    }
+
+    public void setPicture(List<String> picture) {
+        this.picture = picture;
+    }
+
+    public MultipartFile[] getFiles() {
+        return files;
+    }
+
+    public void setFiles(MultipartFile[] files) {
+        this.files = files;
     }
 
     @Override
@@ -92,11 +122,12 @@ public class SetMeal implements java.io.Serializable {
         SetMeal meal = (SetMeal) o;
         return Objects.equals(id, meal.id) &&
                 Objects.equals(smName, meal.smName) &&
+                Objects.equals(fileId, meal.fileId) &&
                 Objects.equals(smUnit, meal.smUnit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, smName, smUnit);
+        return Objects.hash(id, smName, smUnit, fileId);
     }
 }

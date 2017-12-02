@@ -8,57 +8,57 @@
     <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
     <!--菜单类型添加-->
     <insert id="addMenuTypeDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuType">
-        INSERT INTO `gs_cookbook_type` (`ID`,`TNAME`) VALUES (#{id},#{tName})
+        INSERT INTO gs_cookbook_type (ID,TNAME) VALUES (#{id},#{tName})
     </insert>
     <!--菜单子类型添加-->
     <insert id="addMenuSubtypeDao" parameterType="list">
-        INSERT INTO `gs_cookbook_subtype`(`ID`,`STNAME`,`TID`) VALUES
+        INSERT INTO gs_cookbook_subtype(ID,STNAME,TID) VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.stName},#{item.tid})
         </foreach>
     </insert>
     <!--菜单添加-->
     <insert id="addMenuDao" parameterType="list">
-        INSERT INTO `gudou_1`.`gs_cookbook`
-        (`ID`,`TID`,`STID`,`CBNAME`,`UNIT`,`IS_DISCOUNT`,`spec1`,`spec2`,`spec3`,
-        `spec4`,`spec5`,`PRICE1`,`PRICE2`,`PRICE3`,`PRICE4`,`PRICE5`)
+        INSERT INTO gudou_1.gs_cookbook
+        (ID,TID,STID,CBNAME,UNIT,IS_DISCOUNT,spec1,spec2,spec3,
+        spec4,spec5,PRICE1,PRICE2,PRICE3,PRICE4,PRICE5,FILE_ID,IS_SUB)
         VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.tid},#{item.stid},#{item.cbName},#{item.unit},#{item.isNo},#{item.spec1},#{item.spec2},#{item.spec3},
-            #{item.spec4},#{item.spec5},#{item.price1},#{item.price2},#{item.price3},#{item.price4},#{item.price5})
+            #{item.spec4},#{item.spec5},#{item.price1},#{item.price2},#{item.price3},#{item.price4},#{item.price5},#{item.fileId},#{item.isSub})
         </foreach>
     </insert>
     <!--菜单库存量添加-->
     <insert id="addInventoryDao" parameterType="list">
-        INSERT INTO `gs_cookbook_inventory` (`ID`,`KC_DATE`,`KC_NUM`,`TID`,`STID`,`CBID`) VALUES
+        INSERT INTO gs_cookbook_inventory (ID,KC_DATE,KC_NUM,TID,STID) VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.date},#{item.num},#{item.tid},#{item.stid},#{item.cbid})
+            (#{item.id},#{item.date},#{item.num},#{item.tid},#{item.stid})
         </foreach>
     </insert>
     <!--菜单做法添加-->
     <insert id="addMenuMeansDao" parameterType="list">
-        INSERT INTO `gs_cookbook_means` (`ID`,`MNAME`,`TID`,`STID`,`CBID`) VALUES
+        INSERT INTO gs_cookbook_means (ID,MNAME,TID,STID,CBID) VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.mName},#{item.tid},#{item.stid},#{item.cbid})
         </foreach>
     </insert>
     <!--菜单做法详情添加-->
     <insert id="addMenuMeansDetailDao" parameterType="list">
-        INSERT INTO `gs_cookbook_means_detal` (`ID`,`TID`,`STID`,`CBID`,`MID`,`MDNAME`) VALUES
+        INSERT INTO gs_cookbook_means_detal (ID,TID,STID,CBID,MID,MDNAME) VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.tid},#{item.stid},#{item.cbid},#{item.mid},#{item.mdName})
         </foreach>
     </insert>
     <!--套餐数据添加-->
     <insert id="addSetMealDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
-    INSERT INTO `gs_cookbook_setmeal`(`ID`,`SMNAME`,`TC_PRICE`,`SM_ID_DISCOUNT`,`IS_DD`,`SM_UNIT`)
-    VALUES (#{id},#{smName},#{stPrice},#{isNo},#{isdd},#{smUnit})
+    INSERT INTO gs_cookbook_setmeal(ID,FILE_ID,SMNAME,TC_PRICE,SM_ID_DISCOUNT,IS_DD,SM_UNIT)
+    VALUES (#{id},#{fileId},#{smName},#{stPrice},#{isNo},#{isdd},#{smUnit})
     </insert>
     <!--套餐内容数据添加-->
     <insert id="addSetMealDetailDao" parameterType="list">
-        INSERT INTO `gs_cookbook_setmeal_detal`(`ID`,`TID`,`STID`,`CBID`,`SMID`) VALUES
+        INSERT INTO gs_cookbook_setmeal_detal(ID,TID,STID,CBID,SMID,TC_SPEC,TC_PRICE,TC_NUM) VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.tid},#{item.stid},#{item.cbid},#{item.smid})
+            (#{item.id},#{item.tid},#{item.stid},#{item.cbid},#{item.smid},#{item.tcSpec},#{item.tcPrice},#{item.tcNum})
         </foreach>
     </insert>
 </mapper>

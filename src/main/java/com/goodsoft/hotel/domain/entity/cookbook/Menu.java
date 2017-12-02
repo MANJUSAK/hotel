@@ -18,7 +18,10 @@ public class Menu implements java.io.Serializable {
     private int cbid;//菜单编号
     private String tid;//关联类别表id
     private String stid;//关联小类别表id
+    private String fileId;//关联文件表fileId
     private String cbName;//菜名
+    private String tName;//部门类别（仅用于查询）
+    private String stName;//小类（仅用于查询）
     private double price1;//规格1价格
     private double price2;//规格2价格
     private double price3;//规格3价格
@@ -32,6 +35,7 @@ public class Menu implements java.io.Serializable {
     private String spec3;//规格3
     private String spec4;//规格4
     private String spec5;//规格5
+    private int isSub;//是否存在小类（0为true/1为false）
     private List<String> picture;//菜品图片文件（用于查询）
     private MultipartFile[] files;//获取上传的菜品图片（用于上传）
 
@@ -41,6 +45,7 @@ public class Menu implements java.io.Serializable {
         this.spec3 = "大";
         this.spec4 = " ";
         this.spec5 = " ";
+        this.fileId = " ";
     }
 
     public String getId() {
@@ -72,7 +77,34 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setStid(String stid) {
+        if ("".equals(stid)) {
+            isSub = 1;
+        }
         this.stid = stid == null ? null : stid.trim();
+    }
+
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
+    public String gettName() {
+        return tName;
+    }
+
+    public void settName(String tName) {
+        this.tName = tName;
+    }
+
+    public String getStName() {
+        return stName;
+    }
+
+    public void setStName(String stName) {
+        this.stName = stName;
     }
 
     public String getCbName() {
@@ -187,6 +219,14 @@ public class Menu implements java.io.Serializable {
         this.spec5 = spec5 == null ? " " : spec5.trim();
     }
 
+    public int getIsSub() {
+        return isSub;
+    }
+
+    public void setIsSub(int isSub) {
+        this.isSub = isSub;
+    }
+
     public List<String> getPicture() {
         return picture;
     }
@@ -218,11 +258,14 @@ public class Menu implements java.io.Serializable {
                 Objects.equals(spec2, menu.spec2) &&
                 Objects.equals(spec3, menu.spec3) &&
                 Objects.equals(spec4, menu.spec4) &&
+                Objects.equals(fileId, menu.fileId) &&
+                Objects.equals(tName, menu.tName) &&
+                Objects.equals(stName, menu.stName) &&
                 Objects.equals(spec5, menu.spec5);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, stid, cbName, unit, isNo, spec1, spec2, spec3, spec4, spec5);
+        return Objects.hash(id, tid, stid, cbName, unit, isNo, spec1, spec2, spec3, spec4, fileId, spec5, tName, stName);
     }
 }

@@ -2,8 +2,12 @@ package com.goodsoft.hotel.service.supp;
 
 import com.goodsoft.hotel.domain.dao.FileDao;
 import com.goodsoft.hotel.domain.entity.file.FileData;
+import com.goodsoft.hotel.domain.entity.result.StatusEnum;
+import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.FileService;
 import com.goodsoft.hotel.util.DomainNameUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,6 +29,8 @@ public class ServicelmplGetFileSupp {
     private FileDao fileDao;
     //实例化服务器域名地址工具类
     private DomainNameUtil domainName = DomainNameUtil.getInstance();
+    //实例化日志管理工具类
+    private Logger logger = LoggerFactory.getLogger(ServicelmplGetFileSupp.class);
 
     /**
      * 获取苗木文件数据业务实现辅助方法
@@ -34,12 +40,19 @@ public class ServicelmplGetFileSupp {
      * @return 文件数据
      * @throws Exception
      */
-    public List<String> getFileData(HttpServletRequest request, String fileId) throws Exception {
+    public List<String> getFileData(HttpServletRequest request, String fileId) throws HotelDataBaseException {
         //获取服务器域名地址
         String var = this.domainName.getServerDomainName(request).toString();
         StringBuilder sb = new StringBuilder();
         //查询数据对应的图片信息
-        List<FileData> path = this.fileDao.queryFileDao(fileId);
+        List<FileData> path = null;
+        try {
+            path = this.fileDao.queryFileDao(fileId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
         //封装域名地址以及图片相对路径
         List url = null;
         int p = path.size();

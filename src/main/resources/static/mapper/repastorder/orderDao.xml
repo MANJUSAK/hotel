@@ -8,41 +8,41 @@
     <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
     <!--餐饮订单sql复用-->
     <sql id="order_sql">
-    `ID`,`KZ_NUM`,`CONSUMER`,`KT_TIME`,`FW_RATE`,`CT_TYPE`,`SALEMANAGER`,`KT_NUM`,`PERSON_NUM`,`KT_SHIFT`,`ZD_CONSUME`,
-    `QD_DISCOUNT`,`DEPARTMENT`,`PART_HALL`,`VIP_NUM`,`VIP_TYPE`,`ZD_CONSUME_GIST`,`DISCOUNT_SUM`,`ZQ_SUM`,`AOH`,`OPERATOR`,
-    `KT_SB`,`TIME_MINUTE`,`IS_SERVICE_CHARGE`,`IS_ZD_CONSUME`,`PAYMENT_TYPE`,`STATUS`,`REMARKS`,`PLACE_NUM`,`CTID`,`ORDER_PRICE`,
-    `MD_TIME`,`FJZ_REASON`
+    ID,KZ_NUM,CONSUMER,KT_TIME,FW_RATE,CT_TYPE,SALEMANAGER,KT_NUM,PERSON_NUM,KT_SHIFT,ZD_CONSUME,
+    QD_DISCOUNT,DEPARTMENT,PART_HALL,VIP_NUM,VIP_TYPE,ZD_CONSUME_GIST,DISCOUNT_SUM,ZQ_SUM,AOH,OPERATOR,
+    KT_SB,TIME_MINUTE,IS_SERVICE_CHARGE,IS_ZD_CONSUME,PAYMENT_TYPE,STATUS,REMARKS,PLACE_NUM,CTID,ORDER_PRICE,
+    MD_TIME,FJZ_REASON
     </sql>
     <!--餐饮订单查询-->
     <select id="queryRepastOrderDao" parameterType="object"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
         SELECT
         <include refid="order_sql"/>
-        FROM `gs_repast_order`
+        FROM gs_repast_order
         <where>
             <if test="id !=null and id !=''">
-                AND `ID`=#{id}
+                AND ID=#{id}
             </if>
             <if test="status &gt;=0">
-                AND `STATUS`=#{status}
+                AND STATUS=#{status}
             </if>
         </where>
-        ORDER BY `ID` DESC
+        ORDER BY ID DESC
     </select>
     <!--餐饮订单查询 返回单条数据-->
     <select id="queryRepastOrderByIdDao" parameterType="string"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
         SELECT
         <include refid="order_sql"/>
-        FROM `gs_repast_order` WHERE `ID`=#{id} AND `STATUS`=1 ORDER BY `ID` DESC
+        FROM gs_repast_order WHERE ID=#{id} AND STATUS=1 ORDER BY ID DESC
     </select>
     <!--查询开台还未结账时的订单时间-->
     <select id="queryKtOrderTimeDao" resultType="map">
-        SELECT `ID`,`KT_TIME` FROM `gs_repast_order` WHERE  `STATUS`=1 ORDER BY `ID` DESC
+        SELECT ID,KT_TIME FROM gs_repast_order WHERE  STATUS=1 ORDER BY ID DESC
     </select>
     <!--餐饮订单添加-->
     <insert id="addRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
-        INSERT INTO `gs_repast_order`
+        INSERT INTO gs_repast_order
         (<include refid="order_sql"/>)
         VALUES
         (#{id},#{kzNum},#{consumer},#{ktTime},#{fwRate},#{ctType},#{salemanager},#{ktNum},#{personNum},#{ktShift},
@@ -52,19 +52,19 @@
     </insert>
     <!--餐饮订单食品sql复用-->
     <sql id="order_goods_sql">
-    `ID`,`OID`,`CBNAME`,`SP_NUM`,`SPEC`,`SP_PRICE`,`JJ_MEANS`,`DETAIL_ZQ_SUM`,`DETAIL_ZH_SUM`,`DISCOUNT`,`ZK_SUM`,`IS_DISCOUNT`,
-    `BATCH`,`REDOUBLE`,`RATED_SEAT`,`OPERATO`,`DC_TIME`,`WRITE_BILL`,`MENU_TYPE`,`DETAIL_REMARKS`,`UNIT`,`TCID`,`MEANS`
+    ID,OID,CBNAME,SP_NUM,SPEC,SP_PRICE,JJ_MEANS,DETAIL_ZQ_SUM,DETAIL_ZH_SUM,DISCOUNT,ZK_SUM,IS_DISCOUNT,
+    BATCH,REDOUBLE,RATED_SEAT,OPERATO,DC_TIME,WRITE_BILL,MENU_TYPE,DETAIL_REMARKS,UNIT,TCID,MEANS
     </sql>
     <!--餐饮订单食品查询-->
     <select id="queryRepastOrderGoodsDao" parameterType="string"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderGoods">
         SELECT
         <include refid="order_goods_sql"/>
-        FROM `gs_repast_order_goods` WHERE `OID`=#{oid}
+        FROM gs_repast_order_goods WHERE OID=#{oid}
     </select>
     <!--餐饮订单食品数据添加-->
     <insert id="addRepastOrderGoodsDao" parameterType="list">
-        INSERT INTO `gs_repast_order_goods` (<include refid="order_goods_sql"/>) VALUES
+        INSERT INTO gs_repast_order_goods (<include refid="order_goods_sql"/>) VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.oid},#{item.cbname},#{item.spNum},#{item.spec},#{item.spPrice},#{item.jjMeans},#{item.detailZqSum},
             #{item.detailZhSum},#{item.discount},#{item.zkSum},#{item.isDiscount},#{item.batch},#{item.redouble},#{item.ratedSeat},#{item.operato},
@@ -73,49 +73,49 @@
     </insert>
     <!--餐饮订单更新-->
     <update id="updateRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
-        UPDATE `gs_repast_order`
+        UPDATE gs_repast_order
         <set>
-            <if test="qdDiscount !=null and qdDiscount !=''">`QD_DISCOUNT` = #{qdDiscount},</if>
-            <if test="vipNum !=null and vipNum !=''">`VIP_NUM` = #{vipNum},</if>
-            <if test="vipType !=null and vipType !=''">`VIP_TYPE` =#{vipType},</if>
-            <if test="discountSum !=null and discountSum !=''">`DISCOUNT_SUM` = #{discountSum},</if>
-            <if test="zqSum !=null and zqSum !=''">`ZQ_SUM` = #{zqSum},</if>
-            <if test="paymentType !=null and paymentType !=''">`PAYMENT_TYPE` = #{paymentType},</if>
-            <if test="ktNum !=null and ktNum !=''">`KT_NUM`=#{ktNum},</if>
-            <if test="partHall !=null and partHall !=''">`PART_HALL`= #{partHall},</if>
-            <if test="placeNum !=null and placeNum !=''">`PLACE_NUM`= #{placeNum},</if>
-            <if test="ctid !=null and ctid !=''">`AOH`= #{aoh},CTID=#{ctid},</if>
-            <if test="orderPrice &gt;=0">`ORDER_PRICE`=#{orderPrice},</if>
-            <if test="status &lt;=1 ">`STATUS` = #{status}</if>
+            <if test="qdDiscount !=null and qdDiscount !=''">QD_DISCOUNT = #{qdDiscount},</if>
+            <if test="vipNum !=null and vipNum !=''">VIP_NUM = #{vipNum},</if>
+            <if test="vipType !=null and vipType !=''">VIP_TYPE =#{vipType},</if>
+            <if test="discountSum !=null and discountSum !=''">DISCOUNT_SUM = #{discountSum},</if>
+            <if test="zqSum !=null and zqSum !=''">ZQ_SUM = #{zqSum},</if>
+            <if test="paymentType !=null and paymentType !=''">PAYMENT_TYPE = #{paymentType},</if>
+            <if test="ktNum !=null and ktNum !=''">KT_NUM=#{ktNum},</if>
+            <if test="partHall !=null and partHall !=''">PART_HALL= #{partHall},</if>
+            <if test="placeNum !=null and placeNum !=''">PLACE_NUM= #{placeNum},</if>
+            <if test="ctid !=null and ctid !=''">AOH= #{aoh},CTID=#{ctid},</if>
+            <if test="orderPrice &gt;0">ORDER_PRICE=#{orderPrice},</if>
+            <if test="status !=0 ">STATUS = #{status}</if>
         </set>
-        WHERE `ID` = #{id}
+        WHERE ID = #{id}
     </update>
     <!--修改订单状态，用于反结账或订单超时-->
     <update id="updateOrderStatusDao" parameterType="object">
-        UPDATE `gs_repast_order`
+        UPDATE gs_repast_order
         <set>
             <if test="status &gt;0">
-                `STATUS` = #{status},
+                STATUS = #{status},
             </if>
             <if test="fjzReason !=null and fjzReason !=''">
-                `FJZ_REASON`=#{fjzReason}
+                FJZ_REASON=#{fjzReason}
             </if>
         </set>
-        WHERE `ID`=#{id}
+        WHERE ID=#{id}
     </update>
     <!--餐饮订单商品更新-->
     <update id="updateRepastOrderGoodsDao" parameterType="list">
         <foreach collection="list" item="item" separator=";">
-            UPDATE `gs_repast_order_goods` SET
-            `CBNAME` = #{item.cbname},`SP_NUM` = #{item.spNum},`SPEC` = #{item.spec},`SP_PRICE`=#{item.spPrice},
-            `JJ_MEANS` = #{item.jjMeans},`DETAIL_ZQ_SUM` = #{item.detailZqSum},`DETAIL_ZH_SUM` =#{item.detailZhSum},
-            `DISCOUNT` =#{item.discount},`ZK_SUM` = #{item.zkSum}
-            WHERE `ID` = #{item.id}
+            UPDATE gs_repast_order_goods SET
+            CBNAME = #{item.cbname},SP_NUM = #{item.spNum},SPEC = #{item.spec},SP_PRICE=#{item.spPrice},
+            JJ_MEANS = #{item.jjMeans},DETAIL_ZQ_SUM = #{item.detailZqSum},DETAIL_ZH_SUM =#{item.detailZhSum},
+            DISCOUNT =#{item.discount},ZK_SUM = #{item.zkSum}
+            WHERE ID = #{item.id}
         </foreach>
     </update>
     <!--删除餐饮订单-->
     <delete id="deleteOrderDao" parameterType="string">
-        DELETE FROM `gs_repast_order` WHERE `ID`=#{id}
+        DELETE FROM gs_repast_order WHERE ID=#{id}
     </delete>
 </mapper>
         <!--mapper 餐饮订单管理 end -->

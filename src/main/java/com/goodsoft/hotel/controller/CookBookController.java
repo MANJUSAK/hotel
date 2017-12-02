@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.entity.cookbook.MenuMeans;
+import com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetail;
 import com.goodsoft.hotel.domain.entity.cookbook.MenuType;
 import com.goodsoft.hotel.domain.entity.cookbook.SetMeal;
 import com.goodsoft.hotel.domain.entity.param.HotelParam;
@@ -33,16 +34,18 @@ public class CookBookController {
     private Logger logger = LoggerFactory.getLogger(CookBookController.class);
 
     /**
-     * 点餐主页大类小类数据展示接口，用于点餐时进入主页提供类型选择相应的菜式
+     * 部门类别数据查询接口，用于前台下拉框或其他方式查询部门类别
+     * 无分页
      *
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
-    @RequestMapping("/query/index/mean/type/data.shtml")
-    public Object queryMenuTypeAndSubtypeController(HotelParam page) {
+    @RequestMapping("/query/no/page/type/data.shtml")
+    public Object queryTypeController() {
         try {
-            return this.service.queryTypeAndSubtypeService(page);
+            return this.service.queryTypeService();
         } catch (Exception e) {
+            e.printStackTrace();
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
@@ -50,9 +53,10 @@ public class CookBookController {
     }
 
     /**
-     * 前台下拉框菜单子类型数据过滤接口
+     * 前台下拉框小类数据查询接口
+     * 无分页
      *
-     * @param tid 菜单类型编号
+     * @param tid 部门类别编号
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -68,15 +72,16 @@ public class CookBookController {
     }
 
     /**
-     * 查询菜单类型接口，用于前台点餐时大类的数据展示或添加菜单数据用于定位小类型
+     * 查询部门类别接口，用于前台点餐时大类的数据展示或添加菜单数据用于定位小类型
+     * 有分页
      *
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/type/data.shtml")
-    public Object queryMenuTypeController(HotelParam page) {
+    public Object queryMenuTypeController(HotelParam param) {
         try {
-            return this.service.queryMenuTypeService(page);
+            return this.service.queryMenuTypeService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
@@ -85,17 +90,17 @@ public class CookBookController {
     }
 
     /**
-     * 菜单子类型查询接口，用于前台点餐时小类的数据展示或添加菜单数据用于定位菜名
+     * 小类查询接口，用于前台点餐时小类的数据展示或添加菜单数据用于定位菜名
+     * 该接口下如果部门类别下无小类数据则会自动获取该部门下菜品数据
      *
-     * @param tid  菜单类型编号
-     * @param page 分页信息
+     * @param param 参数信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/sub/type/data.shtml")
-    public Object queryMenuStypeController(String tid, HotelParam page) {
+    public Object queryMenuStypeController(HotelParam param) {
         try {
-            return this.service.queryMenuStypeService(tid, page);
+            return this.service.queryMenuStypeService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
@@ -105,7 +110,9 @@ public class CookBookController {
 
     /**
      * 前台下拉框菜单或多选框数据查询接口
+     * 无分页
      *
+     * @param tid  部门类别编号
      * @param stid 菜单字类型编号
      * @return 响应结果
      */
@@ -122,41 +129,36 @@ public class CookBookController {
     }
 
     /**
-     * 菜单数据查询接口，用于前台点餐时菜单数据的展示
+     * 菜单数据查询接口，用于前台点餐或设置套餐时菜单数据的展示
+     * 该接口下涵盖菜品完整数据信息
+     * 注：该接口下如需查询菜品对应的图片信息时前台需传入参数setFindFile=0
+     * 默认状况下不查询图片文件
      *
-     * @param stid 类别编号
-     * @param tid  小类别编号
-     * @param page 分页信息
+     * @param param 参数信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/detail/data.shtml")
-    public Object queryMenuDetailController(HttpServletRequest request, String stid, String tid, HotelParam page) {
+    public Object queryMenuDetailController(HttpServletRequest request, HotelParam param) {
         try {
-            if (page.getSetFindFile() > 0) {
-                return this.service.queryMenuDetailDao(stid, tid, page, request, false);
-            } else {
-                return this.service.queryMenuDetailDao(stid, tid, page, request, true);
-            }
+            return this.service.queryMenuDetailService(param, request);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
-
     }
 
     /**
      * 菜单做法查询接口，用于前台点餐时做法数据展示或添加菜单数据用于定位做法详情
      *
-     * @param cbid 菜单编号
-     * @param page 分页信息
+     * @param param 参数信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/data.shtml")
-    public Object queryMenuMeansController(String cbid, HotelParam page) {
+    public Object queryMenuMeansController(HotelParam param) {
         try {
-            return this.service.queryMenuMeansService(cbid, page);
+            return this.service.queryMenuMeansService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
@@ -167,15 +169,14 @@ public class CookBookController {
     /**
      * 菜单做法详情查询接口，用于前台点餐时具体做法数据展示
      *
-     * @param mid  做法编号
-     * @param page 分页信息
+     * @param param 参数信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/detail/data.shtml")
-    public Object queryMenuMeansDetailController(String mid, HotelParam page) {
+    public Object queryMenuMeansDetailController(HotelParam param) {
         try {
-            return this.service.queryMenuMeansDetailService(mid, page);
+            return this.service.queryMenuMeansDetailService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
@@ -185,15 +186,18 @@ public class CookBookController {
 
     /**
      * 餐饮套餐查询接口，用于前台点餐时具体获取套餐系列菜品以及获取套餐具体明细
+     * 该接口下涵盖了套餐所有明细数据
+     * 注：该接口下如需查询套餐对应的图片信息时前台需传入参数setFindFile=0
+     * 默认状况下不查询图片文件
      *
-     * @param page 分页信息
+     * @param param 参数信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/setmeal/data.shtml")
-    public Object queryMenuSetmealController(HotelParam page) {
+    public Object queryMenuSetmealController(HttpServletRequest request, HotelParam param) {
         try {
-            return this.service.querySetMealDao(page);
+            return this.service.querySetMealService(request, param);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
@@ -214,7 +218,7 @@ public class CookBookController {
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 
@@ -233,7 +237,7 @@ public class CookBookController {
                     return this.service.addMenuService(msg);
                 } catch (Exception e) {
                     this.logger.error(e.toString());
-                    return new Status(StatusEnum.DEFEAT.getCODE(), e.getMessage());
+                    return new Status(StatusEnum.DATABASE_ERROR.getCODE(), e.getMessage());
                 }
             } else {
                 return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
@@ -259,7 +263,7 @@ public class CookBookController {
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 } catch (Exception e) {
                     this.logger.error(e.toString());
-                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                    return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
                 return new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -285,7 +289,7 @@ public class CookBookController {
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 } catch (Exception e) {
                     this.logger.error(e.toString());
-                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                    return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
                 return new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -298,12 +302,12 @@ public class CookBookController {
     /**
      * 套餐数据添加接口
      *
-     * @param msg 套餐数据（存在一对多关系，前台需传入json格式数据。）
+     * @param msg 套餐数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/menu/set/meal/data.shtml", method = RequestMethod.POST)
-    public Status addSetMealService(@RequestBody SetMeal msg) {
+    public Status addSetMealService(SetMeal msg) {
         if (msg.getMealDetails() != null) {
             if (msg.getMealDetails().size() > 0) {
                 try {
@@ -311,7 +315,7 @@ public class CookBookController {
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 } catch (Exception e) {
                     this.logger.error(e.toString());
-                    return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+                    return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
                 return new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -321,9 +325,18 @@ public class CookBookController {
         }
     }
 
+    /**
+     * 部门类别更新接口
+     * 注意：该接口下将会更新与该部门下关联的基本数据
+     * （如：小类更新到其它部门那么该小类下所有关联数据都将会更新到更新的部门）
+     * 传入数据必须为json
+     *
+     * @param msg 更新数据
+     * @return 响应结果
+     */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/update/menu/type/data.shtml", method = RequestMethod.POST)
-    public Status updateMenuType(MenuType msg) {
+    public Status updateMenuType(@RequestBody MenuType msg) {
         try {
             return this.service.updateMenuTypeService(msg);
         } catch (Exception e) {
@@ -332,14 +345,194 @@ public class CookBookController {
         }
     }
 
+    /**
+     * 菜品数据及库存更新接口
+     * 注意：该接口下将会更新与该菜品下关联的基本数据
+     * （如：菜品更新到其它部门那么该菜品下所有关联数据都将会更新到更新的部门）
+     *
+     * @param msg 更新数据
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/update/menu/data.shtml", method = RequestMethod.POST)
+    public Status updateMenuContorller(MenuParam msg) {
+        try {
+            return this.service.updateMenuService(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 菜品做法数据更新接口
+     * 注意：该接口下将会更新与该菜品做法下关联的基本数据
+     * （如：菜品做法更新到其它部门那么该菜品下所有关联数据都将会更新到更新的部门）
+     *
+     * @param msg 更新数据
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/update/menu/means/data.shtml", method = RequestMethod.POST)
+    public Status updateMenuMeansController(MenuMeans msg) {
+        try {
+            return this.service.updateMenuMeansService(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 菜品做法详情数据更新接口
+     *
+     * @param msg 更新数据
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/update/menu/means/detail/data.shtml", method = RequestMethod.POST)
+    public Status updateMenuMeansDetailController(MenuMeansDetail msg) {
+        try {
+            return this.service.updateMenuMeansDetailService(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+    }
+
+    /**
+     * 部门类别数据删除接口
+     * 注意：此接口下将会删除与部门类别相关联的所有数据
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/type/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuType(String... id) {
         try {
             return this.service.deleteMenuTypeService(id);
-        } catch (HotelDataBaseException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
+
+    /**
+     * 小类数据删除接口
+     * 注意：此接口下将会删除与小类相关联的所有数据
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/menu/sub/type/data.shtml", method = RequestMethod.GET)
+    public Status deleteMenuSubTypeController(String... id) {
+        try {
+            return this.service.deleteMenuSubTypeService(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 菜品数据删除接口
+     * 注意：此接口下将会删除与菜品相关联的所有数据
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/menu/data.shtml", method = RequestMethod.GET)
+    public Status deleteMenuContorller(String... id) {
+        try {
+            return this.service.deleteMenuService(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 菜品做法数据删除接口
+     * 注意：此接口下将会删除与菜品做法相关联的所有数据
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/menu/means/data.shtml", method = RequestMethod.GET)
+    public Status deleteMenuMeansController(String... id) {
+        try {
+            return this.service.deleteMenuMeansService(id);
+        } catch (HotelDataBaseException e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 菜品做法明细数据删除接口
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/menu/means/detail/data.shtml", method = RequestMethod.GET)
+    public Status deleteMenuMeansDetailController(String... id) {
+        try {
+            return this.service.deleteMenuMeansDetailService(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 套餐数据删除接口
+     * 注意：该接口下将会删除该套餐下说有明细数据
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/set/meal/data.shtml", method = RequestMethod.GET)
+    public Status deleteSetMealController(String... id) {
+        try {
+            return this.service.deleteSetMealService(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 套餐明细数据删除接口
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/set/meal/detail/data.shtml", method = RequestMethod.GET)
+    public Status deleteSetMealDetailController(String... id) {
+        try {
+            return this.service.deleteSetMealDetailService(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
 }

@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -36,11 +35,10 @@ public class RepastOrderTimer {
     private Logger logger = LoggerFactory.getLogger(RepastOrderTimer.class);
 
     /**
-     *
+     * 检查超时的订单定时器
      */
-    /*@Scheduled(cron = "0 30 4 * * ?")*/
-    @Scheduled(cron = "*/5 * * * * ?")
-    @Transactional
+    @Scheduled(cron = "0 50 9 * * ?")
+    /*@Scheduled(cron = "0/5 * * * * ?")*/
     public void orderTimeoutService() {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao dao = sqlSession.getMapper(RepastOrderDao.class);
@@ -49,7 +47,6 @@ public class RepastOrderTimer {
             int len = list.size();
             if (len > 0) {
                 for (Map map : list) {
-                    System.out.println(map.get("ID"));
                     if (getHourBetween((String) map.get("KT_TIME"))) {
                         dao.updateOrderStatusDao((String) map.get("ID"), 3, null);
                     }
@@ -74,7 +71,6 @@ public class RepastOrderTimer {
         long currentTime = System.currentTimeMillis();
         long timeBetween = currentTime - odTime;
         int hourBetween = (int) timeBetween / (3600 * 1000);
-        System.out.println(hourBetween);
-        return hourBetween > 5;
+        return hourBetween > 4;
     }
 }
