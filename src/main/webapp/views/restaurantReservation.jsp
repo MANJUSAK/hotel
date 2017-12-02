@@ -144,22 +144,29 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
 <div style="width: 100%;height: 800px;min-width: 600px;">
 
     <div class="butt" style="width: 100%;height: 100px;">
-        <div style="float:left;margin-left:40px;"><select style="width:100px;height:34px;border-radius:4px;padding-left: 10px" id="reserveTypeOption" name="sign">
+        <div style="float:left;margin-left:40px;"><select style="width:100px;height:34px;border-radius:4px;padding-left: 10px;background: #F9B550;outline: none;border:0px;color:white" id="reserveTypeOption" name="sign">
             <option <c:if test="${sign==1}">selected="selected"</c:if> value="1">散客</option>
             <option <c:if test="${sign==2}">selected="selected"</c:if> value="2">酒席</option>
             <option <c:if test="${sign==3}">selected="selected"</c:if> value="3">宴会</option></select> </div>
 
-        <div style="float:left;margin-left: 50px;"> <input class="selectRadio" style="float: left" name="dateRadio" <c:if test="${empty staetTime}">checked="checked"</c:if>  type="radio" value="1" /> <span>当天</span></div>
-        <div style="float:left;margin-left: 5px;">  <input class="selectRadio" style="float: left" name="dateRadio" <c:if test="${not empty staetTime}">checked="checked"</c:if> type="radio" value="0" /><span>全部</span></div>
+        <div style="float:left;margin-left: 50px;">
+            <select class="selectRadio" style="border-radius: 4px;width: 80px; height: 34px;background: #08DDD1; border: solid 0px;color: white;padding-left: 10px;outline: none">
+                <option value="1" <c:if test="${empty staetTime}">selected="selected"</c:if>>当天</option>
+                <option value="0" <c:if test="${not empty staetTime}">selected="selected"</c:if>>全部</option>
+            </select>
+            <%--<input class="selectRadio" style="float: left" name="dateRadio" <c:if test="${empty staetTime}">checked="checked"</c:if>  type="radio" value="1" /> <span>当天</span>--%>
+        </div>
+        <%--<div style="float:left;margin-left: 5px;">  <input class="selectRadio" style="float: left" name="dateRadio" <c:if test="${not empty staetTime}">checked="checked"</c:if> type="radio" value="0" /><span>全部</span></div>--%>
 
-        <div style="float:left;margin-left: 30px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==1}">checked="checked"</c:if> type="radio" value="1" /><span>未到</span></div>
-        <div style="float:left;margin-left: 5px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==3}">checked="checked"</c:if> type="radio" value="3" /><span>已到</span></div>
-        <div style="float:left;margin-left: 5px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==2}">checked="checked"</c:if> type="radio" value="2" /><span>取消</span></div>
-        <div style="float:left;margin-left: 5px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==4}">checked="checked"</c:if> type="radio" value="4" /><span>到期未到</span></div>
-
+        <div style="float:left;  height: 34px;width: 280px;border-radius: 4px;border-bottom: 2px solid #08DDD1; border-right: 2px solid #08DDD1;border-top: 2px solid #08DDD1;">
+        <div style="float:left;margin-left: 20px;margin-top: 5px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==1}">checked="checked"</c:if> type="radio" value="1" /><span>未到</span></div>
+        <div style="float:left;margin-left: 13px;margin-top: 5px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==3}">checked="checked"</c:if> type="radio" value="3" /><span>已到</span></div>
+        <div style="float:left;margin-left: 13px;margin-top: 5px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==2}">checked="checked"</c:if> type="radio" value="2" /><span>取消</span></div>
+        <div style="float:left;margin-left: 13px;margin-top: 5px;">  <input class="selectStateRadio" style="float: left" name="stateRadio" <c:if test="${state==4}">checked="checked"</c:if> type="radio" value="4" /><span>到期未到</span></div>
+        </div>
 
         <script>
-            $("#reserveTypeOption").on("change",function () {
+            $("#reserveTypeOption").on("change",function (){
              window.location.href="<%=basePath%>/reserve?sign="+$(this).val();
             });
 
@@ -168,7 +175,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
             });
         </script>
 
-        <div class="input-group"style="width: 299px;float: left;margin-left:300px">
+        <div class="input-group"style="width: 299px;float: left;margin-left:282px">
             <input type="text" class="form-control">
             <span class="input-group-btn">
                         <button class="btn btn-default" type="button">搜索</button>
@@ -228,7 +235,6 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
         </c:if>
         </table>
 
-
         <script>
             //tr单击事件
             $(".trber").on("click",function(){
@@ -244,6 +250,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
         </script>
 
 
+        <%--底部分页固定div--%>
         <div style="height: 100px;width: 100%;position: fixed;left: 0px;bottom: 0px; ">
 
         <%--每页显示条数--%>
@@ -255,7 +262,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
             <option <c:if test="${pageBean.pageSize==20}">selected="selected"</c:if> value="20">20</option>
         </select>
             <script>
-                $(".pageSizeOption").on("change",function () {
+                $(".pageSizeOption").on("change",function (){
                    window.location.href="<%=basePath%>/reserve?currentPage=1&pageSize="+$(this).val()+"<c:if test="${not empty staetTime}">&staetTime=1</c:if>"+"<c:if test="${sign!=null}">&sign=${sign}</c:if>";
                 });
             </script>
@@ -264,7 +271,6 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
         <!--分页-->
         <div style="float: right;margin-right: 25px;margin-top: 15px">
             <ul class="pagination">
-
                 <script>
                     $(".pagination").append('<li> <a href="<%=basePath%>/reserve?currentPage=${pageBean.previousPage}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">上一页</a> </li>');
 
@@ -273,7 +279,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
 
                         if(i==${pageBean.currentPage}){
                             $(".pagination").append('<li class="active"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
-                        }else {
+                        }else{
                             $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=' + i + '&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">' + i + '</a> </li>');
                         }
                     }
@@ -780,7 +786,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
         });
 
    //查看当天或全部
-    $(".selectRadio").on("click",function () {
+    $(".selectRadio").on("change",function () {
     if($(this).val()=='1'){ //查看当天
     window.location.href="<%=basePath%>/reserve<c:if test="${sign!=null}">?sign=${sign}</c:if>";
     }else if($(this).val()=='0'){ //查看全部

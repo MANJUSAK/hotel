@@ -14,7 +14,6 @@ public class Room {
     private String cName;           //别名
     private String buildingCode;    //建筑编号
     private String floorCode;       //楼层编号
-    private String housePrices;     //房价
     private String nights;          //夜晚
     private String stdPax;          //正常人数
     private String maxPax;          //最大人数
@@ -83,14 +82,6 @@ public class Room {
 
     public void setFloorCode(String floorCode) {
         this.floorCode = floorCode;
-    }
-
-    public String getHousePrices() {
-        return housePrices;
-    }
-
-    public void setHousePrices(String housePrices) {
-        this.housePrices = housePrices;
     }
 
     public String getNights() {
@@ -183,7 +174,6 @@ public class Room {
                 ", cName='" + cName + '\'' +
                 ", buildingCode='" + buildingCode + '\'' +
                 ", floorCode='" + floorCode + '\'' +
-                ", housePrices='" + housePrices + '\'' +
                 ", nights='" + nights + '\'' +
                 ", stdPax='" + stdPax + '\'' +
                 ", maxPax='" + maxPax + '\'' +

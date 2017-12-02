@@ -41,7 +41,7 @@ public class RepastOrderTimer {
     /*@Scheduled(cron = "0 30 4 * * ?")*/
     @Scheduled(cron = "*/5 * * * * ?")
     @Transactional
-    public void orderTimeoutService() {
+    public void orderTimeoutService(){
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao dao = sqlSession.getMapper(RepastOrderDao.class);
         try {

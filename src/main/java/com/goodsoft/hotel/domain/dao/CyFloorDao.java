@@ -30,4 +30,8 @@ public interface CyFloorDao {
     //查询餐台各状态数量
     public Map<String,Integer> selectTableStateForNumber();
 
+
+    //修改订单状态
+    public Integer updateOrderStatusDao(@Param("id") String id);
+
 }

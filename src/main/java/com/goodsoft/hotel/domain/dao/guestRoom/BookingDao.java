@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.domain.dao.guestRoom;
 
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public interface BookingDao {
 
     //查询房间信息
     public List<String> findRoomNoMapper(String id) throws Exception;
+
+    //添加客人信息
+    public void addGuestMapper(Guest guest) throws Exception;
 
     //修改房间信息的状态
     public void updateRoomFlag(String id) throws Exception;
@@ -51,8 +55,6 @@ public interface BookingDao {
     //永久删除预定房间号信息
     public void deleteBookingRoomMapper(String bookid) throws Exception;
 
-    //添加客人信息
-    public void addGuestMapper(Guest guest) throws Exception;
 
     //判断预定房间重复
     public Integer joinRoomIdResves(Map map);
@@ -71,6 +73,30 @@ public interface BookingDao {
 
     //会员信息修改
     public void updateVipCardMapper(VipCard vipCard);
+
+    //查询预订信息
+    public  Quickbooking selectReserveInfo(@Param("id") String id);
+    //查询预订房间信息
+    public List<QuickbookingRoomno> selectReserveRooms(@Param("bookId") String bookId);
+
+   //删除预订房间信息
+    public Integer deleteBookdingRoomAll(@Param("bookId") String bookId);
+
+
+    /**
+     * 随行人
+     */
+    //查询随行人
+    public List<AccompanyingPerson> selectAccompanyingInfo(@Param("bookId") String bookId);
+
+    //添加随行人
+    public Integer insertAccompanyingInfo(List<AccompanyingPerson> accompanyingPerson);
+
+    //修改随行人
+    public Integer updateAccompanyingInfo(AccompanyingPerson accompanyingPerson);
+
+    //删除随行人
+    public Integer deleteAccompanyingInf(List<String> bookIds);
 
 
     /**

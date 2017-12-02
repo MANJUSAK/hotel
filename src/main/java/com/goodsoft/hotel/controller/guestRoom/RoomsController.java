@@ -8,7 +8,11 @@ import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.util.UUIDUtil;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.formula.functions.T;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +34,94 @@ public class RoomsController {
     @Resource
     private RoomSDao roomSDao;
 
+    @Resource
+    SqlSessionTemplate sqlSessionTemplate;
+
     //实例化日志管理工具类
     private Logger logger = LoggerFactory.getLogger(CookBookController.class);
+
+
+    /**
+     * 添加实时房间价格
+     * @param rtrp
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("floor/realTime/price")
+    public Object realTimePrice(@RequestBody RealTimeRoomParameter rtrp){
+        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+        RoomSDao mapper = sqlSession.getMapper(RoomSDao.class);
+        //插入list
+        List<RealTimeRoomPrice> realTimeRoomPrices=new ArrayList<RealTimeRoomPrice>(100);
+
+        for(int i=0;i<rtrp.getMsg().size();i++){
+            for(int j=0;j<rtrp.getMsg().get(i).getRealTimeRooms().size();j++){
+                rtrp.getMsg().get(i).getRealTimeRooms().get(j).setTime(rtrp.getMsg().get(i).getTime());
+                realTimeRoomPrices.add(rtrp.getMsg().get(i).getRealTimeRooms().get(j));
+            }
+        }
+
+        try {
+            Integer deleteNum = mapper.deleteAllRealTimePrice();
+            Integer insertNum = mapper.insertRoomRealTimePrice(realTimeRoomPrices);
+            mapper.deleteErrorRoomRealTimePrice();
+            sqlSession.commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            sqlSession.rollback();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+    }
+
+
+    /**
+     * 查询所有实时房价设置
+     * @param time
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("floor/select/RealTimePrice")
+    public Object selectRealTimePrice(String time){
+        List<RealTimeRoomPriceParam> realTimeRoomPriceParamList=null;
+        try {
+            List<RealTimeRoomPrice> realTimeRoomPrices = roomSDao.selectRoomRealTimePrice(null);
+            realTimeRoomPriceParamList = joinRealTimePrice(realTimeRoomPrices);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return realTimeRoomPriceParamList;
+    }
+
+
+    //分类实时房价信息
+    private List<RealTimeRoomPriceParam> joinRealTimePrice(List<RealTimeRoomPrice> reals){
+
+        List<RealTimeRoomPriceParam> returnList=new LinkedList<RealTimeRoomPriceParam>();
+        for(int i=0;i<reals.size();i++){
+
+            if(reals.get(i)!=null){
+                List<RealTimeRoomPrice> real=new LinkedList<RealTimeRoomPrice>();
+                RealTimeRoomPriceParam realtime=new RealTimeRoomPriceParam();
+                realtime.setTime(reals.get(i).getTime());
+                real.add(reals.get(i));
+                for (int j = i + 1; j < reals.size(); j++) {
+                    if(reals.get(j)!=null) {
+                        if (reals.get(j).getTime() != null && reals.get(j).getTime().equals(reals.get(i).getTime())) {
+                            real.add(reals.get(j));
+                            reals.set(j, null);
+                        }
+                    }
+                }
+                realtime.setRealTimeRooms(real);
+                returnList.add(realtime);
+                reals.set(i,null);
+            }
+        }
+
+        return returnList;
+    }
+
 
 
     /**
@@ -60,7 +150,9 @@ public class RoomsController {
             e.printStackTrace();
            return new Status(StatusEnum.ERROR.getCODE(),StatusEnum.ERROR.getEXPLAIN());
         }
+
     }
+
 
 
     /**
@@ -242,7 +334,7 @@ public class RoomsController {
         List<Integer> typeIds = null;
         try {
             String[] arr = {};
-            if (typeId.trim() != null && typeId.trim() != "") {
+            if (typeId.trim() != null && typeId.trim() != ""){
                 arr = typeId.split(",");
             }
             typeIds = new ArrayList<Integer>();
@@ -377,7 +469,7 @@ public class RoomsController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("fenFang/Building")
-    public List<Building> fenFangBuild(@Param("roomType") String roomType) {
+    public List<Building> fenFangBuild(@Param("roomType") String roomType){
         List<Building> list = null;
         if(roomType !=null && !("".equals(roomType))){
             list = this.roomSDao.findBuildingFenFangMapper(roomType);
@@ -442,7 +534,7 @@ public class RoomsController {
         for (String key : map.keySet()) {
             System.out.println("key= "+ key + " and value= " + map.get(key));
         }
-                this.roomSDao.findRoomFenFangMapper(map);
+            this.roomSDao.findRoomFenFangMapper(map);
             return map;
     }
 
