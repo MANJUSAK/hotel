@@ -25,6 +25,61 @@
         </foreach>
     </insert>
 
+
+    <insert id="insertAccompanyingInfo" parameterType="java.util.List">
+        insert into ACCOMPANYING_PERSON values
+        <foreach collection="list" item="item" separator=",">
+        (#{item.id},#{item.bookid},#{item.typename},#{item.roomnumber},#{item.customername},#{item.registerno})
+        </foreach>
+    </insert>
+
+    <update id="updateAccompanyingInfo" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.AccompanyingPerson">
+        update ACCOMPANYING_PERSON
+        <set>
+            <if test="bookid!=null and bookid!=''">
+                bookid=#{bookid}
+            </if>
+            <if test="typename!=null and typename!=''">
+                typename=#{typename}
+            </if>
+            <if test="roomnumber!=null and roomnumber!=''">
+                roomnumber=#{roomnumber}
+            </if>
+            <if test="customername!=null and customername!=''">
+                customername=#{customername}
+            </if>
+            <if test="registerno!=null and registerno!=''">
+                registerno=#{registerno}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteAccompanyingInfo" parameterType="java.util.List">
+        delete from ACCOMPANYING_PERSON where id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="selectAccompanyingInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.AccompanyingPerson">
+        select * from ACCOMPANYING_PERSON where BOOKID =#{bookId}
+    </select>
+
+
+    <!--查询预订信息-->
+    <select id="selectReserveInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        select * from GS_QUICKBOOKING  where id=#{id}
+    </select>
+     <!--查询预订房间信息-->
+    <select id="selectReserveRooms" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+        select * from GS_QUICKBOOKING_ROOMNO where bookid=#{bookId}
+    </select>
+
+
+
+
+
     <!--&lt;!&ndash;查询预订单的房间号码&ndash;&gt;-->
     <!--<select id="findRoomNoMapper" parameterType="java.lang.String" resultType="java.util.List">-->
         <!--select ROOMNO from gs_room WHERE ROOMNO IN-->
@@ -43,49 +98,52 @@
 
     <!--修改预定信息的所有字段,根据ID或者预定单号  未使用-->
     <update id="updateQuickBookingALL" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
-        update gs_quickbooking
-        <trim prefix="set" suffixOverrides=",">
-            <if test="guestType!=null">guestType=#{guestType}</if>
-            <if test="guestName!=null">guestName=#{guestName}</if>
-            <if test="contractNo!=null">contractNo=#{contractNo}</if>
-            <if test="guestThno!=null">guestThno=#{guestThno}</if>
-            <if test="contractUnit!=null">contractUnit=#{contractUnit}</if>
-            <if test="bookingUnit!=null">bookingUnit=#{bookingUnit}</if>
-            <if test="salesman!=null">salesman=#{salesman}</if>
-            <if test="sex!=null">sex=#{sex}</if>
-            <if test="registerNo!=null">registerNo=#{registerNo}</if>
-            <if test="teamNo!=null">teamNo=#{teamNo}</if>
-            <if test="reservationist!=null">reservationist=#{reservationist}</if>
-            <if test="leaderName!=null">leaderName=#{leaderName}</if>
-            <if test="leaderPhone!=null">leaderPhone=#{leaderPhone}</if>
-            <if test="leaderRoomNo!=null">leaderRoomNo=#{leaderRoomNo}</if>
-            <if test="days!=null">days=#{days}</if>
-            <if test="startDate!=null">startDate=#{startDate}</if>
-            <if test="endDate!=null">endDate=#{endDate}</if>
-            <if test="extraBed!=null">extraBed=#{extraBed}</if>
-            <if test="discount!=nunll">discount=#{discount}</if>
-            <if test="discauth!=null">discauth=#{discauth}</if>
-            <if test="rentreson!=null">rentreson=#{rentreson}</if>
-            <if test="releasetTime!=null">releasetTime=#{releasetTime}</if>
-            <if test="phoneNo!=null">phoneNo=#{phoneNo}</if>
-            <if test="markets!=null">markets=#{markets}</if>
-            <if test="guestSource!=null">guestSource=#{guestSource}</if>
-            <if test="bookingType!=null">bookingType=#{bookingType}</if>
-            <if test="receptionUnit!=null">receptionUnit=#{receptionUnit}</if>
-            <if test="reservationist!=null">RESERVATIONIST=#{reservationist}</if>
-            <if test="bookingName!=null">bookingName=#{bookingName}</if>
-            <if test="bookingPhone!=null">bookingPhone=#{bookingPhone}</if>
-            <if test="bookingEmail!=null">bookingEmail=#{bookingEmail}</if>
-            <if test="predeterMode!=null">predeterMode=#{predeterMode}</if>
-            <if test="roomNum!=null">roomNum=#{roomNum}</if>
-            <if test="remark!=null">remark=#{remark}</if>
-            <if test="teamRemark!=null">teamRemark=#{teamRemark}</if>
-            <if test="bookingFlag!=null">bookingFlag=#{bookingFlag}</if>
-            <if test="reason!=null" >reason=#{reason}</if>
-        </trim>
-        WHERE id=#{id} OR bookingNo=#{bookingNo}
+       update gs_quickbooking SET
+               guestType=#{guestType},
+                guestName=#{guestName},
+                contractNo=#{contractNo},
+                guestThno=#{guestThno},
+                contractUnit=#{contractUnit},
+                bookingUnit=#{bookingUnit},
+                salesman=#{salesman},
+                sex=#{sex},
+                registerNo=#{registerNo},
+                teamNo=#{teamNo},
+                reservationist=#{reservationist},
+                leaderName=#{leaderName},
+                leaderPhone=#{leaderPhone},
+                leaderRoomNo=#{leaderRoomNo},
+                days=#{days},
+                startDate=#{startDate},
+                endDate=#{endDate},
+                extraBed=#{extraBed},
+                discount=#{discount},
+                discauth=#{discauth},
+                rentreson=#{rentreson},
+                releasetTime=#{releasetTime},
+                phoneNo=#{phoneNo},
+                markets=#{markets},
+                guestSource=#{guestSource},
+                bookingType=#{bookingType},
+                receptionUnit=#{receptionUnit},
+                RESERVATIONIST=#{reservationist},
+                bookingName=#{bookingName},
+                bookingPhone=#{bookingPhone},
+                bookingEmail=#{bookingEmail},
+                predeterMode=#{predeterMode},
+                roomNum=#{roomNum},
+                remark=#{remark},
+                teamRemark=#{teamRemark},
+                reason=#{reason}
+        WHERE  id =#{id}
+
     </update>
 
+
+    <!--删除预订房间信息-->
+    <delete id="deleteBookdingRoomAll" parameterType="string">
+        delete from gs_quickbooking_roomno where  where bookId = #{bookId}
+    </delete>
 
     <!--修改预定信息的房间  未使用-->
     <update id="updateBookingRoom" parameterType="java.util.List">
@@ -177,13 +235,13 @@
         #{documentNo},#{nativePlace},#{sex},#{occupation},#{birthDay},#{workUnit},#{cityProper},#{work},#{regional},#{stopCause},#{postalCode}
         ,#{address},#{officePhone},#{phoneNumber},#{telePhone},#{visaAgency},#{visaType},#{visaNumber},#{visaDate},#{periodValidity},#{entryTime},#{entryPorts},
         #{newspaperType},#{religiousBelief},#{secondCard},#{comeFrom},#{arrivalFlight},#{whereToGo},#{leaveFlight},#{positions},#{carType},#{carPlateNumber},
-        #{specialDemand},#{hobby},#{taboo})
+        #{specialDemand},#{hobby},#{taboo},#{bookId},#{vipId})
     </insert>
 
 
     <!--判断预定房间号是否重复-->
     <select id="joinRoomIdResves" parameterType="java.util.Map" resultType="java.lang.Integer">
-        select count(1) from gs_quickbooking_roomno a,gs_quickbooking b where b.id=a.bookid and  (unix_timestamp(b.startdate)+86399)  &gt; unix_timestamp(now())
+        select count(1) from gs_quickbooking_roomno a,gs_quickbooking b where b.id=a.bookid and (unix_timestamp(b.startdate)+86399)  &gt; unix_timestamp(now())
         and  floor((unix_timestamp(b.startdate)-unix_timestamp(now()))/86400) &lt;=1 and roomid=#{roomid}
     </select>
 
@@ -243,8 +301,6 @@
     </delete>
 
 
-
-
     <!--预定入住查询-->
     <select id="selectRoomRuZhu"   resultType="java.util.Map">
         SELECT a.markets,c.id,a.id FROM gs_quickbooking a,gs_quickbooking_roomno b,gs_room c
@@ -257,7 +313,7 @@
 
 
     <!--预定入住修改房间状态-->
-    <update id="updateRoomFlagRuZhu" parameterType="java.util.Map" >
+    <update id="updateRoomFlagRuZhu" parameterType="java.util.Map">
            update gs_room SET flag = #{markets} WHERE id=#{id}
     </update>
 

@@ -70,14 +70,13 @@ public class FloorRoomServiceImpl implements FloorRoomService {
                 map.put("error", "重复预定");
                 return map;
             }
-
         }
 
         String uuid = UUIDUtil.getInstance().getUUID().toString();
         String bookingNo = this.getsbs();
         quickbooking.setId(uuid);
         quickbooking.setBookingNo(bookingNo);
-        quickbooking.setBookingFlag("明确预定");
+        quickbooking.setBookingFlag("明确预订");
         quickbooking.setRegisterNo(this.getNubmer());
         for (QuickbookingRoomno qr : quickbooking.getRoomno()) {
             qr.setBookId(uuid);
@@ -86,7 +85,6 @@ public class FloorRoomServiceImpl implements FloorRoomService {
         this.bookingDao.insertQuickBooking(quickbooking);
         this.bookingDao.insertQuickBookingRoom(quickbooking.getRoomno());
         return map;
-
     }
 
     /**

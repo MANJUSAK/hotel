@@ -278,8 +278,6 @@
         .left_b div{
             width: 100%;
             margin-top: 5px
-
-
         }
         .left_b div div:nth-child(1){
             width: 8%;
@@ -629,14 +627,14 @@
         url: "<%=basePath%>/restaurantReservation/selectHalls",
         type: "get",
         dataType: "json",
-        success: function(data) {
+        success: function(data){
             var halls='';
             for(var i=0;i<data.length;i++){
                 var optionhall='';
                 <c:if test="${not empty optionHallId}">
                 optionhall='${optionHallId}';
                 </c:if>
-               if(data[i].id==optionhall) {
+               if(data[i].id==optionhall){
                    halls += '<option selected="selected" value="' + data[i].id + '">' + data[i].HALL_NAME + '</option>';
                }else{
                    halls += '<option value="' + data[i].id + '">' + data[i].HALL_NAME + '</option>';
@@ -654,7 +652,6 @@
         }else{
             window.location.href="<%=basePath%>/floor?hallId="+this.value;
         }
-
     };
 
 //    搜索事件

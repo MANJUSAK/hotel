@@ -303,7 +303,7 @@ where id=#{id}
 
 
      <!--修改散客预订单取消原因-->
-    <update id="updateReserveReason" parameterType="java.util.Map" >
+    <update id="updateReserveReason" parameterType="java.util.Map">
      update GS_RESTAURANT_RESERVATION set  cancellation_reason=#{cancellationReason} where id in
         <foreach collection="reserveIds" item="item" open="(" close=")" separator=",">
             #{item}
@@ -359,7 +359,6 @@ where id=#{id}
         update GS_RESTAURANT_RESERVATION set state=4 where
         state=1 and UNIX_TIMESTAMP(ATTHE_TIME) &lt;UNIX_TIMESTAMP(now())
     </update>
-
 
 </mapper>
 

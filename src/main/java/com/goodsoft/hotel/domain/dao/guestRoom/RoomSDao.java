@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.domain.dao.guestRoom;
 
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -94,4 +95,39 @@ public interface RoomSDao {
     //房间类型信息的添加
     public void insertRoomType(RoomType roomType) throws Exception;
 
+
+    /**
+     * 添加实时房价
+     */
+     public Integer insertRoomRealTimePrice(List<RealTimeRoomPrice> list);
+
+    /**
+     * 查询实时房价
+     */
+     public List<RealTimeRoomPrice> selectRoomRealTimePrice(@Param("time") String time);
+
+    /**
+     * 修改实时房价
+     */
+      public Integer updateRoomRealTimePrice(RealTimeRoomPrice realTimeRoomPrice);
+
+     /**
+      *判断实时房价是否存在
+      */
+     public Integer joinRoomRealTimePrice(RealTimeRoomPrice realTimeRoomPrice);
+
+    /**
+     * 删除错误房价
+     */
+     public Integer deleteErrorRoomRealTimePrice();
+
+    /**
+     * 删除过期实时房价
+     */
+      public Integer deleteLastRealTimePrice();
+
+    /**
+     * 删除全部房价
+     */
+      public Integer deleteAllRealTimePrice();
 }

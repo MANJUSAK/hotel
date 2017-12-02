@@ -86,17 +86,24 @@
 
     <!--快速预定的房态,左边的列表选择-->
     <select id="queryRoomALLMapper" resultType="java.util.Map">
-        SELECT a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME,a.HOUSEPRICES,COUNT(b.FLAG) roomSum FROM gs_roomtype a,gs_room b where a.ROOMTYPE=b.ROOMTYPE AND b.FLAG='空房' GROUP BY a.ROOMTYPE
+        select a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME, case when b.price is null then a.HOUSEPRICES else b.price end  HOUSEPRICES,a.roomSum  from (
+        SELECT a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME,a.HOUSEPRICES,COUNT(b.FLAG) roomSum FROM gs_roomtype a,gs_room b
+        where a.typeid=b.ROOMTYPE AND b.FLAG='空房' GROUP BY a.typeid) a
+        left join REALTIMEHOUSEPRICE b on a.typeid=b.typeid and b.time=DATE_FORMAT(NOW(),'%Y-%m-%d')
     </select>
 
     <!--根据房间类型id获取房间号-->
     <select id="selectKongMapper" resultType="java.util.Map">
-        SELECT a.id,a.roomid,a.ROOMNO,a.doorLockId,b.housePrices,b.typename,b.roomType FROM gs_room a,gs_roomtype b where
-        a.ROOMTYPE=b.ROOMTYPE AND a.FLAG='空房'
+        select a.id,a.roomid,a.ROOMNO,a.doorLockId,case when b.price is null then a.housePrices else b.price end housePrices ,a.typename,a.typeid from (
+        SELECT a.id,a.roomid,a.ROOMNO,a.doorLockId,b.housePrices,b.typename,b.typeid FROM gs_room a,gs_roomtype b where
+        a.ROOMTYPE=b.typeid AND a.FLAG='空房' and b.typename!='不可用'
         AND b.typeId IN
         <foreach collection="list" index="index" item="str" open="(" separator="," close=")">
             #{str}
         </foreach>
+        ) a
+        left join REALTIMEHOUSEPRICE b on a.typeid=b.typeid and b.time=date_format(now(),'%Y-%m-%d')
+
     </select>
 
     <!--快速预定房间信息 end-->
@@ -188,10 +195,60 @@
 
 
     <!--添加房价信息-->
-
     <insert id="addRoomPricesMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomPrices">
         insert INTO gs_roomprices VALUES (#{id},#{roomTypeId},#{setStartTime},#{roomPrices})
     </insert>
+
+
+
+    <!--添加实时房价-->
+    <insert id="insertRoomRealTimePrice" parameterType="java.util.List">
+        insert into REALTIMEHOUSEPRICE values
+        <foreach collection="list" item="item" separator=",">
+            ('',#{item.typeid},#{item.time},#{item.price})
+        </foreach>
+</insert>
+
+
+    <resultMap id="realTimePriceMap" type="com.goodsoft.hotel.domain.entity.guestRoom.RealTimeRoomPrice">
+           <result property="id" column="typename"/>
+           <result property="typeid" column="typeid"/>
+           <result property="time" column="time"/>
+           <result property="price" column="price"/>
+    </resultMap>
+    <!--查询实时房价设置-->
+    <select id="selectRoomRealTimePrice" parameterType="string" resultMap="realTimePriceMap">
+        select a.typeid,b.typename,a.time,a.price from REALTIMEHOUSEPRICE a,GS_ROOMTYPE b  where a.typeid=b.typeId and time &gt;=DATE_FORMAT(NOW(),'%Y-%m-%d')
+        <if test="time!=null  and time!=''">
+            and subString(time,1,7)=#{time}
+        </if>
+    </select>
+
+    <!--修改实时房价-->
+    <update id="updateRoomRealTimePrice" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RealTimeRoomPrice">
+        update REALTIMEHOUSEPRICE set price=#{price} where typeid=#{typeid} and time=#{time}
+    </update>
+
+    <!--查询实时房价是否存在 -->
+    <select id="joinRoomRealTimePrice" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RealTimeRoomPrice" resultType="java.lang.Integer">
+        select count(1) from REALTIMEHOUSEPRICE where typeid=#{typeid} and time=#{time}
+    </select>
+
+    <!--删除错误房价-->
+    <delete id="deleteErrorRoomRealTimePrice">
+        delete from REALTIMEHOUSEPRICE where typeid ='date'
+    </delete>
+
+    <!--删除当天以前实时房价-->
+    <delete id="deleteLastRealTimePrice" >
+      delete from   REALTIMEHOUSEPRICE where time &lt; now();
+    </delete>
+
+    <delete id="deleteAllRealTimePrice">
+        delete from   REALTIMEHOUSEPRICE
+    </delete>
+
+
 
 
 </mapper>

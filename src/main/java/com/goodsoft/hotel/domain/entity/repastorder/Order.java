@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.domain.entity.repastorder;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -258,7 +259,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKtSb(String ktSb) {
-        this.ktSb = ktSb == null ? "" : ktSb.trim();
+        this.ktSb = joinDateSb();
     }
 
     public String getTimeMinute() {
@@ -367,4 +368,19 @@ public class Order implements java.io.Serializable {
     public int hashCode() {
         return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, ctid, mdTime, fjzReason);
     }
+
+    private String joinDateSb(){
+        String shibie=null;
+        Calendar calendar =Calendar.getInstance();
+        int i = calendar.get(Calendar.HOUR_OF_DAY);
+        if(i<10 && i>5){
+            shibie="早市";
+        }else if(i>=10 && i<14){
+            shibie = "中市";
+        }else{
+            shibie = "晚市";
+        }
+        return shibie;
+    }
+
 }
