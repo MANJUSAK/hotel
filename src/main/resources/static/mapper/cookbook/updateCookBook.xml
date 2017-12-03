@@ -41,7 +41,7 @@
     </update>
     <!--套餐明细更新-->
     <update id="updateSetMealDetailDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail">
-    UPDATE gs_cookbook_setmeal_detal SET TID = #{tid},STID = #{stid},CBID = #{cbid},SMID = #{smid},TC_SPEC=#{tcSpec},TC_PRICE=#{tcPrice},TC_NUM=#{tcNum} WHERE ID = #{id};
+    UPDATE gs_cookbook_setmeal_detal SET TID = #{tid},STID = #{stid},CBID = #{cbid},SMID = #{smid},TC_SPEC=#{tcSpec},TC_PRICE=#{tcPrice},TC_NUM=#{tcNum},TC_DISCOUNT=#{tcDiscount} WHERE ID = #{id};
     </update>
 
     <!--用于更新菜品关联所有表数据更新-->

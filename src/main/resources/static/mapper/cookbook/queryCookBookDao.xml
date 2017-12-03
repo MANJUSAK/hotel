@@ -217,10 +217,11 @@
         <result property="isdd" column="IS_DD"/>
         <result property="smUnit" column="SM_UNIT"/>
         <result property="fileId" column="FILE_ID"/>
+        <result property="tcDiscount" column="TC_DISCOUNT"/>
     </resultMap>
     <select id="querySetMealDao" resultMap="setMealInfo"
             parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam">
-        SELECT ID,SMID,FILE_ID,SMNAME,TC_PRICE,SM_ID_DISCOUNT,IS_DD,SM_UNIT FROM gs_cookbook_setmeal
+        SELECT ID,SMID,FILE_ID,SMNAME,TC_PRICE,SM_ID_DISCOUNT,IS_DD,SM_UNIT,TC_DISCOUNT FROM gs_cookbook_setmeal
         <where>
             <if test="id !=null and id !=''">
                 AND SMID=#{id}
@@ -249,12 +250,9 @@
         <result column="TC_NUM" property="tcNum"/>
     </resultMap>
     <select id="querySetMealDetailDao" parameterType="string" resultMap="setMealDetailInfo">
-        SELECT c.*,d.FILE_ID,d.CBNAME,d.UNIT,d.STNAME,d.TNAME FROM
-        (SELECT ID,SMID,CBID,TID,STID,TC_PRICE,TC_SPEC,TC_NUM FROM gs_cookbook_setmeal_detal) c LEFT JOIN
-        (SELECT a.ID,a.CBNAME,a.UNIT,a.FILE_ID,b.STNAME,b.TNAME FROM (SELECT ID,STID,CBNAME,UNIT,FILE_ID FROM
-        gs_cookbook) a
-        LEFT JOIN (SELECT a.ID,a.STNAME,b.TNAME FROM gs_cookbook_subtype a LEFT JOIN gs_cookbook_type b ON a.TID=b.ID) b
-        ON a.STID=b.ID) d ON c.CBID=d.ID WHERE c.SMID=#{smid}
+    select e.*,f.CBNAME,f.UNIT,f.FILE_ID,f.STNAME,f.TNAME from gs_cookbook_setmeal_detal e left join
+    (select c.*,d.STNAME from (select a.ID,a.STID,a.TID,a.CBNAME,a.UNIT,a.FILE_ID,b.TNAME from gs_cookbook a left join gs_cookbook_type b on a.TID=b.ID) c
+    left join gs_cookbook_subtype d on c.STID=d.ID) f on e.CBID=f.ID WHERE e.SMID=#{smid}
     </select>
 </mapper>
         <!--mapper 菜单管理数据查询 end -->

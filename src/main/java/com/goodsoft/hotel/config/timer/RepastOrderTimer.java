@@ -38,8 +38,8 @@ public class RepastOrderTimer {
     /**
      *
      */
-    /*@Scheduled(cron = "0 30 4 * * ?")*/
-    @Scheduled(cron = "*/5 * * * * ?")
+    @Scheduled(cron = "0 30 4 * * ?")
+    /*@Scheduled(cron = "*//*5 * * * * ?")*/
     @Transactional
     public void orderTimeoutService() {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
@@ -55,9 +55,11 @@ public class RepastOrderTimer {
                     }
                 }
                 sqlSession.commit();
+                System.out.println("获取订单状态定时检测成功");
             }
         } catch (Exception e) {
             sqlSession.rollback();
+            System.out.println("获取订单状态定时检测成功");
             this.logger.error(e.getMessage());
         } finally {
             sqlSession.close();

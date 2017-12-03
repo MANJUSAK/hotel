@@ -311,8 +311,7 @@ public class CookBookController {
         if (msg.getMealDetails() != null) {
             if (msg.getMealDetails().size() > 0) {
                 try {
-                    this.service.addSetMealService(msg);
-                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                    return this.service.addSetMealService(msg);
                 } catch (Exception e) {
                     this.logger.error(e.toString());
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());

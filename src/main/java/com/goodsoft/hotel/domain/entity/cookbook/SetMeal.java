@@ -17,6 +17,7 @@ public class SetMeal implements java.io.Serializable {
     private String id;//编号
     private String smName;//套餐名
     private int smid;//套餐编号
+    private double tcDiscount;//明细菜品价格总计套餐折扣席数比
     private int isdd;//是否可单点（0为true/1为false）
     private int isNo;//是否打折（0为true/1为false）
     private double stPrice;//套餐价格
@@ -26,6 +27,9 @@ public class SetMeal implements java.io.Serializable {
     private List<String> picture;//套餐图片容器
     private MultipartFile[] files;//套餐文件上传
 
+    public SetMeal() {
+        this.fileId = " ";
+    }
 
     public String getId() {
         return id;
@@ -49,6 +53,14 @@ public class SetMeal implements java.io.Serializable {
 
     public void setSmid(int smid) {
         this.smid = smid;
+    }
+
+    public double getTcDiscount() {
+        return tcDiscount;
+    }
+
+    public void setTcDiscount(double tcDiscount) {
+        this.tcDiscount = tcDiscount;
     }
 
     public int getIsdd() {

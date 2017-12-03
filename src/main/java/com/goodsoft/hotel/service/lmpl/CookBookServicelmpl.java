@@ -25,6 +25,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -243,10 +244,10 @@ public class CookBookServicelmpl implements CookBookService {
         if (len > 0) {
             for (int i = 0; i < len; ++i) {
                 List<SetMealDetail> detailList = this.dao.querySetMealDetailDao(list.get(i).getId());
+                int len1 = detailList.size();
                 if (param.getSetFindFile() == 0) {
                     List<String> url = this.getFileSupp.getFileData(request, list.get(i).getFileId());
                     list.get(i).setPicture(url);
-                    int len1 = detailList.size();
                     if (len1 > 0) {
                         for (int j = 0; j < len1; ++j) {
                             List<String> sturl = this.getFileSupp.getFileData(request, detailList.get(j).getFileId());
@@ -254,7 +255,9 @@ public class CookBookServicelmpl implements CookBookService {
                         }
                     }
                 }
-                list.get(i).setMealDetails(detailList);
+                if (len1 > 0) {
+                    list.get(i).setMealDetails(detailList);
+                }
             }
             PageInfo<SetMeal> data = new PageInfo<SetMeal>(list);
             return (T) new Result(0, data);
@@ -333,15 +336,18 @@ public class CookBookServicelmpl implements CookBookService {
             //设置菜单数据编号
             String id = this.uuid.getUUID().toString();
             //文件上传
-            int arg = this.fileService.fileUploadService(menus.get(i).getFiles(), "images", id);
-            switch (arg) {
-                case 0:
-                    menus.get(i).setFileId(id);
-                    break;
-                case 603:
-                    return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
-                case 601:
-                    return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+            MultipartFile[] files = menus.get(i).getFiles();
+            if (files != null) {
+                int arg = this.fileService.fileUploadService(files, "images", id);
+                switch (arg) {
+                    case 0:
+                        menus.get(i).setFileId(id);
+                        break;
+                    case 603:
+                        return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
+                    case 601:
+                        return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                }
             }
             menus.get(i).setId(id);
             menus.get(i).setTid(tid);
@@ -434,15 +440,19 @@ public class CookBookServicelmpl implements CookBookService {
         //设置套餐编号，用于关联套餐明细表
         String id = this.uuid.getUUID().toString();
         msg.setId(id);
-        int arg = this.fileService.fileUploadService(msg.getFiles(), "images", id);
-        switch (arg) {
-            case 0:
-                msg.setFileId(id);
-                break;
-            case 603:
-                return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
-            case 601:
-                return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+        //文件上传
+        MultipartFile[] files = msg.getFiles();
+        if (files != null) {
+            int arg = this.fileService.fileUploadService(files, "images", id);
+            switch (arg) {
+                case 0:
+                    msg.setFileId(id);
+                    break;
+                case 603:
+                    return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
+                case 601:
+                    return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+            }
         }
         List<SetMealDetail> mealDetails = msg.getMealDetails();
         for (int i = 0, len = mealDetails.size(); i < len; ++i) {
@@ -452,10 +462,11 @@ public class CookBookServicelmpl implements CookBookService {
         }
         try {
             //套餐明细数据添加
-            this.dao.addSetMealDetailDao(mealDetails);
+            cbDao.addSetMealDetailDao(mealDetails);
             //套餐数据添加
-            this.dao.addSetMealDao(msg);
+            cbDao.addSetMealDao(msg);
             sqlSession.commit();
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
             e.printStackTrace();
             sqlSession.rollback();
@@ -463,7 +474,6 @@ public class CookBookServicelmpl implements CookBookService {
         } finally {
             sqlSession.close();
         }
-        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
     /**
@@ -542,22 +552,26 @@ public class CookBookServicelmpl implements CookBookService {
             for (Menu menu : menus) {
                 String newFileId = this.uuid.getUUID().toString();
                 String fileId = menu.getFileId();
-                int arg = this.fileService.fileUploadService(menu.getFiles(), "images", newFileId);
-                switch (arg) {
-                    //存在文件更新则获取旧文件
-                    case 0:
-                        if (!("".equals(fileId))) {
-                            List<FileData> list = this.fileDao.queryFileDao(fileId);
-                            //删除硬盘上的旧文件
-                            this.deleteFile.deleteAllFile(list);
-                            //删除数据库旧文件存档数据
-                            this.fileDao.deleteFileDao(fileId);
-                        }
-                        break;
-                    case 603:
-                        return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
-                    case 601:
-                        return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                //文件上传
+                MultipartFile[] files = menu.getFiles();
+                if (files != null) {
+                    int arg = this.fileService.fileUploadService(files, "images", newFileId);
+                    switch (arg) {
+                        //存在文件更新则获取旧文件
+                        case 0:
+                            if (!("".equals(fileId))) {
+                                List<FileData> list = this.fileDao.queryFileDao(fileId);
+                                //删除硬盘上的旧文件
+                                this.deleteFile.deleteAllFile(list);
+                                //删除数据库旧文件存档数据
+                                this.fileDao.deleteFileDao(fileId);
+                            }
+                            break;
+                        case 603:
+                            return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
+                        case 601:
+                            return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                    }
                 }
                 menu.setFileId(newFileId);
                 inv.setId(menu.getId());
