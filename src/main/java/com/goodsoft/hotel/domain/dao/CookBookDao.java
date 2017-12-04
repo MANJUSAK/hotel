@@ -43,7 +43,7 @@ public interface CookBookDao {
     List<MenuMeansDetail> queryMenuMeansDetailDao(HotelParam msg) throws Exception;
 
     //餐饮套餐查询，用于前台点餐时具体获取套餐系列菜品
-    List<SetMeal> querySetMealDao() throws Exception;
+    List<SetMeal> querySetMealDao(HotelParam param) throws Exception;
 
     //餐饮套餐详细菜品查询，用于前台点餐时具体获取套餐系列具体菜品数据
     List<SetMealDetail> querySetMealDetailDao(@Param("smid") String smid) throws Exception;

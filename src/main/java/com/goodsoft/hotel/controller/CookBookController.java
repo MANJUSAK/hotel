@@ -31,7 +31,7 @@ public class CookBookController {
     @Resource
     private CookBookService service;
     //实例化日志管理工具类
-    private Logger logger = LoggerFactory.getLogger(CookBookController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 部门类别数据查询接口，用于前台下拉框或其他方式查询部门类别

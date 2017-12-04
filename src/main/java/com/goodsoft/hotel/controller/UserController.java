@@ -27,7 +27,7 @@ public class UserController {
     @Resource
     private UserService service;
     //实例化日志管理工具类
-    private Logger logger = LoggerFactory.getLogger(CookBookController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 查询用户信息（带部门）接口

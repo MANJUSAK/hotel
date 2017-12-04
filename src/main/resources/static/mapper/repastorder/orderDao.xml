@@ -14,7 +14,7 @@
     MD_TIME,FJZ_REASON
     </sql>
     <!--餐饮订单查询-->
-    <select id="queryRepastOrderDao" parameterType="object"
+    <select id="queryRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
         SELECT
         <include refid="order_sql"/>
@@ -86,7 +86,7 @@
             <if test="placeNum !=null and placeNum !=''">PLACE_NUM= #{placeNum},</if>
             <if test="ctid !=null and ctid !=''">AOH= #{aoh},CTID=#{ctid},</if>
             <if test="orderPrice &gt;0">ORDER_PRICE=#{orderPrice},</if>
-            <if test="status !=0 ">STATUS = #{status}</if>
+            <if test="status &gt;=0 ">STATUS = #{status}</if>
         </set>
         WHERE ID = #{id}
     </update>
@@ -105,16 +105,13 @@
     </update>
     <!--餐饮订单商品更新-->
     <update id="updateRepastOrderGoodsDao" parameterType="list">
-        <foreach collection="list" item="item" separator=";">
-            UPDATE gs_repast_order_goods SET
-            CBNAME = #{item.cbname},SP_NUM = #{item.spNum},SPEC = #{item.spec},SP_PRICE=#{item.spPrice},
-            JJ_MEANS = #{item.jjMeans},DETAIL_ZQ_SUM = #{item.detailZqSum},DETAIL_ZH_SUM =#{item.detailZhSum},
-            DISCOUNT =#{item.discount},ZK_SUM = #{item.zkSum}
-            WHERE ID = #{item.id}
-        </foreach>
+    UPDATE gs_repast_order_goods SET
+    CBNAME = #{cbname},SP_NUM = #{spNum},SPEC = #{spec},SP_PRICE=#{spPrice},
+    JJ_MEANS = #{jjMeans},DETAIL_ZQ_SUM = #{detailZqSum},DETAIL_ZH_SUM =#{detailZhSum},
+    DISCOUNT =#{discount},ZK_SUM = #{zkSum} WHERE ID = #{id}
     </update>
     <!--删除餐饮订单-->
-    <delete id="deleteOrderDao" parameterType="string">
+    <delete id="deleteRepastOrderDao" parameterType="string">
         DELETE FROM gs_repast_order WHERE ID=#{id}
     </delete>
 </mapper>

@@ -47,54 +47,59 @@ public class FileServicelmpl implements FileService {
     @Override
     @Transactional
     public int fileUploadService(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException {
+        int len = files.length;
         //判断文件是图片还是文档 start
         switch (fileType) {
             case "document":
-                //判断文件是否为空
-                if (!(files[0].isEmpty())) {
-                    //判断文件大小是否小于30M start
-                    if (files[0].getSize() > 30000000) {
-                        return 601;
+                for (int i = 0; i < len; ++i) {
+                    //判断文件是否为空
+                    if (!(files[i].isEmpty())) {
+                        //判断文件大小是否小于30M start
+                        if (files[i].getSize() > 30000000) {
+                            return 601;
+                        }
+                        //判断文件大小是否小于30M end
+                        // 获取文件名
+                        String fileName = files[i].getOriginalFilename().toLowerCase();
+                        // 判断文件格式是否正确 start
+                        if (!(fileName.endsWith("doc") || fileName.endsWith("docx") || fileName.endsWith("pdf"))) {
+                            return 603;
+                        }
+                        // 判断文件格式是否正确 end
+                    } else {
+                        return 604;
                     }
-                    //判断文件大小是否小于30M end
-                    // 获取文件名
-                    String fileName = files[0].getOriginalFilename().toLowerCase();
-                    // 判断文件格式是否正确 start
-                    if (!(fileName.endsWith("doc") || fileName.endsWith("docx") || fileName.endsWith("pdf"))) {
-                        return 603;
-                    }
-                    // 判断文件格式是否正确 end
-                } else {
-                    return 604;
                 }
                 // 判断文件格是否为空 end
                 break;
             //判断文件是图片还是文档 end
             //判断文件是否为Excel start
             case "excel":
-                //判断文件是否为空
-                if (!(files[0].isEmpty())) {
-                    //判断文件大小是否小于10M start
-                    if (files[0].getSize() > 10000000) {
-                        return 601;
+                for (int i = 0; i < len; ++i) {
+                    //判断文件是否为空
+                    if (!(files[i].isEmpty())) {
+                        //判断文件大小是否小于10M start
+                        if (files[i].getSize() > 10000000) {
+                            return 601;
+                        }
+                        //判断文件大小是否小于30M end
+                        // 获取文件名
+                        String fileName = files[i].getOriginalFilename().toLowerCase();
+                        // 判断文件格式是否正确 start
+                        if (!(fileName.endsWith("xlsx") || fileName.endsWith("xls"))) {
+                            return 603;
+                        }
+                        // 判断文件格式是否正确 end
+                    } else {
+                        return 604;
                     }
-                    //判断文件大小是否小于30M end
-                    // 获取文件名
-                    String fileName = files[0].getOriginalFilename().toLowerCase();
-                    // 判断文件格式是否正确 start
-                    if (!(fileName.endsWith("xlsx") || fileName.endsWith("xls"))) {
-                        return 603;
-                    }
-                    // 判断文件格式是否正确 end
-                } else {
-                    return 604;
                 }
                 // 判断文件格是否为空 end
                 break;
             //判断文件是否为Excel end
             //图片文件类型检查 start
             default:
-                for (int i = 0, length = files.length; i < length; ++i) {
+                for (int i = 0; i < len; ++i) {
                     //判断文件是否为空 start
                     if (!(files[i].isEmpty())) {
                         //判断文件大小是否小于1.5M start

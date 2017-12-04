@@ -1,5 +1,8 @@
 package com.goodsoft.hotel.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.locks.Lock;
@@ -31,7 +34,10 @@ public class OrderIdutil {
         }
         return instance;
     }
+
     // 创建本类的单例模式（具体说明参见本包下的UUIDUtil类） end
+    //实例化日志管理工具类
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //实例化时期格式化工具类
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSS");
@@ -48,6 +54,8 @@ public class OrderIdutil {
             sb.append("CY");
             sb.append(this.dateFormat.format(new Date()));
         } catch (Exception e) {
+            this.logger.error(e.toString());
+            System.out.println(e.getStackTrace() + "生成订单号失败");
         } finally {
             this.lock.unlock();
         }

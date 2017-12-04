@@ -19,11 +19,9 @@
         <result property="createDate" column="CREATEDATE"/>
     </resultMap>
     <select id="queryUserMsgDao" parameterType="com.goodsoft.hotel.domain.entity.param.UserParam" resultMap="userInfo">
-        select c.*,d.DEPT_NAME,d.DEPT_LEVEL,d.DEPT_CODE,d.PARENT_ID,d.CREATEDATE from (select a.*,b.DEPT_ID from (select
-        ID,NAME,LOGIN_NAME,SEX,REGISTER_TIME from to_horizon_user) a
-        left join tor_horizon_user_dept b on a.ID=b.USER_ID) c left join (select
-        ID,DEPT_NAME,DEPT_LEVEL,DEPT_CODE,PARENT_ID,CREATEDATE,ORDER_NO from to_horizon_dept) d
-        on c.DEPT_ID=d.ID
+        select c.*,d.DEPT_NAME,d.DEPT_LEVEL,d.DEPT_CODE,d.PARENT_ID,d.CREATEDATE from (select a.*,b.DEPT_ID from
+        (select ID,NAME,LOGIN_NAME,SEX,REGISTER_TIME from to_horizon_user) a left join tor_horizon_user_dept b on
+        a.ID=b.USER_ID) c left join (select ID,DEPT_NAME,DEPT_LEVEL,DEPT_CODE,PARENT_ID,CREATEDATE,ORDER_NO from to_horizon_dept) d on c.DEPT_ID=d.ID
         <where>
             <if test="keyWord !=null and keyWord !=''">
                 AND d.DEPT_NAME=#{keyWord}

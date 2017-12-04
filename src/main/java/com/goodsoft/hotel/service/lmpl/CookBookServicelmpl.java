@@ -239,7 +239,7 @@ public class CookBookServicelmpl implements CookBookService {
     @Override
     public <T> T querySetMealService(HttpServletRequest request, HotelParam param) throws Exception {
         Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
-        List<SetMeal> list = this.dao.querySetMealDao();
+        List<SetMeal> list = this.dao.querySetMealDao(param);
         int len = list.size();
         if (len > 0) {
             for (int i = 0; i < len; ++i) {
@@ -281,7 +281,7 @@ public class CookBookServicelmpl implements CookBookService {
             String str = this.dao.queryMenuTypeByNameDao(msg.gettName());
             if (str == null) {
                 //设置菜单类别编号用于关联小类别表
-                id = this.uuid.getUUID().toString();
+                id = this.uuid.getUUID("CY").toString();
                 msg.setId(id);
                 //类别数据添加
                 this.dao.addMenuTypeDao(msg);
@@ -293,7 +293,7 @@ public class CookBookServicelmpl implements CookBookService {
                 if (len > 0) {
                     List<MenuSubType> msg1 = msg.getMenuSubTypes();
                     for (int i = 0; i < len; ++i) {
-                        msg1.get(i).setId(this.uuid.getUUID().toString());
+                        msg1.get(i).setId(this.uuid.getUUID("CY").toString());
                         //设置小类别表关联类别表id
                         msg1.get(i).setTid(id);
                     }
@@ -334,7 +334,7 @@ public class CookBookServicelmpl implements CookBookService {
             //实例化库存量实体，用于设置菜单库存量数据
             Inventory inv = new Inventory();
             //设置菜单数据编号
-            String id = this.uuid.getUUID().toString();
+            String id = this.uuid.getUUID("CY").toString();
             //文件上传
             MultipartFile[] files = menus.get(i).getFiles();
             if (files != null) {
@@ -390,7 +390,7 @@ public class CookBookServicelmpl implements CookBookService {
         String cbid = msg.getCbid();
         List<MenuMeans> means = msg.getMeans();
         for (int i = 0, len = means.size(); i < len; ++i) {
-            means.get(i).setId(this.uuid.getUUID().toString());
+            means.get(i).setId(this.uuid.getUUID("CY").toString());
             means.get(i).setTid(tid);
             means.get(i).setStid(stid);
             //设置关联菜单表id
@@ -416,7 +416,7 @@ public class CookBookServicelmpl implements CookBookService {
             String cbid = msg.getCbid();
             List<MenuMeansDetail> mdt = msg.getMeansDetails();
             for (int i = 0, len = mdt.size(); i < len; ++i) {
-                mdt.get(i).setId(this.uuid.getUUID().toString());
+                mdt.get(i).setId(this.uuid.getUUID("CY").toString());
                 //设置关联做法表id
                 mdt.get(i).setMid(mid);
                 mdt.get(i).setTid(tid);
@@ -438,7 +438,7 @@ public class CookBookServicelmpl implements CookBookService {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         //设置套餐编号，用于关联套餐明细表
-        String id = this.uuid.getUUID().toString();
+        String id = this.uuid.getUUID("CY").toString();
         msg.setId(id);
         //文件上传
         MultipartFile[] files = msg.getFiles();
@@ -456,7 +456,7 @@ public class CookBookServicelmpl implements CookBookService {
         }
         List<SetMealDetail> mealDetails = msg.getMealDetails();
         for (int i = 0, len = mealDetails.size(); i < len; ++i) {
-            mealDetails.get(i).setId(this.uuid.getUUID().toString());
+            mealDetails.get(i).setId(this.uuid.getUUID("CY").toString());
             //关联套餐编号
             mealDetails.get(i).setSmid(id);
         }
@@ -550,7 +550,7 @@ public class CookBookServicelmpl implements CookBookService {
         DatabasesParam param = new DatabasesParam();
         try {
             for (Menu menu : menus) {
-                String newFileId = this.uuid.getUUID().toString();
+                String newFileId = this.uuid.getUUID("CY").toString();
                 String fileId = menu.getFileId();
                 //文件上传
                 MultipartFile[] files = menu.getFiles();

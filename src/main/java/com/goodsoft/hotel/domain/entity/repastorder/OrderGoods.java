@@ -1,7 +1,10 @@
 package com.goodsoft.hotel.domain.entity.repastorder;
 
+import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,6 +39,7 @@ public class OrderGoods implements java.io.Serializable {
     private int writeBill;//是否手写单（0为true/1为false）
     private String menuType;//部门类别
     private String detailRemarks;//备注
+    private List<SetMealDetail> setMealDetails;//套餐数据容器（仅用于查询）
 
     public OrderGoods() {
         this.dcTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -223,6 +227,14 @@ public class OrderGoods implements java.io.Serializable {
 
     public void setWriteBill(int writeBill) {
         this.writeBill = writeBill < 0 ? Math.abs(writeBill) : writeBill;
+    }
+
+    public List<SetMealDetail> getSetMealDetails() {
+        return setMealDetails;
+    }
+
+    public void setSetMealDetails(List<SetMealDetail> setMealDetails) {
+        this.setMealDetails = setMealDetails;
     }
 
     @Override

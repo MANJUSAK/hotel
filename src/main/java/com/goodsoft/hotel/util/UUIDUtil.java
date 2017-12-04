@@ -35,9 +35,18 @@ public class UUIDUtil {
     }
 
 
+    //生成前缀固定标识UUID
     public StringBuilder getUUID() {
         String str = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
         String str2 = str.substring(0, 2);
         return new StringBuilder(str.replace(str2, "GS"));
     }
+
+    //生成前缀动态标识UUID
+    public StringBuilder getUUID(String var) {
+        String str = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+        String str2 = str.substring(0, 2);
+        return new StringBuilder(str.replace(str2, var));
+    }
+
 }
