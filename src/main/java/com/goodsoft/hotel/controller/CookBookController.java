@@ -75,6 +75,7 @@ public class CookBookController {
      * 查询部门类别接口，用于前台点餐时大类的数据展示或添加菜单数据用于定位小类型
      * 有分页
      *
+     * @param param 可传入参数：page 页码、total 总记录数
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -92,8 +93,11 @@ public class CookBookController {
     /**
      * 小类查询接口，用于前台点餐时小类的数据展示或添加菜单数据用于定位菜名
      * 该接口下如果部门类别下无小类数据则会自动获取该部门下菜品数据
+     * 传参 tid 则会自动过滤
+     * 不传参 默认查询所有
      *
-     * @param param 参数信息
+     * @param param 可传入参数：page 页码、total 总记录数、tid 部门类别编号、
+     *              id 小类编号（注：赋值id传入数据为小类编号stid而非数据编号id）
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -134,7 +138,10 @@ public class CookBookController {
      * 注：该接口下如需查询菜品对应的图片信息时前台需传入参数setFindFile=0
      * 默认状况下不查询图片文件
      *
-     * @param param 参数信息
+     * @param param 可传入参数：page 页码、total 总记录数
+     *              id 菜品编号（注：赋值id传入数据为菜品编号cbid而非数据编号id）、
+     *              stid 小类编号、tid 部门类别编号、keyWord 菜品名称、isSub 无小类时必传值为1、
+     *              setFindFile 是否查询图片数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -151,7 +158,9 @@ public class CookBookController {
     /**
      * 菜单做法查询接口，用于前台点餐时做法数据展示或添加菜单数据用于定位做法详情
      *
-     * @param param 参数信息
+     * @param param 可传入参数：page 页码、total 总记录数
+     *              id 做法编号（注：赋值id传入数据为做法编号mid而非数据编号id）、
+     *              stid 小类编号、tid 部门类别编号、keyWord 做法名称、cbid 菜品编号
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -169,7 +178,9 @@ public class CookBookController {
     /**
      * 菜单做法详情查询接口，用于前台点餐时具体做法数据展示
      *
-     * @param param 参数信息
+     * @param param 可传入参数：page 页码、total 总记录数
+     *              id 做法详情编号（注：赋值id传入数据为做法详情编号mdid而非数据编号id）、
+     *              stid 小类编号、tid 部门类别编号、keyWord 做法名称、cbid 菜品编号、mid 做法编号
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -185,12 +196,31 @@ public class CookBookController {
     }
 
     /**
+     * 该接口用于套餐添加过程中检查套餐是否存在
+     *
+     * @param sName 套餐名
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("/query/menu/setmeal/by/name/data.shtml")
+    public String queryMenuSetmealByNameController(String sName) {
+        try {
+            return this.service.querySetMealByNameService(sName);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return e.getMessage();
+        }
+    }
+
+    /**
      * 餐饮套餐查询接口，用于前台点餐时具体获取套餐系列菜品以及获取套餐具体明细
      * 该接口下涵盖了套餐所有明细数据
      * 注：该接口下如需查询套餐对应的图片信息时前台需传入参数setFindFile=0
      * 默认状况下不查询图片文件
      *
-     * @param param 参数信息
+     * @param param 可传入参数：page 页码、total 总记录数
+     *              id 套餐编号（注：赋值id传入数据为套餐编号smid而非数据编号id）、keyWord 套餐名称
+     *              setFindFile 是否查询图片数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -266,7 +296,7 @@ public class CookBookController {
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
-                return new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
             }
         } else {
             return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
@@ -292,7 +322,7 @@ public class CookBookController {
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
-                return new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
             }
         } else {
             return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
@@ -301,6 +331,8 @@ public class CookBookController {
 
     /**
      * 套餐数据添加接口
+     * 该接口添加数据会自动检查套餐是否存在，如果存在则是追加套餐明细，否则增加一份新的套餐。
+     * 注：追加套餐明细之前会检查该套餐下是否存在相同菜品，有则覆盖追加否则迭代追加。
      *
      * @param msg 套餐数据
      * @return 响应结果
@@ -317,7 +349,7 @@ public class CookBookController {
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
-                return new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
             }
         } else {
             return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());

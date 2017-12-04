@@ -72,10 +72,12 @@ public class RepastOderServicelmpl implements RepastOderService {
         int len = list.size();
         if (len > 0) {
             for (int i = 0; i < len; ++i) {
+                //订单商品详情
                 List<OrderGoods> list1 = this.dao.queryRepastOrderGoodsDao(list.get(i).getId());
                 int len1 = list1.size();
                 if (len1 > 0) {
                     for (int j = 0; j < len1; ++j) {
+                        //是否存在套餐
                         String tcid = list1.get(j).getTcid();
                         if (tcid != null && !("".equals(tcid))) {
                             List<SetMealDetail> list2 = this.cbDao.querySetMealDetailDao(tcid);

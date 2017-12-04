@@ -35,7 +35,8 @@ public class RepastOrderController {
      * （status=1未结/2反结/3超时）
      * 该接口涵盖了订单的所有信息
      *
-     * @param param 查询条件
+     * @param param 可传入参数：page 页码、total 总记录数
+     *              id 订单编号、status 订单状态
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)

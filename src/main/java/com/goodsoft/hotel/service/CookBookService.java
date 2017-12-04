@@ -48,6 +48,9 @@ public interface CookBookService {
     //餐饮套餐查询，用于前台点餐时具体获取套餐系列菜品以及获取套餐具体明细
     <T> T querySetMealService(HttpServletRequest request, HotelParam param) throws Exception;
 
+    //餐饮套餐查询，用于前台点餐时具体获取套餐系列菜品以及获取套餐具体明细
+    String querySetMealByNameService(String sName) throws Exception;
+
     //菜单类别与小类数据添加
     void addMenuTypeService(MenuType msg) throws HotelDataBaseException;
 
