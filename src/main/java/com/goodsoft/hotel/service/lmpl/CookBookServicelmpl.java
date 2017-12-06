@@ -239,7 +239,7 @@ public class CookBookServicelmpl implements CookBookService {
     @Override
     public <T> T querySetMealService(HttpServletRequest request, HotelParam param) throws Exception {
         Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
-        List<SetMeal> list = this.dao.querySetMealDao();
+        List<SetMeal> list = this.dao.querySetMealDao(param);
         int len = list.size();
         if (len > 0) {
             for (int i = 0; i < len; ++i) {
@@ -265,6 +265,18 @@ public class CookBookServicelmpl implements CookBookService {
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
     }
 
+    /**
+     * 检测添加套餐时是否存在相同套餐名
+     *
+     * @param sName 套餐名
+     * @return 套餐id
+     * @throws Exception
+     */
+    @Override
+    public String querySetMealByNameService(String sName) throws Exception {
+        return this.dao.querySetMealByNameDao(sName);
+    }
+
 
     /**
      * 菜单类别与小类数据添加
@@ -277,23 +289,20 @@ public class CookBookServicelmpl implements CookBookService {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
-            String id = null;
-            String str = this.dao.queryMenuTypeByNameDao(msg.gettName());
-            if (str == null) {
+            String id = this.dao.queryMenuTypeByNameDao(msg.gettName());
+            if (id == null) {
                 //设置菜单类别编号用于关联小类别表
-                id = this.uuid.getUUID().toString();
+                id = this.uuid.getUUID("CY").toString();
                 msg.setId(id);
                 //类别数据添加
                 this.dao.addMenuTypeDao(msg);
-            } else {
-                id = str;
             }
             if (msg.getMenuSubTypes() != null) {
                 int len = msg.getMenuSubTypes().size();
                 if (len > 0) {
                     List<MenuSubType> msg1 = msg.getMenuSubTypes();
                     for (int i = 0; i < len; ++i) {
-                        msg1.get(i).setId(this.uuid.getUUID().toString());
+                        msg1.get(i).setId(this.uuid.getUUID("CY").toString());
                         //设置小类别表关联类别表id
                         msg1.get(i).setTid(id);
                     }
@@ -334,7 +343,7 @@ public class CookBookServicelmpl implements CookBookService {
             //实例化库存量实体，用于设置菜单库存量数据
             Inventory inv = new Inventory();
             //设置菜单数据编号
-            String id = this.uuid.getUUID().toString();
+            String id = this.uuid.getUUID("CY").toString();
             //文件上传
             MultipartFile[] files = menus.get(i).getFiles();
             if (files != null) {
@@ -390,7 +399,7 @@ public class CookBookServicelmpl implements CookBookService {
         String cbid = msg.getCbid();
         List<MenuMeans> means = msg.getMeans();
         for (int i = 0, len = means.size(); i < len; ++i) {
-            means.get(i).setId(this.uuid.getUUID().toString());
+            means.get(i).setId(this.uuid.getUUID("CY").toString());
             means.get(i).setTid(tid);
             means.get(i).setStid(stid);
             //设置关联菜单表id
@@ -416,7 +425,7 @@ public class CookBookServicelmpl implements CookBookService {
             String cbid = msg.getCbid();
             List<MenuMeansDetail> mdt = msg.getMeansDetails();
             for (int i = 0, len = mdt.size(); i < len; ++i) {
-                mdt.get(i).setId(this.uuid.getUUID().toString());
+                mdt.get(i).setId(this.uuid.getUUID("CY").toString());
                 //设置关联做法表id
                 mdt.get(i).setMid(mid);
                 mdt.get(i).setTid(tid);
@@ -437,34 +446,57 @@ public class CookBookServicelmpl implements CookBookService {
     public Status addSetMealService(SetMeal msg) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
-        //设置套餐编号，用于关联套餐明细表
-        String id = this.uuid.getUUID().toString();
-        msg.setId(id);
-        //文件上传
-        MultipartFile[] files = msg.getFiles();
-        if (files != null) {
-            int arg = this.fileService.fileUploadService(files, "images", id);
-            switch (arg) {
-                case 0:
-                    msg.setFileId(id);
-                    break;
-                case 603:
-                    return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
-                case 601:
-                    return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
-            }
-        }
-        List<SetMealDetail> mealDetails = msg.getMealDetails();
-        for (int i = 0, len = mealDetails.size(); i < len; ++i) {
-            mealDetails.get(i).setId(this.uuid.getUUID().toString());
-            //关联套餐编号
-            mealDetails.get(i).setSmid(id);
-        }
         try {
+            String id = cbDao.querySetMealByNameDao(msg.getSmName());
+            List<SetMealDetail> mealDetails = msg.getMealDetails();
+            //套餐不存在 start
+            if (id == null) {
+                //设置套餐编号，用于关联套餐明细表
+                id = this.uuid.getUUID("CY").toString();
+                msg.setId(id);
+                //文件上传
+                MultipartFile[] files = msg.getFiles();
+                if (files != null) {
+                    int arg = this.fileService.fileUploadService(files, "images", id);
+                    switch (arg) {
+                        case 0:
+                            msg.setFileId(id);
+                            break;
+                        case 603:
+                            return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
+                        case 601:
+                            return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                    }
+                }
+                for (int i = 0, len = mealDetails.size(); i < len; ++i) {
+                    mealDetails.get(i).setId(this.uuid.getUUID("CY").toString());
+                    //关联套餐编号
+                    mealDetails.get(i).setSmid(id);
+                }
+                //套餐数据添加
+                cbDao.addSetMealDao(msg);
+                //套餐不存在 end
+                //套餐存在 start
+            } else {
+                for (int i = 0, len = mealDetails.size(); i < len; ++i) {
+                    //检查套餐中是否存在相同菜品，存在时覆盖添加
+                    String cbid = cbDao.querySetMealDetailByNameDao(mealDetails.get(i).getCbid(), id, mealDetails.get(i).getTcSpec());
+                    if (cbid == null) {
+                        mealDetails.get(i).setId(this.uuid.getUUID("CY").toString());
+                        //关联套餐编号
+                        mealDetails.get(i).setSmid(id);
+                    } else {
+                        mealDetails.remove(i);
+                        --i;
+                        len = mealDetails.size();
+                        if (len == 0)
+                            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                    }
+                }
+            }
+            //套餐存在 end
             //套餐明细数据添加
             cbDao.addSetMealDetailDao(mealDetails);
-            //套餐数据添加
-            cbDao.addSetMealDao(msg);
             sqlSession.commit();
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
@@ -550,7 +582,7 @@ public class CookBookServicelmpl implements CookBookService {
         DatabasesParam param = new DatabasesParam();
         try {
             for (Menu menu : menus) {
-                String newFileId = this.uuid.getUUID().toString();
+                String newFileId = this.uuid.getUUID("CY").toString();
                 String fileId = menu.getFileId();
                 //文件上传
                 MultipartFile[] files = menu.getFiles();

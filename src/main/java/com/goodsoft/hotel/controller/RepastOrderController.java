@@ -27,19 +27,23 @@ public class RepastOrderController {
     @Resource
     private RepastOderService service;
     //实例化日志管理工具类
-    private Logger logger = LoggerFactory.getLogger(RepastOrderController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * 餐饮订单查询接口，用于前台收银获取相关订单数据信息
+     * 餐饮订单查询接口，用于获取餐饮所有订单数据信息
+     * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
+     * （status=1未结/2反结/3超时）
+     * 该接口涵盖了订单的所有信息
      *
-     * @param id 订单编号
+     * @param param 可传入参数：page 页码、total 总记录数
+     *              id 订单编号、status 订单状态
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/data.shtml")
-    public Object queryOrderController(String id, HotelParam page) {
+    public Object queryOrderController(HotelParam param) {
         try {
-            return this.service.queryOrderService(id, page);
+            return this.service.queryOrderService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
@@ -48,7 +52,9 @@ public class RepastOrderController {
     }
 
     /**
-     * 通过订单号查询餐饮订单接口，用于开台跳转点餐页面获取该消费者订单信息
+     * 通过订单号查询订单接口，用于开台跳转点餐页面获取该消费者订单信息
+     * 注：开台后必须获取开台订单信息（id必传，否则开台后无法打单）
+     * 该接口为获取订单信息(只包含订单基础信息，返回单条数据)
      *
      * @param id 订单编号
      * @return 响应结果
@@ -66,8 +72,9 @@ public class RepastOrderController {
     }
 
     /**
-     * 餐饮预订单开台订单添加（开台）接口，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮预订开台订单添加（开台）接口，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
      * 返回该订单号用于添加商品明细或者修改订单
+     * 该接口用于楼面开台生成新订单，以便点餐时获取开台订单数据
      *
      * @param order 订单信息
      * @return 响应结果
@@ -86,6 +93,7 @@ public class RepastOrderController {
     /**
      * 餐饮订单商品添加（打单）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      * 用于开台后用户点餐之后数据的提交
+     * 该接口用于点餐员点完菜之后的打单服务，并保存点餐信息用于厨房做菜服务
      *
      * @param msg 订单商品信息
      * @return 响应结果
@@ -111,6 +119,7 @@ public class RepastOrderController {
     }
 
     /**
+     * 该接口未启用（待使用）
      * 餐饮预订单开台订单修改（开台后修改订单）接口，用于处理预订之后的顾客临时调整用餐信息时,
      * 产生相应订单以便于收银获取相关订单数据信息
      *
@@ -131,6 +140,7 @@ public class RepastOrderController {
 
     /**
      * 餐饮订单更新（结算订单）接口，用于前台收银结算相关订单
+     * 该接口用于收银员结算消费者消费信息，经过改接口的所有订单将不可进行任何操作。
      *
      * @param order 订单结算信息
      * @return 响应结果
@@ -148,6 +158,7 @@ public class RepastOrderController {
 
     /**
      * 餐饮订单更新（反结账）接口，用于前台收银相关订单结算错误回滚到可修改状态
+     * 该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
      *
      * @param oid    订单编号
      * @param reason 反结账原因
@@ -165,6 +176,7 @@ public class RepastOrderController {
     }
 
     /**
+     * 该接口未启用（待用）
      * 餐饮订单删除（取消订单）接口，用于预订单处于取消状态时删除该预订单所产生的记录数据
      *
      * @param id 订单编号

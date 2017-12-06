@@ -57,7 +57,7 @@ public class DeleteFileUtil {
     /**
      * 单文件文件删除方法
      *
-     * @param list 文件数据
+     * @param fileData 文件数据
      * @return boolean
      */
     public boolean deleteFile(FileData fileData) {

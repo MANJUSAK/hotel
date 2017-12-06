@@ -3,9 +3,11 @@ package com.goodsoft.hotel.service.lmpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.goodsoft.hotel.domain.dao.CookBookDao;
 import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
+import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail;
 import com.goodsoft.hotel.domain.entity.param.HotelParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
@@ -45,6 +47,8 @@ public class RepastOderServicelmpl implements RepastOderService {
     @Resource
     private CyReserveDao cyReserveDao;
     @Resource
+    private CookBookDao cbDao;
+    @Resource
     private SqlSessionTemplate sqlSessionTemplate;
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
@@ -52,23 +56,36 @@ public class RepastOderServicelmpl implements RepastOderService {
     private OrderIdutil orderId = OrderIdutil.getInstance();
 
     /**
-     * 餐饮订单查询业务方法，用于前台收银获取相关订单数据信息
+     * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
+     * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
+     * （status=1未结/2反结/3超时）
+     * 该接口涵盖了订单的所有信息
      *
-     * @param id     订单编号
-     * @param status 订单状态（0为未支付/1为已支付），默认查询未支付订单
+     * @param param 查询条件
      * @return 查询数据
      * @throws Exception
      */
     @Override
-    public <T> T queryOrderService(String id, HotelParam page) throws Exception {
-        Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
-        int status = page.getStatus();
-        List<Order> list = this.dao.queryRepastOrderDao(id, status);
+    public <T> T queryOrderService(HotelParam param) throws Exception {
+        Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
+        List<Order> list = this.dao.queryRepastOrderDao(param);
         int len = list.size();
         if (len > 0) {
             for (int i = 0; i < len; ++i) {
+                //订单商品详情
                 List<OrderGoods> list1 = this.dao.queryRepastOrderGoodsDao(list.get(i).getId());
-                if (list1.size() > 0) {
+                int len1 = list1.size();
+                if (len1 > 0) {
+                    for (int j = 0; j < len1; ++j) {
+                        //是否存在套餐
+                        String tcid = list1.get(j).getTcid();
+                        if (tcid != null && !("".equals(tcid))) {
+                            List<SetMealDetail> list2 = this.cbDao.querySetMealDetailDao(tcid);
+                            if (list2.size() > 0) {
+                                list1.get(j).setSetMealDetails(list2);
+                            }
+                        }
+                    }
                     list.get(i).setOrderGoods(list1);
                 }
             }
@@ -79,7 +96,9 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
-     * 通过订单号查询餐饮订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
+     * 通过订单号查询订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
+     * 注：开台后必须获取开台订单信息（id必传，否则开台后无法打单）
+     * 该接口为开台后获取订单信息接口
      *
      * @param id 订单编号
      * @return 查询数据
@@ -95,8 +114,9 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
-     * 餐饮预订单开台订单添加（开台）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * * 餐饮预订开台订单添加（开台）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
      * 返回该订单号用于添加商品明细或者修改订单
+     * 该接口用于楼面开台生成新订单，以便点餐时获取开台订单数据
      *
      * @param order 订单信息
      * @return 下单状态
@@ -121,9 +141,9 @@ public class RepastOderServicelmpl implements RepastOderService {
     /**
      * 餐饮订单商品添加（打单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      * 用于开台后用户点餐之后数据的提交
+     * 该接口用于点餐员点完菜之后的打单服务，并保存点餐信息用于厨房做菜服务
      *
-     * @param order      订单信息
-     * @param orderGoods 订单食品明细信息
+     * @param msg 订单商品信息
      * @throws Exception
      */
     @Transactional
@@ -141,7 +161,7 @@ public class RepastOderServicelmpl implements RepastOderService {
         order.setStatus(1);
         List<OrderGoods> orderGoods = msg.getMsg();
         for (int i = 0, len = orderGoods.size(); i < len; ++i) {
-            orderGoods.get(i).setId(this.uuid.getUUID().toString());
+            orderGoods.get(i).setId(this.uuid.getUUID("CY").toString());
             orderGoods.get(i).setOid(id);
         }
         try {
@@ -176,6 +196,7 @@ public class RepastOderServicelmpl implements RepastOderService {
 
     /**
      * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
+     * 该接口用于收银员结算消费者消费信息，经过改接口的所有订单将不可进行任何操作。
      *
      * @param order 订单结算信息
      * @return 结算结果
@@ -199,6 +220,7 @@ public class RepastOderServicelmpl implements RepastOderService {
 
     /**
      * 餐饮订单更新（反结账）业务方法，用于前台收银相关订单结算错误回滚到可修改状态
+     * 该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
      *
      * @param oid    订单编号
      * @param reason 反结账原因

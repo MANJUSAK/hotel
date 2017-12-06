@@ -15,7 +15,7 @@ public class HotelParam implements java.io.Serializable {
     private int page;//页码
     private int total = 20;//每页显示记录数
     private int status;//状态参数
-    private int setFindFile = 1;//是否查找图片
+    private int setFindFile = 1;//是否查找图片（默认不查找）
     private String id;//数据编号
     private String stid;//小类编号
     private String tid;//部门类别

@@ -207,6 +207,10 @@
             </if>
         </where>
     </select>
+    <!--检查套餐是否存在-->
+    <select id="querySetMealByNameDao" resultType="string">
+        SELECT ID FROM gs_cookbook_setmeal WHERE SMNAME=#{sName}
+    </select>
     <!--套餐数据查询-->
     <resultMap id="setMealInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
         <id property="smid" column="SMID"/>
@@ -232,6 +236,10 @@
             </if>
         </where>
         ORDER BY SMID DESC
+    </select>
+    <!--检查套餐中是否有相同菜品存在-->
+    <select id="querySetMealDetailByNameDao" resultType="string">
+        SELECT ID FROM gs_cookbook_setmeal_detal WHERE CBID=#{cbid} AND SMID=#{smid} AND TC_SPEC=#{spec}
     </select>
     <!--套餐详情数据查询-->
     <resultMap id="setMealDetailInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail">

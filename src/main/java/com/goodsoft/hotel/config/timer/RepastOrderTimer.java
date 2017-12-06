@@ -39,7 +39,7 @@ public class RepastOrderTimer {
      *
      */
     @Scheduled(cron = "0 30 4 * * ?")
-    /*@Scheduled(cron = "*//*5 * * * * ?")*/
+  /*  @Scheduled(cron = "0/5 * * * * ?")*/
     @Transactional
     public void orderTimeoutService() {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
@@ -49,13 +49,14 @@ public class RepastOrderTimer {
             int len = list.size();
             if (len > 0) {
                 for (Map map : list) {
-                    System.out.println(map.get("ID"));
+                    System.out.println(getHourBetween((String) map.get("KT_TIME")));
                     if (getHourBetween((String) map.get("KT_TIME"))) {
                         dao.updateOrderStatusDao((String) map.get("ID"), 3, null);
                     }
                 }
                 sqlSession.commit();
                 System.out.println("获取订单状态定时检测成功");
+
             }
         } catch (Exception e) {
             sqlSession.rollback();

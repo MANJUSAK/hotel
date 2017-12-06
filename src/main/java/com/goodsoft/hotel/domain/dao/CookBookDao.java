@@ -42,8 +42,14 @@ public interface CookBookDao {
     //菜单做法详情查询，用于前台点餐时具体做法数据展示
     List<MenuMeansDetail> queryMenuMeansDetailDao(HotelParam msg) throws Exception;
 
+    //查询数据库是否存在相同套餐名
+    String querySetMealByNameDao(@Param("sName") String sName) throws Exception;
+
     //餐饮套餐查询，用于前台点餐时具体获取套餐系列菜品
-    List<SetMeal> querySetMealDao() throws Exception;
+    List<SetMeal> querySetMealDao(HotelParam param) throws Exception;
+
+    //查询数据库套餐中是否有相同菜品存在
+    String querySetMealDetailByNameDao(@Param("cbid") String cbid, @Param("smid") String smid, @Param("spec") String spec) throws Exception;
 
     //餐饮套餐详细菜品查询，用于前台点餐时具体获取套餐系列具体菜品数据
     List<SetMealDetail> querySetMealDetailDao(@Param("smid") String smid) throws Exception;
