@@ -17,7 +17,7 @@ package com.goodsoft.hotel.domain.entity.result;
  */
 public enum StatusEnum {
     SUCCESS(0, "成功"),
-    SERVER_ERROR(100500, "发生不可预知的错误"),
+    SERVER_ERROR(100500, "应用服务器出现异常"),
     DATABASE_ERROR(200500, "数据库服务器出现异常"),
     DEFEAT(200500, "失败"),
     UNKONW_ERROR(100501, "未知错误"),

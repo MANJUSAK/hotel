@@ -3,7 +3,9 @@ package com.goodsoft.hotel.controller;
 import com.goodsoft.hotel.domain.entity.param.UserParam;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
+import com.goodsoft.hotel.exception.HotelApplicationException;
 import com.goodsoft.hotel.service.UserService;
+import com.goodsoft.hotel.service.supp.OrderIdsupp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +28,8 @@ public class UserController {
 
     @Resource
     private UserService service;
+    @Resource
+    private OrderIdsupp od;
     //实例化日志管理工具类
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -46,6 +50,12 @@ public class UserController {
         }
 
     }
+
+    @RequestMapping("/test")
+    public String test() throws HotelApplicationException {
+        return this.od.getOrderId().toString();
+    }
+
 
     /**
      * 查询所有部门接口

@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.domain.dao;
 
 import com.goodsoft.hotel.domain.entity.param.HotelParam;
+import com.goodsoft.hotel.domain.entity.repastorder.MenuCustom;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
 import org.apache.ibatis.annotations.Param;
@@ -31,11 +32,17 @@ public interface RepastOrderDao {
     //查询开台后的订单时间，用于判断是否已达超时时间
     List<Map> queryKtOrderTimeDao() throws Exception;
 
+    //自定义菜品（套餐）查询
+    List<MenuCustom> queryMenuCustomDao(@Param("id") String id) throws Exception;
+
     //餐饮订单下单
     int addRepastOrderDao(Order msg) throws Exception;
 
     //餐饮订单食品下单
     void addRepastOrderGoodsDao(List<OrderGoods> msg) throws Exception;
+
+    //自定义菜品（套餐）添加
+    void addMenuCustomDao(List<MenuCustom> msg) throws Exception;
 
     //餐饮订单更新（用于结算订单）
     int updateRepastOrderDao(Order msg) throws Exception;
