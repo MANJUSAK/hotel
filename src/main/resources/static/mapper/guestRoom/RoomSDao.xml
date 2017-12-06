@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao">
 
     <!--主页面房态信息 start-->
@@ -12,17 +13,55 @@
 
 
     <!--房态 主页面 通过楼层号获取房间信息-->
-    <select id="queryFloorRoomMapper" parameterType="java.util.Map"
-            resultType="java.util.Map">
+    <select id="queryFloorRoomMapper" parameterType="java.util.Map"  resultType="com.goodsoft.hotel.domain.entity.guestRoom.RealStateResult">
       select a.*,b.* from (
-      select b.buildingname,c.floorname,d.typename,d.houseprices,a.id,a.roomno,a.roomtype,a.buildingcode,a.floorcode,a.stdpax,a.maxpax,a.doorlockid,a.flag,a.sflag
+      select b.buildingname,c.floorname,d.typeid,d.typename,d.houseprices,a.id,a.roomno,a.stdpax,a.maxpax,a.doorlockid,a.flag,a.sflag,a.cflag
       from gs_room a ,gs_building b,gs_floor c,gs_roomtype d
-      where a.buildingcode=b.buildingcode and a.floorcode =c.floorcode and a.roomtype=d.roomtype ) a
+      where a.buildingcode=b.buildid and a.floorcode =c.FLOORID and a.roomtype=d.typeid
+        <if test="floorId!=null">
+        and a.floorcode=#{floorId}
+        </if>
+        <if test="typeId!=null">
+        and a.roomtype=#{typeId}
+        </if>
+      ) a
       left join
       (
-      select  a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid from gs_quickbooking a,gs_quickbooking_roomno b  where a.id=b.bookid and a.startdate = date_format(now(),'%y-%m-%d')
+      select  a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid from gs_quickbooking a,gs_quickbooking_roomno b
+      where a.id=b.bookid and a.bookingflag='明确预定' and a.startdate = date_format(now(),'%Y-%m-%d')
       )b
       on a.id =b.roomid
+
+    </select>
+
+
+
+    <!--select a.*,b.* from (-->
+    <!--select s.buildingname,s.floorname,s.typeid,s.typename,case when g.price is null then s.houseprices else g.price end houseprices,-->
+    <!--s.id,s.roomno,s.stdpax,s.maxpax,s.doorlockid,s.flag,s.sflag,s.cflag from (-->
+    <!--select b.buildingname,c.floorname,d.typeid,d.typename,d.houseprices,a.id,a.roomno,a.stdpax,a.maxpax,a.doorlockid,a.flag,a.sflag,a.cflag-->
+    <!--from gs_room a ,gs_building b,gs_floor c,gs_roomtype d-->
+    <!--where a.buildingcode=b.buildid and a.floorcode =c.FLOORID and a.roomtype=d.typeid-->
+    <!--<if test="floorId!=null">-->
+        <!--and a.floorcode=#{floorId}-->
+    <!--</if>-->
+    <!--<if test="typeId!=null">-->
+        <!--and a.roomtype=#{typeId}-->
+    <!--</if>-->
+    <!--) s left join-->
+    <!--(select typeid,price from  REALTIMEHOUSEPRICE where time=date_format(now(),'%Y-%m-%d'))g  on s.typeid=g.typeid-->
+    <!--) a-->
+    <!--left join-->
+    <!--(-->
+    <!--select  a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid from gs_quickbooking a,gs_quickbooking_roomno b-->
+    <!--where a.id=b.bookid and a.bookingflag='明确预定' and a.startdate = date_format(now(),'%Y-%m-%d')-->
+    <!--)b-->
+    <!--on a.id =b.roomid-->
+
+
+    <!--查询实时房价-->
+    <select id="selectImmediateRoomPrice" resultType="java.util.Map">
+        select typeid,price from  REALTIMEHOUSEPRICE where time=date_format(now(),'%Y-%m-%d')
     </select>
 
 

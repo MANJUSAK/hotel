@@ -4,6 +4,7 @@ import com.goodsoft.hotel.controller.CookBookController;
 import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
 import com.goodsoft.hotel.domain.entity.restaurantReservation.PageBean;
+import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.util.UUIDUtil;
@@ -40,6 +41,7 @@ public class RoomsController {
     //实例化日志管理工具类
     private Logger logger = LoggerFactory.getLogger(CookBookController.class);
 
+    private SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * 添加实时房间价格
@@ -105,7 +107,7 @@ public class RoomsController {
                 RealTimeRoomPriceParam realtime=new RealTimeRoomPriceParam();
                 realtime.setTime(reals.get(i).getTime());
                 real.add(reals.get(i));
-                for (int j = i + 1; j < reals.size(); j++) {
+                for(int j = i + 1; j < reals.size(); j++) {
                     if(reals.get(j)!=null) {
                         if (reals.get(j).getTime() != null && reals.get(j).getTime().equals(reals.get(i).getTime())) {
                             real.add(reals.get(j));
@@ -136,55 +138,114 @@ public class RoomsController {
      * @return 房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
-    @RequestMapping("floor/roomType")
-    public Object getFang(){
+    @RequestMapping("floor/select/roomInfo")
+    public Object getFang(String floorId,String typeId,String price){
         List<Map<String, Object>> list = null;
-
         //参数map
         Map<String,Object> paramMap =new HashMap<String,Object>();
+        if(floorId!=null && !"".equals(floorId)){
+            paramMap.put("floorId",floorId);
+        }
+        if(typeId!=null && !"".equals(typeId)){
+            paramMap.put("typeId",typeId);
+        }
+        List<RealStateResult> list1= new ArrayList<RealStateResult>(1000);
 
         try {
-            List<Map<String, Object>> list1 = roomSDao.queryFloorRoomMapper(paramMap);
-            return joinTypeRoom(list1);
-        } catch (Exception e) {
+            list1 = roomSDao.queryFloorRoomMapper(paramMap);
+            System.out.println("房态:"+list1);
+            if(list1.size()==0){
+                return new Result(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
+            }
+            List<Map> maps = joinTypeRoom(list1,price);
+            return new Result(StatusEnum.SUCCESS.getCODE(),maps);
+        } catch (Exception e){
             e.printStackTrace();
-           return new Status(StatusEnum.ERROR.getCODE(),StatusEnum.ERROR.getEXPLAIN());
+           return new Result(StatusEnum.ERROR.getCODE(),StatusEnum.ERROR.getEXPLAIN());
         }
-
     }
 
 
 
     /**
-     * 2017-11-30 分类?
+     * 分类客房信息
      * @param list
      * @return
      */
-    private List<Map> joinTypeRoom(List<Map<String,Object>> list) {
-
+    private List<Map> joinTypeRoom(List<RealStateResult> list,String price){
         List<Map> returnList=new LinkedList<Map>();
-
+        String day=sf.format(new Date());
+        //实时房价
+        ArrayList<Map> maps = roomSDao.selectImmediateRoomPrice();
+        Object realPrice=null;
         for(int i=0;i<list.size();i++){
             if(list.get(i)!=null) {
+                //判断是否有实时房价
+                realPrice = judgeRealTimePrice(maps,list.get(i).getTypeid());
+                if(realPrice!=null){
+                    list.get(i).setHouseprices(String.valueOf(realPrice));
+                }
+                //判断是否区分价格
+                if(price!=null && !price.equals(list.get(i).getHouseprices())){
+                    continue;
+                }
+                //客房是否有预订信息 并判断时间
+                if(list.get(i).getStartdate()!=null && list.get(i).getStartdate().equals(day) ){
+                    list.get(i).setCflag("预抵");
+                }
+                if(list.get(i).getEnddate()!=null && list.get(i).getEnddate().equals(day) ){
+                    list.get(i).setCflag("预离");
+                }
 
                 Map typeMap =new HashMap();
                 List typeList =new LinkedList();
                 typeList.add(list.get(i));
                 for (int j = i + 1; j < list.size(); j++) {
-                if(list.get(j)!=null && list.get(i).get("floorname").equals(list.get(j).get("floorname"))){
+                if(list.get(j)!=null && list.get(i).getFloorname().equals(list.get(j).getFloorname())){
+
+                    //判断是否有实时房价
+                    realPrice = judgeRealTimePrice(maps,list.get(j).getTypeid());
+                    if(realPrice!=null){
+                        list.get(j).setHouseprices(String.valueOf(realPrice));
+                    }
+                    //判断是否区分价格
+                    if(price!=null && !price.equals(list.get(j).getHouseprices())){
+                        continue;
+                    }
+                    //客房是否有预订信息 并判断时间
+                    if(list.get(j).getStartdate()!=null && list.get(j).getStartdate().equals(day) ){
+                            list.get(j).setCflag("预抵");
+                    }
+                    if(list.get(j).getEnddate()!=null && list.get(j).getEnddate().equals(day) ){
+                            list.get(j).setCflag("预离");
+                    }
+
                     typeList.add(list.get(j));
                     list.set(j,null);
                 }
                 }
-                typeMap.put("type",list.get(i).get("floorname"));
+                typeMap.put("type",list.get(i).getFloorname());
                 typeMap.put("typeList",typeList);
                 list.set(i,null);
                 returnList.add(typeMap);
             }
         }
 
-
         return returnList;
+    }
+
+
+    /**
+     * 判断是否有实时房价
+     */
+    private Object judgeRealTimePrice(List<Map> list,Object typeid){
+        String type=typeid.toString();
+        for(int i=0;i<list.size();i++){
+          if(type.equals(list.get(i).get("typeid"))){
+              return list.get(i).get("price");
+          }
+        }
+        return null;
     }
 
 
@@ -332,9 +393,15 @@ public class RoomsController {
         List<Map<String, Object>> list = null;
         List<Map<String, Object>> map = new ArrayList<>();
         List<Integer> typeIds = null;
+        if(typeId==null){
+            return map;
+        }else if(typeId.length()==0){
+            return map;
+        }
+
         try {
             String[] arr = {};
-            if (typeId.trim() != null && typeId.trim() != ""){
+            if (typeId != null && !"".equals(typeId.trim())){
                 arr = typeId.split(",");
             }
             typeIds = new ArrayList<Integer>();
@@ -423,8 +490,6 @@ public class RoomsController {
         String uuid = UUIDUtil.getInstance().getUUID().toString();
 
         room.setId(uuid);
-
-
     }
 
 

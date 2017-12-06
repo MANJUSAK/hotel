@@ -52,7 +52,15 @@ public class Guest {
     private String taboo;        //忌讳
     private String bookId;       //预定单编号
     private String vipId;        //会员卡ID
+    private String customertype ="1";   //顾客类型
 
+    public String getCustomertype() {
+        return customertype;
+    }
+
+    public void setCustomertype(String customertype) {
+        this.customertype = customertype;
+    }
 
     public String getId() {
         return id;

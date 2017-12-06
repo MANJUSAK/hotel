@@ -4,6 +4,7 @@ import com.goodsoft.hotel.domain.entity.guestRoom.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +23,13 @@ public interface RoomSDao {
     public List<Floors> queryFloorMapper() throws Exception;
 
     //   通过楼层号获取到房间所有信息
-    public List<Map<String, Object>> queryFloorRoomMapper(Map map) throws Exception;
+    public List<RealStateResult> queryFloorRoomMapper(Map map) throws Exception;
 
     //  获取房间总条数
     public Integer queryFloorRoomCountMapper(Map map) throws Exception;
 
+   //查询实时房价
+    public ArrayList<Map> selectImmediateRoomPrice();
 
     //房态 右边下拉框 楼层信息
     public List<Floors> findFloorAllMapper() throws Exception;

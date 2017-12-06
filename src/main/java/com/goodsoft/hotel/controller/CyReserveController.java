@@ -1,8 +1,11 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
+import com.goodsoft.hotel.domain.entity.param.UserParam;
 import com.goodsoft.hotel.domain.entity.restaurantReservation.*;
+import com.goodsoft.hotel.service.UserService;
 import com.goodsoft.hotel.util.UUIDUtil;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,12 +31,22 @@ public class CyReserveController {
     @Resource
     CyReserveDao cyReserveDao;
 
+    @Resource
+    UserService userService;
 
     //预订主页面
     @RequestMapping("/reserve")
-    public ModelAndView reserveHome(PageBean<FitReservation> pageBean,Integer sign,String state,String staetTime){
+    public ModelAndView reserveHome(PageBean<FitReservation> pageBean,Integer sign,String state,String staetTime,String loginUser){
         ModelAndView model=new ModelAndView("views/restaurantReservation.jsp");
+        UserParam userParam=new UserParam();
+        userParam.setKeyWord("前台业务员");
+        try {
+            model.addObject("salesman", userService.queryUserMsgService(userParam));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
+        model.addObject("loginUser",loginUser);
         //参数map
         Map<String,Object> paramMap =new HashMap<String,Object>();
         //返回list
@@ -59,7 +72,7 @@ public class CyReserveController {
             List<FitReservation> fitReservations = cyReserveDao.selectSkReserves(paramMap);
             returnList=fitReservations;
         }else{
-            switch (sign) {
+            switch (sign){
                 case 1:
                     pageBean.setRecordTotal(cyReserveDao.selectSkReservesNum(paramMap));
                     returnList = cyReserveDao.selectSkReserves(paramMap);

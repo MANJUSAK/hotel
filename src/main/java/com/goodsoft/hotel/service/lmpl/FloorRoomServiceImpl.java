@@ -61,22 +61,12 @@ public class FloorRoomServiceImpl implements FloorRoomService {
         Map paramMap = new HashMap();
 
         paramMap.put("startdate", quickbooking.getStartDate());
-        List<QuickbookingRoomno> roomno = quickbooking.getRoomno();
-        for (int i = 0; i < roomno.size(); i++) {
-            paramMap.put("roomid", roomno.get(i).getRoomId());
-            Integer integer = bookingDao.joinRoomIdResves(paramMap);
-            System.out.println(integer);
-            if (integer > 0) {
-                map.put("error", "重复预定");
-                return map;
-            }
-        }
 
         String uuid = UUIDUtil.getInstance().getUUID().toString();
         String bookingNo = this.getsbs();
         quickbooking.setId(uuid);
         quickbooking.setBookingNo(bookingNo);
-        quickbooking.setBookingFlag("明确预订");
+        quickbooking.setBookingFlag("明确预定");
         quickbooking.setRegisterNo(this.getNubmer());
         for (QuickbookingRoomno qr : quickbooking.getRoomno()) {
             qr.setBookId(uuid);
@@ -102,6 +92,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
         try {
             for (int i = 0; i < list.size(); i++) {
                 Integer y = bookingDao.updateRoomFlagRuZhu(list.get(i));
+                bookingDao.updateRoomFlagRuZhuBooking(String.valueOf(list.get(i).get("id")));
                 x += y;
             }
             sqlSession.commit();
