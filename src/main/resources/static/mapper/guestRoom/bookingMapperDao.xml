@@ -12,7 +12,7 @@
         #{salesman},#{sex},#{registerNo},#{teamNo},#{reservationist},#{teamName},#{leaderName},
         #{leaderPhone},#{leaderRoomNo},#{startDate},#{endDate},#{days},#{extraBed},#{discount},
         #{discauth},#{rentreson},#{releasetTime},#{phoneNo},#{markets},#{guestSource},#{bookingType},#{receptionUnit},
-        #{bookingName},#{bookingPhone},#{bookingEmail},#{predeterMode},#{roomNum},#{remark},#{teamRemark},
+        #{bookingName},#{phone},#{bookingEmail},#{predeterMode},#{roomNum},#{remark},#{teamRemark},
         #{bookingFlag},#{reason},#{payMode},#{creditCardNo},#{periodValidity},#{authorizationNumber},#{lineCredit},
         #{lineAdjustCredit},#{relationNo},#{attendantNo})
     </insert>
@@ -25,7 +25,14 @@
         </foreach>
     </insert>
 
+     <!--通过预定单号查询所有房间信息-->
+    <select id="selectReserveRoomsBybookNo" parameterType="string" resultType="java.util.Map">
+    select a.guestname,a.registerno,b.typename,b.roomno from gs_quickbooking a,gs_quickbooking_roomno b
+    where a.id=b.bookid  and a.BOOKINGNO=#{_parameter}
+    </select>
 
+
+    <!--添加随行人-->
     <insert id="insertAccompanyingInfo" parameterType="java.util.List">
         insert into ACCOMPANYING_PERSON values
         <foreach collection="list" item="item" separator=",">
@@ -62,6 +69,8 @@
         </foreach>
     </delete>
 
+
+    <!--查询随行人-->
     <select id="selectAccompanyingInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.AccompanyingPerson">
         select * from ACCOMPANYING_PERSON where BOOKID =#{bookId}
     </select>
@@ -99,50 +108,49 @@
     <!--修改预定信息的所有字段,根据ID或者预定单号  未使用-->
     <update id="updateQuickBookingALL" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
        update gs_quickbooking SET
-               guestType=#{guestType},
-                guestName=#{guestName},
-                contractNo=#{contractNo},
-                guestThno=#{guestThno},
-                contractUnit=#{contractUnit},
-                bookingUnit=#{bookingUnit},
-                salesman=#{salesman},
-                sex=#{sex},
-                registerNo=#{registerNo},
-                teamNo=#{teamNo},
-                reservationist=#{reservationist},
-                leaderName=#{leaderName},
-                leaderPhone=#{leaderPhone},
-                leaderRoomNo=#{leaderRoomNo},
-                days=#{days},
-                startDate=#{startDate},
-                endDate=#{endDate},
-                extraBed=#{extraBed},
-                discount=#{discount},
-                discauth=#{discauth},
-                rentreson=#{rentreson},
-                releasetTime=#{releasetTime},
-                phoneNo=#{phoneNo},
-                markets=#{markets},
-                guestSource=#{guestSource},
-                bookingType=#{bookingType},
-                receptionUnit=#{receptionUnit},
+                GUESTTYPE=#{guestType},
+                GUESTNAME=#{guestName},
+                CONTRACTNO=#{contractNo},
+                GUESTTHNO=#{guestThno},
+                CONTRACTUNIT=#{contractUnit},
+                BOOKINGUNIT=#{bookingUnit},
+                SALESMAN=#{salesman},
+                SEX=#{sex},
+                REGISTERNO=#{registerNo},
+                TEAMNO=#{teamNo},
                 RESERVATIONIST=#{reservationist},
-                bookingName=#{bookingName},
-                bookingPhone=#{bookingPhone},
-                bookingEmail=#{bookingEmail},
-                predeterMode=#{predeterMode},
-                roomNum=#{roomNum},
-                remark=#{remark},
-                teamRemark=#{teamRemark},
-                reason=#{reason}
-        WHERE  id =#{id}
-
+                LEADERNAME=#{leaderName},
+                LEADERPHONE=#{leaderPhone},
+                LEADERROOMNO=#{leaderRoomNo},
+                DAYS=#{days},
+                STARTDATE=#{startDate},
+                ENDDATE=#{endDate},
+                EXTRABED=#{extraBed},
+                DISCOUNT=#{discount},
+                DISCAUTH=#{discauth},
+                RENTRESON=#{rentreson},
+                RELEASETIME=#{releasetTime},
+                PHONENO=#{phoneNo},
+                MARKETS=#{markets},
+                GUESTSOURCE=#{guestSource},
+                BOOKINGTYPE=#{bookingType},
+                RECEPTIONUNIT=#{receptionUnit},
+                RESERVATIONIST=#{reservationist},
+                BOOKINGNAME=#{bookingName},
+                PHONE=#{phone},
+                BOOKINGEMAIL=#{bookingEmail},
+                PREDETERMODE=#{predeterMode},
+                ROOMNUM=#{roomNum},
+                REMARK=#{remark},
+                TEAMREMARK=#{teamRemark},
+                REASON=#{reason}
+        WHERE  ID =#{id}
     </update>
 
 
     <!--删除预订房间信息-->
     <delete id="deleteBookdingRoomAll" parameterType="string">
-        delete from gs_quickbooking_roomno where  where bookId = #{bookId}
+        delete from gs_quickbooking_roomno where  bookId = #{bookId}
     </delete>
 
     <!--修改预定信息的房间  未使用-->
@@ -160,23 +168,17 @@
     </update>
 
     <!--取消订单    未使用-->
-    <update id="updateFlagQuxiaoMapper" parameterType="list">
-        UPDATE  gs_quickbooking
-        <foreach collection="list" item="item">
-            <set>
-                bookingFlag = '2',
-                <if test="reason!=null">
-                    reason = #{item.reason}
-                </if>
-            </set>
-            WHERE bookid = #{item.bookid}
-        </foreach>
-
+    <update id="updateFlagQuxiaoMapper" parameterType="string">
+         UPDATE  gs_quickbooking set
+         REASON=#{reason},
+         BOOKINGFLAG='取消'
+         WHERE BOOKINGNO =#{bookid}
     </update>
+
 
     <!--取消订单恢复   未使用-->
     <update id="updateFlagQuXiaoHuiFuMapper" parameterType="java.lang.String">
-        update gs_quickbooking SET bookingFlag = '1' WHERE bookid = #{_parameter}
+        update gs_quickbooking SET bookingFlag = '明确预订' , REASON=''  WHERE BOOKINGNO = #{_parameter}
     </update>
 
     <!--订单删除(修改状态)  未使用-->
@@ -235,7 +237,7 @@
         #{documentNo},#{nativePlace},#{sex},#{occupation},#{birthDay},#{workUnit},#{cityProper},#{work},#{regional},#{stopCause},#{postalCode}
         ,#{address},#{officePhone},#{phoneNumber},#{telePhone},#{visaAgency},#{visaType},#{visaNumber},#{visaDate},#{periodValidity},#{entryTime},#{entryPorts},
         #{newspaperType},#{religiousBelief},#{secondCard},#{comeFrom},#{arrivalFlight},#{whereToGo},#{leaveFlight},#{positions},#{carType},#{carPlateNumber},
-        #{specialDemand},#{hobby},#{taboo},#{bookId},#{vipId})
+        #{specialDemand},#{hobby},#{taboo},#{bookId},#{vipId},#{customertype})
     </insert>
 
 
@@ -245,6 +247,11 @@
         and  floor((unix_timestamp(b.startdate)-unix_timestamp(now()))/86400) &lt;=1 and roomid=#{roomid}
     </select>
 
+    <!--判断预订房间号是否重复-->
+    <select id="joinRoomRepeat" parameterType="string" resultType="java.lang.Integer">
+      select count(1) from  GS_QUICKBOOKING a,gs_quickbooking_roomno b
+      where a.id=b.bookid and a.bookingflag ='明确预定' and b.roomno =#{roomno}  and a.startdate=#{startdate}
+    </select>
 
     <!--会员卡信息添加  未使用-->
     <insert id="addVipCardMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.VipCard" >
@@ -314,12 +321,12 @@
 
     <!--预定入住修改房间状态-->
     <update id="updateRoomFlagRuZhu" parameterType="java.util.Map">
-           update gs_room SET flag = #{markets} WHERE id=#{id}
+           update gs_room SET flag = #{markets}  WHERE id=#{id}
     </update>
 
     <!--预定入住修改预定状态-->
-    <update id="updateRoomFlagRuZhuBooking" parameterType="java.util.Map">
-
+    <update id="updateRoomFlagRuZhuBooking" parameterType="java.lang.String">
+           update GS_QUICKBOOKING SET BOOKINGFLAG = '预定入住'  WHERE id=#{_parameter}
     </update>
 
 

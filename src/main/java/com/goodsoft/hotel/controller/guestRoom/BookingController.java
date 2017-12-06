@@ -7,6 +7,8 @@ import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.service.FloorRoomService;
+import com.goodsoft.hotel.service.UserService;
+import com.goodsoft.hotel.service.lmpl.UserServicelmpl;
 import com.goodsoft.hotel.util.UUIDUtil;
 import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.ibatis.annotations.Param;
@@ -81,15 +83,15 @@ public class BookingController {
     }
 
 
-    //查询单挑预订信息
+    //查询单条预订信息
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("booking/selectOne/Booking")
     public Object bookingSelectBooking(String bookingId){
         Quickbooking quickbooking=null;
         try{
              quickbooking = bookingDao.selectReserveInfo(bookingId);
-            List<QuickbookingRoomno> quickbookingRoomnos = bookingDao.selectReserveRooms(bookingId);
-            quickbooking.setRoomno(quickbookingRoomnos);
+             List<QuickbookingRoomno> quickbookingRoomnos = bookingDao.selectReserveRooms(bookingId);
+             quickbooking.setRoomno(quickbookingRoomnos);
         }catch (Exception e){
             e.printStackTrace();
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
@@ -112,9 +114,14 @@ public class BookingController {
         try {
             this.bookingDao.updateQuickBookingALL(quickbooking);
             bookingDao.deleteBookdingRoomAll(quickbooking.getId());
+            for(int i=0;i<quickbooking.getRoomno().size();i++){
+                quickbooking.getRoomno().get(i).setBookId(quickbooking.getId());
+            }
+
             bookingDao.insertQuickBookingRoom(quickbooking.getRoomno());
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
-        } catch (Exception e) {
+        }catch (Exception e){
+            e.printStackTrace();
             this.logger.error("dao");
             return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
         }
@@ -126,25 +133,38 @@ public class BookingController {
 
 
     /**
-     * 取消预定单   ---还没使用
+     * 取消预定单
      *
      * @param bookid 预定单号
      * @param reason 取消的原因
      * @return 响应结果
      */
-    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("booking/updateQuXiaoBooking")
-    public Status updateQuXiaoBooking(@Param("bookid") String bookid, @Param("reason") String reason) {
-        List<String> list = new ArrayList<String>();
-        list.add(bookid);
-        list.add(reason);
+    public Status updateQuXiaoBooking(@Param("bookid") String bookid, @Param("reason") String reason,@Param("sign") String sign){
+
         try {
-            this.bookingDao.updateFlagQuxiaoMapper(list);
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
-        } catch (Exception e){
+            if(sign!=null) {
+                //取消预订单
+                if(sign.equals("1")){
+                    this.bookingDao.updateFlagQuxiaoMapper(reason,bookid);
+                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                //恢复预订单
+                }else if(sign.equals("2")){
+                   bookingDao.updateFlagQuXiaoHuiFuMapper(bookid);
+                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                }else{
+                    return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+                }
+            }else{
+                  return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
+            }catch (Exception e){
+            e.printStackTrace();
             this.logger.error(e.toString());
             return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
         }
+
     }
 
     /**
@@ -186,6 +206,19 @@ public class BookingController {
         }
     }
 
+
+//    查询预定单所有房间信息selectReserveRoomsBybookNo
+      @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+      @RequestMapping("accompanying/select/reserveRoom")
+       public Object reserveRoom(String bookNo){
+          try{
+              List<Map> maps = bookingDao.selectReserveRoomsBybookNo(bookNo);
+              return new Result(StatusEnum.SUCCESS.getCODE(),maps);
+          }catch (Exception e){
+              return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+          }
+
+      }
 
     /**
      * 查询随行人
@@ -320,7 +353,7 @@ public class BookingController {
     //查询预定信息
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping("quick/select")
-    public Object selectrQuickBookings(String startDate, String endDate) {
+    public Object selectrQuickBookings(String startDate, String endDate){
         Map paramMap = new HashMap();
         if (startDate != null && !"".equals(startDate)) {
             paramMap.put("startDate", startDate);
@@ -340,7 +373,7 @@ public class BookingController {
     }
 
     /**
-     * 添加客人信息   ---还没使用
+     * 添加客人信息
      *
      * @param guest
      * @return
@@ -348,7 +381,9 @@ public class BookingController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("booking/addGuest")
     public Status addGuest(@RequestBody Guest guest) {
-        System.out.println(guest.toString());
+
+        StringBuilder uuid = UUIDUtil.getInstance().getUUID();
+        guest.setId(uuid.toString());
         try {
             bookingDao.addGuestMapper(guest);
         } catch (Exception e) {
@@ -503,7 +538,7 @@ public class BookingController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("message/updateMessage")
-    public List<Map<String, String>> updateMessge(@RequestBody GsPublicMsgIssuance gsPublicMsgIssuance) {
+    public List<Map<String, String>> updateMessge(@RequestBody GsPublicMsgIssuance gsPublicMsgIssuance){
         List<Map<String, String>> list = null;
         Map<String, String> map = null;
         try {
@@ -521,6 +556,31 @@ public class BookingController {
     }
 
 
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("room/select/roomRepeat")
+    public Object roomRepeat(String startdate,String  rooms){
+
+        String [] room=rooms.split(",");
+        String result="";
+        try{
+            for(int i=0;i<room.length;i++){
+                Integer integer = bookingDao.joinRoomRepeat(room[i], startdate);
+                if(integer>0){
+                    result+=room[i]+",";
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+        if(result.length()==0){
+            return new Result(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+        }else{
+            return new Result(StatusEnum.DEFEAT.getCODE(),result);
+        }
+
+    }
 
 
 

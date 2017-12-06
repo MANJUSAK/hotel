@@ -35,13 +35,13 @@ public interface BookingDao {
     public List<QuickbookingRoomno> selectrQuickBookingRooms(String quiId);
 
     //修改预定单中信息
-    public void updateQuickBookingALL(Quickbooking Quickbooking);
+    public Integer updateQuickBookingALL(Quickbooking Quickbooking);
 
     //取消订单
-    public void updateFlagQuxiaoMapper(List<String> list) throws Exception;
+    public void updateFlagQuxiaoMapper(@Param("reason") String reason , @Param("bookid") String bookId);
 
     //    取消订单恢复
-    public void updateFlagQuXiaoHuiFuMapper(String bookid) throws Exception;
+    public void updateFlagQuXiaoHuiFuMapper(String bookid);
 
     //订单逻辑删除
     public void updateFlagDeleteMapper(String str) ;
@@ -59,6 +59,9 @@ public interface BookingDao {
     //判断预定房间重复
     public Integer joinRoomIdResves(Map map);
 
+    //判断房间号在预订中重复
+    public Integer joinRoomRepeat(@Param("roomno") String roomno,@Param("startdate") String startdate);
+
     //查询入住信息的房间ID
     public List<Map> selectRuZhuRoomIdMapper(Map map) ;
 
@@ -67,6 +70,9 @@ public interface BookingDao {
 
     //预定入住
     public Integer updateRoomFlagRuZhu(Map<String,Object> map);
+
+    //修改预订状态
+     Integer updateRoomFlagRuZhuBooking(String id);
 
     //会员信息添加
     public void addVipCardMapper(VipCard vipCard);
@@ -98,6 +104,8 @@ public interface BookingDao {
     //删除随行人
     public Integer deleteAccompanyingInf(List<String> bookIds);
 
+    //通过预定单号查询所有房间信息
+    public List<Map> selectReserveRoomsBybookNo(String bookNo);
 
     /**
      * 会员卡查询

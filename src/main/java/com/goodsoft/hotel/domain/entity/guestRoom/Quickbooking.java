@@ -7,6 +7,7 @@ import java.util.List;
  * Created by 王智 on 2017/11/16/016.
  */
 public class Quickbooking {
+
     private String id;              //ID
     private String guestType;       //客人类型
     private String bookingNo;       //预定单号
@@ -28,8 +29,8 @@ public class Quickbooking {
     private String startDate;       //入住时间
     private String endDate;         //离开时间
     private String extraBed;        //加床价
-    private String discount;        //折扣率
     private String discauth;        //折扣授权
+    private String discount;        //折扣率
     private String rentreson;       //租金因由
     private String releasetTime;    //预留房释放时间
     private String phoneNo;         //手机号码
@@ -38,7 +39,7 @@ public class Quickbooking {
     private String bookingType;     //预定类型
     private String receptionUnit;   //接待单位
     private String bookingName;     //订房人姓名
-    private String bookingPhone;    //订房人电话
+    private String phone;           //订房人电话
     private String bookingEmail;    //订房人邮箱
     private String predeterMode;    //预定方式
     private String roomNum;         //房间数量
@@ -56,28 +57,8 @@ public class Quickbooking {
     private String attendantNo;                 //随行号
     private List<QuickbookingRoomno> roomno;  //房间号表
 
-    public String getRelationNo() {
-        return relationNo;
-    }
 
-    public void setRelationNo(String relationNo) {
-        this.relationNo = relationNo;
-    }
-
-    public String getAttendantNo() {
-        return attendantNo;
-    }
-
-    public void setAttendantNo(String attendantNo) {
-        this.attendantNo = attendantNo;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
+    public Quickbooking() {
     }
 
     public String getId() {
@@ -328,12 +309,12 @@ public class Quickbooking {
         this.bookingName = bookingName;
     }
 
-    public String getBookingPhone() {
-        return bookingPhone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setBookingPhone(String bookingPhone) {
-        this.bookingPhone = bookingPhone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getBookingEmail() {
@@ -384,6 +365,14 @@ public class Quickbooking {
         this.bookingFlag = bookingFlag;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public String getPayMode() {
         return payMode;
     }
@@ -432,6 +421,22 @@ public class Quickbooking {
         this.lineAdjustCredit = lineAdjustCredit;
     }
 
+    public String getRelationNo() {
+        return relationNo;
+    }
+
+    public void setRelationNo(String relationNo) {
+        this.relationNo = relationNo;
+    }
+
+    public String getAttendantNo() {
+        return attendantNo;
+    }
+
+    public void setAttendantNo(String attendantNo) {
+        this.attendantNo = attendantNo;
+    }
+
     public List<QuickbookingRoomno> getRoomno() {
         return roomno;
     }
@@ -474,7 +479,7 @@ public class Quickbooking {
                 ", bookingType='" + bookingType + '\'' +
                 ", receptionUnit='" + receptionUnit + '\'' +
                 ", bookingName='" + bookingName + '\'' +
-                ", bookingPhone='" + bookingPhone + '\'' +
+                ", phone='" + phone + '\'' +
                 ", bookingEmail='" + bookingEmail + '\'' +
                 ", predeterMode='" + predeterMode + '\'' +
                 ", roomNum='" + roomNum + '\'' +

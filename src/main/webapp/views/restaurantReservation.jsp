@@ -7,12 +7,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ page import="com.goodsoft.hotel.service.lmpl.UserServicelmpl" %>
 <%
 String path=request.getContextPath();
 String basePath = request.getScheme()+"://" +request.getServerName()+":" +request.getServerPort()+path+"/" ;
+UserServicelmpl userService=new UserServicelmpl();
 %>
-
 
 <html lang="en">
 
@@ -167,11 +167,11 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
 
         <script>
             $("#reserveTypeOption").on("change",function (){
-             window.location.href="<%=basePath%>/reserve?sign="+$(this).val();
+             window.location.href="<%=basePath%>/reserve?sign="+$(this).val()+"&loginUser=${loginUser}";
             });
 
             $(".selectStateRadio").on("click",function(){
-              window.location.href="<%=basePath%>/reserve?state="+$(this).val()+"&staetTime=1<c:if test="${sign!=null}">&sign=${sign}</c:if>";
+              window.location.href="<%=basePath%>/reserve?state="+$(this).val()+"&loginUser=${loginUser}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>";
             });
         </script>
 
@@ -240,7 +240,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
             $(".trber").on("click",function(){
 
                 var check=$(this).find(".leadsuns");
-                console.log(check.is(":checked"));
+                //console.log(check.is(":checked"));
                 if(!check.is(":checked")){
                 check .prop("checked", "checked");
                 }else{
@@ -263,7 +263,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
         </select>
             <script>
                 $(".pageSizeOption").on("change",function (){
-                   window.location.href="<%=basePath%>/reserve?currentPage=1&pageSize="+$(this).val()+"<c:if test="${not empty staetTime}">&staetTime=1</c:if>"+"<c:if test="${sign!=null}">&sign=${sign}</c:if>";
+                   window.location.href="<%=basePath%>/reserve?currentPage=1&loginUser=${loginUser}&pageSize="+$(this).val()+"<c:if test="${not empty staetTime}">&staetTime=1</c:if>"+"<c:if test="${sign!=null}">&sign=${sign}</c:if>";
                 });
             </script>
         </div>
@@ -272,15 +272,15 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
         <div style="float: right;margin-right: 25px;margin-top: 15px">
             <ul class="pagination">
                 <script>
-                    $(".pagination").append('<li> <a href="<%=basePath%>/reserve?currentPage=${pageBean.previousPage}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">上一页</a> </li>');
+                    $(".pagination").append('<li> <a href="<%=basePath%>/reserve?currentPage=${pageBean.previousPage}&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">上一页</a> </li>');
 
                     <c:if test="${pageBean.pageTotal<7}">
                     for(var i=1;i<=${pageBean.pageTotal};i++){
 
                         if(i==${pageBean.currentPage}){
-                            $(".pagination").append('<li class="active"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
+                            $(".pagination").append('<li class="active"><a href="<%=basePath%>/reserve?currentPage='+i+'&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
                         }else{
-                            $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=' + i + '&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">' + i + '</a> </li>');
+                            $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=' + i + '&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">' + i + '</a> </li>');
                         }
                     }
                     </c:if>
@@ -292,36 +292,36 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                     for(var i=1;i<=5;i++){
                         var active='pointtln';
                         if(i==${pageBean.currentPage}){active='active';}
-                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
+                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
                     }
                     $(".pagination").append('<li><a>......</a> </li>');
-                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage='+'${pageBean.pageTotal}'+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'${pageBean.pageTotal}'+'</a> </li>');
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage='+'${pageBean.pageTotal}'+'&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'${pageBean.pageTotal}'+'</a> </li>');
                     </c:if>
 
                     <c:if test="${pageBean.currentPage>=5 && pageBean.currentPage<=pageBean.pageTotal-5}">
-                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=1&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'1'+'</a> </li>');
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=1&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'1'+'</a> </li>');
                     $(".pagination").append('<li><a>......</a> </li>');
 
                     for(var i=${pageBean.currentPage-1};i<=${pageBean.currentPage+1};i++){
                         var active='pointtln';
                         if(i==${pageBean.currentPage}){active='active';}
-                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
+                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
                     }
 
                     $(".pagination").append('<li><a>......</a> </li>');
-                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage='+'${pageBean.pageTotal}'+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'${pageBean.pageTotal}'+'</a> </li>');
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage='+'${pageBean.pageTotal}'+'&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'${pageBean.pageTotal}'+'</a> </li>');
 
                     </c:if>
 
 
                     <c:if test="${ pageBean.currentPage>pageBean.pageTotal-5 && pageBean.currentPage>=5}">
-                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=1&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'1'+'</a> </li>');
+                    $(".pagination").append('<li><a href="<%=basePath%>/reserve?currentPage=1&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+'1'+'</a> </li>');
                     $(".pagination").append('<li><a>......</a> </li>');
 
                     for(var i=${pageBean.pageTotal-5};i<=${pageBean.pageTotal};i++){
                         var active='pointtln';
                         if(i==${pageBean.currentPage}){active='active';}
-                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
+                        $(".pagination").append('<li class="'+active+'"><a href="<%=basePath%>/reserve?currentPage='+i+'&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">'+i+'</a> </li>');
                     }
                     </c:if>
 
@@ -329,7 +329,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                     </c:if>
 
 
-                    $(".pagination").append('<li> <a href="<%=basePath%>/reserve?currentPage=${pageBean.nextPage}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">下一页</a> </li>');
+                    $(".pagination").append('<li> <a href="<%=basePath%>/reserve?currentPage=${pageBean.nextPage}&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${sign!=null}">&sign=${sign}</c:if>">下一页</a> </li>');
                 </script>
 
             </ul>
@@ -376,7 +376,14 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                             <span>餐　　标：</span><input name="standard_meal" type="text" />
                             <div class="linediv"></div>
                             <span>公司名称：</span><input class="input" name="corporate_name" type="text" />
-                            <span>营业经理：</span><input name="sales_manager" type="text" />
+                            <span>营业经理：</span>
+                            <select name="sales_manager" style="width: 172px;text-align: center; height: 25px; position: relative; left: -4px;" >
+                                <option></option>
+                                <c:forEach items="${salesman.data}" var="item">
+                                    <option>${item.userName}</option>
+                                </c:forEach>
+                            </select>
+
                             <div class="linediv"></div>
                             <span>合约单位：</span><input class="input" name="contract_unit" type="text" />
                             <div class="linediv"></div>
@@ -408,7 +415,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
 
                             <%--<input name="entry_date" type="datetime-local" />--%>
 
-                            <span>记录操作人：</span><input readonly = "readonly" name="record_operator" type="text"  style="margin-right: 86px"/>
+                            <span>记录操作人：</span><input class="loginUser" readonly = "readonly" name="record_operator" type="text"  style="margin-right: 86px"/>
                             <span>记录时间：</span>
                             <div class="input-group date form_datetime" id="startpicker" style="display:inline;margin:0">
                                 <input style="width:172px;clear: both;margin:0;position:relative;left:-4px;" class="customDate" readonly = "readonly"  type="text" name="recording_time">
@@ -459,10 +466,16 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                             <option>会议</option>
                         </select>
                             <span>客人姓名：</span><input class="notnull jxnotnull" name="customerName" type="text" />
-                            <span>入单时间：</span><input  class="customDate" readonly = "readonly" name="entryDate" type="text" />
+                            <span>营业经理：</span>
+                            <select name="salesManager" style="width: 172px;text-align: center; height: 25px; position: relative; left: -4px;" >
+                                <option></option>
+                                <c:forEach items="${salesman.data}" var="item">
+                                    <option>${item.userName}</option>
+                                </c:forEach>
+                            </select>
                             <div class="linediv"></div>
-                            <span>营业经理：</span><input name="salesManager" type="text" />
-                            <span>联　系人：</span><input name="contacts" type="text" />
+                            <span>入单时间：</span><input  class="customDate" readonly = "readonly" name="entryDate" type="text" />
+                            <span>联系 人：</span><input name="contacts" type="text" />
                             <span>联系电话：</span><input name="contactsNumber" type="text" />
                             <div class="linediv"></div>
                             <span>预约时长(分钟)</span><input name="appointmentLength" type="text" />
@@ -601,12 +614,19 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                             <option>会议</option>
                         </select>
                             <span>客人姓名：</span><input class="notnull yhnotnull" name="customerName" type="text" />
-                            <span>入单时间：</span>
-                            <input  class="customDate" readonly = "readonly"  style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="entryDate">
+                            <span>营业经理：</span>
+                            <select name="salesManager" style="width: 172px;text-align: center; height: 25px; position: relative; left: -4px;" >
+                                <option></option>
+                                <c:forEach items="${salesman.data}" var="item">
+                                    <option>${item.userName}</option>
+                                </c:forEach>
+                            </select>
+
                             <div class="linediv"></div>
-                            <span>营业经理：</span><input name="salesManager" type="text" />
-                            <span>联　系人：</span><input name="contacts" type="text" />
-                            <span>联系电话：</span><input name="contactsNumber" type="text" />
+                            <span>入单时间：</span>
+                            <input  class="customDate" readonly = "readonly"  style="width:172px;clear: both;"  type="text" name="entryDate">
+                            <span>联　系人：</span><input name="contacts" type="text" style="position: relative;left:-3px" />
+                            <span>联系电话：</span><input name="contactsNumber" type="text"  style="position: relative;left:-3px"/>
                             <div class="linediv"></div>
                             <span>预约时长(分钟)</span><input name="appointmentLength" type="text" />
                             <span>摆酒位置：</span><input name="winePosition" type="text" />
@@ -788,9 +808,9 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
    //查看当天或全部
     $(".selectRadio").on("change",function () {
     if($(this).val()=='1'){ //查看当天
-    window.location.href="<%=basePath%>/reserve<c:if test="${sign!=null}">?sign=${sign}</c:if>";
+    window.location.href="<%=basePath%>/reserve?loginUser=${loginUser}<c:if test="${sign!=null}">&sign=${sign}</c:if>";
     }else if($(this).val()=='0'){ //查看全部
-        window.location.href="<%=basePath%>/reserve?staetTime=1<c:if test="${sign!=null}">&sign=${sign}</c:if>";
+        window.location.href="<%=basePath%>/reserve?staetTime=1&loginUser=${loginUser}<c:if test="${sign!=null}">&sign=${sign}</c:if>";
     }
     });
 
@@ -847,7 +867,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                             dataType: "json",
                             data: {"hallId": data[0].id},
                             success: function(data1) {
-                                console.log(data1);
+                                //console.log(data1);
                                 hallTables = data1;
                             }
                         });
@@ -866,8 +886,9 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
             $(".notnullBorder").removeClass("notnullBorder");
 
             $(".customDate").val(getNowFormatDate());
+            $(".loginUser").val("${loginUser}");
 
-            console.log( $("#skform").find(".fentingtable"));
+            //console.log( $("#skform").find(".fentingtable"));
             $("#skform").find(".fentingtable").html('<tr id="fentingth">'+
                 '<th>分厅</th>'+
                 '<th>餐台</th>'+
@@ -909,8 +930,8 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
         var deleteReason= $(this).parent("div").parent("div").find(".reasonText");
         var deleteReasonval= $(this).parent("div").parent("div").find(".reasonText").val();
 
-      console.log(reserveId);
-      console.log(deleteReasonval);
+      //console.log(reserveId);
+      //console.log(deleteReasonval);
 
       if(deleteReasonval=='' || deleteReasonval.length==0) {
           return;
@@ -933,7 +954,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                       });
                   }
                   alert(data.result);
-                  window.location.href="<%=basePath%>/reserve?currentPage=${pageBean.currentPage}&pageSize=${pageBean.pageSize}<c:if test="${sign!=null}">&sign=${sign}</c:if><c:if test="${staetTime!=null}">&staetTime=1=${sign}</c:if>";
+                  window.location.href="<%=basePath%>/reserve?currentPage=${pageBean.currentPage}&loginUser=${loginUser}&pageSize=${pageBean.pageSize}<c:if test="${sign!=null}">&sign=${sign}</c:if><c:if test="${staetTime!=null}">&staetTime=1=${sign}</c:if>";
               }
           });
            }else if($("#reserveTypeOption").val()=='2'){
@@ -954,13 +975,13 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                           });
                       }
                       alert(data.result);
-                      window.location.href="<%=basePath%>/reserve?currentPage=${pageBean.currentPage}&pageSize=${pageBean.pageSize}";
+                      window.location.href="<%=basePath%>/reserve?currentPage=${pageBean.currentPage}&loginUser=${loginUser}&pageSize=${pageBean.pageSize}";
                   }
               });
 
           }else if($("#reserveTypeOption").val()=='3'){
-              console.log("-----"+deleteReasonval);
-              console.log("-----"+reserveId);
+//              //console.log("-----"+deleteReasonval);
+//              //console.log("-----"+reserveId);
               $.ajax({
                   url: "<%=basePath%>/updateYhReserveState",
                   type: "post",
@@ -978,7 +999,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                           });
                       }
                       alert(data.result);
-                      window.location.href="<%=basePath%>/reserve?currentPage=${pageBean.currentPage}&pageSize=${pageBean.pageSize}";
+                      window.location.href="<%=basePath%>/reserve?currentPage=${pageBean.currentPage}&loginUser=${loginUser}&pageSize=${pageBean.pageSize}";
                   }
               });
           }
@@ -1077,7 +1098,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
     $(".removefenting").on("click", function() {
         if($(".thisoption").length == 0) {
             if($(".fentingtable .trbnr").length != 0) {
-                //console.log($(this).siblings(".fentingtable").children(".trbnr"));
+                ////console.log($(this).siblings(".fentingtable").children(".trbnr"));
                 //$(this).siblings(".fentingtable").children(".trbnr:last").remove();
                 var x = $(this).siblings(".fentingtable");
             }
@@ -1097,7 +1118,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
     //餐台选择事件
     function fentingchange(s) {
         var options = '';
-        console.log(s.value);
+        //console.log(s.value);
         $.ajax({
             url: "<%=basePath%>/restaurantReservation/selectTablesByHall",
             type: "get",
@@ -1146,7 +1167,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                     async: false,
                     data: {"tableId": tableId, "startTime": startTime},
                     success: function (data) {
-                        console.log(data);
+                        //console.log(data);
                         if (data > 0) {
                             $(".joinText").html("餐台已被预订");
                             tableSelect.addClass("notnullBorder");
@@ -1192,7 +1213,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                     async: false,
                     data: {"tableId": tableId, "startTime": startTime},
                     success: function (data) {
-                        console.log(data);
+                        //console.log(data);
                         if (data > 0) {
                             $(".joinText").html("餐台已被预订");
                             tableSelect.addClass("notnullBorder");
@@ -1237,7 +1258,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                     async: false,
                     data: {"tableId": tableId, "startTime": startTime},
                     success: function (data) {
-                        console.log(data);
+                        //console.log(data);
                         if (data > 0) {
                             $(".joinText").html("餐台已被预订");
                             tableSelect.addClass("notnullBorder");
@@ -1354,7 +1375,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                 data: {"reserveId": reserveId},
                 success: function (data) {
                     data5 = data;
-                    console.log(data);
+                    //console.log(data);
                     var form2 = $("#reverceDeacity").children("#skform");
                     form2.children(".appendreserveId").remove();
                     form2.append('<input class="appendreserveId" name="id" type="hidden" value=' + reserveId + '>');
@@ -1393,7 +1414,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                 data: {"reserveId": reserveId},
                 success: function (data) {
                     data5 = data;
-                    console.log(data);
+                    //console.log(data);
                     var form2 = $("#jiuxi").children("#jiuxiform");
                     form2.children(".appendreserveId").remove();
                     form2.append('<input class="appendreserveId" name="id" type="hidden" value=' + reserveId + '>');
@@ -1433,7 +1454,7 @@ String basePath = request.getScheme()+"://" +request.getServerName()+":" +reques
                 data: {"reserveId": reserveId},
                 success: function (data) {
                     data5 = data;
-                    console.log(data);
+                    //console.log(data);
                     var form2 = $("#yanhui").children("#yanhuiform");
                     form2.children(".appendreserveId").remove();
                     form2.append('<input class="appendreserveId" name="id" type="hidden" value=' + reserveId + '>');

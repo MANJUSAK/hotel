@@ -42,7 +42,7 @@ public class CyFloorController {
 
     private Logger logger= LoggerFactory.getLogger(this.getClass());
 
-    private SimpleDateFormat sf=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    private SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private Calendar calendar=Calendar.getInstance();
 
@@ -218,11 +218,30 @@ public class CyFloorController {
 
     //判断传入时间与当前时间相差5小时
     private boolean joinDateOfHour(Date date){
-      Date da=new Date();
-      if((da.getTime()-date.getTime())/(60*60*1000)>5){
+        Date da=new Date();
+      if((da.getTime()-date.getTime())/(3600*1000)>5){
           return true;
       }
           return false;
     }
+
+
+
+    //修改餐台状态与订单状态
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("floor/update/table/state")
+    @ResponseBody
+    public Object updateTableState(String tableId ,String orderId){
+        try {
+            cyFloorDao.updateTableState(tableId, "1");
+            repastOrderDao.deleteRepastOrderDao(orderId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+    }
+
+
 
 }
