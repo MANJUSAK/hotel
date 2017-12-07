@@ -10,14 +10,16 @@ import com.goodsoft.hotel.domain.dao.RepastOrderDao;
 import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail;
 import com.goodsoft.hotel.domain.entity.param.HotelParam;
 import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
+import com.goodsoft.hotel.domain.entity.repastorder.MenuCustom;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
+import com.goodsoft.hotel.exception.HotelApplicationException;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.RepastOderService;
-import com.goodsoft.hotel.util.OrderIdutil;
+import com.goodsoft.hotel.service.supp.OrderIdsupp;
 import com.goodsoft.hotel.util.UUIDUtil;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -50,10 +52,12 @@ public class RepastOderServicelmpl implements RepastOderService {
     private CookBookDao cbDao;
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
+    //实例化订单编号生成工具类
+    @Resource
+    private OrderIdsupp orderId;
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
-    //实例化订单编号生成工具类
-    private OrderIdutil orderId = OrderIdutil.getInstance();
+
 
     /**
      * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
@@ -83,6 +87,14 @@ public class RepastOderServicelmpl implements RepastOderService {
                             List<SetMealDetail> list2 = this.cbDao.querySetMealDetailDao(tcid);
                             if (list2.size() > 0) {
                                 list1.get(j).setSetMealDetails(list2);
+                            }
+                        }
+                        //是否存在自定义套餐
+                        String customId = list1.get(j).getZdyTcid();
+                        if (tcid != null && !("".equals(tcid))) {
+                            List<MenuCustom> list2 = this.dao.queryMenuCustomDao(customId);
+                            if (list2.size() > 0) {
+                                list1.get(j).setSetMealCustoms(list2);
                             }
                         }
                     }
@@ -125,7 +137,12 @@ public class RepastOderServicelmpl implements RepastOderService {
     @Transactional
     @Override
     public <T> T addOrderService(Order order) throws Exception {
-        String id = this.orderId.getOrderId().toString();
+        String id = null;
+        try {
+            id = this.orderId.getOrderId().toString();
+        } catch (HotelApplicationException e) {
+            throw new HotelApplicationException(StatusEnum.SERVER_ERROR.getEXPLAIN());
+        }
         String ydid = order.getId();
         order.setId(id);
         order.setStatus(1);
@@ -160,11 +177,28 @@ public class RepastOderServicelmpl implements RepastOderService {
         order.setCtType(msg.getCtType());
         order.setStatus(1);
         List<OrderGoods> orderGoods = msg.getMsg();
+        List<MenuCustom> menuCustoms = null;
+        int len1 = 0;
         for (int i = 0, len = orderGoods.size(); i < len; ++i) {
             orderGoods.get(i).setId(this.uuid.getUUID("CY").toString());
             orderGoods.get(i).setOid(id);
+            menuCustoms = orderGoods.get(i).getSetMealCustoms();
+            if (menuCustoms != null) {
+                len1 = menuCustoms.size();
+                if (len1 > 0) {
+                    String zdytcid = this.uuid.getUUID("CY").toString();
+                    orderGoods.get(i).setZdyTcid(zdytcid);
+                    for (int j = 0; j < len1; ++j) {
+                        menuCustoms.get(j).setId(this.uuid.getUUID("CY").toString());
+                        menuCustoms.get(j).setCustomId(zdytcid);
+                    }
+                }
+            }
         }
         try {
+            if (menuCustoms != null && len1 > 0) {
+                orderDao.addMenuCustomDao(menuCustoms);
+            }
             orderDao.addRepastOrderGoodsDao(orderGoods);
             orderDao.updateRepastOrderDao(order);
             this.cydao.updateTableState(msg.getCtid(), "4");

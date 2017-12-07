@@ -118,6 +118,11 @@
             <version>1.1</version>
         </dependency>
         <!--分页插件 end-->
+        <dependency>
+            <groupId>com.sun.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>3.0.9</version>
+        </dependency>
     </dependencies>
     <!--如果jdk版本为1.7则使用jdk1.7进行编译-->
     <build>

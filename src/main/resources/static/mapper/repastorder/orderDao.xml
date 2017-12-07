@@ -53,7 +53,7 @@
     <!--餐饮订单食品sql复用-->
     <sql id="order_goods_sql">
     ID,OID,CBNAME,SP_NUM,SPEC,SP_PRICE,JJ_MEANS,DETAIL_ZQ_SUM,DETAIL_ZH_SUM,DISCOUNT,ZK_SUM,IS_DISCOUNT,
-    BATCH,REDOUBLE,RATED_SEAT,OPERATO,DC_TIME,WRITE_BILL,MENU_TYPE,DETAIL_REMARKS,UNIT,TCID,MEANS
+    BATCH,REDOUBLE,RATED_SEAT,OPERATO,DC_TIME,WRITE_BILL,MENU_TYPE,DETAIL_REMARKS,UNIT,TCID,MEANS,ZDY_TCID
     </sql>
     <!--餐饮订单食品查询-->
     <select id="queryRepastOrderGoodsDao" parameterType="string"
@@ -68,7 +68,20 @@
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.oid},#{item.cbname},#{item.spNum},#{item.spec},#{item.spPrice},#{item.jjMeans},#{item.detailZqSum},
             #{item.detailZhSum},#{item.discount},#{item.zkSum},#{item.isDiscount},#{item.batch},#{item.redouble},#{item.ratedSeat},#{item.operato},
-            #{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means})
+            #{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means},#{item.zdyTcid})
+        </foreach>
+    </insert>
+    <!--自定义菜品查询-->
+    <select id="queryMenuCustomDao" parameterType="string"
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.MenuCustom">
+    SELECT ID, CUSTOM_ID, CBNAME, SPEC, PRICE, UNIT, NUM, TNAME FROM gs_cookbook_custom WHERE CUSTOM_ID=#{id}
+    </select>
+    <!--自定义菜品添加-->
+    <insert id="addMenuCustomDao" parameterType="list">
+        INSERT INTO gs_cookbook_custom (ID, CUSTOM_ID, CBNAME, SPEC, PRICE, UNIT, NUM, TNAME) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.customId}, #{item.cbname}, #{item.spec}, #{item.price}, #{item.unit}, #{item.num},
+            #{item.tname})
         </foreach>
     </insert>
     <!--餐饮订单更新-->

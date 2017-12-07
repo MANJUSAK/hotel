@@ -19,6 +19,7 @@ public class OrderGoods implements java.io.Serializable {
     private String id;//订单食品编号
     private String oid;//订单编号
     private String tcid;//套餐编号
+    private String zdyTcid;//自定义套餐编号
     private String cbname;//食品名称
     private int spNum;//数量
     private String spec;//规格
@@ -40,9 +41,12 @@ public class OrderGoods implements java.io.Serializable {
     private String menuType;//部门类别
     private String detailRemarks;//备注
     private List<SetMealDetail> setMealDetails;//套餐数据容器（仅用于查询）
+    private List<MenuCustom> setMealCustoms;//自定义套餐数据容器
 
     public OrderGoods() {
         this.dcTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        this.tcid = "";
+        this.zdyTcid = "";
     }
 
     public String getId() {
@@ -67,6 +71,14 @@ public class OrderGoods implements java.io.Serializable {
 
     public void setTcid(String tcid) {
         this.tcid = tcid == null ? " " : tcid.trim();
+    }
+
+    public String getZdyTcid() {
+        return zdyTcid;
+    }
+
+    public void setZdyTcid(String zdyTcid) {
+        this.zdyTcid = zdyTcid == null ? " " : zdyTcid.trim();
     }
 
     public String getCbname() {
@@ -237,6 +249,14 @@ public class OrderGoods implements java.io.Serializable {
         this.setMealDetails = setMealDetails;
     }
 
+    public List<MenuCustom> getSetMealCustoms() {
+        return setMealCustoms;
+    }
+
+    public void setSetMealCustoms(List<MenuCustom> setMealCustoms) {
+        this.setMealCustoms = setMealCustoms;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -255,11 +275,12 @@ public class OrderGoods implements java.io.Serializable {
                 Objects.equals(operato, that.operato) &&
                 Objects.equals(dcTime, that.dcTime) &&
                 Objects.equals(menuType, that.menuType) &&
+                Objects.equals(zdyTcid, that.zdyTcid) &&
                 Objects.equals(detailRemarks, that.detailRemarks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, oid, tcid, cbname, spec, unit, means, discount, batch, ratedSeat, operato, dcTime, menuType, detailRemarks);
+        return Objects.hash(id, oid, tcid, cbname, spec, unit, means, discount, batch, ratedSeat, operato, dcTime, menuType, zdyTcid, detailRemarks);
     }
 }
