@@ -25,6 +25,12 @@ public interface RoomSDao {
     //   通过楼层号获取到房间所有信息
     public List<RealStateResult> queryFloorRoomMapper(Map map) throws Exception;
 
+    //获取所有有预订的房间列表
+    public List<Map<String,String>> selectRoomReservesAll();
+
+    //获取所有楼层id
+    public List<Integer> selectFloorIdAll();
+
     //  获取房间总条数
     public Integer queryFloorRoomCountMapper(Map map) throws Exception;
 
@@ -133,4 +139,22 @@ public interface RoomSDao {
      * 删除全部房价
      */
       public Integer deleteAllRealTimePrice();
+
+
+
+    /**
+     * ----------------------------------------------
+     *                消费项目
+     * ----------------------------------------------
+     */
+
+     //获取所有消费项目
+    public List<KfconsumerProjects> selectXfProjectAll();
+
+    //插入客房消费记录
+    public Integer insertXfConsumptionInfo(List<KfconsumpRecord> kfconsumpRecords);
+
+    //删除客房消费记录
+    public Integer deleteXfConsumptionInfo(@Param("bookingno") String bookingno);
+
 }

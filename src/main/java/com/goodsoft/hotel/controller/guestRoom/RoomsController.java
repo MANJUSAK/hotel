@@ -14,6 +14,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.ss.formula.functions.T;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class RoomsController {
     private Logger logger = LoggerFactory.getLogger(CookBookController.class);
 
     private SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+
 
     /**
      * 添加实时房间价格
@@ -139,7 +141,21 @@ public class RoomsController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/select/roomInfo")
-    public Object getFang(String floorId,String typeId,String price){
+    public Object getFang(String floorId,String typeId,String price,Integer sign,String selectedDate,Integer sflag,Integer cflag,Integer flag,Integer yflag){
+
+        if(sign!=null && sign<=3 && sign>0) {
+            //获取所有楼层id
+            List<Integer> integers = roomSDao.selectFloorIdAll();
+            if(integers.size()>30) {
+                int y=sign == 1 ? 10:sign==2?20:integers.size();
+                int m=sign==1 ? 0:sign==2?10:20;
+                floorId="";
+                for (int x = m; x < y; x++){
+                    floorId+=(integers.get(x) + (x==(y-1)?"":","));
+                }
+            }
+        }
+
         List<Map<String, Object>> list = null;
         //参数map
         Map<String,Object> paramMap =new HashMap<String,Object>();
@@ -153,11 +169,14 @@ public class RoomsController {
 
         try {
             list1 = roomSDao.queryFloorRoomMapper(paramMap);
-            System.out.println("房态:"+list1);
+            List<Map<String,String>> strings = roomSDao.selectRoomReservesAll();
             if(list1.size()==0){
                 return new Result(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
             }
-            List<Map> maps = joinTypeRoom(list1,price);
+            List<Map> maps = joinTypeRoom(list1,price,strings,sflag,cflag,flag,yflag,selectedDate);
+            if(maps.size()==0){
+                return new Result(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
+            }
             return new Result(StatusEnum.SUCCESS.getCODE(),maps);
         } catch (Exception e){
             e.printStackTrace();
@@ -166,20 +185,19 @@ public class RoomsController {
     }
 
 
-
     /**
      * 分类客房信息
      * @param list
      * @return
      */
-    private List<Map> joinTypeRoom(List<RealStateResult> list,String price){
+    private List<Map> joinTypeRoom(List<RealStateResult> list,String price,List<Map<String,String>> reserveRooms,Integer sflag,Integer cflag,Integer flag,Integer yflag,String selectedDate){
         List<Map> returnList=new LinkedList<Map>();
         String day=sf.format(new Date());
         //实时房价
         ArrayList<Map> maps = roomSDao.selectImmediateRoomPrice();
         Object realPrice=null;
         for(int i=0;i<list.size();i++){
-            if(list.get(i)!=null) {
+            if(list.get(i)!=null){
                 //判断是否有实时房价
                 realPrice = judgeRealTimePrice(maps,list.get(i).getTypeid());
                 if(realPrice!=null){
@@ -189,18 +207,71 @@ public class RoomsController {
                 if(price!=null && !price.equals(list.get(i).getHouseprices())){
                     continue;
                 }
+                //判断是否区分脏房净房
+                if(sflag!=null){
+                    if(sflag==1) {
+                        if (!"净房".equals(list.get(i).getSflag())) {
+                            continue;
+                        }
+                    }else if (sflag==2) {
+                        if (!"脏房".equals(list.get(i).getSflag())) {
+                            continue;
+                        }
+                    }
+                }
                 //客房是否有预订信息 并判断时间
-                if(list.get(i).getStartdate()!=null && list.get(i).getStartdate().equals(day) ){
+                if(list.get(i).getStartdate()!=null && list.get(i).getStartdate().equals(day)){
                     list.get(i).setCflag("预抵");
+                }else{
+                    if(cflag!=null && cflag==1){
+                        continue;
+                    }
                 }
-                if(list.get(i).getEnddate()!=null && list.get(i).getEnddate().equals(day) ){
+                if(list.get(i).getEnddate()!=null && list.get(i).getBookingflag()!=null && list.get(i).getEnddate().equals(day) && list.get(i).getBookingflag().equals("预订入住")){
                     list.get(i).setCflag("预离");
+                }else{
+                    if(cflag!=null && cflag==2){
+                        continue;
+                    }
                 }
+
+                //判断客房今天以后是否有预订
+                for(int s=0;s<reserveRooms.size();s++){
+                    if(selectedDate==null) {
+                        if (list.get(i).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
+                            list.get(i).setYflag("1");
+                            s = 99999;
+                        }
+                    }else{
+                        if (list.get(i).getRoomno().equals(reserveRooms.get(s).get("roomno")) && selectedDate.equals(reserveRooms.get(s).get("startdate"))) {
+                            list.get(i).setYflag("1");
+                            s = 99999;
+                        }
+                    }
+                }
+                //判断是否过滤预留
+                if(yflag!=null &&yflag==1){
+                    if("0".equals(list.get(i).getYflag())){
+                        continue;
+                    }
+                }
+                //判断是否过滤flag
+                if(flag!=null){
+                    if(flag==1){if(!"空房".equals(list.get(i).getFlag()))
+                        continue;}
+                    else if (flag==2){if(!"散客".equals(list.get(i).getFlag()) && !"团体".equals(list.get(i).getFlag()))
+                        continue;}
+                    else if (flag==3){if(!"维修".equals(list.get(i).getFlag()))
+                        continue;}
+                    else if (flag==4){if(!"停用".equals(list.get(i).getFlag()))
+                        continue;}
+                }
+
 
                 Map typeMap =new HashMap();
                 List typeList =new LinkedList();
                 typeList.add(list.get(i));
-                for (int j = i + 1; j < list.size(); j++) {
+                for (int j = i + 1; j < list.size(); j++){
                 if(list.get(j)!=null && list.get(i).getFloorname().equals(list.get(j).getFloorname())){
 
                     //判断是否有实时房价
@@ -212,14 +283,66 @@ public class RoomsController {
                     if(price!=null && !price.equals(list.get(j).getHouseprices())){
                         continue;
                     }
+                    //判断是否区分脏房净房
+                    if(sflag!=null){
+                        if(sflag==2) {
+                            if (!"脏房".equals(list.get(j).getSflag())) {
+                                continue;
+                            }
+                        }else if (sflag==1) {
+                            if (!"净房".equals(list.get(j).getSflag())) {
+                                continue;
+                            }
+                        }
+                    }
+
                     //客房是否有预订信息 并判断时间
                     if(list.get(j).getStartdate()!=null && list.get(j).getStartdate().equals(day) ){
                             list.get(j).setCflag("预抵");
+                    }else{
+                        if(cflag!=null && cflag==1){
+                            continue;
+                        }
                     }
-                    if(list.get(j).getEnddate()!=null && list.get(j).getEnddate().equals(day) ){
+                    if(list.get(j).getEnddate()!=null && list.get(j).getBookingflag()!=null && list.get(j).getEnddate().equals(day) && list.get(j).getBookingflag().equals("预订入住")){
                             list.get(j).setCflag("预离");
+                    }else{
+                        if(cflag!=null && cflag==2){
+                            continue;
+                        }
                     }
 
+                    //客房今天以后是否有预订
+                    for(int s=0;s<reserveRooms.size();s++){
+                        if(selectedDate==null) {
+                            if (list.get(j).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
+                                list.get(j).setYflag("1");
+                                s = 99999;
+                            }
+                        }else{
+                            if ( selectedDate.equals(reserveRooms.get(s).get("startdate")) && list.get(j).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
+                                list.get(j).setYflag("1");
+                                s = 99999;
+                            }
+                        }
+                    }
+                    //判断是否过滤预留
+                    if(yflag!=null &&yflag==1){
+                        if("0".equals(list.get(j).getYflag())){
+                            continue;
+                        }
+                    }
+                    //判断是否过滤flag
+                    if(flag!=null){
+                        if(flag==1){if(!"空房".equals(list.get(j).getFlag()))
+                            continue;}
+                        else if (flag==3){if(!"维修".equals(list.get(j).getFlag()))
+                            continue;}
+                        else if (flag==4){if(!"停用".equals(list.get(j).getFlag()))
+                            continue;}
+                        else if (flag==2){if(!"散客".equals(list.get(j).getFlag()) && !"团体".equals(list.get(j).getFlag()))
+                            continue;}
+                    }
                     typeList.add(list.get(j));
                     list.set(j,null);
                 }
@@ -230,7 +353,6 @@ public class RoomsController {
                 returnList.add(typeMap);
             }
         }
-
         return returnList;
     }
 
@@ -659,4 +781,82 @@ public class RoomsController {
         }
         return map;
     }
+
+
+
+    /**
+     * ****************************************************************************************
+     *                                      消费项目
+     * *****************************************************************************************
+     */
+
+    /**
+     * 获取所有客房消费项目
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("consume/project/getAll")
+    public Object getProjects(){
+        try{
+            List<KfconsumerProjects> kfconsumerProjects = roomSDao.selectXfProjectAll();
+            if(kfconsumerProjects.size()==0){
+                return new Result(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
+            }else{
+                return new Result(StatusEnum.SUCCESS.getCODE(),kfconsumerProjects);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+
+    /**
+     * 插入客房消费信息
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("consume/record/insert")
+    public Object insertRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam){
+
+        if(kfconsumpRecordParam.getConsumptions()==null||kfconsumpRecordParam.getConsumptions().size()==0||kfconsumpRecordParam.getBookingno()==null){
+            return new Status(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+        }
+        for(int i=0;i<kfconsumpRecordParam.getConsumptions().size();i++){
+            kfconsumpRecordParam.getConsumptions().get(i).setBookingno(kfconsumpRecordParam.getBookingno());
+        }
+        try{
+            roomSDao.insertXfConsumptionInfo(kfconsumpRecordParam.getConsumptions());
+            return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+
+    /**
+     * 修改客房消费信息
+     * @param kfconsumpRecordParam
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("consume/record/update")
+    public Object updateRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam) {
+        if(kfconsumpRecordParam.getConsumptions()==null|| kfconsumpRecordParam.getConsumptions().size()==0 ||kfconsumpRecordParam.getBookingno()==null){
+            return new Status(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+        }
+        try {
+            roomSDao.deleteXfConsumptionInfo(kfconsumpRecordParam.getBookingno());
+            for (int i = 0; i < kfconsumpRecordParam.getConsumptions().size(); i++) {
+                kfconsumpRecordParam.getConsumptions().get(i).setBookingno(kfconsumpRecordParam.getBookingno());
+            }
+            roomSDao.insertXfConsumptionInfo(kfconsumpRecordParam.getConsumptions());
+            return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
 }
+
