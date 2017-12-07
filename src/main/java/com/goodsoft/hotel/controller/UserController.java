@@ -44,7 +44,7 @@ public class UserController {
     public Object queryUserMsgController(UserParam param) {
         try {
             return this.service.queryUserMsgService(param);
-        } catch (Exception e){
+        } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
@@ -63,10 +63,10 @@ public class UserController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/find/dept/msg/data.shtml")
-    public Object queryDeptNameController(){
+    public Object queryDeptNameController() {
         try {
             return this.service.queryDeptNameService();
-        } catch (Exception e){
+        } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }

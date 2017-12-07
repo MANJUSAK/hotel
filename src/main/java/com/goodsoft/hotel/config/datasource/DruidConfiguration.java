@@ -55,7 +55,6 @@ public class DruidConfiguration {
         filterRegistrationBean.addInitParameter("principalCookieName", "USER_COOKIE");
         filterRegistrationBean.addInitParameter("profileEnable", "true");
         filterRegistrationBean.addInitParameter("sessionStatEnable", "true");
-        filterRegistrationBean.addInitParameter("principalCookieName", "");
         return filterRegistrationBean;
     }
 }
