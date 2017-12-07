@@ -44,7 +44,7 @@ public interface BookingDao {
     public void updateFlagQuXiaoHuiFuMapper(String bookid);
 
     //订单逻辑删除
-    public void updateFlagDeleteMapper(String str) ;
+    public void updateFlagDeleteMapper(String str);
 
     //逻辑删除订单恢复
     public void updateFlagDeleteHuiFuMapper(String bookid) throws Exception;

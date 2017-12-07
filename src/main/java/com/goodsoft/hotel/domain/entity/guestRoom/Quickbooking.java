@@ -7,7 +7,7 @@ import java.util.List;
  * Created by 王智 on 2017/11/16/016.
  */
 public class Quickbooking {
-
+    
     private String id;              //ID
     private String guestType;       //客人类型
     private String bookingNo;       //预定单号

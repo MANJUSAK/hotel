@@ -19,7 +19,7 @@
       from gs_room a ,gs_building b,gs_floor c,gs_roomtype d
       where a.buildingcode=b.buildid and a.floorcode =c.FLOORID and a.roomtype=d.typeid
         <if test="floorId!=null">
-        and a.floorcode=#{floorId}
+        and a.floorcode in (${floorId})
         </if>
         <if test="typeId!=null">
         and a.roomtype=#{typeId}
@@ -27,13 +27,23 @@
       ) a
       left join
       (
-      select  a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid from gs_quickbooking a,gs_quickbooking_roomno b
+      select  a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid ,a.bookingflag from gs_quickbooking a,gs_quickbooking_roomno b
       where a.id=b.bookid and a.bookingflag='明确预定' and a.startdate = date_format(now(),'%Y-%m-%d')
       )b
       on a.id =b.roomid
 
     </select>
 
+     <!--获取所有房间预定信息-->
+    <select id="selectRoomReservesAll" resultType="java.util.Map">
+     select  b.roomno ,a.startdate from gs_quickbooking a , gs_quickbooking_roomno b
+     where b.bookid=a.id  and a.startdate > date_format(now(),'%Y-%m-%d') and a.bookingflag='明确预定'
+    </select>
+
+    <!--获取所有楼层id-->
+    <select id="selectFloorIdAll" resultType="java.lang.Integer">
+        select floorid from gs_floor
+    </select>
 
 
     <!--select a.*,b.* from (-->
@@ -67,7 +77,7 @@
 
     <!--房态右边下拉框 获取楼层名-->
     <select id="findFloorAllMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
-        select floorCode,floorName FROM gs_floor
+        select floorid floorId,floorName FROM gs_floor
     </select>
 
     <!--房态右边下拉框楼层名获取房间信息 显示到左边-->
@@ -282,12 +292,30 @@
     <delete id="deleteLastRealTimePrice" >
       delete from   REALTIMEHOUSEPRICE where time &lt; now();
     </delete>
-
+     <!--删除所有实时房价-->
     <delete id="deleteAllRealTimePrice">
         delete from   REALTIMEHOUSEPRICE
     </delete>
 
 
 
+    <!--获取所有消费项目-->
+    <select id="selectXfProjectAll" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumerProjects">
+        select * from  gs_kfconsumer_projects
+    </select>
+
+     <!--插入客房消费记录-->
+    <select id="insertXfConsumptionInfo" parameterType="java.util.List">
+        insert into gs_kfconsump_record values
+        <foreach collection="list" separator="," item="item" >
+            (#{item.id},#{item.roomno},#{item.guestname},#{item.project},#{item.projectnumber},
+            #{item.unitprice},#{item.discount},#{item.paymentexplain},#{item.bookingno})
+        </foreach>
+    </select>
+
+     <!--删除客房消费记录-->
+    <update id="deleteXfConsumptionInfo" parameterType="string">
+    delete from  gs_kfconsump_record  where  bookingno=#{bookingno}
+    </update>
 
 </mapper>
