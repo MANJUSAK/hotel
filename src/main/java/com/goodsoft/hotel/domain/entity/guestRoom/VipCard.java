@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 会员信息
- * Created by 王智 on 2017/11/23/023.
+ * Created by zhiWang on 2017/11/23/023.
  */
 public class VipCard {
     private String id;                  //ID

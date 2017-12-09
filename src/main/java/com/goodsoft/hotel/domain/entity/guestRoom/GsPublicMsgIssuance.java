@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 公共信息发布
- * Created by Administrator on 2017/11/27/027.
+ * Created by zhiWang on 2017/11/27/027.
  */
 public class GsPublicMsgIssuance {
     private String id;

@@ -1,7 +1,7 @@
 package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
- * Created by Administrator on 2017/11/27/027.
+ * Created by zhiWang on 2017/11/27/027.
  */
 public class RoomPrices {
     private String id;          //id

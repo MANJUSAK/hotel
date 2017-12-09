@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by 王智 on 2017/11/9/009.
+ * Created by zhiWang on 2017/11/9/009.
  *
  * 房态信息
  */
@@ -490,7 +490,7 @@ public class RoomsController {
      * @return 房间类型信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
-    @RequestMapping("floor/roomTypeName/room")
+        @RequestMapping("floor/roomTypeName/room")
     public Object findRoomType() {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
