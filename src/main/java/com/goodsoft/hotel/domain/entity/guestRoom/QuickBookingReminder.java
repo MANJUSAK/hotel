@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 预定提醒信息
- * Created by 王智 on 2017/11/20/020.
+ * Created by zhiWang on 2017/11/20/020.
  */
 public class QuickBookingReminder {
 

@@ -4,7 +4,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 /**
  *
  * 房间类型
- * Created by 王智 on 2017/11/13/013.
+ * Created by zhiWang on 2017/11/13/013.
  */
 public class RoomType {
     private String id;                      //房间ID,uuid

@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 建筑信息表
- * Created by 王智 on 2017/11/12/012.
+ * Created by zhiWang on 2017/11/12/012.
  */
 public class Building {
     private String id;                  //ID

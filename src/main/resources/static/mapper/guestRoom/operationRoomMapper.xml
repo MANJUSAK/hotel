@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--  zhiWang  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.OperationRoomDao">
+
+
+    <!--添加建筑-->
+    <insert id="addBuildingMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
+        insert into gs_building(id,buildingname) values(#{id},#{buildingName})
+    </insert>
+
+    <!--添加楼层-->
+    <insert id="addFloorMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        insert into gs_building(id,floorcode,floorname) values(#{id},#{floorCode},#{floorName})
+    </insert>
+
+    <!--添加房间类型信息-->
+    <insert id="addRoomTypeMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
+        insert into gs_roomtypr(id,typename) values(#{id},#{typeName})
+    </insert>
+
+
+    <!--查询建筑信息-->
+    <select id="queryBuildAllMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
+        select buildid,buildingname from gs_building
+    </select>
+
+    <!--查询楼层信息-->
+    <select id="queryFloorAllMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        select  floorid,floorname from  gs_floor
+    </select>
+
+    <!--查询房间类型信息-->
+    <select id="queryRoomTypeMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
+        select typeid,typeName from gs_roomtype;
+    </select>
+
+    <!--添加房间信息-->
+    <insert id="addRoomMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
+        insert into gs_room(id,roomType,roomNo,cName,buildingCode,floorCode,nights,
+        stdPax,maxPax,status,doorLockId,remark,flag,sFlag,rackRate,rateCode)
+        values(#{id},#{roomType},#{roomNo},#{cName},#{buildingCode},
+        #{floorCode},#{nights},#{stdPax},#{maxPax},#{status},#{doorLockId},
+        #{remark},#{flag},#{sFlag},#{rackRate},#{rateCode})
+    </insert>
+
+    <!--修改建筑名-->
+    <update id="updateBuildingMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
+        update gs_building set buildingname=#{buildingName} where buildid=#{buildId} OR id = #{id}
+    </update>
+
+    <!--修改楼层名-->
+    <update id="updateFloorsMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        update gs_floor
+        <set>
+            <if test="floorname !=null">floorname = #{floorName},</if>
+            <if test="floorcode !=null">floorcode=#{floorCode}</if>
+        </set>
+        where floorid = #{floorId} OR id = #{id}
+    </update>
+
+    <!--修改房间类型名-->
+    <update id="updateRoomTypeMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
+        update gs_roomtype set typename = #{typeName} where typeId = #{typeId} OR id = #{id}
+    </update>
+
+    <!--修改房间 信息-->
+    <update id="updateRoomMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
+        update gs_room set
+        roomType = #{roomType},
+        roomNo = #{roomNo},
+        cName = #{cName},
+        buildingCode = #{buildingCode},
+        floorCode = #{floorCode},
+        nights = #{nights},
+        stdPax = #{stdPax},
+        maxPax = #{maxPax},
+        status = #{status},
+        doorLockId = #{doorLockId},
+        remark = #{remark},
+        flag = #{flag},
+        sFlag = #{sFlag},
+        rackRate = #{rackRate},
+        rateCode = #{rateCode}
+        where id=#{id}
+    </update>
+
+
+    <!--删除建筑需要先删除房间-->
+    <delete id="deleteBuildingRoomMapper" parameterType="java.lang.String">
+        delete from gs_room where buildingcode =#{_parameter}
+    </delete>
+
+    <!--删除建筑删除关联楼层-->
+    <delete id="deleteBuildingFloorMapper" parameterType="java.lang.String">
+        delete from gs_floor where floorCode = #{_parameter}
+    </delete>
+
+    <!--删除建筑-->
+    <delete id="deleteBuildingMapper" parameterType="java.lang.String">
+        delete from gs_building where buildid = #{_parameter}
+    </delete>
+
+    <!--删除楼层关联房间-->
+    <delete id="deleteFloorRoomMapper" parameterType="java.lang.String">
+         delete from gs_room where floorcode =#{_parameter}
+    </delete>
+
+    <!--删除楼层信息-->
+    <delete id="deleteFloorMapper" parameterType="java.lang.String">
+        delete from gs_floor where floorid = #{_parameter}
+    </delete>
+
+    <!--删除房间类型信息-->
+    <delete id="deleteRoomTypeMapper" parameterType="java.lang.String">
+        delete from gs_roomType where typeId=#{typeId}
+    </delete>
+
+    <!--删除房间信息-->
+    <delete id="deleteRoomMapper" parameterType="java.lang.String">
+        delete from gs_room where id = #{id}
+    </delete>
+
+</mapper>

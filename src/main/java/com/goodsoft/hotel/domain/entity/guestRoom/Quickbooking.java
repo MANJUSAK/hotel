@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * 快速预定信息表
- * Created by 王智 on 2017/11/16/016.
+ * Created by zhiWang on 2017/11/16/016.
  */
 public class Quickbooking {
     

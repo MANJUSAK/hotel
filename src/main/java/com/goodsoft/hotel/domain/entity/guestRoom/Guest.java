@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 客人信息表
- * Created by 王智 on 2017/11/15/015.
+ * Created by zhiWang on 2017/11/15/015.
  */
 
 public class Guest {
@@ -42,7 +42,7 @@ public class Guest {
     private String secondCard;        //	第二证件
     private String comeFrom;        //从何处来
     private String arrivalFlight;    //	抵达航班
-    private String whereToGo;        //到何处去
+    private String whereToGo;        //到何处去     ----
     private String leaveFlight;    //	离开航班
     private String positions;        //位置
     private String carType;      //车型
