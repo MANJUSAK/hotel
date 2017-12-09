@@ -256,11 +256,13 @@
         <result column="TC_SPEC" property="tcSpec"/>
         <result column="TC_PRICE" property="tcPrice"/>
         <result column="TC_NUM" property="tcNum"/>
+        <result column="PT_PORT" property="ptPort"/>
     </resultMap>
     <select id="querySetMealDetailDao" parameterType="string" resultMap="setMealDetailInfo">
-    select e.*,f.CBNAME,f.UNIT,f.FILE_ID,f.STNAME,f.TNAME from gs_cookbook_setmeal_detal e left join
+    select g.*,h.PT_PORT from (select e.*,f.CBNAME,f.UNIT,f.FILE_ID,f.STNAME,f.TNAME from gs_cookbook_setmeal_detal e left join
     (select c.*,d.STNAME from (select a.ID,a.STID,a.TID,a.CBNAME,a.UNIT,a.FILE_ID,b.TNAME from gs_cookbook a left join gs_cookbook_type b on a.TID=b.ID) c
-    left join gs_cookbook_subtype d on c.STID=d.ID) f on e.CBID=f.ID WHERE e.SMID=#{smid}
+    left join gs_cookbook_subtype d on c.STID=d.ID) f on e.CBID=f.ID) g left join (select PT_PORT,PT_DEPT from gs_sys_printer) h
+    on g.TID=h.PT_DEPT WHERE g.SMID=#{smid}
     </select>
 </mapper>
         <!--mapper 菜单管理数据查询 end -->

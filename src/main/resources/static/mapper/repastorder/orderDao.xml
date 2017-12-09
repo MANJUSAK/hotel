@@ -5,7 +5,7 @@
 <!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.RepastOrderDao">
     <!--第三方缓存技术支持-->
-    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>
     <!--餐饮订单sql复用-->
     <sql id="order_sql">
     ID,KZ_NUM,CONSUMER,KT_TIME,FW_RATE,CT_TYPE,SALEMANAGER,KT_NUM,PERSON_NUM,KT_SHIFT,ZD_CONSUME,
@@ -14,7 +14,7 @@
     MD_TIME,FJZ_REASON
     </sql>
     <!--餐饮订单查询-->
-    <select id="queryRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam"
+    <select id="queryRepastOrderDao" parameterType="object"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
         SELECT
         <include refid="order_sql"/>
@@ -53,14 +53,12 @@
     <!--餐饮订单食品sql复用-->
     <sql id="order_goods_sql">
     ID,OID,CBNAME,SP_NUM,SPEC,SP_PRICE,JJ_MEANS,DETAIL_ZQ_SUM,DETAIL_ZH_SUM,DISCOUNT,ZK_SUM,IS_DISCOUNT,
-    BATCH,REDOUBLE,RATED_SEAT,OPERATO,DC_TIME,WRITE_BILL,MENU_TYPE,DETAIL_REMARKS,UNIT,TCID,MEANS,ZDY_TCID
+    BATCH,REDOUBLE,RATED_SEAT,OPERATO,DC_TIME,WRITE_BILL,MENU_TYPE,DETAIL_REMARKS,UNIT,TCID,MEANS,ZDY_TCID,TID
     </sql>
     <!--餐饮订单食品查询-->
     <select id="queryRepastOrderGoodsDao" parameterType="string"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderGoods">
-        SELECT
-        <include refid="order_goods_sql"/>
-        FROM gs_repast_order_goods WHERE OID=#{oid}
+       select a.*,b.PT_PORT from gs_repast_order_goods a left join (select PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.OID=#{oid}
     </select>
     <!--餐饮订单食品数据添加-->
     <insert id="addRepastOrderGoodsDao" parameterType="list">
@@ -68,13 +66,13 @@
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.oid},#{item.cbname},#{item.spNum},#{item.spec},#{item.spPrice},#{item.jjMeans},#{item.detailZqSum},
             #{item.detailZhSum},#{item.discount},#{item.zkSum},#{item.isDiscount},#{item.batch},#{item.redouble},#{item.ratedSeat},#{item.operato},
-            #{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means},#{item.zdyTcid})
+            #{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means},#{item.zdyTcid},#{tid})
         </foreach>
     </insert>
     <!--自定义菜品查询-->
     <select id="queryMenuCustomDao" parameterType="string"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.MenuCustom">
-    SELECT ID, CUSTOM_ID, CBNAME, SPEC, PRICE, UNIT, NUM, TNAME FROM gs_cookbook_custom WHERE CUSTOM_ID=#{id}
+    SELECT a.*,b.PT_PORT FROM gs_cookbook_custom a left join (select PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.CUSTOM_ID=#{id}
     </select>
     <!--自定义菜品添加-->
     <insert id="addMenuCustomDao" parameterType="list">
