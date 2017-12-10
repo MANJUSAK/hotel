@@ -12,12 +12,12 @@
 
     <!--添加楼层-->
     <insert id="addFloorMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
-        insert into gs_building(id,floorcode,floorname) values(#{id},#{floorCode},#{floorName})
+        insert into gs_floor(id,floorcode,floorname) values(#{id},#{floorCode},#{floorName})
     </insert>
 
     <!--添加房间类型信息-->
     <insert id="addRoomTypeMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
-        insert into gs_roomtypr(id,typename) values(#{id},#{typeName})
+        insert into gs_roomtype(id,typename) values(#{id},#{typeName})
     </insert>
 
 
@@ -39,7 +39,7 @@
     <!--添加房间信息-->
     <insert id="addRoomMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
         insert into gs_room(id,roomType,roomNo,cName,buildingCode,floorCode,nights,
-        stdPax,maxPax,status,doorLockId,remark,flag,sFlag,rackRate,rateCode)
+        stdPax,maxPax,status,doorLockId,remark,flag,sFlag,rackPate,rateCode)
         values(#{id},#{roomType},#{roomNo},#{cName},#{buildingCode},
         #{floorCode},#{nights},#{stdPax},#{maxPax},#{status},#{doorLockId},
         #{remark},#{flag},#{sFlag},#{rackRate},#{rateCode})
@@ -54,8 +54,8 @@
     <update id="updateFloorsMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
         update gs_floor
         <set>
-            <if test="floorname !=null">floorname = #{floorName},</if>
-            <if test="floorcode !=null">floorcode=#{floorCode}</if>
+            <if test="floorName !=null">floorname = #{floorName},</if>
+            <if test="floorCode !=null">floorcode = #{floorCode}</if>
         </set>
         where floorid = #{floorId} OR id = #{id}
     </update>
@@ -81,45 +81,66 @@
         remark = #{remark},
         flag = #{flag},
         sFlag = #{sFlag},
-        rackRate = #{rackRate},
+        rackPate = #{rackRate},
         rateCode = #{rateCode}
-        where id=#{id}
+        where roomId=#{roomId} or id=#{id}
     </update>
 
 
     <!--删除建筑需要先删除房间-->
-    <delete id="deleteBuildingRoomMapper" parameterType="java.lang.String">
-        delete from gs_room where buildingcode =#{_parameter}
+    <delete id="deleteBuildingRoomMapper" parameterType="java.util.List">
+        delete from gs_room where buildingcode in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
     <!--删除建筑删除关联楼层-->
-    <delete id="deleteBuildingFloorMapper" parameterType="java.lang.String">
-        delete from gs_floor where floorCode = #{_parameter}
+    <delete id="deleteBuildingFloorMapper" parameterType="java.util.List">
+        delete from gs_floor where floorCode in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
     <!--删除建筑-->
-    <delete id="deleteBuildingMapper" parameterType="java.lang.String">
-        delete from gs_building where buildid = #{_parameter}
+    <delete id="deleteBuildingMapper" parameterType="java.util.List">
+        delete from gs_building where buildid in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
     <!--删除楼层关联房间-->
-    <delete id="deleteFloorRoomMapper" parameterType="java.lang.String">
-         delete from gs_room where floorcode =#{_parameter}
+    <delete id="deleteFloorRoomMapper" parameterType="java.util.List">
+         delete from gs_room where floorcode in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
     <!--删除楼层信息-->
-    <delete id="deleteFloorMapper" parameterType="java.lang.String">
-        delete from gs_floor where floorid = #{_parameter}
+    <delete id="deleteFloorMapper" parameterType="java.util.List">
+        delete from gs_floor where floorid in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
     <!--删除房间类型信息-->
-    <delete id="deleteRoomTypeMapper" parameterType="java.lang.String">
-        delete from gs_roomType where typeId=#{typeId}
+    <delete id="deleteRoomTypeMapper" parameterType="java.util.List">
+        delete from gs_roomType where typeId in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
     <!--删除房间信息-->
-    <delete id="deleteRoomMapper" parameterType="java.lang.String">
-        delete from gs_room where id = #{id}
+    <delete id="deleteRoomMapper" parameterType="java.util.List">
+        delete from gs_room where roomId in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
     </delete>
 
 </mapper>
