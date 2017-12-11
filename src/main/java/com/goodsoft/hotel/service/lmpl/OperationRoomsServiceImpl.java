@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhiWang on 2017/12/4/004.
@@ -98,8 +100,6 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
 
         String uuid = UUIDUtil.getInstance().getUUID("QT").toString();
         room.setId(uuid);
-        room.setFlag("空房");
-        room.setsFlag("净房");
         Integer x = 0;
         try {
             x = this.operationRoomDao.addRoomMapper(room);
@@ -161,7 +161,7 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return x > 0 ? "更新成功,更新" + x + "中类型" : "房间类型更新失败";
+        return x > 0 ? "更新成功,更新" + x + "种类型" : "房间类型更新失败";
     }
 
     /**
@@ -188,23 +188,25 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
      * @param str 前台获取的建筑id
      * @return 返回成功信息
      */
+    @Transactional
     @Override
     public String deleteBuilding(String str) {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         OperationRoomDao arDao = sqlSession.getMapper(OperationRoomDao.class);
-        Integer x = 0;
+        List<String> list = this.getListArr(str);
         try {
-            arDao.deleteBuildingRoomMapper(str);
-            arDao.deleteBuildingFloorMapper(str);
-            x = arDao.deleteBuildingMapper(str);
+            arDao.deleteBuildingRoomMapper(list);
+            arDao.deleteBuildingFloorMapper(list);
+            arDao.deleteBuildingMapper(list);
             sqlSession.commit();
+            return "建筑删除成功";
         } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
+            return "建筑删除失败";
         } finally {
             sqlSession.close();
         }
-        return x > 0 ? "删除成功,删除" + x + "栋" : "建筑删除失败";
     }
 
     /**
@@ -217,17 +219,19 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
     public String deleteFloor(String str) {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         OperationRoomDao arDao = sqlSession.getMapper(OperationRoomDao.class);
-        Integer x = 0;
+        List<String> list = this.getListArr(str);
         try {
-            arDao.deleteFloorRoomMapper(str);
-            x = arDao.deleteFloorMapper(str);
+            arDao.deleteFloorRoomMapper(list);
+            arDao.deleteFloorMapper(list);
+            sqlSession.commit();
+            return "楼层删除成功";
         } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
+            return "楼层删除失败";
         } finally {
             sqlSession.close();
         }
-        return x > 0 ? "删除成功,删除" + x + "层" : "楼层删除失败";
     }
 
     /**
@@ -240,16 +244,18 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
     public String deleteRoomType(String str) {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         OperationRoomDao arDao = sqlSession.getMapper(OperationRoomDao.class);
-        Integer x = 0;
+        List<String> list = this.getListArr(str);
         try {
-            x = arDao.deleteRoomTypeMapper(str);
+            arDao.deleteRoomTypeMapper(list);
+            sqlSession.commit();
+            return "房间类型删除成功";
         } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
+            return "房间类型删除失败";
         } finally {
             sqlSession.close();
         }
-        return x > 0 ? "删除成功,删除" + x + "种类型" : "房间类型删除失败";
     }
 
     /**
@@ -262,16 +268,40 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
     public String deleteRoom(String str) {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         OperationRoomDao arDao = sqlSession.getMapper(OperationRoomDao.class);
-        Integer x = 0;
+        List<String> list = this.getListArr(str);
         try {
-            x = arDao.deleteRoomMapper(str);
+            arDao.deleteRoomMapper(list);
+            sqlSession.commit();
+            return "房间删除成功";
         } catch (Exception e) {
+            sqlSession.rollback();
             e.printStackTrace();
+            return "房间删除失败";
         } finally {
             sqlSession.close();
         }
-        return x > 0 ? "删除成功,删除" + x + "间" : "房间删除失败";
     }
 
+
+    /**
+     * 传入一个逗号分隔的字符串 返回一个集合
+     *
+     * @param str 传入的字符串
+     * @return 返回的集合
+     */
+    public List getListArr(String str) {
+        List<String> list = new ArrayList<String>();
+        if (str.indexOf(",") != -1) {
+            String[] strs = str.split(",");
+            for (int i = 0; i < strs.length; i++) {
+                list.add(strs[i]);
+            }
+        } else {
+            list.add(str);
+        }
+
+
+        return list;
+    }
 
 }
