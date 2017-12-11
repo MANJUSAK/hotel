@@ -496,14 +496,15 @@ public class BookingController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         List<String> list1 = new ArrayList<>();
         Map<String, Object> map = null;
-        for (int i = 0; i < msg.getMsg().size(); i++) {
+        for (int i = 0; i < msg.getMsg().size(); i++){
             list1.add(msg.getMsg().get(i).getRoomId());
         }
+        //查询房间状态
         list = this.bookingDao.selectRoomRuZhu(list1);
         try {
             String str = this.floorRoomService.updateRoomFlagRuZhuService(list);
             return new Status(StatusEnum.SUCCESS.getCODE(), str);
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
             return new Status(404, "失败");
         }

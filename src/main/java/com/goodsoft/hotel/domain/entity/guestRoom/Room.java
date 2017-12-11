@@ -26,8 +26,6 @@ public class Room {
     private String rateCode;
 
 
-
-
     public String getId() {
         return id;
     }

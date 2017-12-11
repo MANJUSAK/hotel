@@ -25,7 +25,7 @@ import java.util.*;
 
 /**
  * Created by 王智 on 2017/11/9/009.
- *
+ * <p>
  * 房态信息
  */
 
@@ -42,24 +42,25 @@ public class RoomsController {
     //实例化日志管理工具类
     private Logger logger = LoggerFactory.getLogger(CookBookController.class);
 
-    private SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 
 
     /**
      * 添加实时房间价格
+     *
      * @param rtrp
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("floor/realTime/price")
-    public Object realTimePrice(@RequestBody RealTimeRoomParameter rtrp){
+    public Object realTimePrice(@RequestBody RealTimeRoomParameter rtrp) {
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RoomSDao mapper = sqlSession.getMapper(RoomSDao.class);
         //插入list
-        List<RealTimeRoomPrice> realTimeRoomPrices=new ArrayList<RealTimeRoomPrice>(100);
+        List<RealTimeRoomPrice> realTimeRoomPrices = new ArrayList<RealTimeRoomPrice>(100);
 
-        for(int i=0;i<rtrp.getMsg().size();i++){
-            for(int j=0;j<rtrp.getMsg().get(i).getRealTimeRooms().size();j++){
+        for (int i = 0; i < rtrp.getMsg().size(); i++) {
+            for (int j = 0; j < rtrp.getMsg().get(i).getRealTimeRooms().size(); j++) {
                 rtrp.getMsg().get(i).getRealTimeRooms().get(j).setTime(rtrp.getMsg().get(i).getTime());
                 realTimeRoomPrices.add(rtrp.getMsg().get(i).getRealTimeRooms().get(j));
             }
@@ -70,28 +71,29 @@ public class RoomsController {
             Integer insertNum = mapper.insertRoomRealTimePrice(realTimeRoomPrices);
             mapper.deleteErrorRoomRealTimePrice();
             sqlSession.commit();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             sqlSession.rollback();
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
-        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
 
     /**
      * 查询所有实时房价设置
+     *
      * @param time
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/select/RealTimePrice")
-    public Object selectRealTimePrice(String time){
-        List<RealTimeRoomPriceParam> realTimeRoomPriceParamList=null;
+    public Object selectRealTimePrice(String time) {
+        List<RealTimeRoomPriceParam> realTimeRoomPriceParamList = null;
         try {
             List<RealTimeRoomPrice> realTimeRoomPrices = roomSDao.selectRoomRealTimePrice(null);
             realTimeRoomPriceParamList = joinRealTimePrice(realTimeRoomPrices);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return realTimeRoomPriceParamList;
@@ -99,18 +101,18 @@ public class RoomsController {
 
 
     //分类实时房价信息
-    private List<RealTimeRoomPriceParam> joinRealTimePrice(List<RealTimeRoomPrice> reals){
+    private List<RealTimeRoomPriceParam> joinRealTimePrice(List<RealTimeRoomPrice> reals) {
 
-        List<RealTimeRoomPriceParam> returnList=new LinkedList<RealTimeRoomPriceParam>();
-        for(int i=0;i<reals.size();i++){
+        List<RealTimeRoomPriceParam> returnList = new LinkedList<RealTimeRoomPriceParam>();
+        for (int i = 0; i < reals.size(); i++) {
 
-            if(reals.get(i)!=null){
-                List<RealTimeRoomPrice> real=new LinkedList<RealTimeRoomPrice>();
-                RealTimeRoomPriceParam realtime=new RealTimeRoomPriceParam();
+            if (reals.get(i) != null) {
+                List<RealTimeRoomPrice> real = new LinkedList<RealTimeRoomPrice>();
+                RealTimeRoomPriceParam realtime = new RealTimeRoomPriceParam();
                 realtime.setTime(reals.get(i).getTime());
                 real.add(reals.get(i));
-                for(int j = i + 1; j < reals.size(); j++) {
-                    if(reals.get(j)!=null) {
+                for (int j = i + 1; j < reals.size(); j++) {
+                    if (reals.get(j) != null) {
                         if (reals.get(j).getTime() != null && reals.get(j).getTime().equals(reals.get(i).getTime())) {
                             real.add(reals.get(j));
                             reals.set(j, null);
@@ -119,13 +121,12 @@ public class RoomsController {
                 }
                 realtime.setRealTimeRooms(real);
                 returnList.add(realtime);
-                reals.set(i,null);
+                reals.set(i, null);
             }
         }
 
         return returnList;
     }
-
 
 
     /**
@@ -141,108 +142,109 @@ public class RoomsController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/select/roomInfo")
-    public Object getFang(String floorId,String typeId,String price,Integer sign,String selectedDate,Integer sflag,Integer cflag,Integer flag,Integer yflag){
+    public Object getFang(String floorId, String typeId, String price, Integer sign, String selectedDate, Integer sflag, Integer cflag, Integer flag, Integer yflag) {
 
-        if(sign!=null && sign<=3 && sign>0) {
+        if (sign != null && sign <= 3 && sign > 0) {
             //获取所有楼层id
             List<Integer> integers = roomSDao.selectFloorIdAll();
-            if(integers.size()>30) {
-                int y=sign == 1 ? 10:sign==2?20:integers.size();
-                int m=sign==1 ? 0:sign==2?10:20;
-                floorId="";
-                for (int x = m; x < y; x++){
-                    floorId+=(integers.get(x) + (x==(y-1)?"":","));
+            if (integers.size() > 30) {
+                int y = sign == 1 ? 10 : sign == 2 ? 20 : integers.size();
+                int m = sign == 1 ? 0 : sign == 2 ? 10 : 20;
+                floorId = "";
+                for (int x = m; x < y; x++) {
+                    floorId += (integers.get(x) + (x == (y - 1) ? "" : ","));
                 }
             }
         }
 
         List<Map<String, Object>> list = null;
         //参数map
-        Map<String,Object> paramMap =new HashMap<String,Object>();
-        if(floorId!=null && !"".equals(floorId)){
-            paramMap.put("floorId",floorId);
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        if (floorId != null && !"".equals(floorId)) {
+            paramMap.put("floorId", floorId);
         }
-        if(typeId!=null && !"".equals(typeId)){
-            paramMap.put("typeId",typeId);
+        if (typeId != null && !"".equals(typeId)) {
+            paramMap.put("typeId", typeId);
         }
-        List<RealStateResult> list1= new ArrayList<RealStateResult>(1000);
+        List<RealStateResult> list1 = new ArrayList<RealStateResult>(1000);
 
         try {
             list1 = roomSDao.queryFloorRoomMapper(paramMap);
-            List<Map<String,String>> strings = roomSDao.selectRoomReservesAll();
-            if(list1.size()==0){
-                return new Result(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
+            List<Map<String, String>> strings = roomSDao.selectRoomReservesAll();
+            if (list1.size() == 0) {
+                return new Result(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
             }
-            List<Map> maps = joinTypeRoom(list1,price,strings,sflag,cflag,flag,yflag,selectedDate);
-            if(maps.size()==0){
-                return new Result(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
+            List<Map> maps = joinTypeRoom(list1, price, strings, sflag, cflag, flag, yflag, selectedDate);
+            if (maps.size() == 0) {
+                return new Result(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
             }
-            return new Result(StatusEnum.SUCCESS.getCODE(),maps);
-        } catch (Exception e){
+            return new Result(StatusEnum.SUCCESS.getCODE(), maps);
+        } catch (Exception e) {
             e.printStackTrace();
-           return new Result(StatusEnum.ERROR.getCODE(),StatusEnum.ERROR.getEXPLAIN());
+            return new Result(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
         }
     }
 
 
     /**
      * 分类客房信息
+     *
      * @param list
      * @return
      */
-    private List<Map> joinTypeRoom(List<RealStateResult> list,String price,List<Map<String,String>> reserveRooms,Integer sflag,Integer cflag,Integer flag,Integer yflag,String selectedDate){
-        List<Map> returnList=new LinkedList<Map>();
-        String day=sf.format(new Date());
+    private List<Map> joinTypeRoom(List<RealStateResult> list, String price, List<Map<String, String>> reserveRooms, Integer sflag, Integer cflag, Integer flag, Integer yflag, String selectedDate) {
+        List<Map> returnList = new LinkedList<Map>();
+        String day = sf.format(new Date());
         //实时房价
         ArrayList<Map> maps = roomSDao.selectImmediateRoomPrice();
-        Object realPrice=null;
-        for(int i=0;i<list.size();i++){
-            if(list.get(i)!=null){
+        Object realPrice = null;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) != null) {
                 //判断是否有实时房价
-                realPrice = judgeRealTimePrice(maps,list.get(i).getTypeid());
-                if(realPrice!=null){
+                realPrice = judgeRealTimePrice(maps, list.get(i).getTypeid());
+                if (realPrice != null) {
                     list.get(i).setHouseprices(String.valueOf(realPrice));
                 }
                 //判断是否区分价格
-                if(price!=null && !price.equals(list.get(i).getHouseprices())){
+                if (price != null && !price.equals(list.get(i).getHouseprices())) {
                     continue;
                 }
                 //判断是否区分脏房净房
-                if(sflag!=null){
-                    if(sflag==1) {
+                if (sflag != null) {
+                    if (sflag == 1) {
                         if (!"净房".equals(list.get(i).getSflag())) {
                             continue;
                         }
-                    }else if (sflag==2) {
+                    } else if (sflag == 2) {
                         if (!"脏房".equals(list.get(i).getSflag())) {
                             continue;
                         }
                     }
                 }
                 //客房是否有预订信息 并判断时间
-                if(list.get(i).getStartdate()!=null && list.get(i).getStartdate().equals(day)){
+                if ("明确预订".equals(list.get(i).getBookingflag()) && list.get(i).getStartdate() != null && list.get(i).getStartdate().equals(day)) {
                     list.get(i).setCflag("预抵");
-                }else{
-                    if(cflag!=null && cflag==1){
+                } else {
+                    if (cflag != null && cflag == 1) {
                         continue;
                     }
                 }
-                if(list.get(i).getEnddate()!=null && list.get(i).getBookingflag()!=null && list.get(i).getEnddate().equals(day) && list.get(i).getBookingflag().equals("预订入住")){
+                if (list.get(i).getEnddate() != null && list.get(i).getBookingflag() != null && list.get(i).getEnddate().equals(day) && list.get(i).getBookingflag().equals("预订入住")) {
                     list.get(i).setCflag("预离");
-                }else{
-                    if(cflag!=null && cflag==2){
+                } else {
+                    if (cflag != null && cflag == 2) {
                         continue;
                     }
                 }
 
                 //判断客房今天以后是否有预订
-                for(int s=0;s<reserveRooms.size();s++){
-                    if(selectedDate==null) {
+                for (int s = 0; s < reserveRooms.size(); s++) {
+                    if (selectedDate == null) {
                         if (list.get(i).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
                             list.get(i).setYflag("1");
                             s = 99999;
                         }
-                    }else{
+                    } else {
                         if (list.get(i).getRoomno().equals(reserveRooms.get(s).get("roomno")) && selectedDate.equals(reserveRooms.get(s).get("startdate"))) {
                             list.get(i).setYflag("1");
                             s = 99999;
@@ -250,106 +252,116 @@ public class RoomsController {
                     }
                 }
                 //判断是否过滤预留
-                if(yflag!=null &&yflag==1){
-                    if("0".equals(list.get(i).getYflag())){
+                if (yflag != null && yflag == 1) {
+                    if ("0".equals(list.get(i).getYflag())) {
                         continue;
                     }
                 }
                 //判断是否过滤flag
-                if(flag!=null){
-                    if(flag==1){if(!"空房".equals(list.get(i).getFlag()))
-                        continue;}
-                    else if (flag==2){if(!"散客".equals(list.get(i).getFlag()) && !"团体".equals(list.get(i).getFlag()))
-                        continue;}
-                    else if (flag==3){if(!"维修".equals(list.get(i).getFlag()))
-                        continue;}
-                    else if (flag==4){if(!"停用".equals(list.get(i).getFlag()))
-                        continue;}
+                if (flag != null) {
+                    if (flag == 1) {
+                        if (!"空房".equals(list.get(i).getFlag()))
+                            continue;
+                    } else if (flag == 2) {
+                        if (!"散客".equals(list.get(i).getFlag()) && !"团体".equals(list.get(i).getFlag()))
+                            continue;
+                    } else if (flag == 3) {
+                        if (!"维修".equals(list.get(i).getFlag()))
+                            continue;
+                    } else if (flag == 4) {
+                        if (!"停用".equals(list.get(i).getFlag()))
+                            continue;
+                    }
                 }
 
 
-                Map typeMap =new HashMap();
-                List typeList =new LinkedList();
+                Map typeMap = new HashMap();
+                List typeList = new LinkedList();
                 typeList.add(list.get(i));
-                for (int j = i + 1; j < list.size(); j++){
-                if(list.get(j)!=null && list.get(i).getFloorname().equals(list.get(j).getFloorname())){
+                for (int j = i + 1; j < list.size(); j++) {
+                    if (list.get(j) != null && list.get(i).getFloorname().equals(list.get(j).getFloorname())) {
 
-                    //判断是否有实时房价
-                    realPrice = judgeRealTimePrice(maps,list.get(j).getTypeid());
-                    if(realPrice!=null){
-                        list.get(j).setHouseprices(String.valueOf(realPrice));
-                    }
-                    //判断是否区分价格
-                    if(price!=null && !price.equals(list.get(j).getHouseprices())){
-                        continue;
-                    }
-                    //判断是否区分脏房净房
-                    if(sflag!=null){
-                        if(sflag==2) {
-                            if (!"脏房".equals(list.get(j).getSflag())) {
-                                continue;
-                            }
-                        }else if (sflag==1) {
-                            if (!"净房".equals(list.get(j).getSflag())) {
-                                continue;
+                        //判断是否有实时房价
+                        realPrice = judgeRealTimePrice(maps, list.get(j).getTypeid());
+                        if (realPrice != null) {
+                            list.get(j).setHouseprices(String.valueOf(realPrice));
+                        }
+                        //判断是否区分价格
+                        if (price != null && !price.equals(list.get(j).getHouseprices())) {
+                            continue;
+                        }
+                        //判断是否区分脏房净房
+                        if (sflag != null) {
+                            if (sflag == 2) {
+                                if (!"脏房".equals(list.get(j).getSflag())) {
+                                    continue;
+                                }
+                            } else if (sflag == 1) {
+                                if (!"净房".equals(list.get(j).getSflag())) {
+                                    continue;
+                                }
                             }
                         }
-                    }
 
-                    //客房是否有预订信息 并判断时间
-                    if(list.get(j).getStartdate()!=null && list.get(j).getStartdate().equals(day) ){
+                        //客房是否有预订信息 并判断时间
+                        if ("明确预订".equals(list.get(j).getBookingflag()) && list.get(j).getStartdate() != null && list.get(j).getStartdate().equals(day)) {
                             list.get(j).setCflag("预抵");
-                    }else{
-                        if(cflag!=null && cflag==1){
-                            continue;
+                        } else {
+                            if (cflag != null && cflag == 1) {
+                                continue;
+                            }
                         }
-                    }
-                    if(list.get(j).getEnddate()!=null && list.get(j).getBookingflag()!=null && list.get(j).getEnddate().equals(day) && list.get(j).getBookingflag().equals("预订入住")){
+                        if (list.get(j).getEnddate() != null && list.get(j).getBookingflag() != null && list.get(j).getEnddate().equals(day) && list.get(j).getBookingflag().equals("预订入住")) {
                             list.get(j).setCflag("预离");
-                    }else{
-                        if(cflag!=null && cflag==2){
-                            continue;
+                        } else {
+                            if (cflag != null && cflag == 2) {
+                                continue;
+                            }
                         }
-                    }
 
-                    //客房今天以后是否有预订
-                    for(int s=0;s<reserveRooms.size();s++){
-                        if(selectedDate==null) {
-                            if (list.get(j).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
-                                list.get(j).setYflag("1");
-                                s = 99999;
-                            }
-                        }else{
-                            if ( selectedDate.equals(reserveRooms.get(s).get("startdate")) && list.get(j).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
-                                list.get(j).setYflag("1");
-                                s = 99999;
+                        //客房今天以后是否有预订
+                        for (int s = 0; s < reserveRooms.size(); s++) {
+                            if (selectedDate == null) {
+                                if (list.get(j).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
+                                    list.get(j).setYflag("1");
+                                    s = 99999;
+                                }
+                            } else {
+                                if (selectedDate.equals(reserveRooms.get(s).get("startdate")) && list.get(j).getRoomno().equals(reserveRooms.get(s).get("roomno"))) {
+                                    list.get(j).setYflag("1");
+                                    s = 99999;
+                                }
                             }
                         }
-                    }
-                    //判断是否过滤预留
-                    if(yflag!=null &&yflag==1){
-                        if("0".equals(list.get(j).getYflag())){
-                            continue;
+                        //判断是否过滤预留
+                        if (yflag != null && yflag == 1) {
+                            if ("0".equals(list.get(j).getYflag())) {
+                                continue;
+                            }
                         }
+                        //判断是否过滤flag
+                        if (flag != null) {
+                            if (flag == 1) {
+                                if (!"空房".equals(list.get(j).getFlag()))
+                                    continue;
+                            } else if (flag == 3) {
+                                if (!"维修".equals(list.get(j).getFlag()))
+                                    continue;
+                            } else if (flag == 4) {
+                                if (!"停用".equals(list.get(j).getFlag()))
+                                    continue;
+                            } else if (flag == 2) {
+                                if (!"散客".equals(list.get(j).getFlag()) && !"团体".equals(list.get(j).getFlag()))
+                                    continue;
+                            }
+                        }
+                        typeList.add(list.get(j));
+                        list.set(j, null);
                     }
-                    //判断是否过滤flag
-                    if(flag!=null){
-                        if(flag==1){if(!"空房".equals(list.get(j).getFlag()))
-                            continue;}
-                        else if (flag==3){if(!"维修".equals(list.get(j).getFlag()))
-                            continue;}
-                        else if (flag==4){if(!"停用".equals(list.get(j).getFlag()))
-                            continue;}
-                        else if (flag==2){if(!"散客".equals(list.get(j).getFlag()) && !"团体".equals(list.get(j).getFlag()))
-                            continue;}
-                    }
-                    typeList.add(list.get(j));
-                    list.set(j,null);
                 }
-                }
-                typeMap.put("type",list.get(i).getFloorname());
-                typeMap.put("typeList",typeList);
-                list.set(i,null);
+                typeMap.put("type", list.get(i).getFloorname());
+                typeMap.put("typeList", typeList);
+                list.set(i, null);
                 returnList.add(typeMap);
             }
         }
@@ -360,24 +372,25 @@ public class RoomsController {
     /**
      * 判断是否有实时房价
      */
-    private Object judgeRealTimePrice(List<Map> list,Object typeid){
-        String type=typeid.toString();
-        for(int i=0;i<list.size();i++){
-          if(type.equals(list.get(i).get("typeid"))){
-              return list.get(i).get("price");
-          }
+    private Object judgeRealTimePrice(List<Map> list, Object typeid) {
+        String type = typeid.toString();
+        for (int i = 0; i < list.size(); i++) {
+            if (type.equals(list.get(i).get("typeid"))) {
+                return list.get(i).get("price");
+            }
         }
         return null;
     }
 
 
     /**
-     *房态 : 返回房态右边的楼层信息
+     * 房态 : 返回房态右边的楼层信息
+     *
      * @return 右边下拉框中 楼层的信信息 OR 错误状态码
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("room/floorName/FangTai")
-    public Object findFloorAll(){
+    public Object findFloorAll() {
         try {
             List<Floors> list = this.roomSDao.findFloorAllMapper();
             return list;
@@ -388,15 +401,15 @@ public class RoomsController {
     }
 
 
-
     /**
      * 房态 : 通过右边楼层名 获取到房间信息  --不合理
+     *
      * @param floorCode 下拉框中的楼层名字对应的编号
      * @return 房间信息 OR 错误代码
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("room/floorName/room")
-    public Object findRoomGetFloorName(String floorCode){
+    public Object findRoomGetFloorName(String floorCode) {
         try {
             return this.roomSDao.findFloorNameGetRoomMapper(floorCode);
         } catch (Exception e) {
@@ -407,7 +420,8 @@ public class RoomsController {
 
     /**
      * 房间类型所有信息
-     *房态右边下拉框房间类型
+     * 房态右边下拉框房间类型
+     *
      * @return 房间类型
      * 2017-11-29
      */
@@ -424,12 +438,13 @@ public class RoomsController {
 
     /**
      * 房态 : 通过右边房间类型 获取到房间信息  --不合理
+     *
      * @param roomType 获取到右边下拉框信息
      * @return 返回房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("room/roomTypeName/room")
-    public Object findRoomGetRoomType(String roomType){
+    public Object findRoomGetRoomType(String roomType) {
         try {
             return this.roomSDao.queryRoomTypeGetRoomMapper(roomType);
         } catch (Exception e) {
@@ -441,21 +456,21 @@ public class RoomsController {
     /**
      * 房态:前台查询的获取--还没编写
      *
-     * @param strs  前台传递的参数
-     * @return  房间信息
+     * @param strs 前台传递的参数
+     * @return 房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/roomTypeName/find")
     public Object findFangTai(@Param("strs") String strs) {
         String str = "";
-        if(strs != null && !("".equals(strs))){
+        if (strs != null && !("".equals(strs))) {
             str = strs.trim();
         }
         System.out.println(str);
         StringBuffer sb = new StringBuffer("");
-        for(int i = 0;i<str.length();i++){
+        for (int i = 0; i < str.length(); i++) {
             sb.append(str.charAt(i));
-            if(i<str.length()-1){
+            if (i < str.length() - 1) {
                 sb.append("%");
             }
         }
@@ -483,7 +498,6 @@ public class RoomsController {
      */
 
 
-
     /**
      * 预定:预定页面中 点击房间号之后显示的页面,左边的列表
      *
@@ -506,6 +520,7 @@ public class RoomsController {
      * * 预定:预定页面中 点击房间号之后显示的页面,右边的房间号
      * 预定:传递空房信息  获取类型id 动态传递
      * 根据选择的房间类型 查看空房信息
+     *
      * @param typeId 预定页面中 点击房间号之后显示的页面,左边的列表 复选框中的ID
      * @return 房间信息
      */
@@ -515,15 +530,15 @@ public class RoomsController {
         List<Map<String, Object>> list = null;
         List<Map<String, Object>> map = new ArrayList<>();
         List<Integer> typeIds = null;
-        if(typeId==null){
+        if (typeId == null) {
             return map;
-        }else if(typeId.length()==0){
+        } else if (typeId.length() == 0) {
             return map;
         }
 
         try {
             String[] arr = {};
-            if (typeId != null && !"".equals(typeId.trim())){
+            if (typeId != null && !"".equals(typeId.trim())) {
                 arr = typeId.split(",");
             }
             typeIds = new ArrayList<Integer>();
@@ -603,8 +618,6 @@ public class RoomsController {
 
     /**
      * 测试接口--添加房间详细信息--未完成
-     *
-     *
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("insertRoom")
@@ -626,10 +639,10 @@ public class RoomsController {
     public Status updateBuild(@RequestBody Building map) {
         try {
             System.out.println(map.getBuildingName());
-            return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.ERROR.getCODE(),StatusEnum.ERROR.getEXPLAIN());
+            return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
         }
     }
 
@@ -640,25 +653,27 @@ public class RoomsController {
      */
     /**
      * 快速分房右边的房类信息的接口  快速分房 (页面修改为工作流展示该接口联通但未使用)
+     *
      * @return 房类信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("fenFang/roomType")
-    public List<RoomType> fenFangFangLei(){
+    public List<RoomType> fenFangFangLei() {
         List<RoomType> list = this.roomSDao.findRoomTypeFenFangMapper();
         return list;
     }
 
     /**
      * 快速分房右边的建筑的接口  快速分房 (页面修改为工作流展示该接口联通但未使用)
+     *
      * @param roomType 房类的类型编号
      * @return 建筑信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("fenFang/Building")
-    public List<Building> fenFangBuild(@Param("roomType") String roomType){
+    public List<Building> fenFangBuild(@Param("roomType") String roomType) {
         List<Building> list = null;
-        if(roomType !=null && !("".equals(roomType))){
+        if (roomType != null && !("".equals(roomType))) {
             list = this.roomSDao.findBuildingFenFangMapper(roomType);
         }
         return list;
@@ -666,63 +681,63 @@ public class RoomsController {
 
     /**
      * 快速分房右边的楼层的接口 快速分房 (页面修改为工作流展示该接口联通但未使用)
+     *
      * @param buildingCode 建筑的编号
      * @return 楼层信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("fenFang/Floors")
-    public List<Floors> fenFangFloors(String buildingCode ) {
+    public List<Floors> fenFangFloors(String buildingCode) {
         System.out.println(buildingCode);
         List<Floors> list = null;
-        if(buildingCode !=null && !("".equals(buildingCode))){
+        if (buildingCode != null && !("".equals(buildingCode))) {
             list = this.roomSDao.findFloorsFenFangMapper(buildingCode);
         }
         return list;
     }
 
     /**
+     * 快速分房筛选的房态信息  快速分房 (页面修改为工作流展示该接口没有联通使用)
      *
-     *快速分房筛选的房态信息  快速分房 (页面修改为工作流展示该接口没有联通使用)
-     *
-     * @param roomType  房间类型
+     * @param roomType     房间类型
      * @param buildingCode 建筑编号
-     * @param floorCode 楼层编号
-     * @param flag 状态
-     * @param startDate 预抵日期
-     * @param endDate 离店日期
-     * @return  房间信息
+     * @param floorCode    楼层编号
+     * @param flag         状态
+     * @param startDate    预抵日期
+     * @param endDate      离店日期
+     * @return 房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("fenFang/Rooms")
-    public Map fenFangRooms(String roomType,String buildingCode,String floorCode,String flag,String sflag, String startDate,String endDate){
-            Map<String,String> map = new HashMap<String, String>();
-            if(roomType !=null && !("".equals(roomType))){
-                map.put("roomType",roomType);
-            }
-            if(buildingCode !=null && !("".equals(buildingCode))){
-                map.put("buildingCode",buildingCode);
-            }
-            if(floorCode !=null && !("".equals(floorCode))){
-                map.put("floorCode",floorCode);
-            }
-            if(flag !=null && !("".equals(flag))){
-                map.put("flag",flag);
-            }
-            if(sflag !=null && !("".equals(sflag))){
-                map.put("sflag",sflag);
-            }
-            if(startDate !=null && !("".equals(startDate))){
-                map.put("startDate",startDate);
-            }
-            if(endDate !=null && !("".equals(endDate))){
-                map.put("endDate",endDate);
-            }
+    public Map fenFangRooms(String roomType, String buildingCode, String floorCode, String flag, String sflag, String startDate, String endDate) {
+        Map<String, String> map = new HashMap<String, String>();
+        if (roomType != null && !("".equals(roomType))) {
+            map.put("roomType", roomType);
+        }
+        if (buildingCode != null && !("".equals(buildingCode))) {
+            map.put("buildingCode", buildingCode);
+        }
+        if (floorCode != null && !("".equals(floorCode))) {
+            map.put("floorCode", floorCode);
+        }
+        if (flag != null && !("".equals(flag))) {
+            map.put("flag", flag);
+        }
+        if (sflag != null && !("".equals(sflag))) {
+            map.put("sflag", sflag);
+        }
+        if (startDate != null && !("".equals(startDate))) {
+            map.put("startDate", startDate);
+        }
+        if (endDate != null && !("".equals(endDate))) {
+            map.put("endDate", endDate);
+        }
 
         for (String key : map.keySet()) {
-            System.out.println("key= "+ key + " and value= " + map.get(key));
+            System.out.println("key= " + key + " and value= " + map.get(key));
         }
-            this.roomSDao.findRoomFenFangMapper(map);
-            return map;
+        this.roomSDao.findRoomFenFangMapper(map);
+        return map;
     }
 
     /**
@@ -732,44 +747,45 @@ public class RoomsController {
      */
 
 
-
     /**
      * 判断当前日期是星期几
+     *
      * @param pTime 需要判断的时间
      * @return dayForWeek 判断结果
      * @Exception 发生异常
      */
-    public  static  int  dayForWeek(String pTime) throws  Exception {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd" );
+    public static int dayForWeek(String pTime) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(format.parse(pTime));
-        int  dayForWeek = 0 ;
-        if (c.get(Calendar.DAY_OF_WEEK) == 1 ){
-            dayForWeek = 7 ;
-        }else {
-            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1 ;
+        int dayForWeek = 0;
+        if (c.get(Calendar.DAY_OF_WEEK) == 1) {
+            dayForWeek = 7;
+        } else {
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
         }
-        return  dayForWeek;
+        return dayForWeek;
     }
 
 
     /**
      * 保存房价信息---没有接通  房价政策
+     *
      * @param roomPrices
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("rooms/roomsPrices")
-    public Map addRoomPrices(@RequestBody List<RoomPrices> roomPrices){
+    public Map addRoomPrices(@RequestBody List<RoomPrices> roomPrices) {
         String uuid = UUIDUtil.getInstance().getUUID().toString();
 //        roomPrices.setId(uuid);
-        for (RoomPrices r:roomPrices
-             ) {
+        for (RoomPrices r : roomPrices
+                ) {
             System.out.println(r.toString());
         }
-        Map<String,String> map = null;
+        Map<String, String> map = null;
         System.out.println(roomPrices.toString());
-        map.put("success","数据获取");
+        map.put("success", "数据获取");
         try {
 //            this.roomSDao.addRoomPricesMapper(roomPrices);
 //            map.put("success","0");
@@ -783,6 +799,29 @@ public class RoomsController {
     }
 
 
+    /**
+     * 修改房间净房脏房状态
+     *
+     * @param roomnos
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("rooms/update/sflag")
+    public Object updatesflag(String roomnos, String modifTime, String modifier, String roomServece, String roomRemark, String sflag) {
+        try {
+            String[] split = roomnos.split(",");
+            List s = new ArrayList();
+            for (int i = 0; i < split.length; i++) {
+                s.add(split[i]);
+            }
+            roomSDao.updateRoomSflag(sflag, s);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+    }
+
 
     /**
      * ****************************************************************************************
@@ -792,59 +831,62 @@ public class RoomsController {
 
     /**
      * 获取所有客房消费项目
+     *
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("consume/project/getAll")
-    public Object getProjects(){
-        try{
+    public Object getProjects() {
+        try {
             List<KfconsumerProjects> kfconsumerProjects = roomSDao.selectXfProjectAll();
-            if(kfconsumerProjects.size()==0){
-                return new Result(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
-            }else{
-                return new Result(StatusEnum.SUCCESS.getCODE(),kfconsumerProjects);
+            if (kfconsumerProjects.size() == 0) {
+                return new Result(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+            } else {
+                return new Result(StatusEnum.SUCCESS.getCODE(), kfconsumerProjects);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 
 
     /**
      * 插入客房消费信息
+     *
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("consume/record/insert")
-    public Object insertRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam){
+    public Object insertRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam) {
 
-        if(kfconsumpRecordParam.getConsumptions()==null||kfconsumpRecordParam.getConsumptions().size()==0||kfconsumpRecordParam.getBookingno()==null){
-            return new Status(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+        if (kfconsumpRecordParam.getConsumptions() == null || kfconsumpRecordParam.getConsumptions().size() == 0 || kfconsumpRecordParam.getBookingno() == null) {
+            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
         }
-        for(int i=0;i<kfconsumpRecordParam.getConsumptions().size();i++){
+        for (int i = 0; i < kfconsumpRecordParam.getConsumptions().size(); i++) {
             kfconsumpRecordParam.getConsumptions().get(i).setBookingno(kfconsumpRecordParam.getBookingno());
         }
-        try{
+        try {
             roomSDao.insertXfConsumptionInfo(kfconsumpRecordParam.getConsumptions());
-            return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
-        }catch (Exception e){
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 
 
     /**
      * 修改客房消费信息
+     *
      * @param kfconsumpRecordParam
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("consume/record/update")
     public Object updateRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam) {
-        if(kfconsumpRecordParam.getConsumptions()==null|| kfconsumpRecordParam.getConsumptions().size()==0 ||kfconsumpRecordParam.getBookingno()==null){
-            return new Status(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+        if (kfconsumpRecordParam.getConsumptions() == null || kfconsumpRecordParam.getConsumptions().size() == 0 || kfconsumpRecordParam.getBookingno() == null) {
+            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
         }
         try {
             roomSDao.deleteXfConsumptionInfo(kfconsumpRecordParam.getBookingno());
@@ -852,11 +894,12 @@ public class RoomsController {
                 kfconsumpRecordParam.getConsumptions().get(i).setBookingno(kfconsumpRecordParam.getBookingno());
             }
             roomSDao.insertXfConsumptionInfo(kfconsumpRecordParam.getConsumptions());
-            return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
-        }catch (Exception e){
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
+
 }
 

@@ -88,24 +88,22 @@ public class FloorRoomServiceImpl implements FloorRoomService {
     public String updateRoomFlagRuZhuService(List<Map<String, Object>> list) throws Exception {
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         BookingDao mapper = sqlSession.getMapper(BookingDao.class);
-        Integer x = 0;
+
         try {
             for (int i = 0; i < list.size(); i++) {
-                Integer y = bookingDao.updateRoomFlagRuZhu(list.get(i));
-                bookingDao.updateRoomFlagRuZhuBooking(String.valueOf(list.get(i).get("id")));
-                x += y;
+                Integer y = mapper.updateRoomFlagRuZhu(list.get(i));
+                mapper.updateRoomFlagRuZhuBooking(String.valueOf(list.get(i).get("ids")));
             }
             sqlSession.commit();
-        } catch (Exception e) {
+        } catch (Exception e){
             sqlSession.rollback();
             e.printStackTrace();
             System.out.println(e.getMessage());
-            x = 0;
+            return "入住失败";
         } finally {
             sqlSession.close();
         }
-        System.out.println("sum:" + x);
-        return x >= 0 ? "成功入住:入住" + x + "间" : "入住失败";
+        return "入住成功";
     }
 
 

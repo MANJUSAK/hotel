@@ -13,31 +13,33 @@
 
 
     <!--房态 主页面 通过楼层号获取房间信息-->
-    <select id="queryFloorRoomMapper" parameterType="java.util.Map"  resultType="com.goodsoft.hotel.domain.entity.guestRoom.RealStateResult">
-      select a.*,b.* from (
-      select b.buildingname,c.floorname,d.typeid,d.typename,d.houseprices,a.id,a.roomno,a.stdpax,a.maxpax,a.doorlockid,a.flag,a.sflag,a.cflag
-      from gs_room a ,gs_building b,gs_floor c,gs_roomtype d
-      where a.buildingcode=b.buildid and a.floorcode =c.FLOORID and a.roomtype=d.typeid
+    <select id="queryFloorRoomMapper" parameterType="java.util.Map"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.RealStateResult">
+        select a.*,b.* from (
+        select
+        b.buildingname,c.floorname,d.typeid,d.typename,d.houseprices,a.id,a.roomno,a.stdpax,a.maxpax,a.doorlockid,a.flag,a.sflag,a.cflag
+        from gs_room a ,gs_building b,gs_floor c,gs_roomtype d
+        where a.buildingcode=b.buildid and a.floorcode =c.FLOORID and a.roomtype=d.typeid
         <if test="floorId!=null">
-        and a.floorcode in (${floorId})
+            and a.floorcode in (${floorId})
         </if>
         <if test="typeId!=null">
-        and a.roomtype=#{typeId}
+            and a.roomtype=#{typeId}
         </if>
-      ) a
-      left join
-      (
-      select  a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid ,a.bookingflag from gs_quickbooking a,gs_quickbooking_roomno b
-      where a.id=b.bookid and a.bookingflag='明确预定' and a.startdate = date_format(now(),'%Y-%m-%d')
-      )b
-      on a.id =b.roomid
-
+        ) a
+        left join
+        (
+        select a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid ,a.bookingflag from
+        gs_quickbooking a,gs_quickbooking_roomno b
+        where a.id=b.bookid and (a.bookingflag='明确预定' or a.bookingflag='预订入住')
+        )b
+        on a.id =b.roomid
     </select>
 
-     <!--获取所有房间预定信息-->
+    <!--获取所有房间预定信息-->
     <select id="selectRoomReservesAll" resultType="java.util.Map">
      select  b.roomno ,a.startdate from gs_quickbooking a , gs_quickbooking_roomno b
-     where b.bookid=a.id  and a.startdate > date_format(now(),'%Y-%m-%d') and a.bookingflag='明确预定'
+     where b.bookid=a.id  and a.startdate &gt; date_format(now(),'%Y-%m-%d') and a.bookingflag='明确预定'
     </select>
 
     <!--获取所有楼层id-->
@@ -53,10 +55,10 @@
     <!--from gs_room a ,gs_building b,gs_floor c,gs_roomtype d-->
     <!--where a.buildingcode=b.buildid and a.floorcode =c.FLOORID and a.roomtype=d.typeid-->
     <!--<if test="floorId!=null">-->
-        <!--and a.floorcode=#{floorId}-->
+    <!--and a.floorcode=#{floorId}-->
     <!--</if>-->
     <!--<if test="typeId!=null">-->
-        <!--and a.roomtype=#{typeId}-->
+    <!--and a.roomtype=#{typeId}-->
     <!--</if>-->
     <!--) s left join-->
     <!--(select typeid,price from  REALTIMEHOUSEPRICE where time=date_format(now(),'%Y-%m-%d'))g  on s.typeid=g.typeid-->
@@ -143,7 +145,8 @@
 
     <!--根据房间类型id获取房间号-->
     <select id="selectKongMapper" resultType="java.util.Map">
-        select a.id,a.roomid,a.ROOMNO,a.doorLockId,case when b.price is null then a.housePrices else b.price end housePrices ,a.typename,a.typeid from (
+        select a.id,a.roomid,a.ROOMNO,a.doorLockId,case when b.price is null then a.housePrices else b.price end
+        housePrices ,a.typename,a.typeid from (
         SELECT a.id,a.roomid,a.ROOMNO,a.doorLockId,b.housePrices,b.typename,b.typeid FROM gs_room a,gs_roomtype b where
         a.ROOMTYPE=b.typeid AND a.FLAG='空房' and b.typename!='不可用'
         AND b.typeId IN
@@ -167,22 +170,25 @@
     </select>
 
     <!--右边第二个建筑楼层-->
-    <select id="findBuildingFenFangMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
+    <select id="findBuildingFenFangMapper" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
         select DISTINCT a.* FROM gs_building a,gs_room b WHERE a.buildingcode = b.buildingcode
             AND b.roomType = #{_parameter}
     </select>
 
     <!--右边第三个获取楼层-->
-    <select id="findFloorsFenFangMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+    <select id="findFloorsFenFangMapper" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
         select DISTINCT a.* FROM gs_floor a,gs_room b WHERE a.floorcode = b.floorcode
             AND b.buildingcode = #{_parameter}
     </select>
-    
+
     <!--左边房间查询房间-->
-    <select id="findRoomFenFangMapper" parameterType="java.util.Map" resultType="java.util.Map" >
+    <select id="findRoomFenFangMapper" parameterType="java.util.Map" resultType="java.util.Map">
         select * from
         (
-        SELECT c.buildingname,d.floorname,b.typename,a.id,a.roomno,a.remark,a.flag,a.sflag from gs_room a,gs_roomtype b,gs_building c ,gs_floor d
+        SELECT c.buildingname,d.floorname,b.typename,a.id,a.roomno,a.remark,a.flag,a.sflag from gs_room a,gs_roomtype
+        b,gs_building c ,gs_floor d
         WHERE a.roomtype=b.roomtype AND a.buildingcode = c.buildingcode AND a.floorcode = d.floorcode AND
         <if test="roomType != null and roomType !='' ">
             AND a.roomType = #{roomType}
@@ -202,7 +208,8 @@
         ) x
         LEFT JOIN
         (
-        select w.roomid,q.bookingno,q.guestname,q.markets,q.salesman,q.startdate,q.enddate,q.releasetime,q.days,q.remark,w.roomno
+        select
+        w.roomid,q.bookingno,q.guestname,q.markets,q.salesman,q.startdate,q.enddate,q.releasetime,q.days,q.remark,w.roomno
         from gs_quickbooking q ,gs_quickbooking_roomno w where q.id = w.bookid
         <if test="startDate !=null and startDate != ''">
             AND unix_timestamp(q.startdate) &gt;= unix_timestamp(#{endDate})
@@ -242,12 +249,10 @@
     </insert>
 
 
-
     <!--添加房价信息-->
     <insert id="addRoomPricesMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomPrices">
         insert INTO gs_roomprices VALUES (#{id},#{roomTypeId},#{setStartTime},#{roomPrices})
     </insert>
-
 
 
     <!--添加实时房价-->
@@ -256,18 +261,19 @@
         <foreach collection="list" item="item" separator=",">
             ('',#{item.typeid},#{item.time},#{item.price})
         </foreach>
-</insert>
+    </insert>
 
 
     <resultMap id="realTimePriceMap" type="com.goodsoft.hotel.domain.entity.guestRoom.RealTimeRoomPrice">
-           <result property="id" column="typename"/>
-           <result property="typeid" column="typeid"/>
-           <result property="time" column="time"/>
-           <result property="price" column="price"/>
+        <result property="id" column="typename"/>
+        <result property="typeid" column="typeid"/>
+        <result property="time" column="time"/>
+        <result property="price" column="price"/>
     </resultMap>
     <!--查询实时房价设置-->
     <select id="selectRoomRealTimePrice" parameterType="string" resultMap="realTimePriceMap">
-        select a.typeid,b.typename,a.time,a.price from REALTIMEHOUSEPRICE a,GS_ROOMTYPE b  where a.typeid=b.typeId and time &gt;=DATE_FORMAT(NOW(),'%Y-%m-%d')
+        select a.typeid,b.typename,a.time,a.price from REALTIMEHOUSEPRICE a,GS_ROOMTYPE b where a.typeid=b.typeId and
+        time &gt;=DATE_FORMAT(NOW(),'%Y-%m-%d')
         <if test="time!=null  and time!=''">
             and subString(time,1,7)=#{time}
         </if>
@@ -279,7 +285,8 @@
     </update>
 
     <!--查询实时房价是否存在 -->
-    <select id="joinRoomRealTimePrice" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RealTimeRoomPrice" resultType="java.lang.Integer">
+    <select id="joinRoomRealTimePrice" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RealTimeRoomPrice"
+            resultType="java.lang.Integer">
         select count(1) from REALTIMEHOUSEPRICE where typeid=#{typeid} and time=#{time}
     </select>
 
@@ -289,14 +296,13 @@
     </delete>
 
     <!--删除当天以前实时房价-->
-    <delete id="deleteLastRealTimePrice" >
+    <delete id="deleteLastRealTimePrice">
       delete from   REALTIMEHOUSEPRICE where time &lt; now();
     </delete>
-     <!--删除所有实时房价-->
+    <!--删除所有实时房价-->
     <delete id="deleteAllRealTimePrice">
         delete from   REALTIMEHOUSEPRICE
     </delete>
-
 
 
     <!--获取所有消费项目-->
@@ -304,18 +310,35 @@
         select * from  gs_kfconsumer_projects
     </select>
 
-     <!--插入客房消费记录-->
+    <!--插入客房消费记录-->
     <select id="insertXfConsumptionInfo" parameterType="java.util.List">
         insert into gs_kfconsump_record values
-        <foreach collection="list" separator="," item="item" >
+        <foreach collection="list" separator="," item="item">
             (#{item.id},#{item.roomno},#{item.guestname},#{item.project},#{item.projectnumber},
             #{item.unitprice},#{item.discount},#{item.paymentexplain},#{item.bookingno})
         </foreach>
     </select>
 
-     <!--删除客房消费记录-->
+    <!--删除客房消费记录-->
     <update id="deleteXfConsumptionInfo" parameterType="string">
     delete from  gs_kfconsump_record  where  bookingno=#{bookingno}
     </update>
+
+
+    <!--修改客房净房脏房状态-->
+    <update id="updateRoomSflag" parameterType="string">
+        update gs_room set sflag=#{sflag} where roomno in
+        <foreach collection="roomnos" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--定时修改客房脏房净房状态-->
+    <update id="updateRoomSflagTimer">
+         update gs_room set sflag='脏房' where roomno in (
+         select b.roomno from  gs_quickbooking a , gs_quickbooking_roomno b
+         where b.bookid=a.id  and a.startdate = date_format(now(),'%Y-%m-%d')  and a.bookingflag='预订入住' )
+    </update>
+
 
 </mapper>

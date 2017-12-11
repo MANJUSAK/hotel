@@ -7,9 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
+
 
 /**
  * Created by duyuxiang on 2017/11/29.
@@ -36,7 +35,19 @@ public class CyReserveTimer{
             //更新过期实时房价
             roomSDao.deleteLastRealTimePrice();
         }catch (Exception e){
-            logger.error("定时任务更新失败");
+            logger.error("定时任务更新失败:"+e.getMessage());
         }
     }
+
+    @Scheduled(cron="0 50 23 * * ?")
+    public void updateRoomSflag(){
+        try{
+            roomSDao.updateRoomSflagTimer();
+        }catch (Exception e){
+            logger.error("定时任务更新失败:"+e.getMessage());
+        }
+
+    }
+
+
 }

@@ -19,14 +19,14 @@ public class RealStateResult {
     private String     flag ;          //标识(空房,散客,团体 ... ) 除空房以外  其余都是入住状态
     private String     sflag  ;        // 标识(净房 , 脏房 )
     private String     cflag  ;        // 标识(预抵 , 预离 )
-    private String     yflag ="0" ;        //标识(预留 ?)
+    private String     yflag ="0" ;    //标识(预留 ?)
 
     //以下不确定数据   cflag为预抵 附带以下信息
     private String     bookingno ;   //预订单号
     private String     guestname ;   //预订客人名
     private String     startdate;    //预订入住时间
     private String     enddate ;     //预订离开时间
-    private String     teamname ;    //业务员
+    private String     teamname ;    //团队名
     private String     remark ;      //备注
     private String     roomid ;      //房间id
     private String     bookingflag;  //预订单状态

@@ -106,6 +106,16 @@ public interface RoomSDao {
 
 
     /**
+     * 定时修改房间脏房净房状态
+     */
+     public void updateRoomSflagTimer();
+
+    /**
+     * 修改房间sflag
+     */
+     public Integer updateRoomSflag(@Param("sflag") String sflag,@Param("roomnos") List<String> roomnos);
+
+    /**
      * 添加实时房价
      */
      public Integer insertRoomRealTimePrice(List<RealTimeRoomPrice> list);

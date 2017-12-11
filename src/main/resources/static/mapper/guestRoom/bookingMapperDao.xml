@@ -310,8 +310,8 @@
 
     <!--预定入住查询-->
     <select id="selectRoomRuZhu"   resultType="java.util.Map">
-        SELECT a.markets,c.id,a.id FROM gs_quickbooking a,gs_quickbooking_roomno b,gs_room c
-        where a.id = b.bookid and b.roomid = c.id AND b.roomno IN
+        SELECT a.markets,c.id,a.id ids FROM gs_quickbooking a,gs_quickbooking_roomno b,gs_room c
+        where a.id = b.bookid and b.roomid = c.id AND a.bookingno='明确预订' AND b.roomno IN
         <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>

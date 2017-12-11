@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.config.timer;
 
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
+import javafx.fxml.Initializable;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -13,10 +14,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * description:
@@ -80,4 +83,6 @@ public class RepastOrderTimer {
         System.out.println(hourBetween);
         return hourBetween > 5;
     }
+
+
 }
