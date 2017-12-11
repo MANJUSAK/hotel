@@ -21,6 +21,9 @@ public class MenuCustom implements java.io.Serializable {
     private double num;//数量
     private String tname;//部门类别
     private double price;//价格
+    private String tid;//部门id
+    private String ptPort;//打印机端口（仅用于查询）
+    private String ptDriverName;//打印机端口（仅用于查询）
 
     public String getId() {
         return id;
@@ -86,6 +89,30 @@ public class MenuCustom implements java.io.Serializable {
         this.price = price < 0 ? Math.abs(price) : price;
     }
 
+    public String getTid() {
+        return tid;
+    }
+
+    public void setTid(String tid) {
+        this.tid = tid;
+    }
+
+    public String getPtPort() {
+        return ptPort;
+    }
+
+    public void setPtPort(String ptPort) {
+        this.ptPort = ptPort;
+    }
+
+    public String getPtDriverName() {
+        return ptDriverName;
+    }
+
+    public void setPtDriverName(String ptDriverName) {
+        this.ptDriverName = ptDriverName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,11 +123,14 @@ public class MenuCustom implements java.io.Serializable {
                 Objects.equals(cbname, that.cbname) &&
                 Objects.equals(spec, that.spec) &&
                 Objects.equals(unit, that.unit) &&
+                Objects.equals(tid, that.tid) &&
+                Objects.equals(ptPort, that.ptPort) &&
+                Objects.equals(ptDriverName, that.ptDriverName) &&
                 Objects.equals(tname, that.tname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customId, cbname, spec, unit, tname);
+        return Objects.hash(id, customId, cbname, spec, unit, tname, tid, ptPort, ptDriverName);
     }
 }

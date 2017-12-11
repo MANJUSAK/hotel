@@ -5,7 +5,7 @@ import java.util.List;
 /**
  *
  * 接收房间信息预定入住信息
- * Created by 王智 on 2017/11/28/028.
+ * Created by zhiWang on 2017/11/28/028.
  */
 public class BookingCheckIn {
 

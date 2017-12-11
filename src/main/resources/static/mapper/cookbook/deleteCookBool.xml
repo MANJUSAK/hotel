@@ -61,7 +61,7 @@
         DELETE FROM `gs_cookbook_inventory`
         WHERE
         <if test="rel ==0">
-            `CBID`
+            `ID`
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==1">

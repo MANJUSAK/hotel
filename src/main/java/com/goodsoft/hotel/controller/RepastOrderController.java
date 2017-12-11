@@ -30,6 +30,30 @@ public class RepastOrderController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
+     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * 注：id为必传
+     * 该接口涵盖了订单的所有信息
+     *
+     * @param id 订单编号
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("/find/order/data.shtml")
+    public Object queryOrderOneController(String id) {
+        try {
+            if (id != null && !("".equals(id))) {
+                return this.service.queryOrderService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN() + "id的值不能为null或为空");
+            }
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+    }
+
+    /**
      * 餐饮订单查询接口，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
      * （status=1未结/2反结/3超时）

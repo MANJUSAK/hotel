@@ -446,7 +446,11 @@ public class CookBookController {
     @RequestMapping(value = "/delete/menu/type/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuType(String... id) {
         try {
-            return this.service.deleteMenuTypeService(id);
+            if (id != null && id.length > 0) {
+                return this.service.deleteMenuTypeService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
@@ -465,7 +469,11 @@ public class CookBookController {
     @RequestMapping(value = "/delete/menu/sub/type/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuSubTypeController(String... id) {
         try {
-            return this.service.deleteMenuSubTypeService(id);
+            if (id != null && id.length > 0) {
+                return this.service.deleteMenuSubTypeService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
@@ -484,7 +492,11 @@ public class CookBookController {
     @RequestMapping(value = "/delete/menu/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuContorller(String... id) {
         try {
-            return this.service.deleteMenuService(id);
+            if (id != null && id.length > 0) {
+                return this.service.deleteMenuService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
@@ -503,7 +515,11 @@ public class CookBookController {
     @RequestMapping(value = "/delete/menu/means/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuMeansController(String... id) {
         try {
-            return this.service.deleteMenuMeansService(id);
+            if (id != null && id.length > 0) {
+                return this.service.deleteMenuMeansService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
         } catch (HotelDataBaseException e) {
             e.printStackTrace();
             this.logger.error(e.toString());
@@ -521,7 +537,11 @@ public class CookBookController {
     @RequestMapping(value = "/delete/menu/means/detail/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuMeansDetailController(String... id) {
         try {
-            return this.service.deleteMenuMeansDetailService(id);
+            if (id != null && id.length > 0) {
+                return this.service.deleteMenuMeansDetailService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
@@ -540,7 +560,11 @@ public class CookBookController {
     @RequestMapping(value = "/delete/set/meal/data.shtml", method = RequestMethod.GET)
     public Status deleteSetMealController(String... id) {
         try {
-            return this.service.deleteSetMealService(id);
+            if (id != null && id.length > 0) {
+                return this.service.deleteSetMealService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
@@ -558,7 +582,11 @@ public class CookBookController {
     @RequestMapping(value = "/delete/set/meal/detail/data.shtml", method = RequestMethod.GET)
     public Status deleteSetMealDetailController(String... id) {
         try {
-            return this.service.deleteSetMealDetailService(id);
+            if (id != null && id.length > 0) {
+                return this.service.deleteSetMealDetailService(id);
+            } else {
+                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());

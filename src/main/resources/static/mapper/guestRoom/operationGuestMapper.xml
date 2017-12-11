@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--  zhiWang  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.OperationGuestDao">
+
+    <!--修改客人信息-->
+    <update id="updateGuestMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Guest">
+        update gs_guest set
+        guestName=#{guestName},
+        nickName = #{nickName},
+        englishName =  #{englishName},
+        marital = #{marital},
+        nationality = #{nationality},
+        languages = #{languages},
+        cardType = #{cardType},
+        ethnic = #{ethnic},
+        documentNo = #{documentNo},
+        nativePlace = #{nativePlace},
+        sex = #{sex},
+        occupation = #{occupation},
+        birthDay = #{birthDay},
+        workUnit = #{workUnit},
+        cityProper = #{cityProper},
+        post = #{work},
+        regional = #{regional},
+        stopCause = #{stopCause},
+        postalCode = #{postalCode},
+        address = #{address},
+        officePhone = #{officePhone},
+        phoneNumber = #{phoneNumber},
+        telePhone = #{telePhone},
+        visaAgency = #{visaAgency},
+        visaType = #{visaType},
+        visaNumber = #{visaNumber},
+        visaDate = #{visaDate},
+        periodValidity = #{periodValidity},
+        entryTime = #{entryTime},
+        entryPorts = #{entryPorts},
+        newspaperType = #{newspaperType},
+        religiousBelief = #{religiousBelief},
+        secondCard = #{secondCard},
+        comeFrom = #{comeFrom},
+        arrivalFlight = #{arrivalFlight},
+        whereToGo = #{whereToGo},
+        leaveFlight = #{leaveFlight},
+        positions = #{positions},
+        carType = #{carType},
+        carPlateNumber = #{carPlateNumber},
+        specialDemand = #{specialDemand},
+        hobby = #{hobby},
+        taboo = #{taboo},
+        bookId = #{bookId},
+        vipId = #{vipId}
+        where id = #{id}
+    </update>
+
+
+    <!--查询客人信息-->
+    <select id="findGuestMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Guest">
+        select * from gs_guest
+    </select>
+
+
+    <!--删除客人信息-->
+    <delete id="deleteGuestMapper" parameterType="java.lang.String">
+        delete from gs_guest where id = #{_parameter}
+    </delete>
+
+
+</mapper>

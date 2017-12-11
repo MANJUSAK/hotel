@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * 预定信息
- * Created by 王智 on 2017/11/21/021.
+ * Created by zhiWang on 2017/11/21/021.
  */
 @Repository
 public interface BookingDao {

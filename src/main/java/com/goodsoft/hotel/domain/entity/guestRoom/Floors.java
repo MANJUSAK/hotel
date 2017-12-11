@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 楼层信息表
- * Created by 王智 on 2017/11/9/009.
+ * Created by zhiWang on 2017/11/9/009.
  */
 public class Floors {
     private String id;              //ID
@@ -43,24 +43,12 @@ public class Floors {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Floors floors = (Floors) o;
-
-        if (id != null ? !id.equals(floors.id) : floors.id != null) return false;
-        if (floorCode != null ? !floorCode.equals(floors.floorCode) : floors.floorCode != null) return false;
-        if (floorName != null ? !floorName.equals(floors.floorName) : floors.floorName != null) return false;
-        return floorId != null ? floorId.equals(floors.floorId) : floors.floorId == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (floorCode != null ? floorCode.hashCode() : 0);
-        result = 31 * result + (floorName != null ? floorName.hashCode() : 0);
-        result = 31 * result + (floorId != null ? floorId.hashCode() : 0);
-        return result;
+    public String toString() {
+        return "Floors{" +
+                "id='" + id + '\'' +
+                ", floorCode='" + floorCode + '\'' +
+                ", floorName='" + floorName + '\'' +
+                ", floorId='" + floorId + '\'' +
+                '}';
     }
 }

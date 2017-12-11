@@ -60,6 +60,48 @@ public class RepastOderServicelmpl implements RepastOderService {
 
 
     /**
+     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * 注：id为必传
+     * 该接口涵盖了订单的所有信息
+     *
+     * @param id 订单编号
+     * @return 查询数据
+     * @throws Exception
+     */
+    @Override
+    public <T> T queryOrderService(String id) throws Exception {
+        Order data = this.dao.queryRepastOrderDao(id, 1);
+        if (data != null) {
+            //订单商品详情
+            List<OrderGoods> list1 = this.dao.queryRepastOrderGoodsDao(data.getId());
+            int len1 = list1.size();
+            if (len1 > 0) {
+                for (int j = 0; j < len1; ++j) {
+                    //是否存在套餐
+                    String tcid = list1.get(j).getTcid();
+                    if (tcid != null && !("".equals(tcid))) {
+                        List<SetMealDetail> list2 = this.cbDao.querySetMealDetailDao(tcid);
+                        if (list2.size() > 0) {
+                            list1.get(j).setSetMealDetails(list2);
+                        }
+                    }
+                    //是否存在自定义套餐
+                    String customId = list1.get(j).getZdyTcid();
+                    if (tcid != null && !("".equals(tcid))) {
+                        List<MenuCustom> list2 = this.dao.queryMenuCustomDao(customId);
+                        if (list2.size() > 0) {
+                            list1.get(j).setSetMealCustoms(list2);
+                        }
+                    }
+                }
+                data.setOrderGoods(list1);
+            }
+            return (T) new Result(0, data);
+        }
+        return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
+    }
+
+    /**
      * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
      * （status=1未结/2反结/3超时）

@@ -23,7 +23,7 @@ import java.util.*;
 
 /**
  * 预定
- * Created by 王智 on 2017/11/21/021.
+ * Created by zhiWang on 2017/11/21/021.
  */
 @RestController
 public class BookingController {

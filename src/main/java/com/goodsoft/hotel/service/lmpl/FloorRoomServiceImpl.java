@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by Administrator on 2017/11/16/016.
+ * Created by zhiWang on 2017/11/16/016.
  */
 @Service
 public class FloorRoomServiceImpl implements FloorRoomService {
@@ -63,7 +63,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
         paramMap.put("startdate", quickbooking.getStartDate());
 
         String uuid = UUIDUtil.getInstance().getUUID().toString();
-        String bookingNo = this.getsbs();
+        String bookingNo = this.getNumber("QT");
         quickbooking.setId(uuid);
         quickbooking.setBookingNo(bookingNo);
         quickbooking.setBookingFlag("明确预定");
@@ -112,7 +112,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
      * 预订单生成预定单号
      * @return 预定单号
      */
-    public String getsbs() {
+    public String getNumber(String str) {
 
         //char 数组  用于生成随机数
         char[] chars = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
@@ -121,10 +121,10 @@ public class FloorRoomServiceImpl implements FloorRoomService {
 
         //生成系统时间的时间戳
         SimpleDateFormat dateS = new SimpleDateFormat("yyyyMMddHHmmss");
-        String str = dateS.format(new Date());
+        String str1 = dateS.format(new Date());
         //开始用客房的拼音
-        StringBuffer sb = new StringBuffer("KF");
-        sb.append(str);
+        StringBuffer sb = new StringBuffer(str);
+        sb.append(str1);
         //预定单号长度20位  再加4个随机数  避免重复
         for (int i = 0; i < 4; i++) {
             int num = (int) (Math.random() * (chars.length - 1));

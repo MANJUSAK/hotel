@@ -2,7 +2,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 房间实体类
- * Created by 王智 on 2017/11/9/009.
+ * Created by zhiWang on 2017/11/9/009.
  */
 
 

@@ -3,7 +3,7 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
 
 /**
  * 预定房间信息表
- * Created by 王智 on 2017/11/18/018.
+ * Created by zhiWang on 2017/11/18/018.
  */
 public class QuickbookingRoomno {
 

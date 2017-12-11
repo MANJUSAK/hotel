@@ -19,7 +19,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
-
     <dependencies>
         <!--springboot核心包 start-->
         <dependency>
@@ -77,7 +76,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
-            <version>1.1.4</version>
+            <version>1.1.6</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -118,19 +117,29 @@
             <version>1.1</version>
         </dependency>
         <!--分页插件 end-->
-        <dependency>
+        <!--c程序支持-->
+        <!--<dependency>
             <groupId>com.sun.jna</groupId>
             <artifactId>jna</artifactId>
             <version>3.0.9</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
-    <!--如果jdk版本为1.7则使用jdk1.7进行编译-->
+    <!--项目版本控制 导出war或jar-->
     <build>
+        <finalName>hotel</finalName>
         <plugins>
             <plugin>
+                <!--导出jar包组件-->
+                <!-- <groupId>org.springframework.boot</groupId>
+                 <artifactId>spring-boot-maven-plugin</artifactId>-->
+                <!--war包导出组件-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <!--jar支持-->
+                    <!--<fork>true</fork>
+                    <executable>true</executable>-->
+                    <!--如果jdk版本为1.7则使用jdk1.7进行编译-->
                     <compilerVersion>1.7</compilerVersion>
                     <source>1.7</source>
                     <target>1.7</target>

@@ -17,6 +17,18 @@ import com.goodsoft.hotel.exception.HotelDataBaseException;
 public interface RepastOderService {
 
     /**
+     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * 注：id为必传
+     * 该接口涵盖了订单的所有信息
+     *
+     * @param id  订单编号
+     * @param <T>
+     * @return 查询数据
+     * @throws Exception
+     */
+    <T> T queryOrderService(String id) throws Exception;
+
+    /**
      * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
      * （status=1未结/2反结/3超时）
