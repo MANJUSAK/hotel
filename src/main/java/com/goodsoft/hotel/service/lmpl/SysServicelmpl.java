@@ -83,4 +83,21 @@ public class SysServicelmpl implements SysService {
         }
         return new Status(StatusEnum.UPDATE_DEFEAT.getCODE(), StatusEnum.UPDATE_DEFEAT.getEXPLAIN());
     }
+
+    /**
+     * 删除打印机业务方法
+     *
+     * @param id 数据id
+     * @return 添加结果
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public Status deletePrinterService(String... id) throws Exception {
+        int row = this.dao.deletePrinterDao(id);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.DELETE_DEFEAT.getCODE(), StatusEnum.DELETE_DEFEAT.getEXPLAIN());
+    }
 }

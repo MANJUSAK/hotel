@@ -9,23 +9,37 @@
     <select id="querySerialNumDao" resultType="string" parameterType="object">
         SELECT  max(max_serial) FROM gs_sys_serial_num where sys_date=#{date} and serl_type=#{tp}
     </select>
+    <!--打印机sql复用-->
+    <sql id="printer_sql">
+        ID, PT_NAME, PT_PORT, PT_TYPE, PT_DEPT,PT_DRIVER_NAME
+    </sql>
     <!--查询打印机-->
     <select id="queryPrinterDao" resultType="com.goodsoft.hotel.domain.entity.sys.Printer">
-        SELECT ID, PT_NAME, PT_PORT, PT_TYPE, PT_DEPT FROM gs_sys_printer
+        SELECT
+        <include refid="printer_sql"/>
+        FROM gs_sys_printer
     </select>
     <!--添加打印机-->
     <insert id="addPrinterDao" parameterType="com.goodsoft.hotel.domain.entity.sys.Printer">
-        INSERT INTO gs_sys_printer (ID, PT_NAME, PT_PORT, PT_TYPE, PT_DEPT) VALUES (#{id}, #{ptName}, #{ptPort}, #{ptType}, #{ptDept})
+        INSERT INTO gs_sys_printer (<include refid="printer_sql"/>)
+        VALUES (#{id}, #{ptName}, #{ptPort}, #{ptType},#{ptDept},#{ptDriverName})
     </insert>
     <!--增加流水号-->
     <insert id="addSerialNumDao" parameterType="com.goodsoft.hotel.domain.entity.sys.SerialNum">
         INSERT INTO gs_sys_serial_num (id, module_name, module_code, config_templet, max_serial, pre_max_num, is_auto_increment, sys_date,serl_type)
         VALUES (#{id}, #{moduleName}, #{moduleCode}, #{configTemplet}, #{maxSerial}, #{preMaxNum},#{isAutoIncrement}, #{sysDate},#{serlType})
     </insert>
-
     <!--更换打印机-->
     <update id="updatePrinterDao" parameterType="com.goodsoft.hotel.domain.entity.sys.Printer">
-        UPDATE gs_sys_printer SET PT_NAME = #{ptName}, PT_PORT = #{ptPort}, PT_TYPE = #{ptType}, PT_DEPT = #{ptDept} WHERE id = #{id};
+        UPDATE gs_sys_printer SET PT_NAME = #{ptName}, PT_PORT = #{ptPort}, PT_TYPE = #{ptType}, PT_DEPT = #{ptDept},PT_DRIVER_NAME=#{ptDriverName} WHERE id = #{id};
     </update>
+    <!--删除打印机-->
+    <delete id="deletePrinterDao" parameterType="java.util.Arrays">
+        DELETE FROM gs_sys_printer WHERE id in(
+        <foreach collection="id" item="item" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
 </mapper>
         <!--mapper 系统功能 end -->

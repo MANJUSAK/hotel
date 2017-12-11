@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * function 苗圃管理接口实现获取文件辅助功能类
+ * function 获取文件辅助功能类
  * Created by 严彬荣 on 2017/9/21.
  * version v1.0
  */

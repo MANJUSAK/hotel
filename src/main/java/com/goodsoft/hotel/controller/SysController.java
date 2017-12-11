@@ -21,6 +21,7 @@ import javax.annotation.Resource;
  * @author manjusaka Created on 2017-12-09 16:35
  * @version V1.0
  */
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/sys")
 public class SysController {
@@ -75,6 +76,27 @@ public class SysController {
     public Status updatePrinterController(Printer msg) {
         try {
             return this.sysService.updatePrinterService(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.logger.error(e.toString());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 删除系统打印机接口
+     *
+     * @param id 数据id
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping(value = "/delete/printer/data.shtml", method = RequestMethod.GET)
+    public Status deletePrinterController(String... id) {
+        try {
+            if (id != null && !("".equals(id))) {
+                return this.sysService.deletePrinterService(id);
+            }
+            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN() + "id的值不能为null或为空");
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());

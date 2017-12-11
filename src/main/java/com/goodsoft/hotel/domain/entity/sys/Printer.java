@@ -17,6 +17,7 @@ public class Printer implements java.io.Serializable {
     private String ptPort;//打印机端口
     private String ptType;//打印机类型
     private String ptDept;//打印机所属部门
+    private String ptDriverName;//驱动名称
 
     public String getId() {
         return id;
@@ -31,7 +32,7 @@ public class Printer implements java.io.Serializable {
     }
 
     public void setPtName(String ptName) {
-        this.ptName = ptName;
+        this.ptName = ptName == null ? " " : ptName.trim();
     }
 
     public String getPtPort() {
@@ -39,7 +40,7 @@ public class Printer implements java.io.Serializable {
     }
 
     public void setPtPort(String ptPort) {
-        this.ptPort = ptPort;
+        this.ptPort = ptPort == null ? " " : ptPort.trim();
     }
 
     public String getPtType() {
@@ -47,7 +48,7 @@ public class Printer implements java.io.Serializable {
     }
 
     public void setPtType(String ptType) {
-        this.ptType = ptType;
+        this.ptType = ptType == null ? " " : ptType.trim();
     }
 
     public String getPtDept() {
@@ -55,7 +56,15 @@ public class Printer implements java.io.Serializable {
     }
 
     public void setPtDept(String ptDept) {
-        this.ptDept = ptDept;
+        this.ptDept = ptDept == null ? " " : ptDept.trim();
+    }
+
+    public String getPtDriverName() {
+        return ptDriverName;
+    }
+
+    public void setPtDriverName(String ptDriverName) {
+        this.ptDriverName = ptDriverName == null ? " " : ptDriverName.trim();
     }
 
     @Override
@@ -67,11 +76,12 @@ public class Printer implements java.io.Serializable {
                 Objects.equals(ptName, printer.ptName) &&
                 Objects.equals(ptPort, printer.ptPort) &&
                 Objects.equals(ptType, printer.ptType) &&
-                Objects.equals(ptDept, printer.ptDept);
+                Objects.equals(ptType, printer.ptType) &&
+                Objects.equals(ptDriverName, printer.ptDriverName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ptName, ptPort, ptType, ptDept);
+        return Objects.hash(id, ptName, ptPort, ptType, ptDept, ptDriverName);
     }
 }

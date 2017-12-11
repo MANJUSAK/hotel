@@ -38,4 +38,13 @@ public interface SysService {
      * @throws Exception
      */
     Status updatePrinterService(Printer msg) throws Exception;
+
+    /**
+     * 删除打印机业务方法
+     *
+     * @param id 数据id
+     * @return 添加结果
+     * @throws Exception
+     */
+    Status deletePrinterService(String... id) throws Exception;
 }

@@ -58,7 +58,7 @@
     <!--餐饮订单食品查询-->
     <select id="queryRepastOrderGoodsDao" parameterType="string"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderGoods">
-       select a.*,b.PT_PORT from gs_repast_order_goods a left join (select PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.OID=#{oid}
+        select a.*,b.PT_DRIVER_NAME,b.PT_PORT from gs_repast_order_goods a left join (select PT_DRIVER_NAME,PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.OID=#{oid}
     </select>
     <!--餐饮订单食品数据添加-->
     <insert id="addRepastOrderGoodsDao" parameterType="list">
@@ -72,7 +72,7 @@
     <!--自定义菜品查询-->
     <select id="queryMenuCustomDao" parameterType="string"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.MenuCustom">
-    SELECT a.*,b.PT_PORT FROM gs_cookbook_custom a left join (select PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.CUSTOM_ID=#{id}
+    SELECT a.*,b.PT_DRIVER_NAME,b.PT_PORT FROM gs_cookbook_custom a left join (select PT_DRIVER_NAME,PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.CUSTOM_ID=#{id}
     </select>
     <!--自定义菜品添加-->
     <insert id="addMenuCustomDao" parameterType="list">

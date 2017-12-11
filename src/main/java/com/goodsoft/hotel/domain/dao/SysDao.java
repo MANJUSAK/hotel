@@ -33,4 +33,7 @@ public interface SysDao {
     //更换打印机
     int updatePrinterDao(Printer msg) throws Exception;
 
+    //删除打印机
+    int deletePrinterDao(@Param("id") String... id) throws Exception;
+
 }

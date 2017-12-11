@@ -22,6 +22,7 @@ public class SetMealDetail implements java.io.Serializable {
     private int tcNum;//套餐菜品数量
     private String tName;//部门类别（仅用于查询）
     private String ptPort;//打印机端口号（仅用于查询）
+    private String ptDriverName;//打印机驱动名称（仅用于查询）
     private String stName;//小类（仅用于查询）
     private String cbName;//菜品名（仅用于查询）
     private String unit;//菜品单位（仅用于查询）
@@ -124,6 +125,14 @@ public class SetMealDetail implements java.io.Serializable {
         this.ptPort = ptPort;
     }
 
+    public String getPtDriverName() {
+        return ptDriverName;
+    }
+
+    public void setPtDriverName(String ptDriverName) {
+        this.ptDriverName = ptDriverName;
+    }
+
     public String getUnit() {
         return unit;
     }
@@ -164,11 +173,12 @@ public class SetMealDetail implements java.io.Serializable {
                 Objects.equals(cbName, that.cbName) &&
                 Objects.equals(unit, that.unit) &&
                 Objects.equals(ptPort, that.ptPort) &&
+                Objects.equals(ptDriverName, that.ptDriverName) &&
                 Objects.equals(fileId, that.fileId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, stid, cbid, smid, tcSpec, tName, stName, cbName, unit, ptPort, fileId);
+        return Objects.hash(id, tid, stid, cbid, smid, tcSpec, tName, stName, cbName, unit, ptPort, ptDriverName, fileId);
     }
 }
