@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * description:
  * ===>用户数据获取接口访问处理类
  *
- * @author 严彬荣 Created on 2017-12-03 10:41
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-12-03 10:41
  * @version V1.0
  */
 @RestController

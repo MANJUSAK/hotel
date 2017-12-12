@@ -10,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 /**
  * function 系统启动程序入口
- * Created by 严彬荣 on 2017/11/7.
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/11/7.
  * version v1.0
  */
 @ComponentScan(basePackages = "com.goodsoft.hotel.*")
@@ -19,9 +19,10 @@ import org.springframework.context.annotation.ComponentScan;
 public class HotelApplication implements CommandLineRunner {
 
     //实例化日志管理
-    private final Logger logger = LoggerFactory.getLogger(HotelApplication.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static void main(String[] args) {
+        System.out.println("=================>系统正在启动......<==============");
         SpringApplication.run(HotelApplication.class, args);
     }
 

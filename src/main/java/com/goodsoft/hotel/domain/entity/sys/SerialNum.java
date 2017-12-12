@@ -3,6 +3,13 @@ package com.goodsoft.hotel.domain.entity.sys;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * description:
+ * ===>流水号信息表实体
+ *
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 15:57
+ * @version V1.0
+ */
 public class SerialNum implements java.io.Serializable {
     private static final long serialVersionUID = -547001544307004750L;
     /**

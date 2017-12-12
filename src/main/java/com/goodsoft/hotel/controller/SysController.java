@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * description:
  * ===>系统组件访问接口实现类,设置系统功能属性
  *
- * @author manjusaka Created on 2017-12-09 16:35
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 16:35
  * @version V1.0
  */
 @SuppressWarnings("ALL")

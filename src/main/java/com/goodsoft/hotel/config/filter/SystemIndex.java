@@ -7,8 +7,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * function 自定义系统主页
- * Created by 严彬荣 on 2017/8/24.
- * version v1.0
+ * Created by manjusaka[manjusakachn@gmail.com] on 2017/8/24.
+ *
+ * @version v1.0
  */
 @Configuration
 public class SystemIndex extends WebMvcConfigurerAdapter {

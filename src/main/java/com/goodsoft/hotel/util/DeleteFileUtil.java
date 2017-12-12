@@ -7,8 +7,8 @@ import java.util.List;
 
 /**
  * function 文件删除工具类
- * Created by 严彬荣 on 2017/9/11.
- * version v1.0
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/9/11.
+ * @version v1.0
  */
 @SuppressWarnings("ALL")
 public class DeleteFileUtil {

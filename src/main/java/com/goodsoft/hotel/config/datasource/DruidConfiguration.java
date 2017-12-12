@@ -11,8 +11,9 @@ import org.springframework.context.annotation.Configuration;
  * 数据库监控配置
  * <p>
  * 这样的方式不需要添加注解：@ServletComponentScan
- * Created by 严彬荣 on 2017/7/19.
- * version v1.0
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/7/19.
+ *
+ * @version v1.0
  */
 @Configuration
 public class DruidConfiguration {

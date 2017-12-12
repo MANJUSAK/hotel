@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletRequest;
  * function 获取服务器域名工具类
  * <p>
  * date 2017.08.04
- * author 严彬荣
- * version v1.0
+ * @author  manjusaka[manjusakachn@gmail.com]
+ * @version v1.0
  */
 public class DomainNameUtil {
 

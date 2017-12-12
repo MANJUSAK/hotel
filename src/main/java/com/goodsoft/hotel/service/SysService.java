@@ -8,7 +8,7 @@ import com.goodsoft.hotel.domain.entity.sys.Printer;
  * description:
  * ===>系统组件业务接口,设置系统功能属性模块组件
  *
- * @author manjusaka Created on 2017-12-09 16:14
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 16:14
  * @version V1.0
  */
 public interface SysService {

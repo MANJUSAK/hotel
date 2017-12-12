@@ -3,9 +3,9 @@ package com.goodsoft.hotel.util;
 import javax.servlet.http.HttpServletRequest;
 
 /**
-     * function 获取客户端ip工具类
- * Created by 严彬荣 on 2017/8/14.
- * version v1.0
+ * function 获取客户端ip工具类
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/14.
+ * @version v1.0
  */
 public class GetIPUtil {
     /**

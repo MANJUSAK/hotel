@@ -10,8 +10,8 @@ import java.util.List;
 
 /**
  * function 文件上传工具类
- * Created by 严彬荣 on 2017/8/4.
- * version v1.0
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
+ * @version v1.0
  */
 @SuppressWarnings("ALL")
 @Service

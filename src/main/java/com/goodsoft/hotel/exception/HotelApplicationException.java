@@ -4,7 +4,7 @@ package com.goodsoft.hotel.exception;
  * description:
  * ===>系统应用程序异常处理类
  *
- * @author 严彬荣 Created on 2017-11-28 17:14
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-28 17:14
  * @version V1.0
  */
 public class HotelApplicationException extends Exception {

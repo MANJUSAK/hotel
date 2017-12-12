@@ -10,7 +10,7 @@ import com.goodsoft.hotel.exception.HotelDataBaseException;
  * description:
  * ===>餐饮订单管理业务接口类，用于实现餐饮所有订单的管理，查询订单，下订单，修改订单。
  *
- * @author 严彬荣 Created on 2017-11-15 9:32
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:32
  * @version V1.0
  */
 @SuppressWarnings("ALL")

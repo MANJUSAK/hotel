@@ -39,7 +39,7 @@ import java.util.Map;
  * description:
  * ===>菜单管理业务接口实现类,用于管理菜单各类数据查询，添加。
  *
- * @author 严彬荣 Created on 2017-11-07 16:50
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:50
  * @version V1.0
  */
 @SuppressWarnings("ALL")

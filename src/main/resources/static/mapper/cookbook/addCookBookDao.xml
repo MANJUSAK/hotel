@@ -21,11 +21,11 @@
     <insert id="addMenuDao" parameterType="list">
         INSERT INTO gudou_1.gs_cookbook
         (ID,TID,STID,CBNAME,UNIT,IS_DISCOUNT,spec1,spec2,spec3,
-        spec4,spec5,PRICE1,PRICE2,PRICE3,PRICE4,PRICE5,FILE_ID,IS_SUB)
+        spec4,spec5,PRICE1,PRICE2,PRICE3,PRICE4,PRICE5,FILE_ID,IS_SUB,COST_PRICE)
         VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.tid},#{item.stid},#{item.cbName},#{item.unit},#{item.isNo},#{item.spec1},#{item.spec2},#{item.spec3},
-            #{item.spec4},#{item.spec5},#{item.price1},#{item.price2},#{item.price3},#{item.price4},#{item.price5},#{item.fileId},#{item.isSub})
+            #{item.spec4},#{item.spec5},#{item.price1},#{item.price2},#{item.price3},#{item.price4},#{item.price5},#{item.fileId},#{item.isSub},#{item.costPrice})
         </foreach>
     </insert>
     <!--菜单库存量添加-->

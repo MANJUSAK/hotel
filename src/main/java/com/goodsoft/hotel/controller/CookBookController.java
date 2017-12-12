@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  * description:
  * ===>菜单管理访问入口接口处理类
  *
- * @author 严彬荣 Created on 2017-11-07 16:27
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:27
  * @version V1.0
  */
 @RestController
@@ -34,7 +34,8 @@ public class CookBookController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * 部门类别数据查询接口，用于前台下拉框或其他方式查询部门类别
+     * 部门类别数据查询接口，用于前台下拉框或其他方式查询部门类别、
+     * 用于前台点餐时大类的数据展示或添加菜单数据用于定位小类型
      * 无分页
      *
      * @return 响应结果
@@ -255,7 +256,7 @@ public class CookBookController {
     /**
      * 菜单数据、库存量数据添加接口
      *
-     * @param msg 菜单数据及库存量数据（存在一对多关系，前台需传入json格式数据。）
+     * @param msg 菜单数据及库存量数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)

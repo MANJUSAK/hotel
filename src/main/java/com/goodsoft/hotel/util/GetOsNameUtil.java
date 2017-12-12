@@ -2,7 +2,9 @@ package com.goodsoft.hotel.util;
 
 /**
  * function 获取操作系统类型工具类
- * Created by 严彬荣 on 2017/9/8.
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/9/8.
+ *
+ * @version V1.0
  */
 @SuppressWarnings("ALL")
 public class GetOsNameUtil {

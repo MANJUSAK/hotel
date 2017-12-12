@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * description:
  * ===>餐饮订单管理访问接口入口类，用于实现餐饮所有订单的管理，查询订单、下订单
  *
- * @author 严彬荣 Created on 2017-11-15 9:30
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:30
  * @version V1.0
  */
 @RestController

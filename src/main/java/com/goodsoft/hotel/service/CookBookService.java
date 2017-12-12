@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * description:
  * ===>菜单管理业务类
  *
- * @author 严彬荣 Created on 2017-11-07 16:49
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:49
  * @version V1.0
  */
 public interface CookBookService {
