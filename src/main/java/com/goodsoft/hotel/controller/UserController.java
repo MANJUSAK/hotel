@@ -14,14 +14,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * description:
  * ===>用户数据获取接口访问处理类
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-12-03 10:41
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-03 10:41
  * @version V1.0
  */
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -41,18 +44,20 @@ public class UserController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/find/user/msg/data.shtml")
-    public Object queryUserMsgController(UserParam param) {
+    public <T> T queryUserMsgController(UserParam param) {
         try {
             return this.service.queryUserMsgService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 
     @RequestMapping("/test")
-    public String test() throws HotelApplicationException {
-        return this.od.getOrderId().toString();
+    public <T> T test() throws HotelApplicationException {
+        List<String> list = new ArrayList<String>();
+        list.add(this.od.getOrderId().toString());
+        return (T) new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
 
@@ -63,12 +68,12 @@ public class UserController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/find/dept/msg/data.shtml")
-    public Object queryDeptNameController() {
+    public <T> T queryDeptNameController() {
         try {
             return this.service.queryDeptNameService();
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 }

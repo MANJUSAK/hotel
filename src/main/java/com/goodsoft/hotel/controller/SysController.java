@@ -37,13 +37,13 @@ public class SysController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/find/printer/data.shtml", method = RequestMethod.GET)
-    public Object queryPrinterController(HotelParam param) {
+    public <T> T queryPrinterController(HotelParam param) {
         try {
             return this.sysService.queryPrinterService(param);
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 

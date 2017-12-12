@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:27
  * @version V1.0
  */
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/cookbook")
 public class CookBookController {
@@ -42,13 +43,13 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/no/page/type/data.shtml")
-    public Object queryTypeController() {
+    public <T> T queryTypeController() {
         try {
             return this.service.queryTypeService();
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -62,12 +63,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/sub/type/by/id/data.shtml")
-    public Object queryMenuStypeByidController(String tid) {
+    public <T> T queryMenuStypeByidController(String tid) {
         try {
             return this.service.queryMenuStypeService(tid);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -81,12 +82,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/type/data.shtml")
-    public Object queryMenuTypeController(HotelParam param) {
+    public <T> T queryMenuTypeController(HotelParam param) {
         try {
             return this.service.queryMenuTypeService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
 
@@ -102,12 +103,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/sub/type/data.shtml")
-    public Object queryMenuStypeController(HotelParam param) {
+    public <T> T queryMenuStypeController(HotelParam param) {
         try {
             return this.service.queryMenuStypeService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -122,12 +123,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/data.shtml")
-    public Object queryMenuController(String stid, String tid) {
+    public <T> T queryMenuController(String stid, String tid) {
         try {
             return this.service.queryMenuService(stid, tid);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -146,12 +147,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/detail/data.shtml")
-    public Object queryMenuDetailController(HttpServletRequest request, HotelParam param) {
+    public <T> T queryMenuDetailController(HttpServletRequest request, HotelParam param) {
         try {
             return this.service.queryMenuDetailService(param, request);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
 
@@ -165,12 +166,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/data.shtml")
-    public Object queryMenuMeansController(HotelParam param) {
+    public <T> T queryMenuMeansController(HotelParam param) {
         try {
             return this.service.queryMenuMeansService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -185,12 +186,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/detail/data.shtml")
-    public Object queryMenuMeansDetailController(HotelParam param) {
+    public <T> T queryMenuMeansDetailController(HotelParam param) {
         try {
             return this.service.queryMenuMeansDetailService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -225,12 +226,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/setmeal/data.shtml")
-    public Object queryMenuSetmealController(HttpServletRequest request, HotelParam param) {
+    public <T> T queryMenuSetmealController(HttpServletRequest request, HotelParam param) {
         try {
             return this.service.querySetMealService(request, param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
 

@@ -20,6 +20,7 @@ import javax.annotation.Resource;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:30
  * @version V1.0
  */
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/repast")
 public class RepastOrderController {
@@ -39,16 +40,16 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/find/order/data.shtml")
-    public Object queryOrderOneController(String id) {
+    public <T> T queryOrderOneController(String id) {
         try {
             if (id != null && !("".equals(id))) {
                 return this.service.queryOrderService(id);
             } else {
-                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
+                return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
             }
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
     }
@@ -65,12 +66,12 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/data.shtml")
-    public Object queryOrderController(HotelParam param) {
+    public <T> T queryOrderController(HotelParam param) {
         try {
             return this.service.queryOrderService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
     }
@@ -85,12 +86,12 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/by/id/data.shtml")
-    public Object queryOrderController(String id) {
+    public <T> T queryOrderController(String id) {
         try {
             return this.service.queryOrderByIdService(id);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
     }
@@ -105,12 +106,12 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/order/data.shtml", method = RequestMethod.POST)
-    public Object addOrderService(Order order) {
+    public <T> T addOrderService(Order order) {
         try {
             return this.service.addOrderService(order);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
+            return (T) new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
         }
     }
 
