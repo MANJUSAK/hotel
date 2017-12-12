@@ -41,6 +41,7 @@ public class CyReserveTimer{
 
     @Scheduled(cron="0 50 23 * * ?")
     public void updateRoomSflag(){
+
         try{
             roomSDao.updateRoomSflagTimer();
         }catch (Exception e){

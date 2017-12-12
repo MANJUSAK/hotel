@@ -145,19 +145,24 @@
 
     <!--根据房间类型id获取房间号-->
     <select id="selectKongMapper" resultType="java.util.Map">
-        select a.id,a.roomid,a.ROOMNO,a.doorLockId,case when b.price is null then a.housePrices else b.price end
+        select a.id,a.roomid,a.roomno,a.doorLockId,case when b.price is null then a.housePrices else b.price end
         housePrices ,a.typename,a.typeid from (
-        SELECT a.id,a.roomid,a.ROOMNO,a.doorLockId,b.housePrices,b.typename,b.typeid FROM gs_room a,gs_roomtype b where
-        a.ROOMTYPE=b.typeid AND a.FLAG='空房' and b.typename!='不可用'
+        SELECT a.id,a.roomid,a.roomno,a.doorLockId,b.housePrices,b.typename,b.typeid FROM gs_room a,gs_roomtype b where
+        a.ROOMTYPE=b.typeid AND a.FLAG='空房'
         AND b.typeId IN
         <foreach collection="list" index="index" item="str" open="(" separator="," close=")">
             #{str}
         </foreach>
         ) a
         left join REALTIMEHOUSEPRICE b on a.typeid=b.typeid and b.time=date_format(now(),'%Y-%m-%d')
-
     </select>
 
+
+     <!--查询传入时间段内被预订的房间号 -->
+    <select id="selectReserveRoomByDate" parameterType="string" resultType="java.lang.String">
+        select  b.roomno from gs_quickbooking a,gs_quickbooking_roomno b where  a.id=b.bookid and  a.bookingflag='明确预定'
+        and a.startdate &lt; #{enddate} and a.enddate &gt; #{startdate}
+    </select>
 
     <!--快速预定房间信息 end-->
 
@@ -340,6 +345,9 @@
          select b.roomno from  gs_quickbooking a , gs_quickbooking_roomno b
          where b.bookid=a.id  and a.startdate = date_format(now(),'%Y-%m-%d')  and a.bookingflag='预订入住' )
     </update>
+
+
+
 
 
 </mapper>

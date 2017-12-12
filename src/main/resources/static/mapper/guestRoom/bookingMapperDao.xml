@@ -85,6 +85,9 @@
         select * from GS_QUICKBOOKING_ROOMNO where bookid=#{bookId}
     </select>
 
+    <!--查询所有房间号和ID-->
+
+
 
 
 
@@ -329,6 +332,25 @@
            update GS_QUICKBOOKING SET BOOKINGFLAG = '预定入住'  WHERE id=#{_parameter}
     </update>
 
+    <!--退房修改客房状态-->
+    <update id="updateRoomFlagTuifang" parameterType="java.util.List">
+        update gs_room SET flag = '空房' where roomno in
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+          #{item}
+        </foreach>
+    </update>
+
+    <!--退房修改预订状态-->
+    <update id="updateBookingStateTuifang" parameterType="string">
+        update GS_QUICKBOOKING SET BOOKINGFLAG = '退房'  WHERE id=#{_parameter}
+    </update>
+
+
+    <!--查询预订单所有房间信息-->
+    <select id="selectBookingRooms" parameterType="java.lang.String" resultType="java.lang.String">
+        select roomno from GS_QUICKBOOKING_ROOMNO where bookid=#{_parameter}
+    </select>
+
 
 
     <!--公共信息发布添加-->
@@ -370,5 +392,7 @@
         </set>
         WHERE id = #{id}
     </update>
+
+
 
 </mapper>

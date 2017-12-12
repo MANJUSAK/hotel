@@ -1,6 +1,9 @@
 package com.goodsoft.hotel.domain.dao;
 
+import com.goodsoft.hotel.domain.entity.floor.Diningtable;
+import com.oracle.webservices.internal.api.message.PropertySet;
 import org.apache.ibatis.annotations.Param;
+import org.hibernate.validator.constraints.ParameterScriptAssert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,5 +36,15 @@ public interface CyFloorDao {
 
     //修改订单状态
     public Integer updateOrderStatusDao(@Param("id") String id);
+
+
+    //查询当前厅所有空闲餐台
+    public List<Diningtable> selectFreeTables(@Param("tableId") String tableId);
+
+    //修改订单关联餐台id
+    public Integer updateOrderTable(@Param("tableId") String tableId ,@Param("orderId") String orderId);
+
+
+
 
 }

@@ -50,26 +50,19 @@ public interface RoomSDao {
     // 通过房态右边下拉框 房间类型信息 获取到该类型房间信息
     public List<Map<String, Object>> queryRoomTypeGetRoomMapper(String roomType) throws Exception;
 
+    //查询传入时间段内被预订的房间号
+    public List<String> selectReserveRoomByDate(@Param("startdate") String startdate ,@Param("enddate") String enddate) ;
+
 
     //房态右边的条件查询
     public List<Map> queryFuzzyRoomMapper(String str) throws Exception;
-    /*
-    房态 end
-     */
-
-    /*
-    快速预定  房间 start
-     */
 
     //   快速预定中的房态信息,左边的列表
     public List<Map<String, Object>> queryRoomALLMapper() throws Exception;
 
     //   预定中 房间信息 通过左边的房间类型状态来判断
-    public List<Map<String, Object>> selectKongMapper(List<Integer> typeIds) throws Exception;
+    public List<Map<String, Object>> selectKongMapper(List<String> typeIds) throws Exception;
 
-    /*
-    快速预定房间信息 end
-     */
 
 
 

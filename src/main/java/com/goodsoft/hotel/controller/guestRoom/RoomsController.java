@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -526,32 +527,57 @@ public class RoomsController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("floor/roomTypeName/kong")
-    public Object getKongAll(@Param("typeId") String typeId) {
+    public Object getKongAll(String typeId, String startdate, String enddate) {
         List<Map<String, Object>> list = null;
         List<Map<String, Object>> map = new ArrayList<>();
-        List<Integer> typeIds = null;
-        if (typeId == null) {
+        List<String> typeIds = null;
+        if (typeId == null || startdate == null || enddate == null) {
             return map;
-        } else if (typeId.length() == 0) {
+        } else if (typeId.length() == 0 || startdate.length() == 0 || enddate.length() == 0) {
             return map;
         }
 
         try {
-            String[] arr = {};
-            if (typeId != null && !"".equals(typeId.trim())) {
-                arr = typeId.split(",");
-            }
-            typeIds = new ArrayList<Integer>();
+            String[] arr = typeId.split(",");
+            typeIds = new ArrayList<String>();
             for (int i = 0; i < arr.length; i++) {
-                int s = Integer.parseInt(arr[i]);
-                typeIds.add(s);
+                typeIds.add(arr[i]);
             }
             map = this.roomSDao.selectKongMapper(typeIds);
+            System.out.println("map:" + map);
+            List<String> roomnos = roomSDao.selectReserveRoomByDate(startdate, enddate);
+            System.out.println("roomnos:" + roomnos);
+            map = joinRepadbleResere(map, roomnos);
         } catch (Exception e) {
             e.printStackTrace();
             return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
         }
         return map;
+    }
+
+
+    /**
+     * 判断房间在时间段内是否有预订信息  修改返回状态
+     *
+     * @param rooms
+     * @param reserveRooms
+     * @return
+     */
+    private List<Map<String, Object>> joinRepadbleResere(List<Map<String, Object>> rooms, List<String> reserveRooms) {
+
+        for (int i = 0; i < rooms.size(); i++) {
+
+            for (int j = 0; j < reserveRooms.size(); j++) {
+                if (String.valueOf(rooms.get(i).get("roomno")).equals(reserveRooms.get(j))) {
+                    rooms.get(i).put("state", "2");
+                }
+            }
+
+            if (rooms.get(i).get("state") == null) {
+                rooms.get(i).put("state", "1");
+            }
+        }
+        return rooms;
     }
 
 
@@ -829,6 +855,7 @@ public class RoomsController {
      * *****************************************************************************************
      */
 
+
     /**
      * 获取所有客房消费项目
      *
@@ -900,6 +927,8 @@ public class RoomsController {
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
+
+
 
 }
 

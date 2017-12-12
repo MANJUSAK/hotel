@@ -175,7 +175,7 @@ UserServicelmpl userService=new UserServicelmpl();
             });
         </script>
 
-        <div class="input-group"style="width: 299px;float: left;margin-left:282px">
+        <div class="input-group"style="width: 299px;float: left;margin-left:252px">
             <input type="text" class="form-control">
             <span class="input-group-btn">
                         <button class="btn btn-default" type="button">搜索</button>

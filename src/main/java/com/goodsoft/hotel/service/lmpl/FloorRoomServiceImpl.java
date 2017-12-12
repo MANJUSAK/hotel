@@ -59,7 +59,6 @@ public class FloorRoomServiceImpl implements FloorRoomService {
 
         //判断房间号是否重复预定
         Map paramMap = new HashMap();
-
         paramMap.put("startdate", quickbooking.getStartDate());
 
         String uuid = UUIDUtil.getInstance().getUUID().toString();
@@ -76,6 +75,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
         this.bookingDao.insertQuickBookingRoom(quickbooking.getRoomno());
         return map;
     }
+
 
     /**
      * 预定入住

@@ -70,6 +70,7 @@ public class BookingController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("booking/addQuick")
     public Map<String, String> addQuicking(@RequestBody Quickbooking quickbooking){
+        System.out.println("quickbooking:"+quickbooking);
         //返回map
         Map<String, String> map = new HashMap<String, String>();
         try {
@@ -90,6 +91,9 @@ public class BookingController {
         Quickbooking quickbooking=null;
         try{
              quickbooking = bookingDao.selectReserveInfo(bookingId);
+             if(quickbooking==null){
+                 return new Status(StatusEnum.NO_DATA.getCODE(),StatusEnum.NO_DATA.getEXPLAIN());
+             }
              List<QuickbookingRoomno> quickbookingRoomnos = bookingDao.selectReserveRooms(bookingId);
              quickbooking.setRoomno(quickbookingRoomnos);
         }catch (Exception e){
@@ -101,8 +105,7 @@ public class BookingController {
 
 
     /**
-     * 预定信息修改接口   ---还没使用
-     * .*
+     * 预定信息修改接口
      *
      * @param quickbooking 传入的需要修改的对象
      */
@@ -113,9 +116,11 @@ public class BookingController {
         System.out.println(quickbooking.toString());
         try {
             this.bookingDao.updateQuickBookingALL(quickbooking);
+            List<QuickbookingRoomno> quickbookingRoomnos = bookingDao.selectReserveRooms(quickbooking.getId());
             bookingDao.deleteBookdingRoomAll(quickbooking.getId());
             for(int i=0;i<quickbooking.getRoomno().size();i++){
                 quickbooking.getRoomno().get(i).setBookId(quickbooking.getId());
+
             }
 
             bookingDao.insertQuickBookingRoom(quickbooking.getRoomno());
@@ -557,6 +562,12 @@ public class BookingController {
     }
 
 
+    /**
+     * 判断房间预定是否重复
+     * @param startdate
+     * @param rooms
+     * @return
+     */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("room/select/roomRepeat")
     public Object roomRepeat(String startdate,String  rooms){
@@ -584,10 +595,48 @@ public class BookingController {
     }
 
 
+    /**
+     * ------------------------------------------
+     * 退房
+     * ------------------------------------------
+     */
 
+    /**
+     * 退房
+     * @param bookid
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("room/update/checkout")
+    public Object bookingTuifang(String bookid ,String roomno){
 
-
-
+        try {
+        //传入预订id  预订单退房
+        if(bookid!=null && !"".equals(bookid)){
+            List<String> strings = bookingDao.selectBookingRooms(bookid);
+            if(strings.size()!=0){
+             bookingDao.updateRoomFlagTuifang(strings);
+             bookingDao.updateBookingStateTuifang(bookid);
+            }else{
+                return new Status(StatusEnum.NO_PARAM.getCODE(),"该订单无房间号");
+            }
+        //传入房间号 退房
+        }else if(roomno!=null && !"".equals(roomno)){
+             List<String> list=new ArrayList();
+             String[] split = roomno.split(",");
+             for(int i=0;i<split.length;i++){
+                 list.add(split[i]);
+             }
+             bookingDao.updateRoomFlagTuifang(list);
+        }else{
+            return new Status(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+        }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+    }
 
 
 }

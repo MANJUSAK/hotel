@@ -85,9 +85,23 @@ public interface BookingDao {
     //查询预订房间信息
     public List<QuickbookingRoomno> selectReserveRooms(@Param("bookId") String bookId);
 
-   //删除预订房间信息
+    //删除预订房间信息
     public Integer deleteBookdingRoomAll(@Param("bookId") String bookId);
 
+    /**
+     * 退房修改客房状态
+     */
+    public Integer updateRoomFlagTuifang(List list);
+
+    /**
+     * 退房修改预订单状态
+     */
+     public Integer updateBookingStateTuifang(String bookingId);
+
+    /**
+     * 查询预订单关联的所有房间号
+     */
+     public List<String> selectBookingRooms(String bookid);
 
     /**
      * 随行人

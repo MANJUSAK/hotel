@@ -47,6 +47,11 @@
     </select>
 
 
+    <!--获取当前厅所有空闲餐台-->
+    <select id="selectFreeTables" parameterType="java.lang.String">
+        select * from gs_diningtable where status=1 and hall_id=
+        (select hall_id from gs_diningtable where id=#{tableId})
+    </select>
 
     <!--修改餐台状态-->
     <update id="updateTableState" parameterType="string">
@@ -69,6 +74,11 @@
        set
          `STATUS` = 3
         WHERE `ID`=#{id}
+    </update>
+
+    <!--修改订单关联餐台-->
+    <update id="updateOrderTable" parameterType="java.lang.String">
+        udpate gs_repast_order set ctid=#{tableId} where id=#{orderId}
     </update>
 
 </mapper>

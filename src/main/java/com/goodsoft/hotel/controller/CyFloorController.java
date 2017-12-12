@@ -3,6 +3,7 @@ package com.goodsoft.hotel.controller;
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
+import com.goodsoft.hotel.domain.entity.floor.Diningtable;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
@@ -243,5 +244,59 @@ public class CyFloorController {
     }
 
 
+    /**
+     * 获取当前厅台所有空闲餐厅
+     * @param tableId
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("floor/select/freeTable")
+    @ResponseBody
+    public Object selectFreeTable(String tableId){
+
+         if(tableId!=null && !"".equals(tableId)) {
+             try {
+                 List<Diningtable> diningtables = cyFloorDao.selectFreeTables(tableId);
+                 return new Result(StatusEnum.SUCCESS.getCODE(), diningtables);
+             } catch (Exception e) {
+                 e.printStackTrace();
+                 return new Result(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+             }
+         }else{
+             return new Result(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+         }
+    }
+
+
+    /**
+     *
+     * @param orderId      订单编号
+     * @param currentTable 当前餐台id
+     * @param transTable   换至餐台id
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("floor/update/transform")
+    @ResponseBody
+    public Object transformTable(String orderId,String currentTable,String transTable){
+        if(orderId!=null && currentTable!=null && transTable!=null){
+            SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+            CyFloorDao mapper = sqlSession.getMapper(CyFloorDao.class);
+            try{
+                mapper.updateOrderTable(transTable,orderId);
+                mapper.updateTableState(currentTable,"1");
+                mapper.updateTableState(transTable,"8");
+                sqlSession.commit();
+                return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+            }catch (Exception e){
+                e.printStackTrace();
+                sqlSession.rollback();
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            }
+        }else{
+            return new Status(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+        }
+
+    }
 
 }
