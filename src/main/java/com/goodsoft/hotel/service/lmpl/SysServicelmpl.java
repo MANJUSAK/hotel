@@ -21,7 +21,7 @@ import java.util.List;
  * description:
  * ===>系统组件业务接口实现类,设置系统功能属性
  *
- * @author manjusaka Created on 2017-12-09 16:18
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 16:18
  * @version V1.0
  */
 @SuppressWarnings("ALL")

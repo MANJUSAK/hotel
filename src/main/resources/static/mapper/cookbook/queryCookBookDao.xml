@@ -92,12 +92,13 @@
         <result column="SPEC3" property="spec3"/>
         <result column="SPEC4" property="spec4"/>
         <result column="SPEC5" property="spec5"/>
+        <result column="COST_PRICE" property="costPrice"/>
     </resultMap>
     <select id="queryMenuDetailDao" parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam"
             resultMap="menuInfo">
         select f.*,e.STNAME from (select ID,STNAME from gs_cookbook_subtype) e right join
         (select c.*,d.TNAME from (select a.ID,a.STID,A.TID,a.CBID,a.FILE_ID,a.CBNAME,a.UNIT,a.IS_DISCOUNT,
-        a.IS_SUB,a.SPEC1,a.SPEC2,a.SPEC3,a.SPEC4,a.SPEC5,a.PRICE1,a.PRICE2,a.PRICE3,a.PRICE4,a.PRICE5,b.KC_DATE,b.KC_NUM
+        a.IS_SUB,a.SPEC1,a.SPEC2,a.SPEC3,a.SPEC4,a.SPEC5,a.PRICE1,a.PRICE2,a.PRICE3,a.PRICE4,a.PRICE5,b.KC_DATE,b.KC_NUM,COST_PRICE
         from gs_cookbook a left join gs_cookbook_inventory b on a.ID = b.ID) c left join (select ID,TNAME
         from gs_cookbook_type) d on c.TID=d.ID) f on e.ID=f.STID
         <where>

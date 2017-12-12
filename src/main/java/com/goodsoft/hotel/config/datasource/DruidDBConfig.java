@@ -20,12 +20,12 @@ import java.util.List;
  * <p>
  * DruidDBConfig类被@Configuration标注，用作配置信息；
  * DataSource对象被@Bean声明，为Spring容器所管理，
- * version v1.0
  *
- * @author 严彬荣
+ * @author manjusaka[manjusakachn@gmail.com]
  *         jdbc.url=${jdbc.url}
  *         最新的支持方式如下:
  *         jdbc.url=@jdbc.url@
+ * @version v1.0
  * @primary 表示这里定义的DataSource将覆盖其他来源的DataSource。
  */
 @SuppressWarnings("ALL")

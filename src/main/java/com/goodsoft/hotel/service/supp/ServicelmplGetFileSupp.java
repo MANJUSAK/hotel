@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * function 获取文件辅助功能类
- * Created by 严彬荣 on 2017/9/21.
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/9/21.
  * version v1.0
  */
 @SuppressWarnings("ALL")

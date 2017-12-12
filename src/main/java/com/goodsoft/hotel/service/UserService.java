@@ -6,7 +6,7 @@ import com.goodsoft.hotel.domain.entity.param.UserParam;
  * description:
  * ===>用户信息获取业务接口类
  *
- * @author 严彬荣 Created on 2017-12-03 10:43
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-12-03 10:43
  * @version V1.0
  */
 public interface UserService {

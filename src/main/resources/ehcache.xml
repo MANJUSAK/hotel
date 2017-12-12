@@ -6,13 +6,13 @@
     <defaultCache
             name="gudou_hotel"
             maxElementsInMemory="1000"
-            maxElementsOnDisk="10000"
+            maxElementsOnDisk="0"
             eternal="false"
             overflowToDisk="true"
             diskPersistent="false"
             timeToIdleSeconds="1800"
             timeToLiveSeconds="3600"
-            diskSpoolBufferSizeMB="50"
+            diskSpoolBufferSizeMB="100"
             diskExpiryThreadIntervalSeconds="120"
             memoryStoreEvictionPolicy="LRU"/>
     <!--

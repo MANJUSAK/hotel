@@ -36,7 +36,7 @@ import java.util.List;
  * description:
  * ===>餐饮订单管理业务接口实现类，用于实现餐饮所有订单的管理，查询订单、下订单
  *
- * @author 严彬荣 Created on 2017-11-17 9:46
+ * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 9:46
  * @version V1.0
  */
 @SuppressWarnings("ALL")

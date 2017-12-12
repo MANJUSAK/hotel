@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
  * description:
  * ===>餐饮定时器业务处理，用于餐饮实现业务辅助功能模块
  *
- * @author 严彬荣 Created on 2017-11-30 17:35
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-30 17:35
  * @version V1.0
  */
 @Configuration

@@ -35,6 +35,7 @@ public class Menu implements java.io.Serializable {
     private String spec3;//规格3
     private String spec4;//规格4
     private String spec5;//规格5
+    private double costPrice;//成本价格
     private int isSub;//是否存在小类（0为true/1为false）
     private List<String> picture;//菜品图片文件（用于查询）
     private MultipartFile[] files;//获取上传的菜品图片（用于上传）
@@ -77,7 +78,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setStid(String stid) {
-        if ("".equals(stid)) {
+        if ("".equals(stid) || stid == null) {
             isSub = 1;
         }
         this.stid = stid == null ? null : stid.trim();
@@ -225,6 +226,14 @@ public class Menu implements java.io.Serializable {
 
     public void setIsSub(int isSub) {
         this.isSub = isSub;
+    }
+
+    public double getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
     }
 
     public List<String> getPicture() {

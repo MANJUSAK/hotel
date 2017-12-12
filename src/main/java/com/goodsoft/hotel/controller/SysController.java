@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * description:
  * ===>系统组件访问接口实现类,设置系统功能属性
  *
- * @author manjusaka Created on 2017-12-09 16:35
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 16:35
  * @version V1.0
  */
 @SuppressWarnings("ALL")
@@ -37,13 +37,13 @@ public class SysController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/find/printer/data.shtml", method = RequestMethod.GET)
-    public Object queryPrinterController(HotelParam param) {
+    public <T> T queryPrinterController(HotelParam param) {
         try {
             return this.sysService.queryPrinterService(param);
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 
@@ -96,7 +96,7 @@ public class SysController {
             if (id != null && !("".equals(id))) {
                 return this.sysService.deletePrinterService(id);
             }
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN() + "id的值不能为null或为空");
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());

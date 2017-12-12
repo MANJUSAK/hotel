@@ -7,10 +7,7 @@ import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.service.FloorRoomService;
-import com.goodsoft.hotel.service.UserService;
-import com.goodsoft.hotel.service.lmpl.UserServicelmpl;
 import com.goodsoft.hotel.util.UUIDUtil;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,10 +156,10 @@ public class BookingController {
                    bookingDao.updateFlagQuXiaoHuiFuMapper(bookid);
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 }else{
-                    return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+                    return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
                 }
             }else{
-                  return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+                  return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
             }
             }catch (Exception e){
             e.printStackTrace();
@@ -343,7 +340,7 @@ public class BookingController {
             this.bookingDao.updateFlagDeleteMapper(bookingNo);
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } else {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
     }
 

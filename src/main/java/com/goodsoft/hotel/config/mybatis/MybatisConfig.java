@@ -15,8 +15,9 @@ import java.util.Properties;
 
 /**
  * function mybatis配置属性
- * Created by 严彬荣 on 2017/8/3.
- * version v1.0
+ * Created by manjusaka[manjusakachn@gmail.com] on 2017/8/3.
+ *
+ * @version v1.0
  */
 @EnableTransactionManagement
 @Configuration

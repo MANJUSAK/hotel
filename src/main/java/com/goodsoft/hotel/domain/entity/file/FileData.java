@@ -5,7 +5,7 @@ import java.util.Objects;
 
 /**
  * function 文件数据实体类
- * Created by 严彬荣 on 2017/8/4.
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
  * version v1.0
  */
 public class FileData implements java.io.Serializable {

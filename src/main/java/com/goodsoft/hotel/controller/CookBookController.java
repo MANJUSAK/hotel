@@ -22,9 +22,10 @@ import javax.servlet.http.HttpServletRequest;
  * description:
  * ===>菜单管理访问入口接口处理类
  *
- * @author 严彬荣 Created on 2017-11-07 16:27
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:27
  * @version V1.0
  */
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/cookbook")
 public class CookBookController {
@@ -34,20 +35,21 @@ public class CookBookController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * 部门类别数据查询接口，用于前台下拉框或其他方式查询部门类别
+     * 部门类别数据查询接口，用于前台下拉框或其他方式查询部门类别、
+     * 用于前台点餐时大类的数据展示或添加菜单数据用于定位小类型
      * 无分页
      *
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/no/page/type/data.shtml")
-    public Object queryTypeController() {
+    public <T> T queryTypeController() {
         try {
             return this.service.queryTypeService();
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -61,12 +63,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/sub/type/by/id/data.shtml")
-    public Object queryMenuStypeByidController(String tid) {
+    public <T> T queryMenuStypeByidController(String tid) {
         try {
             return this.service.queryMenuStypeService(tid);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -80,14 +82,13 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/type/data.shtml")
-    public Object queryMenuTypeController(HotelParam param) {
+    public <T> T queryMenuTypeController(HotelParam param) {
         try {
             return this.service.queryMenuTypeService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
-
     }
 
     /**
@@ -102,12 +103,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/sub/type/data.shtml")
-    public Object queryMenuStypeController(HotelParam param) {
+    public <T> T queryMenuStypeController(HotelParam param) {
         try {
             return this.service.queryMenuStypeService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -122,12 +123,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/data.shtml")
-    public Object queryMenuController(String stid, String tid) {
+    public <T> T queryMenuController(String stid, String tid) {
         try {
             return this.service.queryMenuService(stid, tid);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -146,12 +147,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/detail/data.shtml")
-    public Object queryMenuDetailController(HttpServletRequest request, HotelParam param) {
+    public <T> T queryMenuDetailController(HttpServletRequest request, HotelParam param) {
         try {
             return this.service.queryMenuDetailService(param, request);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
 
@@ -165,12 +166,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/data.shtml")
-    public Object queryMenuMeansController(HotelParam param) {
+    public <T> T queryMenuMeansController(HotelParam param) {
         try {
             return this.service.queryMenuMeansService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -185,12 +186,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/means/detail/data.shtml")
-    public Object queryMenuMeansDetailController(HotelParam param) {
+    public <T> T queryMenuMeansDetailController(HotelParam param) {
         try {
             return this.service.queryMenuMeansDetailService(param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
     }
@@ -225,12 +226,12 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/menu/setmeal/data.shtml")
-    public Object queryMenuSetmealController(HttpServletRequest request, HotelParam param) {
+    public <T> T queryMenuSetmealController(HttpServletRequest request, HotelParam param) {
         try {
             return this.service.querySetMealService(request, param);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
+            return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
 
@@ -255,7 +256,7 @@ public class CookBookController {
     /**
      * 菜单数据、库存量数据添加接口
      *
-     * @param msg 菜单数据及库存量数据（存在一对多关系，前台需传入json格式数据。）
+     * @param msg 菜单数据及库存量数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
@@ -270,10 +271,10 @@ public class CookBookController {
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), e.getMessage());
                 }
             } else {
-                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM_DATA.getCODE(), StatusEnum.NO_PARAM_DATA.getEXPLAIN());
             }
         } else {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
     }
 
@@ -296,10 +297,10 @@ public class CookBookController {
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
-                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM_DATA.getCODE(), StatusEnum.NO_PARAM_DATA.getEXPLAIN());
             }
         } else {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
     }
 
@@ -322,10 +323,10 @@ public class CookBookController {
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
-                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM_DATA.getCODE(), StatusEnum.NO_PARAM_DATA.getEXPLAIN());
             }
         } else {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
     }
 
@@ -339,7 +340,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/menu/set/meal/data.shtml", method = RequestMethod.POST)
-    public Status addSetMealService(SetMeal msg) {
+    public Status addSetMealController(SetMeal msg) {
         if (msg.getMealDetails() != null) {
             if (msg.getMealDetails().size() > 0) {
                 try {
@@ -349,10 +350,31 @@ public class CookBookController {
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             } else {
-                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+                return new Status(StatusEnum.NO_PARAM_DATA.getCODE(), StatusEnum.NO_PARAM_DATA.getEXPLAIN());
             }
         } else {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 现有套餐中增加菜品接口
+     *
+     * @param msg 菜品数据
+     * @return 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/add/menu/set/meal/detail/data.shtml", method = RequestMethod.POST)
+    public Status addSetMealDetailController(SetMeal msg) {
+        if (msg.getMealDetails() != null) {
+            try {
+                return this.service.addSetMealDetailService(msg);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            }
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：mealDetails参数为空或null");
         }
     }
 
@@ -445,16 +467,15 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/type/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuType(String... id) {
-        try {
-            if (id != null && id.length > 0) {
+        if (id != null && id.length > 0) {
+            try {
                 return this.service.deleteMenuTypeService(id);
-            } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id参数为空或null");
         }
     }
 
@@ -468,16 +489,15 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/sub/type/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuSubTypeController(String... id) {
-        try {
-            if (id != null && id.length > 0) {
+        if (id != null && id.length > 0) {
+            try {
                 return this.service.deleteMenuSubTypeService(id);
-            } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id参数为空或null");
         }
     }
 
@@ -491,16 +511,15 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuContorller(String... id) {
-        try {
-            if (id != null && id.length > 0) {
+        if (id != null && id.length > 0) {
+            try {
                 return this.service.deleteMenuService(id);
-            } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id参数为空或null");
         }
     }
 
@@ -514,16 +533,15 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/means/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuMeansController(String... id) {
-        try {
-            if (id != null && id.length > 0) {
+        if (id != null && id.length > 0) {
+            try {
                 return this.service.deleteMenuMeansService(id);
-            } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            } catch (HotelDataBaseException e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
-        } catch (HotelDataBaseException e) {
-            e.printStackTrace();
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id参数为空或null");
         }
     }
 
@@ -536,16 +554,15 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/means/detail/data.shtml", method = RequestMethod.GET)
     public Status deleteMenuMeansDetailController(String... id) {
-        try {
-            if (id != null && id.length > 0) {
+        if (id != null && id.length > 0) {
+            try {
                 return this.service.deleteMenuMeansDetailService(id);
-            } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id参数为空或null");
         }
     }
 
@@ -559,16 +576,15 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/set/meal/data.shtml", method = RequestMethod.GET)
     public Status deleteSetMealController(String... id) {
-        try {
-            if (id != null && id.length > 0) {
+        if (id != null && id.length > 0) {
+            try {
                 return this.service.deleteSetMealService(id);
-            } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id参数为空或null");
         }
     }
 
@@ -581,16 +597,15 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/set/meal/detail/data.shtml", method = RequestMethod.GET)
     public Status deleteSetMealDetailController(String... id) {
-        try {
-            if (id != null && id.length > 0) {
+        if (id != null && id.length > 0) {
+            try {
                 return this.service.deleteSetMealDetailService(id);
-            } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        } else {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id参数为空或null");
         }
     }
 

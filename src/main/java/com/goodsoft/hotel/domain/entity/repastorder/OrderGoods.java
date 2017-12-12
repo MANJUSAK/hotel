@@ -11,7 +11,7 @@ import java.util.Objects;
  * description:
  * ===>餐饮订单食品实体
  *
- * @author 严彬荣 Created on 2017-11-17 10:07
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 10:07
  */
 public class OrderGoods implements java.io.Serializable {
 
@@ -48,8 +48,8 @@ public class OrderGoods implements java.io.Serializable {
 
     public OrderGoods() {
         this.dcTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        this.tcid = "";
-        this.zdyTcid = "";
+        this.tcid = " ";
+        this.zdyTcid = " ";
     }
 
     public String getId() {

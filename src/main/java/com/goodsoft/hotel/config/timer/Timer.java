@@ -16,7 +16,7 @@ import java.util.concurrent.Executor;
  * description:
  * ===>定时器配置类
  *
- * @author 严彬荣 Created on 2017-11-12 10:58
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-12 10:58
  * @version v1.0
  */
 @Configuration
@@ -24,7 +24,7 @@ import java.util.concurrent.Executor;
 public class Timer implements AsyncConfigurer, SchedulingConfigurer {
 
     @Bean
-    public ThreadPoolTaskScheduler taskScheduler(){
+    public ThreadPoolTaskScheduler taskScheduler() {
         //定时器线程池调度器配置
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(10);
@@ -34,7 +34,7 @@ public class Timer implements AsyncConfigurer, SchedulingConfigurer {
     }
 
     @Override
-    public Executor getAsyncExecutor(){
+    public Executor getAsyncExecutor() {
         //线程池执行器
         /*ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
@@ -48,12 +48,12 @@ public class Timer implements AsyncConfigurer, SchedulingConfigurer {
     }
 
     @Override
-    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler(){
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return null;
     }
 
     @Override
-    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar){
+    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
         TaskScheduler taskScheduler = this.taskScheduler();
         scheduledTaskRegistrar.setTaskScheduler(taskScheduler);
     }

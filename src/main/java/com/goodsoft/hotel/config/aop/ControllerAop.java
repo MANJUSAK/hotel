@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * function 系统访问数据信息增强工具类
- * Created by 严彬荣 on 2017/9/22.
+ * Created by  manjusaka[manjusakachn@gmail.com] on 2017/9/22.
  * version v1.0
  */
 @SuppressWarnings("ALL")
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 public class ControllerAop {
 
-    private final Logger logger = LoggerFactory.getLogger(ControllerAop.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //匹配com.goodsoft.plantlet.controller包及其子包下的所有类的所有方法
     @Pointcut("execution(* com.goodsoft.hotel.controller.*..*(..))")

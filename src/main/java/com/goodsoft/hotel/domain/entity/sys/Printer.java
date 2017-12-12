@@ -4,10 +4,10 @@ import java.util.Objects;
 
 /**
  * description:
- * ===>系统打印机信息表实体
+ * ===>系统打印机信息表实体，通过该表实现系统所有打印机的管理，方便客户端调用特定的打印机。
  *
- * @author manjusaka Created on 2017-12-09 15:57
- * @version 通过该表实现系统所有打印机的管理，方便客户端调用特定的打印机。
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 15:57
+ * @version V1.0
  */
 public class Printer implements java.io.Serializable {
 

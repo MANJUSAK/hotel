@@ -78,19 +78,26 @@
             <artifactId>druid</artifactId>
             <version>1.1.6</version>
         </dependency>
+        <!--支持jdk1.8-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>6.0.5</version>
         </dependency>
+        <!--jdk1.7以下版本-->
+        <!-- <dependency>
+             <groupId>mysql</groupId>
+             <artifactId>mysql-connector-java</artifactId>
+             <version>5.1.43</version>
+         </dependency>-->
         <!--mysql end-->
-        <!--泛型jar start-->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.14</version>
-        </dependency>
-        <!--泛型jar end-->
+        <!--poi  start-->
+        <!-- <dependency>
+             <groupId>org.apache.poi</groupId>
+             <artifactId>poi</artifactId>
+             <version>3.14</version>
+         </dependency>-->
+        <!--poi end-->
         <!--json解析包 start-->
         <!-- <dependency>
              <groupId>com.google.code.gson</groupId>
