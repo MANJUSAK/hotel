@@ -78,7 +78,7 @@ public class Menu implements java.io.Serializable {
     }
 
     public void setStid(String stid) {
-        if ("".equals(stid)) {
+        if ("".equals(stid) || stid == null) {
             isSub = 1;
         }
         this.stid = stid == null ? null : stid.trim();

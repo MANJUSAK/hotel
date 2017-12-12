@@ -23,7 +23,7 @@ public enum StatusEnum {
     UNKONW_ERROR(100501, "未知错误"),
     ERROR(100502, "错误操作"),
     NO_DATA(200404, "无数据"),
-    NO_PARAM(400404, "未获取到数据"),
+    NO_PARAM_DATA(400404, "未获取到数据"),
     NO_GOODS(200404, "订单无效"),
     NO_ORDER(200404, "生成订单失败，无法开台"),
     ERROR_ORDER(200500, "生成订单失败，无法开台"),
@@ -32,19 +32,16 @@ public enum StatusEnum {
     DELETE_DEFEAT(200404, "删除失败！未获取到该条数据信息"),
     UPDATE_DEFEAT(200404, "更新失败！更新过程中未获取到需要更新的数据"),
     INSERT_DEFEAT(200404, "添加失败！保存数据无效"),
-    NO_PRAM(400400, "传入参数错误或缺少参数！"),
+    NO_PARAM(400400, "传入参数错误或缺少参数！"),
     NO_FILE(100404, "文件不能为空"),
     FILE_FORMAT(100603, "文件格式不正确"),
     FILE_SIZE(100601, "文件大小不符合要求"),
     FILE_UPLOAD(100600, "文件上传失败"),
 
-    QT_FIND_ERROR(101100,"获取失败"),
-    QT_ADD_ERROR(101101,"添加失败"),
-    QT_MODIFY_ERROR(101102,"更新失败"),
-    QT_REMOVE_ERROR(101103,"删除失败")
-    ;
-
-
+    QT_FIND_ERROR(101100, "获取失败"),
+    QT_ADD_ERROR(101101, "添加失败"),
+    QT_MODIFY_ERROR(101102, "更新失败"),
+    QT_REMOVE_ERROR(101103, "删除失败");
 
 
     private final int CODE;

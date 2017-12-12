@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * description:
  * ===>餐饮订单管理访问接口入口类，用于实现餐饮所有订单的管理，查询订单、下订单
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:30
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:30
  * @version V1.0
  */
 @RestController
@@ -44,7 +44,7 @@ public class RepastOrderController {
             if (id != null && !("".equals(id))) {
                 return this.service.queryOrderService(id);
             } else {
-                return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN() + "id的值不能为null或为空");
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
             }
         } catch (Exception e) {
             this.logger.error(e.toString());
@@ -138,7 +138,7 @@ public class RepastOrderController {
                 return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
             }
         } else {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
     }
 

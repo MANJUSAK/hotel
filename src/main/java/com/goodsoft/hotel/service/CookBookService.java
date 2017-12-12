@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * description:
  * ===>菜单管理业务类
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:49
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:49
  * @version V1.0
  */
 public interface CookBookService {
@@ -65,6 +65,9 @@ public interface CookBookService {
 
     //套餐数据添加
     Status addSetMealService(SetMeal msg) throws Exception;
+
+    //现有套餐中增加菜品业务方法
+    Status addSetMealDetailService(SetMeal msg) throws Exception;
 
     //菜单类别与小类数据更新
     Status updateMenuTypeService(MenuType msg) throws HotelDataBaseException;

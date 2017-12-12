@@ -39,7 +39,7 @@ import java.util.Map;
  * description:
  * ===>菜单管理业务接口实现类,用于管理菜单各类数据查询，添加。
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:50
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:50
  * @version V1.0
  */
 @SuppressWarnings("ALL")
@@ -506,6 +506,22 @@ public class CookBookServicelmpl implements CookBookService {
         } finally {
             sqlSession.close();
         }
+    }
+
+    /**
+     * 现有套餐中增加菜品业务方法
+     *
+     * @param msg 增加菜品数据
+     * @throws Exception
+     */
+    @Override
+    public Status addSetMealDetailService(SetMeal msg) throws Exception {
+        List<SetMealDetail> list = msg.getMealDetails();
+        if (list.size() > 0) {
+            this.dao.addSetMealDetailDao(msg.getMealDetails());
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.NO_PARAM_DATA.getCODE(), StatusEnum.NO_PARAM_DATA.getEXPLAIN());
     }
 
     /**
