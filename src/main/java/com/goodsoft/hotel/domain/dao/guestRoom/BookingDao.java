@@ -23,7 +23,7 @@ public interface BookingDao {
     public List<String> findRoomNoMapper(String id) throws Exception;
 
     //添加客人信息
-    public void addGuestMapper(Guest guest) throws Exception;
+    public Integer addGuestMapper(Guest guest) throws Exception;
 
     //修改房间信息的状态
     public void updateRoomFlag(String id) throws Exception;
@@ -71,8 +71,14 @@ public interface BookingDao {
     //预定入住
     public Integer updateRoomFlagRuZhu(Map<String,Object> map);
 
+    //查询房间状态
+    public String selectFlagByRoomId(@Param("roomId") String roomId);
+
     //修改预订状态
      Integer updateRoomFlagRuZhuBooking(String id);
+
+     //查询房间入住客人证件号码
+     public List<String> selectRoomGuestInfo(String roomid);
 
     //会员信息添加
     public void addVipCardMapper(VipCard vipCard);
@@ -87,6 +93,10 @@ public interface BookingDao {
 
     //删除预订房间信息
     public Integer deleteBookdingRoomAll(@Param("bookId") String bookId);
+
+    //查询预订类型
+    public String  selectBookingMarkets(@Param("bookingno") String bookingno);
+
 
     /**
      * 退房修改客房状态

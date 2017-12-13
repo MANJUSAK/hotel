@@ -12,7 +12,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.poi.ss.formula.functions.T;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
@@ -888,7 +887,7 @@ public class RoomsController {
     public Object insertRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam) {
 
         if (kfconsumpRecordParam.getConsumptions() == null || kfconsumpRecordParam.getConsumptions().size() == 0 || kfconsumpRecordParam.getBookingno() == null) {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
         for (int i = 0; i < kfconsumpRecordParam.getConsumptions().size(); i++) {
             kfconsumpRecordParam.getConsumptions().get(i).setBookingno(kfconsumpRecordParam.getBookingno());
@@ -913,7 +912,7 @@ public class RoomsController {
     @RequestMapping("consume/record/update")
     public Object updateRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam) {
         if (kfconsumpRecordParam.getConsumptions() == null || kfconsumpRecordParam.getConsumptions().size() == 0 || kfconsumpRecordParam.getBookingno() == null) {
-            return new Status(StatusEnum.NO_PRAM.getCODE(), StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
         try {
             roomSDao.deleteXfConsumptionInfo(kfconsumpRecordParam.getBookingno());

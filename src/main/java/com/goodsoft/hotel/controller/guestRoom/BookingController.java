@@ -384,6 +384,7 @@ public class BookingController {
     @RequestMapping("booking/addGuest")
     public Status addGuest(@RequestBody Guest guest) {
 
+        System.out.println(guest);
         StringBuilder uuid = UUIDUtil.getInstance().getUUID();
         guest.setId(uuid.toString());
         try {
@@ -494,7 +495,7 @@ public class BookingController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("booking/bookingRuZhu")
-    public Status bookingRuZhu(@RequestBody BookingCheckIn msg) {
+    public Status bookingRuZhu(@RequestBody BookingCheckIn msg){
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         List<String> list1 = new ArrayList<>();
         Map<String, Object> map = null;
@@ -511,6 +512,91 @@ public class BookingController {
             return new Status(404, "失败");
         }
     }
+
+
+    /**
+     * 添加客人信息
+     * @param guest
+     * @param <T>
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("booking/insertGuest")
+    public <T> T insertGuest(Guest guest){
+
+        System.out.println(guest);
+        //判断客人信息是否完整
+        if(guest.getGuestName()==null ||guest.getDocumentNo()==null){
+            return (T) new Status(40010,"客人名或证件号为空");
+        }
+        //判断客人信息数量与是否重复
+        List<String> documentNos = bookingDao.selectRoomGuestInfo(guest.getRoomId());
+        if(documentNos.size()==5){
+            return (T) new Status(40010,"入住人数已满");
+        }
+        for(String s:documentNos){
+            if(guest.getDocumentNo().equals(s)){
+                return (T) new Status(40010,"客人信息重复");
+            }
+        }
+        try{
+            //插入客人信息
+         Integer ss= bookingDao.addGuestMapper(guest);
+         System.out.println("sssssss:"+ss);
+        }catch (Exception e){
+            e.printStackTrace();
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+        return (T) new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+    }
+
+
+
+    /**
+     * 入住
+     * @param  bookingNo  roomNo  roomId
+     * @param <T>
+     * @return
+     */
+       @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+       @RequestMapping("booking/roomCheck")
+       public <T> T roomCheck(String bookingNo ,String roomNo ,String roomId){
+       //判断必填参数是否为空
+        if(bookingNo==null || roomNo==null || roomId==null){
+           return (T) new Status(40010,StatusEnum.NO_PARAM.getEXPLAIN());
+       }
+
+           try {
+                //修改房间状态参数map
+                Map roomFlagParam = new HashMap();
+               //获取房间状态
+               String roomflag = bookingDao.selectFlagByRoomId(roomId);
+               if (roomflag != null && !"".equals(roomflag)) {
+                //判断房间是否已入住
+                if(!roomflag.equals("空房")){
+                    return (T) new Status(40010, "房间已入住");
+                }
+
+                //修改房间状态
+                //查询预订状态
+                String s = bookingDao.selectBookingMarkets(bookingNo);
+                roomFlagParam.put("markets",s);
+                roomFlagParam.put("id",roomId);
+                bookingDao.updateRoomFlagRuZhu(roomFlagParam);
+
+               } else {
+                   return (T) new Status(40010, "房间ID错误");
+               }
+
+           }catch (Exception e){
+            e.printStackTrace();
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+           }
+        return (T) new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+    }
+
+
+
 
     /**
      * 公共信息发布添加
@@ -626,7 +712,7 @@ public class BookingController {
              }
              bookingDao.updateRoomFlagTuifang(list);
         }else{
-            return new Status(StatusEnum.NO_PRAM.getCODE(),StatusEnum.NO_PRAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
         }
         }catch (Exception e){
             e.printStackTrace();

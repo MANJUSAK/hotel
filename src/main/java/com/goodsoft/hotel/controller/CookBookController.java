@@ -110,7 +110,6 @@ public class CookBookController {
             this.logger.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
-
     }
 
     /**
