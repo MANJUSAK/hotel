@@ -36,7 +36,7 @@ import java.util.List;
  * description:
  * ===>餐饮订单管理业务接口实现类，用于实现餐饮所有订单的管理，查询订单、下订单
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 9:46
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 9:46
  * @version V1.0
  */
 @SuppressWarnings("ALL")
@@ -113,7 +113,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Override
     public <T> T queryOrderService(HotelParam param) throws Exception {
-        Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
+        Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
         List<Order> list = this.dao.queryRepastOrderDao(param);
         int len = list.size();
         if (len > 0) {
@@ -143,7 +143,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                     list.get(i).setOrderGoods(list1);
                 }
             }
-            PageInfo<Order> data = new PageInfo<>(list);
+            PageInfo<Order> data = new PageInfo<Order>(list);
             return (T) new Result(0, data);
         }
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -225,6 +225,7 @@ public class RepastOderServicelmpl implements RepastOderService {
             orderGoods.get(i).setId(this.uuid.getUUID("CY").toString());
             orderGoods.get(i).setOid(id);
             menuCustoms = orderGoods.get(i).getSetMealCustoms();
+            //是否存在自定义套餐
             if (menuCustoms != null) {
                 len1 = menuCustoms.size();
                 if (len1 > 0) {
@@ -243,8 +244,8 @@ public class RepastOderServicelmpl implements RepastOderService {
             }
             orderDao.addRepastOrderGoodsDao(orderGoods);
             orderDao.updateRepastOrderDao(order);
-            this.cydao.updateTableState(msg.getCtid(), "4");
             sqlSession.commit();
+            this.cydao.updateTableState(msg.getCtid(), "4");
         } catch (Exception e) {
             sqlSession.rollback();
             throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());

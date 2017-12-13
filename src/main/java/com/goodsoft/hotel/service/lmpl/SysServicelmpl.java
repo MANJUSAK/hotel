@@ -40,7 +40,7 @@ public class SysServicelmpl implements SysService {
      */
     @Override
     public <T> T queryPrinterService(HotelParam param) throws Exception {
-        Page<Object> page = PageHelper.startPage(param.getPage(), param.getTotal());
+        Page<T> page = PageHelper.startPage(param.getPage(), param.getTotal());
         List<Printer> list = this.dao.queryPrinterDao();
         if (list.size() > 0) {
             PageInfo<Printer> data = new PageInfo<Printer>(list);

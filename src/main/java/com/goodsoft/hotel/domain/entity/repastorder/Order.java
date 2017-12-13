@@ -41,7 +41,7 @@ public class Order implements java.io.Serializable {
     private int isServiceCharge;//收服务费（0为true/1为false）
     private int isZdConsume;//记最低消费（0为true/1为false）
     private String paymentType;//支付方式
-    private int status;//订单状态（是否支付，0为true/1为false）
+    private int status;//订单状态（是否支付，0为true/1为false/2为反结状态/3为超时未买单）
     private String remarks;//备注
     private int placeNum;//席数
     private String ctid;//餐台编号
@@ -369,15 +369,15 @@ public class Order implements java.io.Serializable {
         return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, ctid, mdTime, fjzReason);
     }
 
-    private String joinDateSb(){
-        String shibie=null;
-        Calendar calendar =Calendar.getInstance();
+    private String joinDateSb() {
+        String shibie = null;
+        Calendar calendar = Calendar.getInstance();
         int i = calendar.get(Calendar.HOUR_OF_DAY);
-        if(i<10 && i>5){
-            shibie="早市";
-        }else if(i>=10 && i<14){
+        if (i < 10 && i > 5) {
+            shibie = "早市";
+        } else if (i >= 10 && i < 14) {
             shibie = "中市";
-        }else{
+        } else {
             shibie = "晚市";
         }
         return shibie;
