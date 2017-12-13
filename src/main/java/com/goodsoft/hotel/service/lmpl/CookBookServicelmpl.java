@@ -104,7 +104,7 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuTypeService(HotelParam page) throws Exception {
-        Page<Object> pages = PageHelper.startPage(page.getPage(), page.getTotal());
+        Page<T> pages = PageHelper.startPage(page.getPage(), page.getTotal());
         List<MenuType> list = this.dao.queryMenuTypeDao();
         if (list.size() > 0) {
             PageInfo<MenuType> data = new PageInfo<MenuType>(list);
@@ -125,18 +125,18 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuStypeService(HotelParam param) throws Exception {
-        Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
+        Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
         List<MenuSubType> list = this.dao.queryMenuSubtypeDao(param);
         //存在小类时返回小类，否则自动获取部门类别下的菜品
         if (list.size() > 0) {
-            PageInfo<T> data = (PageInfo<T>) new PageInfo<>(list);
+            PageInfo<MenuSubType> data = new PageInfo<>(list);
             return (T) new Result(0, data);
         } else {
             param.setIsSub(1);
             Page<Object> pages1 = PageHelper.startPage(param.getPage(), param.getTotal());
             List<Menu> list1 = this.dao.queryMenuDetailDao(param);
             if (list1.size() > 0) {
-                PageInfo<T> data = (PageInfo<T>) new PageInfo<>(list1);
+                PageInfo<Menu> data = new PageInfo<Menu>(list1);
                 return (T) new Result(0, data);
             }
         }
@@ -172,7 +172,7 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuDetailService(HotelParam param, HttpServletRequest request) throws Exception {
-        Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
+        Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
         List<Menu> list = this.dao.queryMenuDetailDao(param);
         int len = list.size();
         if (len > 0) {
@@ -199,10 +199,10 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuMeansService(HotelParam param) throws Exception {
-        Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
+        Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
         List<MenuMeans> list = this.dao.queryMenuMeansDao(param);
         if (list.size() > 0) {
-            PageInfo<MenuMeans> data = new PageInfo<>(list);
+            PageInfo<MenuMeans> data = new PageInfo<MenuMeans>(list);
             return (T) new Result(0, data);
         }
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -219,10 +219,10 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T queryMenuMeansDetailService(HotelParam param) throws Exception {
-        Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
+        Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
         List<MenuMeansDetail> list = this.dao.queryMenuMeansDetailDao(param);
         if (list.size() > 0) {
-            PageInfo<MenuMeansDetail> data = new PageInfo<>(list);
+            PageInfo<MenuMeansDetail> data = new PageInfo<MenuMeansDetail>(list);
             return (T) new Result(0, data);
         }
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -238,7 +238,7 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     public <T> T querySetMealService(HttpServletRequest request, HotelParam param) throws Exception {
-        Page<Object> pages = PageHelper.startPage(param.getPage(), param.getTotal());
+        Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
         List<SetMeal> list = this.dao.querySetMealDao(param);
         int len = list.size();
         if (len > 0) {

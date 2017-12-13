@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * description:
@@ -55,9 +53,7 @@ public class UserController {
 
     @RequestMapping("/test")
     public <T> T test() throws HotelApplicationException {
-        List<String> list = new ArrayList<String>();
-        list.add(this.od.getOrderId().toString());
-        return (T) new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        return (T) this.od.getOrderId().toString();
     }
 
 
