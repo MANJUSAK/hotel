@@ -50,7 +50,6 @@ public class BookingController {
         System.out.println(quickbooking.toString());
         try {
             this.bookingDao.insertQuickBooking(quickbooking);
-
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e){
             this.logger.error(e.toString());
@@ -81,7 +80,11 @@ public class BookingController {
     }
 
 
-    //查询单条预订信息
+    /**
+     * 查询单条预订详细信息
+     * @param bookingId
+     * @return
+     */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("booking/selectOne/Booking")
     public Object bookingSelectBooking(String bookingId){
@@ -113,13 +116,12 @@ public class BookingController {
         System.out.println(quickbooking.toString());
         try {
             this.bookingDao.updateQuickBookingALL(quickbooking);
-            List<QuickbookingRoomno> quickbookingRoomnos = bookingDao.selectReserveRooms(quickbooking.getId());
+            //List<QuickbookingRoomno> quickbookingRoomnos = bookingDao.selectReserveRooms(quickbooking.getId());
             bookingDao.deleteBookdingRoomAll(quickbooking.getId());
+            System.out.println(quickbooking.getRoomno());
             for(int i=0;i<quickbooking.getRoomno().size();i++){
                 quickbooking.getRoomno().get(i).setBookId(quickbooking.getId());
-
             }
-
             bookingDao.insertQuickBookingRoom(quickbooking.getRoomno());
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }catch (Exception e){
@@ -130,6 +132,23 @@ public class BookingController {
     }
 
 
+    /**
+     * 仅修改预订信息
+     * @param <T>
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("booking/updateBookingOnly")
+    public <T> T updateBookingOnly(@RequestBody Quickbooking quickbooking){
+
+        try{
+            this.bookingDao.updateQuickBookingALL(quickbooking);
+        }catch (Exception e){
+            e.printStackTrace();
+            return (T)new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+        return (T) new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+    }
 
 
 
@@ -522,18 +541,19 @@ public class BookingController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("booking/insertGuest")
-    public <T> T insertGuest(Guest guest){
+    public <T> T insertGuest(@RequestBody Guest guest){
 
         System.out.println(guest);
         //判断客人信息是否完整
-        if(guest.getGuestName()==null ||guest.getDocumentNo()==null){
+        if(guest.getGuestName()==null ||guest.getDocumentNo()==null ||"".equals(guest.getGuestName()) || "".equals(guest.getDocumentNo())){
             return (T) new Status(40010,"客人名或证件号为空");
         }
-        //判断客人信息数量与是否重复
+        //判断客人信息数量
         List<String> documentNos = bookingDao.selectRoomGuestInfo(guest.getRoomId());
         if(documentNos.size()==5){
             return (T) new Status(40010,"入住人数已满");
         }
+        //判断客人信息重复
         for(String s:documentNos){
             if(guest.getDocumentNo().equals(s)){
                 return (T) new Status(40010,"客人信息重复");
@@ -562,10 +582,9 @@ public class BookingController {
        @RequestMapping("booking/roomCheck")
        public <T> T roomCheck(String bookingNo ,String roomNo ,String roomId){
        //判断必填参数是否为空
-        if(bookingNo==null || roomNo==null || roomId==null){
+        if(bookingNo==null || roomNo==null || roomId==null ||"".equals(bookingNo) || "".equals(roomId) || "".equals(roomNo)){
            return (T) new Status(40010,StatusEnum.NO_PARAM.getEXPLAIN());
        }
-
            try {
                 //修改房间状态参数map
                 Map roomFlagParam = new HashMap();
@@ -576,13 +595,38 @@ public class BookingController {
                 if(!roomflag.equals("空房")){
                     return (T) new Status(40010, "房间已入住");
                 }
+                   //判断是否有客人信息
+                   List<String> documentNos = bookingDao.selectRoomGuestInfo(roomId);
+                   if(documentNos.size()==0){
+                       return (T) new Status(40010, "无客人信息");
+                   }
 
                 //修改房间状态
                 //查询预订状态
                 String s = bookingDao.selectBookingMarkets(bookingNo);
                 roomFlagParam.put("markets",s);
                 roomFlagParam.put("id",roomId);
+                //修改客房状态
                 bookingDao.updateRoomFlagRuZhu(roomFlagParam);
+
+                //查询预订单ID
+                String reserveId = bookingDao.selectBookIdByBookNo(roomNo);
+                //查询预订所有房间状态
+                List<String> flags = bookingDao.selectAllReserveRoomState(reserveId);
+                int x=0;
+                for(int i=0;i<flags.size();i++){
+                    if("空房".equals(flags.get(i))){
+                       x++;
+                    }
+                }
+                   //修改预订单状态
+                   if(x==0){
+                    //全部入住
+                    bookingDao.updateReserveFlagAllByNo(bookingNo);
+                  } else{
+                       //部分入住
+                       bookingDao.updateReserveFlagByNo(bookingNo);
+                   }
 
                } else {
                    return (T) new Status(40010, "房间ID错误");
@@ -594,7 +638,6 @@ public class BookingController {
            }
         return (T) new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
     }
-
 
 
 
@@ -691,7 +734,10 @@ public class BookingController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("room/update/checkout")
-    public Object bookingTuifang(String bookid ,String roomno){
+    public Object bookingTuifang(String bookid ,String roomno,String roomId){
+
+        //修改客人信息状态为0
+
 
         try {
         //传入预订id  预订单退房

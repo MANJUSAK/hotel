@@ -6,50 +6,50 @@ package com.goodsoft.hotel.domain.entity.guestRoom;
  */
 
 public class Guest {
-    private String id;   //id
-    private String guestName;   //客人名字
-    private String nickName;     //客人称呼
-    private String englishName;  //英语名
-    private String marital;     //婚姻状况
-    private String nationality;     //国籍
-    private String languages;        //语言
-    private String cardType;        //证件类型
-    private String ethnic;         //民族
-    private String documentNo;      //证件号码
-    private String nativePlace;     //籍贯
-    private String sex;             //性别
-    private String occupation;      //职业
-    private String birthDay;        //生日
-    private String workUnit;        //工作单位
-    private String cityProper;      //城区
-    private String work;        //职务
-    private String regional;    //地区分类
-    private String stopCause;       //经停事由
-    private String postalCode;      //邮政编码
-    private String address;         //住址
-    private String officePhone;     //办公电话
-    private String phoneNumber;     //手机号码
-    private String telePhone;       //电话
-    private String visaAgency;        //签证机关
-    private String visaType;        //签证类型
-    private String visaNumber;        //签证号码
-    private String visaDate;        //签证日期
-    private String periodValidity;  //有效期
-    private String entryTime;        //入境时间
-    private String entryPorts;        //入境口岸
-    private String newsPaperType;  //报纸类型
-    private String religiousBelief;    //宗教信仰
-    private String secondCard;        //	第二证件
-    private String comeFrom;        //从何处来
-    private String arrivalFlight;    //	抵达航班
-    private String whereToGo;        //到何处去     ----
-    private String leaveFlight;    //	离开航班
-    private String positions;        //位置
-    private String carType;      //车型
-    private String carPlateNumber;  //车牌号
-    private String specialDemand;        //特殊要求
-    private String hobby;        //兴趣爱好
-    private String taboo;        //忌讳
+    private String id;                  //ID
+    private String guestName;           //客人名字
+    private String nickName;            //客人称呼
+    private String englishName;         //英文名
+    private String marital;             //婚姻状况
+    private String nationality;         //国籍
+    private String languages;           //语言
+    private String cardType;            //证件类型
+    private String ethnic;              //民族
+    private String documentNo;          //证件号码
+    private String nativePlace;         //籍贯
+    private String sex;                 //性别
+    private String occupation;          //职业
+    private String birthDay;            //生日
+    private String workUnit;            //工作单位
+    private String cityProper;          //城区
+    private String post;                //职务
+    private String regional;            //地区分类
+    private String stopCause;           //经停事由
+    private String postalCode;          //邮政编码
+    private String address;             //住址
+    private String officePhone;         //办公电话
+    private String phoneNumber;         //手机号码
+    private String telePhone;           //电话
+    private String visaAgency;          //签证机关
+    private String visaType;            //签证类型
+    private String visaNumber;          //签证号码
+    private String visaDate;            //签证日期
+    private String periodValidity;      //有效期
+    private String entryTime;           //入境时间
+    private String entryPorts;          //入境口岸
+    private String newsPaperType;       //报纸类型
+    private String religiousBelief;     //宗教信仰
+    private String secondCard;          //第二证件
+    private String comeFrom;            //从何处来
+    private String arrivalFlight;       //抵达航班
+    private String whereToGo;           //到何处去
+    private String leaveFlight;         //离开航班
+    private String positions;           //位置
+    private String carType;             //车型
+    private String carPlateNumber;      //车牌号
+    private String specialDemand;       //特殊要求
+    private String hobby;               //兴趣爱好
+    private String taboo;               //忌讳
     private String bookId;       //预定单编号
     private String vipId;        //会员卡ID
     private String customertype ="1";   //顾客类型
@@ -219,11 +219,11 @@ public class Guest {
     }
 
     public String getWork() {
-        return work;
+        return post;
     }
 
     public void setWork(String work) {
-        this.work = work;
+        this.post = work;
     }
 
     public String getRegional() {
@@ -477,7 +477,7 @@ public class Guest {
                 ", birthDay='" + birthDay + '\'' +
                 ", workUnit='" + workUnit + '\'' +
                 ", cityProper='" + cityProper + '\'' +
-                ", work='" + work + '\'' +
+                ", work='" + post + '\'' +
                 ", regional='" + regional + '\'' +
                 ", stopCause='" + stopCause + '\'' +
                 ", postalCode='" + postalCode + '\'' +

@@ -56,6 +56,17 @@ public interface BookingDao {
     public void deleteBookingRoomMapper(String bookid) throws Exception;
 
 
+    //修改预订单状态为部分入住
+    public Integer updateReserveFlagByNo(String bookingNo);
+    //修改预订单状态为全部入住
+    public Integer updateReserveFlagAllByNo(String bookingNo);
+
+    //通过预定单号查询预订Id
+    public String selectBookIdByBookNo(String bookingNo);
+
+    //查询预订单所有房间状态
+    public List<String> selectAllReserveRoomState(String bookId);
+
     //判断预定房间重复
     public Integer joinRoomIdResves(Map map);
 

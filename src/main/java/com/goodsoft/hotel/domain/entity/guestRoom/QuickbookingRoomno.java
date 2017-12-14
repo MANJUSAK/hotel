@@ -10,7 +10,7 @@ public class QuickbookingRoomno {
     private String roomNo;              //房间号
     private String typeName;            //房间类型
     private String doorLockId;          //门锁ID
-    private String housePrices;         //标准房价
+    private String housePrices;         //房价
     private String bookId;              //预定表单ID
     private String roomId;              //房间id
 

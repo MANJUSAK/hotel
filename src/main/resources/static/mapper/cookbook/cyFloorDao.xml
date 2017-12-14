@@ -48,7 +48,7 @@
 
 
     <!--获取当前厅所有空闲餐台-->
-    <select id="selectFreeTables" parameterType="java.lang.String">
+    <select id="selectFreeTables" parameterType="string"  resultType="com.goodsoft.hotel.domain.entity.floor.Diningtable">
         select * from gs_diningtable where status=1 and hall_id=
         (select hall_id from gs_diningtable where id=#{tableId})
     </select>

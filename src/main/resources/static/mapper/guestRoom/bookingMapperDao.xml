@@ -82,15 +82,8 @@
     </select>
      <!--查询预订房间信息-->
     <select id="selectReserveRooms" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
-        select * from GS_QUICKBOOKING_ROOMNO where bookid=#{bookId}
+        select a.* from GS_QUICKBOOKING_ROOMNO a,gs_room b where a.roomid=b.id and b.flag='空房' and  a.bookid=#{bookId}
     </select>
-
-    <!--查询所有房间号和ID-->
-
-
-
-
-
 
     <!--&lt;!&ndash;查询预订单的房间号码&ndash;&gt;-->
     <!--<select id="findRoomNoMapper" parameterType="java.lang.String" resultType="java.util.List">-->
@@ -240,7 +233,7 @@
               insert into gs_guest values (
 #{id},#{guestName},#{nickName},#{englishName},#{marital},#{nationality},
 #{languages},#{cardType},#{ethnic},#{documentNo},#{nativePlace},
-#{sex},#{occupation},#{birthday},#{workUnit},#{cityProper},
+#{sex},#{occupation},#{birthDay},#{workUnit},#{cityProper},
 #{post},#{regional},#{stopCause},#{postalCode},#{address},
 #{officePhone},#{phoneNumber},#{telePhone},#{visaAgency},
 #{visaType},#{visaNumber},#{visaDate},#{periodValidity},
@@ -253,7 +246,7 @@
 
     <!--查询同一房间客人信息-->
     <select id="selectRoomGuestInfo" parameterType="java.lang.String" resultType="java.lang.String">
-    select documentNo from  gs_guest where roomid=#{_parameter}
+    select documentNo from  gs_guest where roomid=#{_parameter} and state=1
     </select>
 
     <!--判断预定房间号是否重复-->
@@ -339,10 +332,30 @@
            update gs_room SET flag = #{markets}  WHERE id=#{id}
     </update>
 
-    <!--预定入住修改预定状态-->
+    <!--预定入住修改预定状态  通过预订单id-->
     <update id="updateRoomFlagRuZhuBooking" parameterType="java.lang.String">
            update GS_QUICKBOOKING SET BOOKINGFLAG = '预定入住'  WHERE id=#{_parameter}
     </update>
+
+    <!--预定入住修改预定状态 通过预定单号 -->
+    <update id="updateReserveFlagByNo" parameterType="java.lang.String">
+        update GS_QUICKBOOKING SET BOOKINGFLAG = '部分入住'  WHERE bookingno=#{_parameter}
+    </update>
+
+    <!--预定入住修改预定状态 通过预定单号 -->
+    <update id="updateReserveFlagAllByNo" parameterType="java.lang.String">
+        update GS_QUICKBOOKING SET BOOKINGFLAG = '全部入住'  WHERE bookingno=#{_parameter}
+    </update>
+
+    <!--查询预订单所有房间状态-->
+    <select id="selectAllReserveRoomState" parameterType="java.lang.String" resultType="java.lang.String">
+select b.flag from gs_quickbooking_roomno a,gs_room b where a.roomid=b.id and a.bookid =#{_parameter}
+    </select>
+
+    <!--通过预定单查询预订ID-->
+    <select id="selectBookIdByBookNo" parameterType="string" resultType="string">
+        select id from gs_quickbooking where bookingno=#{_parameter}
+    </select>
 
     <!--查询房间状态-->
     <select id="selectFlagByRoomId" resultType="string" parameterType="string">

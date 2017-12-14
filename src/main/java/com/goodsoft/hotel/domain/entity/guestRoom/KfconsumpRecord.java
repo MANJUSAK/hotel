@@ -15,8 +15,17 @@ public class KfconsumpRecord {
     private String  discount;      //折扣
     private String  paymentexplain;//付款说明
     private String  bookingno;     //预订单号
+    private String  roomid ;       //房间id
 
     public KfconsumpRecord() {
+    }
+
+    public String getRoomid() {
+        return roomid;
+    }
+
+    public void setRoomid(String roomid) {
+        this.roomid = roomid;
     }
 
     public String getId() {

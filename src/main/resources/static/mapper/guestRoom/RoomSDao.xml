@@ -330,6 +330,10 @@
     delete from  gs_kfconsump_record  where  bookingno=#{bookingno}
     </update>
 
+    <!--查询客房消费信息-->
+    <select id="selectXfConsumptionInfo" resultType="string">
+
+    </select>
 
     <!--修改客房净房脏房状态-->
     <update id="updateRoomSflag" parameterType="string">
