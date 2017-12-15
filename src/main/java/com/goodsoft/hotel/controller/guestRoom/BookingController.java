@@ -153,6 +153,10 @@ public class BookingController {
 
 
 
+
+
+
+
     /**
      * 取消预定单
      *
@@ -610,7 +614,7 @@ public class BookingController {
                 bookingDao.updateRoomFlagRuZhu(roomFlagParam);
 
                 //查询预订单ID
-                String reserveId = bookingDao.selectBookIdByBookNo(roomNo);
+                String reserveId = bookingDao.selectBookIdByBookNo(bookingNo);
                 //查询预订所有房间状态
                 List<String> flags = bookingDao.selectAllReserveRoomState(reserveId);
                 int x=0;
@@ -737,6 +741,7 @@ public class BookingController {
     public Object bookingTuifang(String bookid ,String roomno,String roomId){
 
         //修改客人信息状态为0
+        //删除财务信息
 
 
         try {
@@ -766,6 +771,7 @@ public class BookingController {
         }
         return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
     }
+
 
 
 }

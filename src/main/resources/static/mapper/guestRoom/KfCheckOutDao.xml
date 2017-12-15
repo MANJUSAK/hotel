@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.KfCheckOutDao">
+
+
+    <!--查询订单详情 -->
+    <select id="selectBookingInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+       select * from  GS_QUICKBOOKING where id=#{id};
+    </select>
+
+    <!--查询预订单全部已入住房间-->
+    <select id="selectBookingCheckRooms" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+        select a.* from GS_QUICKBOOKING_ROOMNO a,gs_room b where a.roomid=b.id and b.flag!='空房' and  a.bookid=#{bookId}
+    </select>
+
+</mapper>

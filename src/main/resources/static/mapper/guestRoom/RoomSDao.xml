@@ -325,15 +325,31 @@
         </foreach>
     </select>
 
-    <!--删除客房消费记录-->
-    <update id="deleteXfConsumptionInfo" parameterType="string">
+    <!--删除客房消费记录 通过预定单号-->
+    <delete id="deleteXfConsumptionInfo" parameterType="string">
     delete from  gs_kfconsump_record  where  bookingno=#{bookingno}
-    </update>
+    </delete>
+
+    <!--删除客房消费记录  通过id-->
+    <delete id="deleteOneXfConsumptionInfo" parameterType="string">
+    delete from  gs_kfconsump_record  where  id=#{_parameter}
+    </delete>
+
 
     <!--查询客房消费信息-->
-    <select id="selectXfConsumptionInfo" resultType="string">
-
+    <select id="selectXfConsumptionInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
+       select * from gs_kfconsump_record where bookingno=#{_paramater} and state=1
     </select>
+
+    <!--修改客房消费记录-->
+    <update id="updateXfConsumptionInfo" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
+            update gs_kfconsump_record  set
+            guestname=#{guestname},project=#{project},projectnumber=#{projectnumber},
+            unitprice=#{unitprice},discount=#{discount},paymentexplain=#{paymentexplain}, roomno=#{roomno},bookingno=#{bookingno}
+            where
+           id=#{id}
+    </update>
+
 
     <!--修改客房净房脏房状态-->
     <update id="updateRoomSflag" parameterType="string">

@@ -75,6 +75,8 @@ public class RoomsController {
             e.printStackTrace();
             sqlSession.rollback();
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }finally {
+            sqlSession.close();
         }
         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
@@ -884,16 +886,19 @@ public class RoomsController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("consume/record/insert")
-    public Object insertRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam) {
+    public Object insertRecord(@RequestBody KfconsumpRecord kfconsumpRecord){
 
-        if (kfconsumpRecordParam.getConsumptions() == null || kfconsumpRecordParam.getConsumptions().size() == 0 || kfconsumpRecordParam.getBookingno() == null) {
+        if (kfconsumpRecord.getRoomno() == null || kfconsumpRecord.getProject()==null || kfconsumpRecord.getRoomid()==null || kfconsumpRecord.getBookingno()==null) {
             return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
-        for (int i = 0; i < kfconsumpRecordParam.getConsumptions().size(); i++) {
-            kfconsumpRecordParam.getConsumptions().get(i).setBookingno(kfconsumpRecordParam.getBookingno());
-        }
+        System.out.println(kfconsumpRecord);
+
+        StringBuilder uuid = UUIDUtil.getInstance().getUUID();
+        kfconsumpRecord.setId(uuid.toString());
         try {
-            roomSDao.insertXfConsumptionInfo(kfconsumpRecordParam.getConsumptions());
+            List list=new ArrayList();
+            list.add(kfconsumpRecord);
+            roomSDao.insertXfConsumptionInfo(list);
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
             e.printStackTrace();
@@ -905,29 +910,66 @@ public class RoomsController {
     /**
      * 修改客房消费信息
      *
-     * @param kfconsumpRecordParam
+     * @param kfconsumpRecord
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("consume/record/update")
-    public Object updateRecord(@RequestBody KfconsumpRecordParam kfconsumpRecordParam) {
-        if (kfconsumpRecordParam.getConsumptions() == null || kfconsumpRecordParam.getConsumptions().size() == 0 || kfconsumpRecordParam.getBookingno() == null) {
+    public Object updateRecord(@RequestBody KfconsumpRecord kfconsumpRecord) {
+        if (kfconsumpRecord.getRoomno() == null  || kfconsumpRecord.getRoomid()==null || kfconsumpRecord.getBookingno()==null) {
             return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
         try {
-            roomSDao.deleteXfConsumptionInfo(kfconsumpRecordParam.getBookingno());
-            for (int i = 0; i < kfconsumpRecordParam.getConsumptions().size(); i++) {
-                kfconsumpRecordParam.getConsumptions().get(i).setBookingno(kfconsumpRecordParam.getBookingno());
-            }
-            roomSDao.insertXfConsumptionInfo(kfconsumpRecordParam.getConsumptions());
+            roomSDao.updateXfConsumptionInfo(kfconsumpRecord);
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
             e.printStackTrace();
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
-        }
+    }
     }
 
 
+    /**
+     * 删除单条消费信息
+     * @param recordId
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("consume/record/deleteOne")
+    public Object recordDelete(String recordId){
+        if (recordId==null) {
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        try{
+            roomSDao.deleteOneXfConsumptionInfo(recordId);
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+    }
+
+
+    /**
+     * 查询订单所有消费记录
+     * @param bookingNo
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("consume/record/select")
+    public Object selectRecord(String bookingNo){
+
+       if(bookingNo==null || "".equals(bookingNo)){
+           return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+       }
+       try{
+           List<KfconsumpRecord> kfconsumpRecords = roomSDao.selectXfConsumptionInfo(bookingNo);
+           return kfconsumpRecords;
+       }catch (Exception e){
+           return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+       }
+    }
 
 }
 

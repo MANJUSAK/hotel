@@ -8,20 +8,12 @@ import java.util.List;
  */
 public class KfconsumpRecordParam {
 
-    private String bookingno;
     private List<KfconsumpRecord> consumptions;
 
 
     public KfconsumpRecordParam() {
     }
 
-    public String getBookingno() {
-        return bookingno;
-    }
-
-    public void setBookingno(String bookingno) {
-        this.bookingno = bookingno;
-    }
 
     public List<KfconsumpRecord> getConsumptions() {
         return consumptions;

@@ -160,4 +160,14 @@ public interface RoomSDao {
     //删除客房消费记录
     public Integer deleteXfConsumptionInfo(@Param("bookingno") String bookingno);
 
+    //删除单条客房消费记录
+    public Integer deleteOneXfConsumptionInfo(String id);
+
+    //查询订单所有消费记录
+    public List<KfconsumpRecord> selectXfConsumptionInfo(String bookingno);
+
+    //修改客房消费记录
+    public Integer updateXfConsumptionInfo(KfconsumpRecord kfconsumpRecord);
+
+
 }

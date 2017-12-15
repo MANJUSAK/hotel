@@ -80,7 +80,7 @@
     <select id="selectReserveInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
         select * from GS_QUICKBOOKING  where id=#{id}
     </select>
-     <!--查询预订房间信息-->
+     <!--查询预订所有未入住房间信息-->
     <select id="selectReserveRooms" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
         select a.* from GS_QUICKBOOKING_ROOMNO a,gs_room b where a.roomid=b.id and b.flag='空房' and  a.bookid=#{bookId}
     </select>
@@ -221,11 +221,12 @@
 
 
     <!--查询预定房间信息-->
-    <select id="selectrQuickbookingRooms" parameterType="java.lang.String"
-            resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+    <select id="selectrQuickbookingRooms"  parameterType="java.lang.String"  resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
         select * from gs_quickbooking_roomno where bookid=#{_parameter}
     </select>
 
+
+    <!--新增预订单房间-->
 
 
     <!--添加客人信息 -->
@@ -349,7 +350,7 @@
 
     <!--查询预订单所有房间状态-->
     <select id="selectAllReserveRoomState" parameterType="java.lang.String" resultType="java.lang.String">
-select b.flag from gs_quickbooking_roomno a,gs_room b where a.roomid=b.id and a.bookid =#{_parameter}
+      select b.flag from gs_quickbooking_roomno a,gs_room b where a.roomid=b.id and a.bookid =#{_parameter}
     </select>
 
     <!--通过预定单查询预订ID-->
