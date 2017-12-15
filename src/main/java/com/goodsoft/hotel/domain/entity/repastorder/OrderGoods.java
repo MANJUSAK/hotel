@@ -42,11 +42,14 @@ public class OrderGoods implements java.io.Serializable {
     private String dcTime;//点菜时间
     private int writeBill;//是否手写单（0为true/1为false）
     private String menuType;//部门类别
+    private int rePlay;//是否存在先落单（点餐之前先落单到厨房）[0为true/1为false]
     private String detailRemarks;//备注
     private List<SetMealDetail> setMealDetails;//套餐数据容器（仅用于查询）
     private List<MenuCustom> setMealCustoms;//自定义套餐数据容器
 
     public OrderGoods() {
+        this.writeBill = 1;
+        this.rePlay = 1;
         this.dcTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         this.tcid = " ";
         this.zdyTcid = " ";
@@ -266,6 +269,14 @@ public class OrderGoods implements java.io.Serializable {
 
     public void setPtDriverName(String ptDriverName) {
         this.ptDriverName = ptDriverName;
+    }
+
+    public int getRePlay() {
+        return rePlay;
+    }
+
+    public void setRePlay(int rePlay) {
+        this.rePlay = rePlay;
     }
 
     public List<SetMealDetail> getSetMealDetails() {

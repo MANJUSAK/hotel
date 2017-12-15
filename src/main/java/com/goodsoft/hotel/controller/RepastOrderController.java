@@ -31,12 +31,11 @@ public class RepastOrderController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
-     * 注：id为必传
-     * 该接口涵盖了订单的所有信息
-     *
      * @param id 订单编号
      * @return 响应结果
+     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * 注：id为必传
+     * 该接口涵盖了订单的所有信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/find/order/data.shtml")
@@ -79,7 +78,7 @@ public class RepastOrderController {
     /**
      * 通过订单号查询订单接口，用于开台跳转点餐页面获取该消费者订单信息
      * 注：开台后必须获取开台订单信息（id必传，否则开台后无法打单）
-     * 该接口为获取订单信息(只包含订单基础信息，返回单条数据)
+     * 该接口为获取订单信息(返回单条数据)
      *
      * @param id 订单编号
      * @return 响应结果

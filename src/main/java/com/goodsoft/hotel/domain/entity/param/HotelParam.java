@@ -22,6 +22,7 @@ public class HotelParam implements java.io.Serializable {
     private String cbid;//菜品编号
     private String mid;//做法编号
     private String keyWord;//关键字
+    private String keyWord_1;//关键字1
     private int isSub;//菜品是否存在小类（0为true/1为false）
 
 
@@ -113,6 +114,14 @@ public class HotelParam implements java.io.Serializable {
         this.isSub = isSub;
     }
 
+    public String getKeyWord_1() {
+        return keyWord_1;
+    }
+
+    public void setKeyWord_1(String keyWord_1) {
+        this.keyWord_1 = keyWord_1 == null ? null : keyWord_1.trim();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,11 +132,12 @@ public class HotelParam implements java.io.Serializable {
                 Objects.equals(tid, that.tid) &&
                 Objects.equals(cbid, that.cbid) &&
                 Objects.equals(keyWord, that.keyWord) &&
+                Objects.equals(keyWord_1, that.keyWord_1) &&
                 Objects.equals(mid, that.mid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, stid, tid, cbid, mid, keyWord);
+        return Objects.hash(id, stid, tid, cbid, mid, keyWord, keyWord_1);
     }
 }

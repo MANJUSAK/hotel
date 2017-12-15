@@ -10,21 +10,20 @@ import com.goodsoft.hotel.exception.HotelDataBaseException;
  * description:
  * ===>餐饮订单管理业务接口类，用于实现餐饮所有订单的管理，查询订单，下订单，修改订单。
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:32
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:32
  * @version V1.0
  */
 @SuppressWarnings("ALL")
 public interface RepastOderService {
 
     /**
-     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
-     * 注：id为必传
-     * 该接口涵盖了订单的所有信息
-     *
      * @param id  订单编号
      * @param <T>
      * @return 查询数据
      * @throws Exception
+     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * 注：id为必传
+     * 该接口涵盖了订单的所有信息
      */
     <T> T queryOrderService(String id) throws Exception;
 

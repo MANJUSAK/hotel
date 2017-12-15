@@ -138,10 +138,11 @@ public class CookBookController {
      * 注：该接口下如需查询菜品对应的图片信息时前台需传入参数setFindFile=0
      * 默认状况下不查询图片文件
      *
-     * @param param 可传入参数：page 页码、total 总记录数
-     *              id 菜品编号（注：赋值id传入数据为菜品编号cbid而非数据编号id）、
-     *              stid 小类编号、tid 部门类别编号、keyWord 菜品名称、isSub 无小类时必传值为1、
-     *              setFindFile 是否查询图片数据
+     * @param request 请求
+     * @param param   可传入参数：page 页码、total 总记录数
+     *                id 菜品编号（注：赋值id传入数据为菜品编号cbid而非数据编号id）、
+     *                stid 小类编号、tid 部门类别编号、keyWord 菜品名称、isSub 无小类时必传值为1、
+     *                setFindFile 是否查询图片数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -192,7 +193,6 @@ public class CookBookController {
             this.logger.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
-
     }
 
     /**
@@ -218,9 +218,10 @@ public class CookBookController {
      * 注：该接口下如需查询套餐对应的图片信息时前台需传入参数setFindFile=0
      * 默认状况下不查询图片文件
      *
-     * @param param 可传入参数：page 页码、total 总记录数
-     *              id 套餐编号（注：赋值id传入数据为套餐编号smid而非数据编号id）、keyWord 套餐名称
-     *              setFindFile 是否查询图片数据
+     * @param request 请求
+     * @param param   可传入参数：page 页码、total 总记录数
+     *                id 套餐编号（注：赋值id传入数据为套餐编号smid而非数据编号id）、keyWord 套餐名称
+     *                setFindFile 是否查询图片数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)

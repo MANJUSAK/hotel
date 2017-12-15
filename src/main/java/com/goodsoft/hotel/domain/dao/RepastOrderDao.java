@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.domain.dao;
 
 import com.goodsoft.hotel.domain.entity.param.HotelParam;
+import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
 import com.goodsoft.hotel.domain.entity.repastorder.MenuCustom;
 import com.goodsoft.hotel.domain.entity.repastorder.Order;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
@@ -21,9 +22,14 @@ import java.util.Map;
 public interface RepastOrderDao {
 
     //餐饮订单查询
-    List<Order> queryRepastOrderDao(HotelParam param) throws Exception;
+    List<Order> queryRepastOrdersDao(HotelParam param) throws Exception;
 
-    //餐饮订单查询(单条) 用于打印小票
+
+    /**
+     * 餐饮订单查询(单条) 用于打印小票
+     *
+     * @deprecated
+     */
     Order queryRepastOrderDao(@Param("id") String id, @Param("status") int status) throws Exception;
 
     //餐饮订单查询通过订单编号
@@ -47,8 +53,14 @@ public interface RepastOrderDao {
     //自定义菜品（套餐）添加
     void addMenuCustomDao(List<MenuCustom> msg) throws Exception;
 
-    //餐饮订单更新（用于结算订单）
-    int updateRepastOrderDao(Order msg) throws Exception;
+    //餐饮订单更新（用于打单）
+    int updateRepastOrderDao(RepastOrderParam msg) throws Exception;
+
+    //换台更新订单餐台信息
+    int updateOrderCTDao(@Param("tableId") String tableId, @Param("orderId") String orderId, @Param("aoh") String aoh);
+
+    //餐饮订单更新（结算、修改）
+    int checkoutRepastOrderDao(Order msg) throws Exception;
 
     //反结账
     int updateOrderStatusDao(@Param("id") String id, @Param("status") int status, @Param("fjzReason") String fjzReason) throws Exception;

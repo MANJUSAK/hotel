@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * description:
  * ===>生成订单号工具类
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 14:44
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 14:44
  * @version V1.0
  */
 @SuppressWarnings("ALL")
@@ -36,6 +36,12 @@ public class OrderIdsupp {
     private static int serial_num = 0;
     private static int serial_num1 = 0;
 
+    /**
+     * 流水号生成策略（无参）
+     *
+     * @return StringBuilder 流水号
+     * @throws HotelApplicationException
+     */
     @Transactional
     public StringBuilder getOrderId() throws HotelApplicationException {
         this.lock.lock();
@@ -71,7 +77,6 @@ public class OrderIdsupp {
             this.dao.addSerialNumDao(sn);
             return sb;
         } catch (Exception e) {
-            e.printStackTrace();
             this.logger.error(e.toString());
             throw new HotelApplicationException("生成订单号失败");
         } finally {
@@ -81,12 +86,12 @@ public class OrderIdsupp {
     }
 
     /**
-     * 订单流水号生成策略
+     * 订单流水号生成策略（有参）
      *
      * @param var  标识
      * @param var1 类型
      * @param arg  类型编码
-     * @return 流水号
+     * @return StringBuilder 流水号
      * @throws HotelApplicationException
      */
     @Transactional
@@ -124,7 +129,6 @@ public class OrderIdsupp {
             this.dao.addSerialNumDao(sn);
             return sb;
         } catch (Exception e) {
-            e.printStackTrace();
             this.logger.error(e.toString());
             throw new HotelApplicationException("生成订单号失败");
         } finally {
