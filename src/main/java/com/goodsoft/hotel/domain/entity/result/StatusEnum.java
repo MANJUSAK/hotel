@@ -37,7 +37,6 @@ public enum StatusEnum {
     FILE_FORMAT(100603, "文件格式不正确"),
     FILE_SIZE(100601, "文件大小不符合要求"),
     FILE_UPLOAD(100600, "文件上传失败"),
-
     QT_FIND_ERROR(101100, "获取失败"),
     QT_ADD_ERROR(101101, "添加失败"),
     QT_MODIFY_ERROR(101102, "更新失败"),

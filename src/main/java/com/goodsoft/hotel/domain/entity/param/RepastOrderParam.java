@@ -17,8 +17,11 @@ public class RepastOrderParam implements java.io.Serializable {
     private String id;//订单号
     private String ctid;//餐台编号
     private double orderPrice;//订单总价
+    private double discountSum;//折扣金额（打折优惠的金额）
+    private double zqSum;//折去金额（打折后的金额）
+    private int totalNum;//数量合计
+    private int mNum;//菜品分量合计
     private String aoh;//台号
-    private String ctType;//分厅
     private List<OrderGoods> msg;//用于接收前台传入的餐饮订单明细数据容器
 
     public String getId() {
@@ -27,6 +30,22 @@ public class RepastOrderParam implements java.io.Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum;
+    }
+
+    public int getmNum() {
+        return mNum;
+    }
+
+    public void setmNum(int mNum) {
+        this.mNum = mNum;
     }
 
     public String getCtid() {
@@ -53,12 +72,21 @@ public class RepastOrderParam implements java.io.Serializable {
         this.aoh = aoh;
     }
 
-    public String getCtType() {
-        return ctType;
+
+    public double getDiscountSum() {
+        return discountSum;
     }
 
-    public void setCtType(String ctType) {
-        this.ctType = ctType;
+    public void setDiscountSum(double discountSum) {
+        this.discountSum = discountSum;
+    }
+
+    public double getZqSum() {
+        return zqSum;
+    }
+
+    public void setZqSum(double zqSum) {
+        this.zqSum = zqSum;
     }
 
     public List<OrderGoods> getMsg() {
@@ -69,6 +97,7 @@ public class RepastOrderParam implements java.io.Serializable {
         this.msg = msg;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,12 +105,11 @@ public class RepastOrderParam implements java.io.Serializable {
         RepastOrderParam that = (RepastOrderParam) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(ctid, that.ctid) &&
-                Objects.equals(aoh, that.aoh) &&
-                Objects.equals(ctType, that.ctType);
+                Objects.equals(aoh, that.aoh);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ctid, aoh, ctType);
+        return Objects.hash(id, ctid, aoh);
     }
 }

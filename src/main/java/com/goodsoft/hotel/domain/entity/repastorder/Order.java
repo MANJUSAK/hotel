@@ -13,10 +13,10 @@ import java.util.Objects;
  * @author 严彬荣 Created on 2017-11-17 10:07
  */
 public class Order implements java.io.Serializable {
-
     private static final long serialVersionUID = -5502168041100514292L;
-    private String id;//订单编号
-    private String kzNum;//客账号
+    private String id;//订单编号(客账号)
+    private int totalNum;//数量合计
+    private int mNum;//菜品分量合计
     private String consumer;//客人姓名
     private String ktTime;//开台时间（订单生成时间）
     private double fwRate;//服务费率
@@ -32,26 +32,27 @@ public class Order implements java.io.Serializable {
     private String vipNum;//会员卡号
     private String vipType;//会员类型
     private String zdConsumeGist;//最低消费依据
-    private double discountSum;//折扣金额
-    private double zqSum;//折去金额
+    private double discountSum;//折扣金额（打折优惠的金额）
+    private double zqSum;//折去金额（打折后的金额）
     private String aoh;//台号
     private String operator;//开台操作员
     private String ktSb;//开台市别
-    private String timeMinute;//计时分钟
     private int isServiceCharge;//收服务费（0为true/1为false）
     private int isZdConsume;//记最低消费（0为true/1为false）
     private String paymentType;//支付方式
-    private int status;//订单状态（是否支付，0为true/1为false/2为反结状态/3为超时未买单）
+    private int status;//订单状态（是否支付，0为true/1为false/2为反结状态/3为超时未买单/4为迟付）
     private String remarks;//备注
     private int placeNum;//席数
     private String ctid;//餐台编号
     private double orderPrice;//订单总价
     private String mdTime;//买单时间
-    private String fjzReason;//反结账说明
+    private String reason;//反结账或迟付等说明
     private List<OrderGoods> orderGoods;//订单明细容器
 
     public Order() {
         this.ktTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        this.ktShift = joinDateSb() + "班";
+        this.ktSb = joinDateSb() + "市";
     }
 
     public String getId() {
@@ -62,12 +63,20 @@ public class Order implements java.io.Serializable {
         this.id = id == null ? "" : id.trim();
     }
 
-    public String getKzNum() {
-        return kzNum;
+    public int getTotalNum() {
+        return totalNum;
     }
 
-    public void setKzNum(String kzNum) {
-        this.kzNum = kzNum == null ? "" : kzNum.trim();
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum < 0 ? Math.abs(totalNum) : totalNum;
+    }
+
+    public int getmNum() {
+        return mNum;
+    }
+
+    public void setmNum(int mNum) {
+        this.mNum = mNum < 0 ? Math.abs(mNum) : mNum;
     }
 
     public String getConsumer() {
@@ -116,7 +125,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKtShift(String ktShift) {
-        this.ktShift = ktShift == null ? "" : ktShift.trim();
+        this.ktShift = ktShift;
     }
 
     public String getDepartment() {
@@ -259,15 +268,7 @@ public class Order implements java.io.Serializable {
     }
 
     public void setKtSb(String ktSb) {
-        this.ktSb = joinDateSb();
-    }
-
-    public String getTimeMinute() {
-        return timeMinute;
-    }
-
-    public void setTimeMinute(String timeMinute) {
-        this.timeMinute = timeMinute == null ? "" : timeMinute.trim();
+        this.ktSb = ktSb;
     }
 
     public String getPaymentType() {
@@ -314,12 +315,12 @@ public class Order implements java.io.Serializable {
         this.mdTime = mdTime == null ? " " : mdTime.trim();
     }
 
-    public String getFjzReason() {
-        return fjzReason;
+    public String getReason() {
+        return reason;
     }
 
-    public void setFjzReason(String fjzReason) {
-        this.fjzReason = fjzReason == null ? " " : fjzReason.trim();
+    public void setReason(String fjzReason) {
+        this.reason = reason == null ? " " : reason.trim();
     }
 
     public void setOrderPrice(double orderPrice) {
@@ -341,7 +342,6 @@ public class Order implements java.io.Serializable {
         if (!(o instanceof Order)) return false;
         Order order = (Order) o;
         return Objects.equals(id, order.id) &&
-                Objects.equals(kzNum, order.kzNum) &&
                 Objects.equals(consumer, order.consumer) &&
                 Objects.equals(ktTime, order.ktTime) &&
                 Objects.equals(ctType, order.ctType) &&
@@ -356,17 +356,16 @@ public class Order implements java.io.Serializable {
                 Objects.equals(aoh, order.aoh) &&
                 Objects.equals(operator, order.operator) &&
                 Objects.equals(ktSb, order.ktSb) &&
-                Objects.equals(timeMinute, order.timeMinute) &&
                 Objects.equals(paymentType, order.paymentType) &&
                 Objects.equals(remarks, order.remarks) &&
                 Objects.equals(mdTime, order.mdTime) &&
-                Objects.equals(fjzReason, order.fjzReason) &&
+                Objects.equals(reason, order.reason) &&
                 Objects.equals(ctid, order.ctid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, kzNum, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, timeMinute, paymentType, remarks, ctid, mdTime, fjzReason);
+        return Objects.hash(id, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, paymentType, remarks, ctid, mdTime, reason);
     }
 
     private String joinDateSb() {
@@ -374,11 +373,11 @@ public class Order implements java.io.Serializable {
         Calendar calendar = Calendar.getInstance();
         int i = calendar.get(Calendar.HOUR_OF_DAY);
         if (i < 10 && i > 5) {
-            shibie = "早市";
+            shibie = "早";
         } else if (i >= 10 && i < 14) {
-            shibie = "中市";
+            shibie = "中";
         } else {
-            shibie = "晚市";
+            shibie = "晚";
         }
         return shibie;
     }

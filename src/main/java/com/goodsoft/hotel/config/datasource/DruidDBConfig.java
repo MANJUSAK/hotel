@@ -33,7 +33,7 @@ import java.util.List;
 public class DruidDBConfig {
     @Resource
     private WallFilter wallFilter;
-    private final Logger logger = Logger.getLogger(DruidDBConfig.class);
+    private final Logger logger = Logger.getLogger(this.getClass());
     @Value("${spring.datasource.url}")
     private String dbUrl;
     @Value("${spring.datasource.username}")

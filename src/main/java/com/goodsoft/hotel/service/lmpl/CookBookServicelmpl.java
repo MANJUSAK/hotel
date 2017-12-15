@@ -17,7 +17,6 @@ import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.CookBookService;
 import com.goodsoft.hotel.service.FileService;
-import com.goodsoft.hotel.service.supp.ServicelmplGetFileSupp;
 import com.goodsoft.hotel.util.DeleteFileUtil;
 import com.goodsoft.hotel.util.UUIDUtil;
 import org.apache.ibatis.session.ExecutorType;
@@ -54,8 +53,6 @@ public class CookBookServicelmpl implements CookBookService {
     private FileService fileService;
     @Resource
     private FileDao fileDao;
-    @Resource
-    private ServicelmplGetFileSupp getFileSupp;
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
     //实例化文件删除工具类
@@ -178,7 +175,7 @@ public class CookBookServicelmpl implements CookBookService {
         if (len > 0) {
             if (param.getSetFindFile() == 0) {
                 for (int i = 0; i < len; ++i) {
-                    List<String> picture = this.getFileSupp.getFileData(request, list.get(i).getId());
+                    List<String> picture = this.fileService.getFileData(request, list.get(i).getId());
                     list.get(i).setPicture(picture);
                 }
             }
@@ -246,11 +243,11 @@ public class CookBookServicelmpl implements CookBookService {
                 List<SetMealDetail> detailList = this.dao.querySetMealDetailDao(list.get(i).getId());
                 int len1 = detailList.size();
                 if (param.getSetFindFile() == 0) {
-                    List<String> url = this.getFileSupp.getFileData(request, list.get(i).getFileId());
+                    List<String> url = this.fileService.getFileData(request, list.get(i).getFileId());
                     list.get(i).setPicture(url);
                     if (len1 > 0) {
                         for (int j = 0; j < len1; ++j) {
-                            List<String> sturl = this.getFileSupp.getFileData(request, detailList.get(j).getFileId());
+                            List<String> sturl = this.fileService.getFileData(request, detailList.get(j).getFileId());
                             detailList.get(j).setPicture(sturl);
                         }
                     }

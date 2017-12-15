@@ -60,13 +60,12 @@ public class RepastOderServicelmpl implements RepastOderService {
 
 
     /**
-     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
-     * 注：id为必传
-     * 该接口涵盖了订单的所有信息
-     *
      * @param id 订单编号
      * @return 查询数据
      * @throws Exception
+     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * 注：id为必传
+     * 该接口涵盖了订单的所有信息
      */
     @Override
     public <T> T queryOrderService(String id) throws Exception {
@@ -104,7 +103,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     /**
      * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
-     * （status=1未结/2反结/3超时）
+     * （status=1未结/2反结/3超时/4迟付）
      * 该接口涵盖了订单的所有信息
      *
      * @param param 查询条件
@@ -114,7 +113,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     @Override
     public <T> T queryOrderService(HotelParam param) throws Exception {
         Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
-        List<Order> list = this.dao.queryRepastOrderDao(param);
+        List<Order> list = this.dao.queryRepastOrdersDao(param);
         int len = list.size();
         if (len > 0) {
             for (int i = 0; i < len; ++i) {
@@ -133,7 +132,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                         }
                         //是否存在自定义套餐
                         String customId = list1.get(j).getZdyTcid();
-                        if (tcid != null && !("".equals(tcid))) {
+                        if (customId != null && !("".equals(customId))) {
                             List<MenuCustom> list2 = this.dao.queryMenuCustomDao(customId);
                             if (list2.size() > 0) {
                                 list1.get(j).setSetMealCustoms(list2);
@@ -162,6 +161,30 @@ public class RepastOderServicelmpl implements RepastOderService {
     public <T> T queryOrderByIdService(String id) throws Exception {
         Order data = this.dao.queryRepastOrderByIdDao(id);
         if (data != null) {
+            //订单商品详情
+            List<OrderGoods> list = this.dao.queryRepastOrderGoodsDao(id);
+            int len = list.size();
+            if (len > 0) {
+                for (int j = 0; j < len; ++j) {
+                    //是否存在套餐
+                    String tcid = list.get(j).getTcid();
+                    if (tcid != null && !("".equals(tcid))) {
+                        List<SetMealDetail> list1 = this.cbDao.querySetMealDetailDao(tcid);
+                        if (list1.size() > 0) {
+                            list.get(j).setSetMealDetails(list1);
+                        }
+                    }
+                    //是否存在自定义套餐
+                    String customId = list.get(j).getZdyTcid();
+                    if (customId != null && !("".equals(customId))) {
+                        List<MenuCustom> list1 = this.dao.queryMenuCustomDao(customId);
+                        if (list1.size() > 0) {
+                            list.get(j).setSetMealCustoms(list1);
+                        }
+                    }
+                }
+                data.setOrderGoods(list);
+            }
             return (T) new Result(0, data);
         }
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -185,6 +208,7 @@ public class RepastOderServicelmpl implements RepastOderService {
         } catch (HotelApplicationException e) {
             throw new HotelApplicationException(StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
+        //预订编号
         String ydid = order.getId();
         order.setId(id);
         order.setStatus(1);
@@ -211,13 +235,6 @@ public class RepastOderServicelmpl implements RepastOderService {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao orderDao = sqlSession.getMapper(RepastOrderDao.class);
         String id = msg.getId();
-        Order order = new Order();
-        order.setId(id);
-        order.setAoh(msg.getAoh());
-        order.setOrderPrice(msg.getOrderPrice());
-        order.setCtid(msg.getCtid());
-        order.setCtType(msg.getCtType());
-        order.setStatus(1);
         List<OrderGoods> orderGoods = msg.getMsg();
         List<MenuCustom> menuCustoms = null;
         int len1 = 0;
@@ -243,7 +260,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                 orderDao.addMenuCustomDao(menuCustoms);
             }
             orderDao.addRepastOrderGoodsDao(orderGoods);
-            orderDao.updateRepastOrderDao(order);
+            orderDao.updateRepastOrderDao(msg);
             sqlSession.commit();
             this.cydao.updateTableState(msg.getCtid(), "4");
         } catch (Exception e) {
@@ -264,7 +281,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Override
     public Status updateRepastOrderService(Order msg) throws Exception {
-        int row = this.dao.updateRepastOrderDao(msg);
+        int row = this.dao.checkoutRepastOrderDao(msg);
         if (row > 0) {
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }
@@ -282,13 +299,12 @@ public class RepastOderServicelmpl implements RepastOderService {
     @Override
     public Status checkoutRepastOrderService(Order order) throws Exception {
         order.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        int row = this.dao.updateRepastOrderDao(order);
+        int row = this.dao.checkoutRepastOrderDao(order);
         if (row > 0) {
             //更新餐台状态为清洁中
             try {
                 this.cydao.updateTableState(order.getCtid(), "7");
             } catch (Exception e) {
-                e.printStackTrace();
             }
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }

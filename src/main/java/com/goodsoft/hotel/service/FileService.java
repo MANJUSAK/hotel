@@ -3,6 +3,9 @@ package com.goodsoft.hotel.service;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 /**
  * function 文件上传业务接口
  * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
@@ -10,5 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FileService {
     //文件上传业务处理
-    public int fileUploadService(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException;
+    int fileUploadService(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException;
+
+    //获取文件数据业务方法
+    List<String> getFileData(HttpServletRequest request, String fileId) throws HotelDataBaseException;
 }

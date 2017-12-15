@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.CyFloorDao">
@@ -8,47 +8,51 @@
 
     <!--查询所有餐台-->
     <select id="selectTableInfos" parameterType="java.util.Map" resultType="java.util.Map">
-    select DISTINCT s.*,t.* from
-    (
-    select rt.newhall_name,et.*
-    from gs_newhall rt left join(
-    select ab.*,geo.id orderNumber ,geo.kt_time ktTime from (
-    select a.fenting_id,a.hall_name hall_name ,b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status from
-    (select * from gs_hall where 1=1
+        select DISTINCT s.*,t.* from
+        (
+        select rt.newhall_name,et.*
+        from gs_newhall rt left join(
+        select ab.*,geo.id orderNumber ,geo.kt_time ktTime from (
+        select a.fenting_id,a.hall_name hall_name
+        ,b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status from
+        (select * from gs_hall where 1=1
         <if test="hallId!=null and hallId!=''">
-         and id=#{hallId}
+            and id=#{hallId}
         </if>
         <if test="hallName!=null and hallName!=''">
             and hall_name like '%${hallName}%'
         </if>
-    )a
-    left join (
-    select b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status ,b.HALL_ID
-    from  gs_diningtable b  where b.status!=0
+        )a
+        left join (
+        select b.id,b.table_codee,b.table_name,b.service_charge,b.minimum_consumption,b.status ,b.HALL_ID
+        from gs_diningtable b where b.status!=0
         <if test="state!=null and state!=''">
-         and   b.status=#{state}
+            and b.status=#{state}
         </if>
         )b
-    on a.id=b.hall_id)ab  left join (select * from GS_REPAST_ORDER where status=1) geo on ab.id=geo.ctid )et on rt.id=et.fenting_id
-    )s
-    left join
-    (
-    select a.id reserveId,a.customer_name,a.people_number,b.table_id,a.contact_number,b.reserve_start_time,b.reserve_end_time
-    from gs_restaurant_reservation a ,reserve_halls b
-    where a.id=b.reserve_id and a.state='1' and b.reserve_hall_status='1'
-    <if test="timeZone == null ">
-    and ((UNIX_TIMESTAMP(b.reserve_start_time)-UNIX_TIMESTAMP(now()))/3600 between 0 and 5)
-    </if>
-    <if test="timeZone != null ">
-        and subString(b.reserve_start_time,1,10)=#{timeZone}
-    </if>
-    )t
-    on s.id=t.table_id
+        on a.id=b.hall_id)ab left join (select * from GS_REPAST_ORDER where status=1) geo on ab.id=geo.ctid )et on
+        rt.id=et.fenting_id
+        )s
+        left join
+        (
+        select a.id
+        reserveId,a.customer_name,a.people_number,b.table_id,a.contact_number,b.reserve_start_time,b.reserve_end_time
+        from gs_restaurant_reservation a ,reserve_halls b
+        where a.id=b.reserve_id and a.state='1' and b.reserve_hall_status='1'
+        <if test="timeZone == null ">
+            and ((UNIX_TIMESTAMP(b.reserve_start_time)-UNIX_TIMESTAMP(now()))/3600 between 0 and 5)
+        </if>
+        <if test="timeZone != null ">
+            and subString(b.reserve_start_time,1,10)=#{timeZone}
+        </if>
+        )t
+        on s.id=t.table_id
     </select>
 
 
     <!--获取当前厅所有空闲餐台-->
-    <select id="selectFreeTables" parameterType="string"  resultType="com.goodsoft.hotel.domain.entity.floor.Diningtable">
+    <select id="selectFreeTables" parameterType="string"
+            resultType="com.goodsoft.hotel.domain.entity.floor.Diningtable">
         select * from gs_diningtable where status=1 and hall_id=
         (select hall_id from gs_diningtable where id=#{tableId})
     </select>
@@ -67,7 +71,6 @@
     from gs_diningtable;
     </select>
 
-
     <!--修改订单状态-->
     <update id="updateOrderStatusDao" parameterType="string">
         UPDATE `gs_repast_order`
@@ -75,10 +78,4 @@
          `STATUS` = 3
         WHERE `ID`=#{id}
     </update>
-
-    <!--修改订单关联餐台-->
-    <update id="updateOrderTable" parameterType="java.lang.String">
-        udpate gs_repast_order set ctid=#{tableId} where id=#{orderId}
-    </update>
-
 </mapper>

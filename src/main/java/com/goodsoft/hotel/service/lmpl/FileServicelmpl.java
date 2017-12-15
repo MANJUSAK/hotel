@@ -5,6 +5,7 @@ import com.goodsoft.hotel.domain.entity.file.FileData;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
 import com.goodsoft.hotel.service.FileService;
+import com.goodsoft.hotel.util.DomainNameUtil;
 import com.goodsoft.hotel.util.FileUploadUtil;
 import com.goodsoft.hotel.util.GetOsNameUtil;
 import org.slf4j.Logger;
@@ -14,13 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * function 文件上传业务接口实现类
  * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
- * version v1.0
+ * version v1.1.2
  */
 @SuppressWarnings("ALL")
 @Service
@@ -30,6 +32,8 @@ public class FileServicelmpl implements FileService {
     private FileUploadUtil fileUploadUtil;
     @Resource
     private FileDao dao;
+    //实例化服务器域名地址工具类
+    private DomainNameUtil domainName = DomainNameUtil.getInstance();
     //实例化获取操作系统类型工具类
     private GetOsNameUtil getOsNameUtil = GetOsNameUtil.getInstance();
     //实例化日志管理
@@ -171,23 +175,60 @@ public class FileServicelmpl implements FileService {
                 //获取文件新命名
                 file.setNewFileName(fileList.get(i).substring(j, fileList.get(i).length()));
                 //获取原文件名
-                file.setFileName(files[i].getOriginalFilename());
+                String fileName = files[i].getOriginalFilename();
+                file.setFileName(fileName);
                 //获取文件后缀
-                file.setSuffix(files[i].getOriginalFilename().substring(s, files[i].getOriginalFilename().length()));
+                file.setSuffix(fileName.substring(s, fileName.length()));
                 //设置文件路径
                 file.setPath(fileList.get(i));
                 list.add(file);
             }
             this.dao.saveFileDao(list);
+            return 0;
             //文件信息保存 end
-            //清除集合里的内容  避免数据混乱
-            fileList.clear();
         } catch (Exception e) {
-            fileList.clear();
             this.logger.error(e.toString());
             throw new HotelDataBaseException(StatusEnum.FILE_UPLOAD.getEXPLAIN());
+        } finally {
+            //清除集合里的内容  避免数据混乱
+            fileList.clear();
         }
-        return 0;
         //文件保存 end
+    }
+
+    /**
+     * 获取文件数据业务方法
+     *
+     * @param request 请求
+     * @param fileId  文件编号
+     * @return 文件数据
+     * @throws HotelDataBaseException
+     */
+    @Override
+    public List<String> getFileData(HttpServletRequest request, String fileId) throws HotelDataBaseException {
+        //获取服务器域名地址
+        String var = this.domainName.getServerDomainName(request).toString();
+        StringBuilder sb = new StringBuilder();
+        //查询数据对应的图片信息
+        List<FileData> path = null;
+        try {
+            path = this.dao.queryFileDao(fileId);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+        //封装域名地址以及图片相对路径
+        List<String> url = null;
+        int p = path.size();
+        if (p > 0) {
+            url = new ArrayList<String>();
+            for (int j = 0; j < p; ++j) {
+                sb.append(var);
+                sb.append(path.get(j).getPath());
+                url.add(sb.toString());
+                sb.delete(0, sb.length());
+            }
+        }
+        return url;
     }
 }
