@@ -1,12 +1,14 @@
-package com.goodsoft.hotel.config.timer;
+package com.goodsoft.hotel.timers;
 
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+
 import javax.annotation.Resource;
 
 
@@ -16,7 +18,8 @@ import javax.annotation.Resource;
  */
 @Configuration
 @EnableScheduling
-public class CyReserveTimer{
+@Async
+public class CyReserveTimer {
 
     @Resource
     CyReserveDao cyReserveDao;
@@ -24,28 +27,28 @@ public class CyReserveTimer{
     @Resource
     RoomSDao roomSDao;
 
-    private Logger logger= LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    @Scheduled(cron="0 0 1 * * ?")
-    public void updateReserveState(){
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void updateReserveState() {
         try {
             //更新过期未到预订单状态
             cyReserveDao.updateReserveReState();
             //更新过期实时房价
             roomSDao.deleteLastRealTimePrice();
-        }catch (Exception e){
-            logger.error("定时任务更新失败:"+e.getMessage());
+        } catch (Exception e) {
+            logger.error("定时任务更新失败:" + e.getMessage());
         }
     }
 
-    @Scheduled(cron="0 50 23 * * ?")
-    public void updateRoomSflag(){
+    @Scheduled(cron = "0 50 23 * * ?")
+    public void updateRoomSflag() {
 
-        try{
+        try {
             roomSDao.updateRoomSflagTimer();
-        }catch (Exception e){
-            logger.error("定时任务更新失败:"+e.getMessage());
+        } catch (Exception e) {
+            logger.error("定时任务更新失败:" + e.getMessage());
         }
 
     }

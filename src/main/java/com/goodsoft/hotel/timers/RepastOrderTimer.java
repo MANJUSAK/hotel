@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.config.timer;
+package com.goodsoft.hotel.timers;
 
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
 import org.apache.ibatis.session.ExecutorType;
@@ -38,8 +38,8 @@ public class RepastOrderTimer {
     /**
      *
      */
-    @Scheduled(cron = "0 30 4 * * ?")
-  /*  @Scheduled(cron = "0/5 * * * * ?")*/
+    //@Scheduled(cron = "0 30 4 * * ?")
+    @Scheduled(cron = "0/5 * * * * ?")
     @Transactional
     public void orderTimeoutService() {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
