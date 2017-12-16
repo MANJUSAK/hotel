@@ -22,6 +22,7 @@ public class RepastOrderParam implements java.io.Serializable {
     private int totalNum;//数量合计
     private int mNum;//菜品分量合计
     private String aoh;//台号
+    private int status;//订单状态（0支付/1下单/2打单/3超时未买单/4迟付/5取消/6反结）
     private List<OrderGoods> msg;//用于接收前台传入的餐饮订单明细数据容器
 
     public String getId() {
@@ -97,6 +98,13 @@ public class RepastOrderParam implements java.io.Serializable {
         this.msg = msg;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     @Override
     public boolean equals(Object o) {

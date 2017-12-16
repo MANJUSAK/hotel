@@ -36,23 +36,23 @@
         </where>
         ORDER BY ID DESC
     </select>
-    <!--餐饮订单查询(通过id) 返回单条数据-->
+    <!--餐饮订单查询(通过id，开台未打单的订单) 返回单条数据-->
     <select id="queryRepastOrderByIdDao" parameterType="string"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
         SELECT
         <include refid="order_sql"/>
         FROM gs_repast_order WHERE ID=#{id} AND STATUS=1 ORDER BY ID DESC
     </select>
-    <!--餐饮订单查询(通过id和status) 返回单条数据-->
+    <!--餐饮订单查询(通过id和status) 返回单条数据 弃用-->
     <select id="queryRepastOrderDao" parameterType="object"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
         SELECT
         <include refid="order_sql"/>
         FROM gs_repast_order WHERE ID=#{id} AND STATUS=#{status} ORDER BY ID DESC
     </select>
-    <!--查询开台还未结账时的订单时间(定时器)-->
+    <!--查询打单还未结账时的订单时间(用于定时器)-->
     <select id="queryKtOrderTimeDao" resultType="map">
-        SELECT ID,KT_TIME FROM gs_repast_order WHERE  STATUS=1 ORDER BY ID DESC
+        SELECT ID,KT_TIME FROM gs_repast_order WHERE  STATUS=2 ORDER BY ID DESC
     </select>
     <!--餐饮订单添加-->
     <insert id="addRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
@@ -96,7 +96,7 @@
             #{item.tname})
         </foreach>
     </insert>
-    <!--餐饮订单更新（打单）-->
+    <!--餐饮订单更新（打单、落单、先落）-->
     <update id="updateRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.param.RepastOrderParam">
         UPDATE gs_repast_order
         <set>
@@ -106,6 +106,7 @@
             <if test="zqSum !=null and zqSum !=''">ZQ_SUM = #{zqSum},</if>
             <if test="ctid !=null and ctid !=''">AOH= #{aoh},CTID=#{ctid},</if>
             <if test="orderPrice &gt;0">ORDER_PRICE=#{orderPrice},</if>
+            <if test="status &gt;0">STATUS=#{status},</if>
         </set>
         WHERE ID = #{id}
     </update>
@@ -137,8 +138,8 @@
             <if test="status &gt;0">
                 STATUS = #{status},
             </if>
-            <if test="fjzReason !=null and fjzReason !=''">
-                FJZ_REASON=#{fjzReason}
+            <if test="reason !=null and reason !=''">
+                REASON=#{reason}
             </if>
         </set>
         WHERE ID=#{id}
@@ -154,9 +155,9 @@
     JJ_MEANS = #{jjMeans},DETAIL_ZQ_SUM = #{detailZqSum},DETAIL_ZH_SUM =#{detailZhSum},
     DISCOUNT =#{discount},ZK_SUM = #{zkSum} WHERE ID = #{id}
     </update>
-    <!--删除餐饮订单-->
-    <delete id="deleteRepastOrderDao" parameterType="string">
-        DELETE FROM gs_repast_order WHERE ID=#{id}
-    </delete>
+    <!--取消餐饮订单-->
+    <update id="deleteRepastOrderDao" parameterType="string">
+        UPDATE gs_repast_order SET  STATUS=5 WHERE ID=#{id}
+    </update>
 </mapper>
         <!--mapper 餐饮订单管理 end -->

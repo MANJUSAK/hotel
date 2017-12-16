@@ -103,7 +103,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     /**
      * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
-     * （status=1未结/2反结/3超时/4迟付）
+     * （status=0支付/1开台/2打单/3超时未买单/4迟付/5取消/6反结）
      * 该接口涵盖了订单的所有信息
      *
      * @param param 查询条件
@@ -222,9 +222,10 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
-     * 餐饮订单商品添加（打单）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮订单商品添加（打单、落单、先落）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      * 用于开台后用户点餐之后数据的提交
-     * 该接口用于点餐员点完菜之后的打单服务，并保存点餐信息用于厨房做菜服务
+     * 该业务方法用于点餐员点完菜之后的打单、落单、先落服务，并保存点餐信息用于厨房做菜服务
+     * 注：打单调用该业务方法时需额外传入status=2（必传）
      *
      * @param msg 订单商品信息
      * @throws Exception
@@ -261,8 +262,8 @@ public class RepastOderServicelmpl implements RepastOderService {
             }
             orderDao.addRepastOrderGoodsDao(orderGoods);
             orderDao.updateRepastOrderDao(msg);
-            sqlSession.commit();
             this.cydao.updateTableState(msg.getCtid(), "4");
+            sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
             throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
@@ -312,18 +313,20 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
-     * 餐饮订单更新（反结账）业务方法，用于前台收银相关订单结算错误回滚到可修改状态
-     * 该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
+     * 餐饮订单更新（反结账，迟付等）业务方法，用于前台收银相关订单结算错误回滚到可修改状态或迟付等
+     * 1.该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
+     * 2.该接口用于前台收银员将此订单推迟支付
      *
      * @param oid    订单编号
-     * @param reason 反结账原因
-     * @return 反结账果
+     * @param reason 反结账，迟付等原因
+     * @param status 订单状态
+     * @return Status 结果
      * @throws Exception
      */
     @Override
     @Transactional
-    public Status counterCheckoutService(String oid, String reason) throws Exception {
-        int row = this.dao.updateOrderStatusDao(oid, 2, reason);
+    public Status counterCheckoutService(String oid, int status, String reason) throws Exception {
+        int row = this.dao.updateOrderStatusDao(oid, status, reason);
         if (row > 0) {
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }

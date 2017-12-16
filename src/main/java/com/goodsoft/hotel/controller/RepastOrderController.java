@@ -56,7 +56,7 @@ public class RepastOrderController {
     /**
      * 餐饮订单查询接口，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
-     * （status=1未结/2反结/3超时）
+     * （status=0支付/1开台/2打单/3超时未买单/4迟付/5取消/6反结）
      * 该接口涵盖了订单的所有信息
      *
      * @param param 可传入参数：page 页码、total 总记录数
@@ -115,9 +115,10 @@ public class RepastOrderController {
     }
 
     /**
-     * 餐饮订单商品添加（打单）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
+     * 餐饮订单商品添加（打单、落单、先落）接口，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
      * 用于开台后用户点餐之后数据的提交
-     * 该接口用于点餐员点完菜之后的打单服务，并保存点餐信息用于厨房做菜服务
+     * 该接口用于点餐员点完菜之后的打单、落单、先落服务，并保存点餐信息用于厨房做菜服务
+     * 注：打单调用该接口时需额外传入status=2（必传）
      *
      * @param msg 订单商品信息
      * @return 响应结果
@@ -181,18 +182,20 @@ public class RepastOrderController {
     }
 
     /**
-     * 餐饮订单更新（反结账）接口，用于前台收银相关订单结算错误回滚到可修改状态
-     * 该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
+     * 餐饮订单更新（反结账，迟付等）接口，用于前台收银相关订单结算错误回滚到可修改状态或迟付等
+     * 1.该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
+     * 2.该接口用于前台收银员将此订单推迟支付
      *
      * @param oid    订单编号
-     * @param reason 反结账原因
+     * @param reason 反结账，迟付等原因
+     * @param status 订单状态
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/counter/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status counterCheckoutController(String oid, String reason) {
+    public Status counterCheckoutController(String oid, int status, String reason) {
         try {
-            return this.service.counterCheckoutService(oid, reason);
+            return this.service.counterCheckoutService(oid, status, reason);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());

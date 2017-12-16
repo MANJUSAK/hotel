@@ -63,7 +63,7 @@ public interface RepastOrderDao {
     int checkoutRepastOrderDao(Order msg) throws Exception;
 
     //反结账
-    int updateOrderStatusDao(@Param("id") String id, @Param("status") int status, @Param("fjzReason") String fjzReason) throws Exception;
+    int updateOrderStatusDao(@Param("id") String id, @Param("status") int status, @Param("reason") String reason) throws Exception;
 
     //餐饮订单商品更新（用于结算订单）
     int updateRepastOrderGoodsDao(List<OrderGoods> msg) throws Exception;

@@ -22,7 +22,8 @@ public class HotelApplication implements CommandLineRunner {
     //实例化日志管理
     private final Logger logger = LoggerFactory.getLogger(HotelApplication.class);
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        System.out.println("=================>系统正在启动............<==============");
         SpringApplication.run(HotelApplication.class, args);
     }
 

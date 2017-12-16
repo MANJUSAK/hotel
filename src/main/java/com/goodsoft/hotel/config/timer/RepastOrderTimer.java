@@ -1,7 +1,6 @@
 package com.goodsoft.hotel.config.timer;
 
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
-import javafx.fxml.Initializable;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -14,12 +13,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * description:
@@ -52,14 +49,12 @@ public class RepastOrderTimer {
             int len = list.size();
             if (len > 0) {
                 for (Map map : list) {
-                    System.out.println(getHourBetween((String) map.get("KT_TIME")));
                     if (getHourBetween((String) map.get("KT_TIME"))) {
                         dao.updateOrderStatusDao((String) map.get("ID"), 3, null);
                     }
                 }
                 sqlSession.commit();
                 System.out.println("获取订单状态定时检测成功");
-
             }
         } catch (Exception e) {
             sqlSession.rollback();

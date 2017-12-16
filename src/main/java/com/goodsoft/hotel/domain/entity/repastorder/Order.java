@@ -40,7 +40,7 @@ public class Order implements java.io.Serializable {
     private int isServiceCharge;//收服务费（0为true/1为false）
     private int isZdConsume;//记最低消费（0为true/1为false）
     private String paymentType;//支付方式
-    private int status;//订单状态（是否支付，0为true/1为false/2为反结状态/3为超时未买单/4为迟付）
+    private int status;//订单状态（0支付/1下单/2打单/3超时未买单/4迟付/5取消/6反结）
     private String remarks;//备注
     private int placeNum;//席数
     private String ctid;//餐台编号
