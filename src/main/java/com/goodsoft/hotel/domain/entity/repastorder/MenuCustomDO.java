@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author 严彬荣 Created on 2017-12-04 17:11
  * @version V1.0
  */
-public class MenuCustom implements java.io.Serializable {
+public class MenuCustomDO implements java.io.Serializable {
 
     private static final long serialVersionUID = -5117357082605185851L;
 
@@ -18,12 +18,10 @@ public class MenuCustom implements java.io.Serializable {
     private String cbname;//菜品名称
     private String spec;//规格
     private String unit;//单位
-    private double num;//数量
+    private Double num;//数量
     private String tname;//部门类别
-    private double price;//价格
+    private Double price;//价格
     private String tid;//部门id
-    private String ptPort;//打印机端口（仅用于查询）
-    private String ptDriverName;//打印机端口（仅用于查询）
 
     public String getId() {
         return id;
@@ -65,11 +63,11 @@ public class MenuCustom implements java.io.Serializable {
         this.unit = unit == null ? " " : unit;
     }
 
-    public double getNum() {
+    public Double getNum() {
         return num;
     }
 
-    public void setNum(double num) {
+    public void setNum(Double num) {
         this.num = num < 0 ? Math.abs(num) : num;
     }
 
@@ -81,11 +79,11 @@ public class MenuCustom implements java.io.Serializable {
         this.tname = tname == null ? " " : tname.trim();
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price < 0 ? Math.abs(price) : price;
     }
 
@@ -97,40 +95,39 @@ public class MenuCustom implements java.io.Serializable {
         this.tid = tid;
     }
 
-    public String getPtPort() {
-        return ptPort;
-    }
-
-    public void setPtPort(String ptPort) {
-        this.ptPort = ptPort;
-    }
-
-    public String getPtDriverName() {
-        return ptDriverName;
-    }
-
-    public void setPtDriverName(String ptDriverName) {
-        this.ptDriverName = ptDriverName;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MenuCustom)) return false;
-        MenuCustom that = (MenuCustom) o;
+        if (!(o instanceof MenuCustomDO)) return false;
+        MenuCustomDO that = (MenuCustomDO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(customId, that.customId) &&
                 Objects.equals(cbname, that.cbname) &&
                 Objects.equals(spec, that.spec) &&
                 Objects.equals(unit, that.unit) &&
-                Objects.equals(tid, that.tid) &&
-                Objects.equals(ptPort, that.ptPort) &&
-                Objects.equals(ptDriverName, that.ptDriverName) &&
-                Objects.equals(tname, that.tname);
+                Objects.equals(num, that.num) &&
+                Objects.equals(tname, that.tname) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(tid, that.tid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customId, cbname, spec, unit, tname, tid, ptPort, ptDriverName);
+        return Objects.hash(id, customId, cbname, spec, unit, num, tname, price, tid);
+    }
+
+    @Override
+    public String toString() {
+        return "MenuCustomDO{" +
+                "id='" + id + '\'' +
+                ", customId='" + customId + '\'' +
+                ", cbname='" + cbname + '\'' +
+                ", spec='" + spec + '\'' +
+                ", unit='" + unit + '\'' +
+                ", num=" + num +
+                ", tname='" + tname + '\'' +
+                ", price=" + price +
+                ", tid='" + tid + '\'' +
+                '}';
     }
 }

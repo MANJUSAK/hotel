@@ -14,23 +14,23 @@
         ID, PT_NAME, PT_PORT, PT_TYPE, PT_DEPT,PT_DRIVER_NAME
     </sql>
     <!--查询打印机-->
-    <select id="queryPrinterDao" resultType="com.goodsoft.hotel.domain.entity.sys.Printer">
+    <select id="queryPrinterDao" resultType="com.goodsoft.hotel.domain.entity.sys.PrinterDO">
         SELECT
         <include refid="printer_sql"/>
         FROM gs_sys_printer
     </select>
     <!--添加打印机-->
-    <insert id="addPrinterDao" parameterType="com.goodsoft.hotel.domain.entity.sys.Printer">
+    <insert id="addPrinterDao" parameterType="com.goodsoft.hotel.domain.entity.sys.PrinterDO">
         INSERT INTO gs_sys_printer (<include refid="printer_sql"/>)
         VALUES (#{id}, #{ptName}, #{ptPort}, #{ptType},#{ptDept},#{ptDriverName})
     </insert>
     <!--增加流水号-->
-    <insert id="addSerialNumDao" parameterType="com.goodsoft.hotel.domain.entity.sys.SerialNum">
+    <insert id="addSerialNumDao" parameterType="com.goodsoft.hotel.domain.entity.sys.SerialNumDO">
         INSERT INTO gs_sys_serial_num (id, module_name, module_code, config_templet, max_serial, pre_max_num, is_auto_increment, sys_date,serl_type)
         VALUES (#{id}, #{moduleName}, #{moduleCode}, #{configTemplet}, #{maxSerial}, #{preMaxNum},#{isAutoIncrement}, #{sysDate},#{serlType})
     </insert>
     <!--更换打印机-->
-    <update id="updatePrinterDao" parameterType="com.goodsoft.hotel.domain.entity.sys.Printer">
+    <update id="updatePrinterDao" parameterType="com.goodsoft.hotel.domain.entity.sys.PrinterDO">
         UPDATE gs_sys_printer SET PT_NAME = #{ptName}, PT_PORT = #{ptPort}, PT_TYPE = #{ptType}, PT_DEPT = #{ptDept},PT_DRIVER_NAME=#{ptDriverName} WHERE id = #{id};
     </update>
     <!--删除打印机-->

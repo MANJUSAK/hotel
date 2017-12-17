@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 15:57
  * @version V1.0
  */
-public class Printer implements java.io.Serializable {
+public class PrinterDO implements java.io.Serializable {
 
     private static final long serialVersionUID = -3161846995482266438L;
     private String id;//数据id
@@ -70,18 +70,30 @@ public class Printer implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Printer)) return false;
-        Printer printer = (Printer) o;
-        return Objects.equals(id, printer.id) &&
-                Objects.equals(ptName, printer.ptName) &&
-                Objects.equals(ptPort, printer.ptPort) &&
-                Objects.equals(ptType, printer.ptType) &&
-                Objects.equals(ptType, printer.ptType) &&
-                Objects.equals(ptDriverName, printer.ptDriverName);
+        if (!(o instanceof PrinterDO)) return false;
+        PrinterDO printerDO = (PrinterDO) o;
+        return Objects.equals(id, printerDO.id) &&
+                Objects.equals(ptName, printerDO.ptName) &&
+                Objects.equals(ptPort, printerDO.ptPort) &&
+                Objects.equals(ptType, printerDO.ptType) &&
+                Objects.equals(ptType, printerDO.ptType) &&
+                Objects.equals(ptDriverName, printerDO.ptDriverName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, ptName, ptPort, ptType, ptDept, ptDriverName);
+    }
+
+    @Override
+    public String toString() {
+        return "PrinterDO{" +
+                "id='" + id + '\'' +
+                ", ptName='" + ptName + '\'' +
+                ", ptPort='" + ptPort + '\'' +
+                ", ptType='" + ptType + '\'' +
+                ", ptDept='" + ptDept + '\'' +
+                ", ptDriverName='" + ptDriverName + '\'' +
+                '}';
     }
 }

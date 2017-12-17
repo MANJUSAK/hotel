@@ -1,6 +1,6 @@
 package com.goodsoft.hotel.domain.entity.repastorder;
 
-import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail;
+import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetailDO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,41 +13,38 @@ import java.util.Objects;
  *
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 10:07
  */
-public class OrderGoods implements java.io.Serializable {
+public class OrderGoodsDO implements java.io.Serializable {
 
     private static final long serialVersionUID = 6551389333680604804L;
     private String id;//订单食品编号
     private String oid;//订单编号
     private String tcid;//套餐编号
     private String zdyTcid;//自定义套餐编号
-    private String tid;//部门id
-    private String ptPort;//打印机端口号（仅用于查询）
-    private String ptDriverName;//打印机端口号（仅用于查询）
     private String cbname;//食品名称
-    private int spNum;//数量
+    private Integer spNum;//数量
     private String spec;//规格
     private String unit;//单位
-    private double spPrice;//价格
-    private double jjMeans;//做法加价
+    private Double spPrice;//价格
+    private Double jjMeans;//做法加价
     private String means;//做法
-    private double detailZqSum;//折前金额
-    private double detailZhSum;//折后金额
+    private Double detailZqSum;//折前金额
+    private Double detailZhSum;//折后金额
     private String discount;//折扣
-    private double zkSum;//金额折
-    private int isDiscount;//可折否（0为true/1为false）
+    private Double zkSum;//金额折
+    private Integer isDiscount;//可折否（0为true/1为false）
     private String batch;//批次
-    private double redouble;//倍数
+    private Double reDouble;//倍数
     private String ratedSeat;//客位
     private String operato;//点菜员
     private String dcTime;//点菜时间
-    private int writeBill;//是否手写单（0为true/1为false）
+    private Integer writeBill;//是否手写单（0为true/1为false）
     private String menuType;//部门类别
-    private int rePlay;//是否存在先落单（点餐之前先落单到厨房）[0为true/1为false]
+    private Integer rePlay;//是否存在先落单（点餐之前先落单到厨房）[0为true/1为false]
     private String detailRemarks;//备注
-    private List<SetMealDetail> setMealDetails;//套餐数据容器（仅用于查询）
-    private List<MenuCustom> setMealCustoms;//自定义套餐数据容器
+    private List<SetMealDetailDO> setMealDetailDOS;//套餐数据容器（仅用于查询）
+    private List<MenuCustomDO> setMealCustoms;//自定义套餐数据容器
 
-    public OrderGoods() {
+    public OrderGoodsDO() {
         this.writeBill = 1;
         this.rePlay = 1;
         this.dcTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -85,14 +82,6 @@ public class OrderGoods implements java.io.Serializable {
 
     public void setZdyTcid(String zdyTcid) {
         this.zdyTcid = zdyTcid == null ? " " : zdyTcid.trim();
-    }
-
-    public String getTid() {
-        return tid;
-    }
-
-    public void setTid(String tid) {
-        this.tid = tid == null ? " " : tid.trim();
     }
 
     public String getCbname() {
@@ -135,11 +124,11 @@ public class OrderGoods implements java.io.Serializable {
         this.batch = batch == null ? " " : batch.trim();
     }
 
-    public double getSpPrice() {
+    public Double getSpPrice() {
         return spPrice;
     }
 
-    public void setSpPrice(double spPrice) {
+    public void setSpPrice(Double spPrice) {
         this.spPrice = spPrice < 0 ? Math.abs(spPrice) : spPrice;
     }
 
@@ -151,44 +140,44 @@ public class OrderGoods implements java.io.Serializable {
         this.means = means == null ? " " : means.trim();
     }
 
-    public double getJjMeans() {
+    public Double getJjMeans() {
         return jjMeans;
     }
 
-    public void setJjMeans(double jjMeans) {
+    public void setJjMeans(Double jjMeans) {
         this.jjMeans = jjMeans < 0 ? Math.abs(jjMeans) : jjMeans;
     }
 
-    public double getDetailZqSum() {
+    public Double getDetailZqSum() {
         return detailZqSum;
     }
 
-    public void setDetailZqSum(double detailZqSum) {
+    public void setDetailZqSum(Double detailZqSum) {
         this.detailZqSum = detailZqSum < 0 ? Math.abs(detailZqSum) : detailZqSum;
     }
 
-    public double getDetailZhSum() {
+    public Double getDetailZhSum() {
         return detailZhSum;
     }
 
-    public void setDetailZhSum(double detailZhSum) {
+    public void setDetailZhSum(Double detailZhSum) {
         this.detailZhSum = detailZhSum < 0 ? Math.abs(detailZhSum) : detailZhSum;
     }
 
-    public double getZkSum() {
+    public Double getZkSum() {
         return zkSum;
     }
 
-    public void setZkSum(double zkSum) {
+    public void setZkSum(Double zkSum) {
         this.zkSum = zkSum < 0 ? Math.abs(zkSum) : zkSum;
     }
 
-    public double getRedouble() {
-        return redouble;
+    public Double getReDouble() {
+        return reDouble;
     }
 
-    public void setRedouble(double redouble) {
-        this.redouble = redouble < 0 ? Math.abs(redouble) : redouble;
+    public void setReDouble(Double reDouble) {
+        this.reDouble = reDouble < 0 ? Math.abs(reDouble) : reDouble;
     }
 
     public String getRatedSeat() {
@@ -231,97 +220,123 @@ public class OrderGoods implements java.io.Serializable {
         this.detailRemarks = detailRemarks;
     }
 
-    public int getSpNum() {
+    public Integer getSpNum() {
         return spNum;
     }
 
-    public void setSpNum(int spNum) {
+    public void setSpNum(Integer spNum) {
         this.spNum = spNum < 0 ? Math.abs(spNum) : spNum;
     }
 
-    public int getIsDiscount() {
+    public Integer getIsDiscount() {
         return isDiscount;
     }
 
-    public void setIsDiscount(int isDiscount) {
+    public void setIsDiscount(Integer isDiscount) {
         this.isDiscount = isDiscount < 0 ? Math.abs(isDiscount) : isDiscount;
     }
 
-    public int getWriteBill() {
+    public Integer getWriteBill() {
         return writeBill;
     }
 
-    public void setWriteBill(int writeBill) {
+    public void setWriteBill(Integer writeBill) {
         this.writeBill = writeBill < 0 ? Math.abs(writeBill) : writeBill;
     }
 
-    public String getPtPort() {
-        return ptPort;
-    }
-
-    public void setPtPort(String ptPort) {
-        this.ptPort = ptPort;
-    }
-
-    public String getPtDriverName() {
-        return ptDriverName;
-    }
-
-    public void setPtDriverName(String ptDriverName) {
-        this.ptDriverName = ptDriverName;
-    }
-
-    public int getRePlay() {
+    public Integer getRePlay() {
         return rePlay;
     }
 
-    public void setRePlay(int rePlay) {
+    public void setRePlay(Integer rePlay) {
         this.rePlay = rePlay;
     }
 
-    public List<SetMealDetail> getSetMealDetails() {
-        return setMealDetails;
+    public List<SetMealDetailDO> getSetMealDetailDOS() {
+        return setMealDetailDOS;
     }
 
-    public void setSetMealDetails(List<SetMealDetail> setMealDetails) {
-        this.setMealDetails = setMealDetails;
+    public void setSetMealDetailDOS(List<SetMealDetailDO> setMealDetailDOS) {
+        this.setMealDetailDOS = setMealDetailDOS;
     }
 
-    public List<MenuCustom> getSetMealCustoms() {
+    public List<MenuCustomDO> getSetMealCustoms() {
         return setMealCustoms;
     }
 
-    public void setSetMealCustoms(List<MenuCustom> setMealCustoms) {
+    public void setSetMealCustoms(List<MenuCustomDO> setMealCustoms) {
         this.setMealCustoms = setMealCustoms;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OrderGoods)) return false;
-        OrderGoods that = (OrderGoods) o;
+        if (!(o instanceof OrderGoodsDO)) return false;
+        OrderGoodsDO that = (OrderGoodsDO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(oid, that.oid) &&
                 Objects.equals(tcid, that.tcid) &&
+                Objects.equals(zdyTcid, that.zdyTcid) &&
                 Objects.equals(cbname, that.cbname) &&
+                Objects.equals(spNum, that.spNum) &&
                 Objects.equals(spec, that.spec) &&
                 Objects.equals(unit, that.unit) &&
+                Objects.equals(spPrice, that.spPrice) &&
+                Objects.equals(jjMeans, that.jjMeans) &&
                 Objects.equals(means, that.means) &&
+                Objects.equals(detailZqSum, that.detailZqSum) &&
+                Objects.equals(detailZhSum, that.detailZhSum) &&
                 Objects.equals(discount, that.discount) &&
+                Objects.equals(zkSum, that.zkSum) &&
+                Objects.equals(isDiscount, that.isDiscount) &&
                 Objects.equals(batch, that.batch) &&
+                Objects.equals(reDouble, that.reDouble) &&
                 Objects.equals(ratedSeat, that.ratedSeat) &&
                 Objects.equals(operato, that.operato) &&
                 Objects.equals(dcTime, that.dcTime) &&
+                Objects.equals(writeBill, that.writeBill) &&
                 Objects.equals(menuType, that.menuType) &&
-                Objects.equals(zdyTcid, that.zdyTcid) &&
-                Objects.equals(tid, that.tid) &&
-                Objects.equals(ptPort, that.ptPort) &&
-                Objects.equals(ptDriverName, that.ptDriverName) &&
-                Objects.equals(detailRemarks, that.detailRemarks);
+                Objects.equals(rePlay, that.rePlay) &&
+                Objects.equals(detailRemarks, that.detailRemarks) &&
+                Objects.equals(setMealDetailDOS, that.setMealDetailDOS) &&
+                Objects.equals(setMealCustoms, that.setMealCustoms);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, oid, tcid, tid, ptPort, cbname, spec, unit, means, discount, ptDriverName, batch, ratedSeat, operato, dcTime, menuType, zdyTcid, detailRemarks);
+        return Objects.hash(id, oid, tcid, zdyTcid, cbname, spNum, spec, unit, spPrice, jjMeans, means, detailZqSum, detailZhSum, discount, zkSum, isDiscount, batch, reDouble, ratedSeat, operato, dcTime, writeBill, menuType, rePlay, detailRemarks, setMealDetailDOS, setMealCustoms);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderGoodsDO{" +
+                "id='" + id + '\'' +
+                ", oid='" + oid + '\'' +
+                ", tcid='" + tcid + '\'' +
+                ", zdyTcid='" + zdyTcid + '\'' +
+                ", cbname='" + cbname + '\'' +
+                ", spNum=" + spNum +
+                ", spec='" + spec + '\'' +
+                ", unit='" + unit + '\'' +
+                ", spPrice=" + spPrice +
+                ", jjMeans=" + jjMeans +
+                ", means='" + means + '\'' +
+                ", detailZqSum=" + detailZqSum +
+                ", detailZhSum=" + detailZhSum +
+                ", discount='" + discount + '\'' +
+                ", zkSum=" + zkSum +
+                ", isDiscount=" + isDiscount +
+                ", batch='" + batch + '\'' +
+                ", reDouble=" + reDouble +
+                ", ratedSeat='" + ratedSeat + '\'' +
+                ", operato='" + operato + '\'' +
+                ", dcTime='" + dcTime + '\'' +
+                ", writeBill=" + writeBill +
+                ", menuType='" + menuType + '\'' +
+                ", rePlay=" + rePlay +
+                ", detailRemarks='" + detailRemarks + '\'' +
+                ", setMealDetailDOS=" + setMealDetailDOS +
+                ", setMealCustoms=" + setMealCustoms +
+                '}';
     }
 }

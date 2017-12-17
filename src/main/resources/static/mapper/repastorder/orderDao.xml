@@ -14,8 +14,8 @@
     MD_TIME,REASON
     </sql>
     <!--餐饮订单查询-->
-    <select id="queryRepastOrdersDao" parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam"
-            resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+    <select id="queryRepastOrdersDao" parameterType="com.goodsoft.hotel.domain.entity.dto.HotelDTO"
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         SELECT
         <include refid="order_sql"/>
         FROM gs_repast_order
@@ -38,14 +38,14 @@
     </select>
     <!--餐饮订单查询(通过id，开台未打单的订单) 返回单条数据-->
     <select id="queryRepastOrderByIdDao" parameterType="string"
-            resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         SELECT
         <include refid="order_sql"/>
         FROM gs_repast_order WHERE ID=#{id} AND STATUS=1 ORDER BY ID DESC
     </select>
     <!--餐饮订单查询(通过id和status) 返回单条数据 弃用-->
     <select id="queryRepastOrderDao" parameterType="object"
-            resultType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         SELECT
         <include refid="order_sql"/>
         FROM gs_repast_order WHERE ID=#{id} AND STATUS=#{status} ORDER BY ID DESC
@@ -55,7 +55,7 @@
         SELECT ID,KT_TIME FROM gs_repast_order WHERE  STATUS=2 ORDER BY ID DESC
     </select>
     <!--餐饮订单添加-->
-    <insert id="addRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+    <insert id="addRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         INSERT INTO gs_repast_order
         (<include refid="order_sql"/>)
         VALUES
@@ -67,12 +67,14 @@
     <!--餐饮订单食品sql复用-->
     <sql id="order_goods_sql">
     ID,OID,CBNAME,SP_NUM,SPEC,SP_PRICE,JJ_MEANS,DETAIL_ZQ_SUM,DETAIL_ZH_SUM,DISCOUNT,ZK_SUM,IS_DISCOUNT,
-    BATCH,REDOUBLE,RATED_SEAT,OPERATO,DC_TIME,WRITE_BILL,MENU_TYPE,DETAIL_REMARKS,UNIT,TCID,MEANS,ZDY_TCID,TID,RE_PLAY
+    BATCH,REDOUBLE,RATED_SEAT,OPERATO,DC_TIME,WRITE_BILL,MENU_TYPE,DETAIL_REMARKS,UNIT,TCID,MEANS,ZDY_TCID,RE_PLAY
     </sql>
     <!--餐饮订单食品查询-->
     <select id="queryRepastOrderGoodsDao" parameterType="string"
-            resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderGoods">
-        select a.*,b.PT_DRIVER_NAME,b.PT_PORT from gs_repast_order_goods a left join (select PT_DRIVER_NAME,PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.OID=#{oid}
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderGoodsDO">
+        select
+        <include refid="order_goods_sql"/>
+        from gs_repast_order_goods WHERE OID=#{oid}
     </select>
     <!--餐饮订单食品数据添加-->
     <insert id="addRepastOrderGoodsDao" parameterType="list">
@@ -80,13 +82,13 @@
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.oid},#{item.cbname},#{item.spNum},#{item.spec},#{item.spPrice},#{item.jjMeans},#{item.detailZqSum},
             #{item.detailZhSum},#{item.discount},#{item.zkSum},#{item.isDiscount},#{item.batch},#{item.redouble},#{item.ratedSeat},#{item.operato},
-            #{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means},#{item.zdyTcid},#{item.tid},#{item.rePlay})
+            #{item.dcTime},#{item.writeBill},#{item.menuTypeDO},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means},#{item.zdyTcid},#{item.rePlay})
         </foreach>
     </insert>
     <!--自定义菜品查询-->
     <select id="queryMenuCustomDao" parameterType="string"
-            resultType="com.goodsoft.hotel.domain.entity.repastorder.MenuCustom">
-    SELECT a.*,b.PT_DRIVER_NAME,b.PT_PORT FROM gs_cookbook_custom a left join (select PT_DRIVER_NAME,PT_PORT,PT_DEPT from gs_sys_printer) b on a.TID=b.PT_DEPT WHERE a.CUSTOM_ID=#{id}
+            resultType="com.goodsoft.hotel.domain.entity.repastorder.MenuCustomDO">
+    SELECT * FROM gs_cookbook_custom  WHERE CUSTOM_ID=#{id}
     </select>
     <!--自定义菜品添加-->
     <insert id="addMenuCustomDao" parameterType="list">
@@ -97,7 +99,7 @@
         </foreach>
     </insert>
     <!--餐饮订单更新（打单、落单、先落）-->
-    <update id="updateRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.param.RepastOrderParam">
+    <update id="updateRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO">
         UPDATE gs_repast_order
         <set>
             <if test="totalNum &gt;0">TOTAL_NUM = #{totalNum},</if>
@@ -111,7 +113,7 @@
         WHERE ID = #{id}
     </update>
     <!--餐饮订单更新（修改、结算）-->
-    <update id="checkoutRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.Order">
+    <update id="checkoutRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         UPDATE gs_repast_order
         <set>
             <if test="totalNum &gt;0">TOTAL_NUM = #{totalNum},</if>

@@ -1,7 +1,7 @@
 package com.goodsoft.hotel.service.lmpl;
 
 import com.goodsoft.hotel.domain.dao.UserDao;
-import com.goodsoft.hotel.domain.entity.param.UserParam;
+import com.goodsoft.hotel.domain.entity.dto.UserDTO;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
@@ -36,7 +36,7 @@ public class UserServicelmpl implements UserService {
      * @throws Exception
      */
     @Override
-    public <T> T queryUserMsgService(UserParam param) throws Exception {
+    public <T> T queryUserMsgService(UserDTO param) throws Exception {
         List<UserMsg> data = this.dao.queryUserMsgDao(param);
         if (data.size() > 0) {
             return (T) new Result(0, data);

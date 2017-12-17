@@ -1,8 +1,8 @@
 package com.goodsoft.hotel.controller;
 
-import com.goodsoft.hotel.domain.entity.param.HotelParam;
-import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
-import com.goodsoft.hotel.domain.entity.repastorder.Order;
+import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
+import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
@@ -33,19 +33,19 @@ public class RepastOrderController {
     /**
      * @param id 订单编号
      * @return 响应结果
-     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * @deprecated 餐饮订单查询单条接口，获取餐饮订单数据信息用于打印机打票已使用其它方式代替不必调用接口实现
      * 注：id为必传
      * 该接口涵盖了订单的所有信息
      */
+    @Deprecated
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/find/order/data.shtml")
     public <T> T queryOrderOneController(String id) {
         try {
             if (id != null && !("".equals(id))) {
                 return this.service.queryOrderService(id);
-            } else {
-                return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
             }
+            return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
         } catch (Exception e) {
             this.logger.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
@@ -65,7 +65,7 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/data.shtml")
-    public <T> T queryOrderController(HotelParam param) {
+    public <T> T queryOrderController(HotelDTO param) {
         try {
             return this.service.queryOrderService(param);
         } catch (Exception e) {
@@ -100,14 +100,14 @@ public class RepastOrderController {
      * 返回该订单号用于添加商品明细或者修改订单
      * 该接口用于楼面开台生成新订单，以便点餐时获取开台订单数据
      *
-     * @param order 订单信息
+     * @param orderDO 订单信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/order/data.shtml", method = RequestMethod.POST)
-    public <T> T addOrderService(Order order) {
+    public <T> T addOrderService(OrderDO orderDO) {
         try {
-            return this.service.addOrderService(order);
+            return this.service.addOrderService(orderDO);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return (T) new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
@@ -125,7 +125,7 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/order/goods/data.shtml", method = RequestMethod.POST)
-    public Status addOrderService(@RequestBody RepastOrderParam msg) {
+    public Status addOrderService(@RequestBody RepastOrderDTO msg) {
         if (msg.getMsg() != null) {
             if (msg.getMsg().size() > 0) {
                 try {
@@ -135,12 +135,10 @@ public class RepastOrderController {
                     this.logger.error(e.toString());
                     return new Status(StatusEnum.DEFEAT.getCODE(), e.toString());
                 }
-            } else {
-                return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
             }
-        } else {
-            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+            return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
         }
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
     }
 
     /**
@@ -148,14 +146,14 @@ public class RepastOrderController {
      * 餐饮预订单开台订单修改（开台后修改订单）接口，用于处理预订之后的顾客临时调整用餐信息时,
      * 产生相应订单以便于收银获取相关订单数据信息
      *
-     * @param order 订单信息
+     * @param orderDO 订单信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/update/order/data.shtml", method = RequestMethod.POST)
-    public Status updateOrderService(Order order) {
+    public Status updateOrderService(OrderDO orderDO) {
         try {
-            return this.service.updateRepastOrderService(order);
+            return this.service.updateRepastOrderService(orderDO);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
@@ -167,14 +165,14 @@ public class RepastOrderController {
      * 餐饮订单更新（结算订单）接口，用于前台收银结算相关订单
      * 该接口用于收银员结算消费者消费信息，经过改接口的所有订单将不可进行任何操作。
      *
-     * @param order 订单结算信息
+     * @param orderDO 订单结算信息
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status checkoutOrderController(Order order) {
+    public Status checkoutOrderController(OrderDO orderDO) {
         try {
-            return this.service.checkoutRepastOrderService(order);
+            return this.service.checkoutRepastOrderService(orderDO);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());

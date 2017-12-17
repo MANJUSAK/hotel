@@ -1,6 +1,6 @@
 package com.goodsoft.hotel.controller;
 
-import com.goodsoft.hotel.domain.entity.param.UserParam;
+import com.goodsoft.hotel.domain.entity.dto.UserDTO;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
 import com.goodsoft.hotel.exception.HotelApplicationException;
@@ -42,7 +42,7 @@ public class UserController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/find/user/msg/data.shtml")
-    public <T> T queryUserMsgController(UserParam param) {
+    public <T> T queryUserMsgController(UserDTO param) {
         try {
             return this.service.queryUserMsgService(param);
         } catch (Exception e) {
@@ -53,7 +53,10 @@ public class UserController {
 
     @RequestMapping("/test")
     public <T> T test() throws HotelApplicationException {
-        return (T) this.od.getOrderId().toString();
+        /*LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String strTime = date.format(timeFormatter);*/
+        return (T) null;
     }
 
 

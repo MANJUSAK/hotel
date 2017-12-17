@@ -1,6 +1,6 @@
-package com.goodsoft.hotel.domain.entity.param;
+package com.goodsoft.hotel.domain.entity.dto;
 
-import com.goodsoft.hotel.domain.entity.cookbook.MenuMeans;
+import com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDO;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,13 +11,13 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-24 17:00
  */
-public class MeansParam implements java.io.Serializable {
+public class MeansDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = -1491761767077326645L;
     private String tid;
     private String stid;
     private String cbid;
-    private List<MenuMeans> means;
+    private List<MenuMeansDO> means;
 
     public String getTid() {
         return tid;
@@ -43,19 +43,19 @@ public class MeansParam implements java.io.Serializable {
         this.cbid = cbid;
     }
 
-    public List<MenuMeans> getMeans() {
+    public List<MenuMeansDO> getMeans() {
         return means;
     }
 
-    public void setMeans(List<MenuMeans> means) {
+    public void setMeans(List<MenuMeansDO> means) {
         this.means = means;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MeansParam)) return false;
-        MeansParam that = (MeansParam) o;
+        if (!(o instanceof MeansDTO)) return false;
+        MeansDTO that = (MeansDTO) o;
         return Objects.equals(tid, that.tid) &&
                 Objects.equals(stid, that.stid) &&
                 Objects.equals(cbid, that.cbid);
@@ -64,5 +64,15 @@ public class MeansParam implements java.io.Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(tid, stid, cbid);
+    }
+
+    @Override
+    public String toString() {
+        return "MeansDTO{" +
+                "tid='" + tid + '\'' +
+                ", stid='" + stid + '\'' +
+                ", cbid='" + cbid + '\'' +
+                ", means=" + means +
+                '}';
     }
 }

@@ -7,15 +7,15 @@
     <!--第三方缓存技术 ehcache-->
     <cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>
     <!--部门类别更新-->
-    <update id="updateMenuTypeDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuType">
+    <update id="updateMenuTypeDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuTypeDO">
     UPDATE gs_cookbook_type SET TNAME = #{tName} WHERE ID = #{id};
     </update>
     <!--小类更新-->
-    <update id="updateMenuSubTypeDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
+    <update id="updateMenuSubTypeDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuSubTypeDO">
     UPDATE gs_cookbook_subtype SET STNAME = #{stName},TID = #{tid} WHERE ID = #{id};
     </update>
     <!--菜品更新-->
-    <update id="updateMenuDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.Menu">
+    <update id="updateMenuDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuDO">
     UPDATE gs_cookbook SET
     TID = #{tid},STID = #{stid},CBNAME = #{cbName},UNIT = #{unit},IS_DISCOUNT = #{isNo},FILE_ID=#{fileId},
     PRICE1 = #{price1},PRICE2 = #{price2},PRICE3 = #{price3},PRICE4 = #{price4},PRICE5 = #{price5},IS_SUB =#{isSub},
@@ -23,30 +23,30 @@
     WHERE ID = #{id};
     </update>
     <!--库存量更新-->
-    <update id="updateInventoryDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.Inventory">
+    <update id="updateInventoryDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.InventoryDO">
     UPDATE gs_cookbook_inventory SET KC_DATE = #{date},KC_NUM = #{num},TID = #{tid},STID = #{stid} WHERE ID = #{id};
     </update>
     <!--菜品做法更新-->
-    <update id="updateMenuMeansDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuMeans">
+    <update id="updateMenuMeansDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDO">
     UPDATE gs_cookbook_means SET TID = #{tid},STID = #{stid},MNAME = #{mName},CBID = #{cbid} WHERE ID = #{id};
     </update>
     <!--菜品做法明细更新-->
-    <update id="updateMenuMeansDetailDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetail">
+    <update id="updateMenuMeansDetailDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetailDO">
     UPDATE gs_cookbook_means_detal SET TID = #{tid},STID = #{stid}, CBID = #{cbid},MID = #{mid},MDNAME = #{mdName} WHERE ID = #{id};
     </update>
     <!--套餐更新-->
-    <update id="updateSetMealDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
+    <update id="updateSetMealDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMealDO">
     UPDATE gs_cookbook_setmeal SET
     SMNAME = #{smName},TC_PRICE = #{stPrice},SM_ID_DISCOUNT = #{isNo},IS_DD = #{isdd},SM_UNIT = #{smUnit},TC_DISCOUNT=#{tcDiscount}
     WHERE ID = #{id};
     </update>
     <!--套餐明细更新-->
-    <update id="updateSetMealDetailDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail">
+    <update id="updateSetMealDetailDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMealDetailDO">
     UPDATE gs_cookbook_setmeal_detal SET TID = #{tid},STID = #{stid},CBID = #{cbid},SMID = #{smid},TC_SPEC=#{tcSpec},TC_PRICE=#{tcPrice},TC_NUM=#{tcNum} WHERE ID = #{id};
     </update>
 
     <!--用于更新菜品关联所有表数据更新-->
-    <update id="updateCookBookAllDao" parameterType="com.goodsoft.hotel.domain.entity.param.DatabasesParam">
+    <update id="updateCookBookAllDao" parameterType="com.goodsoft.hotel.domain.entity.dto.DatabasesDTO">
         UPDATE #{table}
         <set>
             <if test="tid ！=null and tid !=''">

@@ -1,7 +1,7 @@
 package com.goodsoft.hotel.service.supp;
 
 import com.goodsoft.hotel.domain.dao.SysDao;
-import com.goodsoft.hotel.domain.entity.sys.SerialNum;
+import com.goodsoft.hotel.domain.entity.sys.SerialNumDO;
 import com.goodsoft.hotel.exception.HotelApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class OrderIdsupp {
         StringBuilder sb = null;
         Date date = new Date();
         String dateStr = this.dateFormat.format(date);
-        SerialNum sn = new SerialNum();
+        SerialNumDO sn = new SerialNumDO();
         try {
             if (serial_num == 0) {
                 String numStr = this.dao.querySerialNumDao(dateStr, 2);
@@ -100,7 +100,7 @@ public class OrderIdsupp {
         StringBuilder sb = null;
         Date date = new Date();
         String dateStr = this.dateFormat.format(date);
-        SerialNum sn = new SerialNum();
+        SerialNumDO sn = new SerialNumDO();
         try {
             if (serial_num1 == 0) {
                 String numStr = this.dao.querySerialNumDao(dateStr, arg);

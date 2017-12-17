@@ -1,6 +1,6 @@
-package com.goodsoft.hotel.domain.entity.param;
+package com.goodsoft.hotel.domain.entity.dto;
 
-import com.goodsoft.hotel.domain.entity.cookbook.Menu;
+import com.goodsoft.hotel.domain.entity.cookbook.MenuDO;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,12 +12,12 @@ import java.util.Objects;
  * @author 严彬荣 Created on 2017-11-30 11:08
  * @version V1.0
  */
-public class MenuParam implements java.io.Serializable {
+public class MenuDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = -1090082481951956688L;
     private String tid;//部门类别编号
     private String stid;//小类编号
-    private List<Menu> menu;//菜品数据
+    private List<MenuDO> menuDOS;//菜品数据
 
     public String getTid() {
         return tid;
@@ -35,25 +35,34 @@ public class MenuParam implements java.io.Serializable {
         this.stid = stid;
     }
 
-    public List<Menu> getMenu() {
-        return menu;
+    public List<MenuDO> getMenuDOS() {
+        return menuDOS;
     }
 
-    public void setMenu(List<Menu> menu) {
-        this.menu = menu;
+    public void setMenuDOS(List<MenuDO> menuDOS) {
+        this.menuDOS = menuDOS;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MenuParam)) return false;
-        MenuParam menuParam = (MenuParam) o;
-        return Objects.equals(tid, menuParam.tid) &&
-                Objects.equals(stid, menuParam.stid);
+        if (!(o instanceof MenuDTO)) return false;
+        MenuDTO menuDTO = (MenuDTO) o;
+        return Objects.equals(tid, menuDTO.tid) &&
+                Objects.equals(stid, menuDTO.stid);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(tid, stid);
+    }
+
+    @Override
+    public String toString() {
+        return "MenuDTO{" +
+                "tid='" + tid + '\'' +
+                ", stid='" + stid + '\'' +
+                ", menuDOS=" + menuDOS +
+                '}';
     }
 }

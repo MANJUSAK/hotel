@@ -7,12 +7,12 @@ import com.goodsoft.hotel.domain.dao.CookBookDao;
 import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
-import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail;
-import com.goodsoft.hotel.domain.entity.param.HotelParam;
-import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
-import com.goodsoft.hotel.domain.entity.repastorder.MenuCustom;
-import com.goodsoft.hotel.domain.entity.repastorder.Order;
-import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
+import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetailDO;
+import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
+import com.goodsoft.hotel.domain.entity.repastorder.MenuCustomDO;
+import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
+import com.goodsoft.hotel.domain.entity.repastorder.OrderGoodsDO;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
@@ -63,37 +63,38 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @param id 订单编号
      * @return 查询数据
      * @throws Exception
-     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票已使用其它方式代替不必调用接口实现
      * 注：id为必传
      * 该接口涵盖了订单的所有信息
      */
+    @Deprecated
     @Override
     public <T> T queryOrderService(String id) throws Exception {
-        Order data = this.dao.queryRepastOrderDao(id, 1);
+        OrderDO data = this.dao.queryRepastOrderDao(id, 1);
         if (data != null) {
             //订单商品详情
-            List<OrderGoods> list1 = this.dao.queryRepastOrderGoodsDao(data.getId());
+            List<OrderGoodsDO> list1 = this.dao.queryRepastOrderGoodsDao(data.getId());
             int len1 = list1.size();
             if (len1 > 0) {
                 for (int j = 0; j < len1; ++j) {
                     //是否存在套餐
                     String tcid = list1.get(j).getTcid();
                     if (tcid != null && !("".equals(tcid))) {
-                        List<SetMealDetail> list2 = this.cbDao.querySetMealDetailDao(tcid);
+                        List<SetMealDetailDO> list2 = this.cbDao.querySetMealDetailDao(tcid);
                         if (list2.size() > 0) {
-                            list1.get(j).setSetMealDetails(list2);
+                            list1.get(j).setSetMealDetailDOS(list2);
                         }
                     }
                     //是否存在自定义套餐
                     String customId = list1.get(j).getZdyTcid();
                     if (tcid != null && !("".equals(tcid))) {
-                        List<MenuCustom> list2 = this.dao.queryMenuCustomDao(customId);
+                        List<MenuCustomDO> list2 = this.dao.queryMenuCustomDao(customId);
                         if (list2.size() > 0) {
                             list1.get(j).setSetMealCustoms(list2);
                         }
                     }
                 }
-                data.setOrderGoods(list1);
+                data.setOrderGoodDOS(list1);
             }
             return (T) new Result(0, data);
         }
@@ -111,38 +112,38 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @throws Exception
      */
     @Override
-    public <T> T queryOrderService(HotelParam param) throws Exception {
+    public <T> T queryOrderService(HotelDTO param) throws Exception {
         Page<T> pages = PageHelper.startPage(param.getPage(), param.getTotal());
-        List<Order> list = this.dao.queryRepastOrdersDao(param);
+        List<OrderDO> list = this.dao.queryRepastOrdersDao(param);
         int len = list.size();
         if (len > 0) {
             for (int i = 0; i < len; ++i) {
                 //订单商品详情
-                List<OrderGoods> list1 = this.dao.queryRepastOrderGoodsDao(list.get(i).getId());
+                List<OrderGoodsDO> list1 = this.dao.queryRepastOrderGoodsDao(list.get(i).getId());
                 int len1 = list1.size();
                 if (len1 > 0) {
                     for (int j = 0; j < len1; ++j) {
                         //是否存在套餐
                         String tcid = list1.get(j).getTcid();
                         if (tcid != null && !("".equals(tcid))) {
-                            List<SetMealDetail> list2 = this.cbDao.querySetMealDetailDao(tcid);
+                            List<SetMealDetailDO> list2 = this.cbDao.querySetMealDetailDao(tcid);
                             if (list2.size() > 0) {
-                                list1.get(j).setSetMealDetails(list2);
+                                list1.get(j).setSetMealDetailDOS(list2);
                             }
                         }
                         //是否存在自定义套餐
                         String customId = list1.get(j).getZdyTcid();
                         if (customId != null && !("".equals(customId))) {
-                            List<MenuCustom> list2 = this.dao.queryMenuCustomDao(customId);
+                            List<MenuCustomDO> list2 = this.dao.queryMenuCustomDao(customId);
                             if (list2.size() > 0) {
                                 list1.get(j).setSetMealCustoms(list2);
                             }
                         }
                     }
-                    list.get(i).setOrderGoods(list1);
+                    list.get(i).setOrderGoodDOS(list1);
                 }
             }
-            PageInfo<Order> data = new PageInfo<Order>(list);
+            PageInfo<OrderDO> data = new PageInfo<OrderDO>(list);
             return (T) new Result(0, data);
         }
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -159,31 +160,31 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Override
     public <T> T queryOrderByIdService(String id) throws Exception {
-        Order data = this.dao.queryRepastOrderByIdDao(id);
+        OrderDO data = this.dao.queryRepastOrderByIdDao(id);
         if (data != null) {
             //订单商品详情
-            List<OrderGoods> list = this.dao.queryRepastOrderGoodsDao(id);
+            List<OrderGoodsDO> list = this.dao.queryRepastOrderGoodsDao(id);
             int len = list.size();
             if (len > 0) {
                 for (int j = 0; j < len; ++j) {
                     //是否存在套餐
                     String tcid = list.get(j).getTcid();
                     if (tcid != null && !("".equals(tcid))) {
-                        List<SetMealDetail> list1 = this.cbDao.querySetMealDetailDao(tcid);
+                        List<SetMealDetailDO> list1 = this.cbDao.querySetMealDetailDao(tcid);
                         if (list1.size() > 0) {
-                            list.get(j).setSetMealDetails(list1);
+                            list.get(j).setSetMealDetailDOS(list1);
                         }
                     }
                     //是否存在自定义套餐
                     String customId = list.get(j).getZdyTcid();
                     if (customId != null && !("".equals(customId))) {
-                        List<MenuCustom> list1 = this.dao.queryMenuCustomDao(customId);
+                        List<MenuCustomDO> list1 = this.dao.queryMenuCustomDao(customId);
                         if (list1.size() > 0) {
                             list.get(j).setSetMealCustoms(list1);
                         }
                     }
                 }
-                data.setOrderGoods(list);
+                data.setOrderGoodDOS(list);
             }
             return (T) new Result(0, data);
         }
@@ -195,13 +196,13 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 返回该订单号用于添加商品明细或者修改订单
      * 该接口用于楼面开台生成新订单，以便点餐时获取开台订单数据
      *
-     * @param order 订单信息
+     * @param orderDO 订单信息
      * @return 下单状态
      * @throws Exception
      */
     @Transactional
     @Override
-    public <T> T addOrderService(Order order) throws Exception {
+    public <T> T addOrderService(OrderDO orderDO) throws Exception {
         String id = null;
         try {
             id = this.orderId.getOrderId().toString();
@@ -209,13 +210,13 @@ public class RepastOderServicelmpl implements RepastOderService {
             throw new HotelApplicationException(StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
         //预订编号
-        String ydid = order.getId();
-        order.setId(id);
-        order.setStatus(1);
-        int row = this.dao.addRepastOrderDao(order);
+        String ydid = orderDO.getId();
+        orderDO.setId(id);
+        orderDO.setStatus(1);
+        int row = this.dao.addRepastOrderDao(orderDO);
         if (row > 0) {
             this.cyReserveDao.updateAloneReserveState("3", ydid);
-            this.cydao.updateTableState(order.getCtid(), "8");
+            this.cydao.updateTableState(orderDO.getCtid(), "8");
             return (T) new Result(0, id);
         }
         return (T) new Status(StatusEnum.NO_ORDER.getCODE(), StatusEnum.NO_ORDER.getEXPLAIN());
@@ -232,35 +233,35 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Transactional
     @Override
-    public void addOrderGoodsService(RepastOrderParam msg) throws HotelDataBaseException {
+    public void addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao orderDao = sqlSession.getMapper(RepastOrderDao.class);
         String id = msg.getId();
-        List<OrderGoods> orderGoods = msg.getMsg();
-        List<MenuCustom> menuCustoms = null;
+        List<OrderGoodsDO> orderGoodDOS = msg.getMsg();
+        List<MenuCustomDO> menuCustomDOS = null;
         int len1 = 0;
-        for (int i = 0, len = orderGoods.size(); i < len; ++i) {
-            orderGoods.get(i).setId(this.uuid.getUUID("CY").toString());
-            orderGoods.get(i).setOid(id);
-            menuCustoms = orderGoods.get(i).getSetMealCustoms();
+        for (int i = 0, len = orderGoodDOS.size(); i < len; ++i) {
+            orderGoodDOS.get(i).setId(this.uuid.getUUID("CY").toString());
+            orderGoodDOS.get(i).setOid(id);
+            menuCustomDOS = orderGoodDOS.get(i).getSetMealCustoms();
             //是否存在自定义套餐
-            if (menuCustoms != null) {
-                len1 = menuCustoms.size();
+            if (menuCustomDOS != null) {
+                len1 = menuCustomDOS.size();
                 if (len1 > 0) {
                     String zdytcid = this.uuid.getUUID("CY").toString();
-                    orderGoods.get(i).setZdyTcid(zdytcid);
+                    orderGoodDOS.get(i).setZdyTcid(zdytcid);
                     for (int j = 0; j < len1; ++j) {
-                        menuCustoms.get(j).setId(this.uuid.getUUID("CY").toString());
-                        menuCustoms.get(j).setCustomId(zdytcid);
+                        menuCustomDOS.get(j).setId(this.uuid.getUUID("CY").toString());
+                        menuCustomDOS.get(j).setCustomId(zdytcid);
                     }
                 }
             }
         }
         try {
-            if (menuCustoms != null && len1 > 0) {
-                orderDao.addMenuCustomDao(menuCustoms);
+            if (menuCustomDOS != null && len1 > 0) {
+                orderDao.addMenuCustomDao(menuCustomDOS);
             }
-            orderDao.addRepastOrderGoodsDao(orderGoods);
+            orderDao.addRepastOrderGoodsDao(orderGoodDOS);
             orderDao.updateRepastOrderDao(msg);
             this.cydao.updateTableState(msg.getCtid(), "4");
             sqlSession.commit();
@@ -281,7 +282,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @throws Exception
      */
     @Override
-    public Status updateRepastOrderService(Order msg) throws Exception {
+    public Status updateRepastOrderService(OrderDO msg) throws Exception {
         int row = this.dao.checkoutRepastOrderDao(msg);
         if (row > 0) {
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
@@ -293,18 +294,18 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
      * 该接口用于收银员结算消费者消费信息，经过改接口的所有订单将不可进行任何操作。
      *
-     * @param order 订单结算信息
+     * @param orderDO 订单结算信息
      * @return 结算结果
      * @throws Exception
      */
     @Override
-    public Status checkoutRepastOrderService(Order order) throws Exception {
-        order.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        int row = this.dao.checkoutRepastOrderDao(order);
+    public Status checkoutRepastOrderService(OrderDO orderDO) throws Exception {
+        orderDO.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        int row = this.dao.checkoutRepastOrderDao(orderDO);
         if (row > 0) {
             //更新餐台状态为清洁中
             try {
-                this.cydao.updateTableState(order.getCtid(), "7");
+                this.cydao.updateTableState(orderDO.getCtid(), "7");
             } catch (Exception e) {
             }
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());

@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.domain.entity.repastorder;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,44 +13,44 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-17 10:07
  */
-public class Order implements java.io.Serializable {
+public class OrderDO implements java.io.Serializable {
     private static final long serialVersionUID = -5502168041100514292L;
     private String id;//订单编号(客账号)
-    private int totalNum;//数量合计
-    private int mNum;//菜品分量合计
+    private Integer totalNum;//数量合计
+    private Integer mNum;//菜品分量合计
     private String consumer;//客人姓名
     private String ktTime;//开台时间（订单生成时间）
-    private double fwRate;//服务费率
+    private Double fwRate;//服务费率
     private String ctType;//餐台类型
     private String salemanager;//营业经理
     private String ktNum;//开台卡号
-    private int personNum;//人数
+    private Integer personNum;//人数
     private String ktShift;//开台班次
-    private double zdConsume;//最低消费
-    private double qdDiscount;//全单折扣
+    private Double zdConsume;//最低消费
+    private Double qdDiscount;//全单折扣
     private String department;//合约单位
     private String partHall;//分厅
     private String vipNum;//会员卡号
     private String vipType;//会员类型
     private String zdConsumeGist;//最低消费依据
-    private double discountSum;//折扣金额（打折优惠的金额）
-    private double zqSum;//折去金额（打折后的金额）
+    private Double discountSum;//折扣金额（打折优惠的金额）
+    private Double zqSum;//折去金额（打折后的金额）
     private String aoh;//台号
     private String operator;//开台操作员
     private String ktSb;//开台市别
-    private int isServiceCharge;//收服务费（0为true/1为false）
-    private int isZdConsume;//记最低消费（0为true/1为false）
+    private Integer isServiceCharge;//收服务费（0为true/1为false）
+    private Integer isZdConsume;//记最低消费（0为true/1为false）
     private String paymentType;//支付方式
-    private int status;//订单状态（0支付/1下单/2打单/3超时未买单/4迟付/5取消/6反结）
+    private Integer status;//订单状态（0支付/1下单/2打单/3超时未买单/4迟付/5取消/6反结）
     private String remarks;//备注
-    private int placeNum;//席数
+    private Integer placeNum;//席数
     private String ctid;//餐台编号
-    private double orderPrice;//订单总价
+    private Double orderPrice;//订单总价
     private String mdTime;//买单时间
     private String reason;//反结账或迟付等说明
-    private List<OrderGoods> orderGoods;//订单明细容器
+    private List<OrderGoodsDO> orderGoodDOS;//订单明细容器
 
-    public Order() {
+    public OrderDO() {
         this.ktTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         this.ktShift = joinDateSb() + "班";
         this.ktSb = joinDateSb() + "市";
@@ -63,19 +64,19 @@ public class Order implements java.io.Serializable {
         this.id = id == null ? "" : id.trim();
     }
 
-    public int getTotalNum() {
+    public Integer getTotalNum() {
         return totalNum;
     }
 
-    public void setTotalNum(int totalNum) {
+    public void setTotalNum(Integer totalNum) {
         this.totalNum = totalNum < 0 ? Math.abs(totalNum) : totalNum;
     }
 
-    public int getmNum() {
+    public Integer getmNum() {
         return mNum;
     }
 
-    public void setmNum(int mNum) {
+    public void setmNum(Integer mNum) {
         this.mNum = mNum < 0 ? Math.abs(mNum) : mNum;
     }
 
@@ -168,43 +169,43 @@ public class Order implements java.io.Serializable {
         this.zdConsumeGist = zdConsumeGist == null ? "" : zdConsumeGist.trim();
     }
 
-    public int getPersonNum() {
+    public Integer getPersonNum() {
         return personNum;
     }
 
-    public void setPersonNum(int personNum) {
+    public void setPersonNum(Integer personNum) {
         this.personNum = personNum < 0 ? Math.abs(personNum) : personNum;
     }
 
-    public int getIsServiceCharge() {
+    public Integer getIsServiceCharge() {
         return isServiceCharge;
     }
 
-    public void setIsServiceCharge(int isServiceCharge) {
+    public void setIsServiceCharge(Integer isServiceCharge) {
         this.isServiceCharge = isServiceCharge < 0 ? Math.abs(isServiceCharge) : isServiceCharge;
     }
 
-    public int getIsZdConsume() {
+    public Integer getIsZdConsume() {
         return isZdConsume;
     }
 
-    public void setIsZdConsume(int isZdConsume) {
+    public void setIsZdConsume(Integer isZdConsume) {
         this.isZdConsume = isZdConsume < 0 ? Math.abs(isZdConsume) : isZdConsume;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status < 0 ? Math.abs(status) : status;
     }
 
-    public double getFwRate() {
+    public Double getFwRate() {
         return fwRate;
     }
 
-    public void setFwRate(double fwRate) {
+    public void setFwRate(Double fwRate) {
         //服务费率小于或等于0，改变收取服务费为1
         if (fwRate <= 0) {
             this.isServiceCharge = 1;
@@ -212,38 +213,38 @@ public class Order implements java.io.Serializable {
         this.fwRate = fwRate < 0 ? Math.abs(fwRate) : fwRate;
     }
 
-    public double getZdConsume() {
+    public Double getZdConsume() {
         return zdConsume;
     }
 
-    public void setZdConsume(double zdConsume) {
+    public void setZdConsume(Double zdConsume) {
         if (zdConsume <= 0) {
             this.isZdConsume = 1;
         }
         this.zdConsume = zdConsume < 0 ? Math.abs(zdConsume) : zdConsume;
     }
 
-    public double getQdDiscount() {
+    public Double getQdDiscount() {
         return qdDiscount;
     }
 
-    public void setQdDiscount(double qdDiscount) {
+    public void setQdDiscount(Double qdDiscount) {
         this.qdDiscount = qdDiscount < 0 ? Math.abs(qdDiscount) : qdDiscount;
     }
 
-    public double getDiscountSum() {
+    public Double getDiscountSum() {
         return discountSum;
     }
 
-    public void setDiscountSum(double discountSum) {
+    public void setDiscountSum(Double discountSum) {
         this.discountSum = discountSum < 0 ? Math.abs(discountSum) : discountSum;
     }
 
-    public double getZqSum() {
+    public Double getZqSum() {
         return zqSum;
     }
 
-    public void setZqSum(double zqSum) {
+    public void setZqSum(Double zqSum) {
         this.zqSum = zqSum < 0 ? Math.abs(zqSum) : zqSum;
     }
 
@@ -287,11 +288,11 @@ public class Order implements java.io.Serializable {
         this.remarks = remarks == null ? "" : remarks.trim();
     }
 
-    public int getPlaceNum() {
+    public Integer getPlaceNum() {
         return placeNum;
     }
 
-    public void setPlaceNum(int placeNum) {
+    public void setPlaceNum(Integer placeNum) {
         this.placeNum = placeNum < 0 ? Math.abs(placeNum) : placeNum;
     }
 
@@ -303,7 +304,7 @@ public class Order implements java.io.Serializable {
         this.ctid = ctid == null ? " " : ctid.trim();
     }
 
-    public double getOrderPrice() {
+    public Double getOrderPrice() {
         return orderPrice;
     }
 
@@ -323,49 +324,103 @@ public class Order implements java.io.Serializable {
         this.reason = reason == null ? " " : reason.trim();
     }
 
-    public void setOrderPrice(double orderPrice) {
+    public void setOrderPrice(Double orderPrice) {
         this.orderPrice = orderPrice < 0 ? Math.abs(orderPrice) : orderPrice;
 
     }
 
-    public List<OrderGoods> getOrderGoods() {
-        return orderGoods;
+    public List<OrderGoodsDO> getOrderGoodDOS() {
+        return orderGoodDOS;
     }
 
-    public void setOrderGoods(List<OrderGoods> orderGoods) {
-        this.orderGoods = orderGoods;
+    public void setOrderGoodDOS(List<OrderGoodsDO> orderGoodDOS) {
+        this.orderGoodDOS = orderGoodDOS;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Order)) return false;
-        Order order = (Order) o;
-        return Objects.equals(id, order.id) &&
-                Objects.equals(consumer, order.consumer) &&
-                Objects.equals(ktTime, order.ktTime) &&
-                Objects.equals(ctType, order.ctType) &&
-                Objects.equals(salemanager, order.salemanager) &&
-                Objects.equals(ktNum, order.ktNum) &&
-                Objects.equals(ktShift, order.ktShift) &&
-                Objects.equals(department, order.department) &&
-                Objects.equals(partHall, order.partHall) &&
-                Objects.equals(vipNum, order.vipNum) &&
-                Objects.equals(vipType, order.vipType) &&
-                Objects.equals(zdConsumeGist, order.zdConsumeGist) &&
-                Objects.equals(aoh, order.aoh) &&
-                Objects.equals(operator, order.operator) &&
-                Objects.equals(ktSb, order.ktSb) &&
-                Objects.equals(paymentType, order.paymentType) &&
-                Objects.equals(remarks, order.remarks) &&
-                Objects.equals(mdTime, order.mdTime) &&
-                Objects.equals(reason, order.reason) &&
-                Objects.equals(ctid, order.ctid);
+        if (!(o instanceof OrderDO)) return false;
+        OrderDO orderDO = (OrderDO) o;
+        return Objects.equals(id, orderDO.id) &&
+                Objects.equals(totalNum, orderDO.totalNum) &&
+                Objects.equals(mNum, orderDO.mNum) &&
+                Objects.equals(consumer, orderDO.consumer) &&
+                Objects.equals(ktTime, orderDO.ktTime) &&
+                Objects.equals(fwRate, orderDO.fwRate) &&
+                Objects.equals(ctType, orderDO.ctType) &&
+                Objects.equals(salemanager, orderDO.salemanager) &&
+                Objects.equals(ktNum, orderDO.ktNum) &&
+                Objects.equals(personNum, orderDO.personNum) &&
+                Objects.equals(ktShift, orderDO.ktShift) &&
+                Objects.equals(zdConsume, orderDO.zdConsume) &&
+                Objects.equals(qdDiscount, orderDO.qdDiscount) &&
+                Objects.equals(department, orderDO.department) &&
+                Objects.equals(partHall, orderDO.partHall) &&
+                Objects.equals(vipNum, orderDO.vipNum) &&
+                Objects.equals(vipType, orderDO.vipType) &&
+                Objects.equals(zdConsumeGist, orderDO.zdConsumeGist) &&
+                Objects.equals(discountSum, orderDO.discountSum) &&
+                Objects.equals(zqSum, orderDO.zqSum) &&
+                Objects.equals(aoh, orderDO.aoh) &&
+                Objects.equals(operator, orderDO.operator) &&
+                Objects.equals(ktSb, orderDO.ktSb) &&
+                Objects.equals(isServiceCharge, orderDO.isServiceCharge) &&
+                Objects.equals(isZdConsume, orderDO.isZdConsume) &&
+                Objects.equals(paymentType, orderDO.paymentType) &&
+                Objects.equals(status, orderDO.status) &&
+                Objects.equals(remarks, orderDO.remarks) &&
+                Objects.equals(placeNum, orderDO.placeNum) &&
+                Objects.equals(ctid, orderDO.ctid) &&
+                Objects.equals(orderPrice, orderDO.orderPrice) &&
+                Objects.equals(mdTime, orderDO.mdTime) &&
+                Objects.equals(reason, orderDO.reason) &&
+                Objects.equals(orderGoodDOS, orderDO.orderGoodDOS);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, consumer, ktTime, ctType, salemanager, ktNum, ktShift, department, partHall, vipNum, vipType, zdConsumeGist, aoh, operator, ktSb, paymentType, remarks, ctid, mdTime, reason);
+        return Objects.hash(id, totalNum, mNum, consumer, ktTime, fwRate, ctType, salemanager, ktNum, personNum, ktShift, zdConsume, qdDiscount, department, partHall, vipNum, vipType, zdConsumeGist, discountSum, zqSum, aoh, operator, ktSb, isServiceCharge, isZdConsume, paymentType, status, remarks, placeNum, ctid, orderPrice, mdTime, reason, orderGoodDOS);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDO{" +
+                "id='" + id + '\'' +
+                ", totalNum=" + totalNum +
+                ", mNum=" + mNum +
+                ", consumer='" + consumer + '\'' +
+                ", ktTime='" + ktTime + '\'' +
+                ", fwRate=" + fwRate +
+                ", ctType='" + ctType + '\'' +
+                ", salemanager='" + salemanager + '\'' +
+                ", ktNum='" + ktNum + '\'' +
+                ", personNum=" + personNum +
+                ", ktShift='" + ktShift + '\'' +
+                ", zdConsume=" + zdConsume +
+                ", qdDiscount=" + qdDiscount +
+                ", department='" + department + '\'' +
+                ", partHall='" + partHall + '\'' +
+                ", vipNum='" + vipNum + '\'' +
+                ", vipType='" + vipType + '\'' +
+                ", zdConsumeGist='" + zdConsumeGist + '\'' +
+                ", discountSum=" + discountSum +
+                ", zqSum=" + zqSum +
+                ", aoh='" + aoh + '\'' +
+                ", operator='" + operator + '\'' +
+                ", ktSb='" + ktSb + '\'' +
+                ", isServiceCharge=" + isServiceCharge +
+                ", isZdConsume=" + isZdConsume +
+                ", paymentType='" + paymentType + '\'' +
+                ", status=" + status +
+                ", remarks='" + remarks + '\'' +
+                ", placeNum=" + placeNum +
+                ", ctid='" + ctid + '\'' +
+                ", orderPrice=" + orderPrice +
+                ", mdTime='" + mdTime + '\'' +
+                ", reason='" + reason + '\'' +
+                ", orderGoodDOS=" + orderGoodDOS +
+                '}';
     }
 
     private String joinDateSb() {

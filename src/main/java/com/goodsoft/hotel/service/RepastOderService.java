@@ -1,8 +1,8 @@
 package com.goodsoft.hotel.service;
 
-import com.goodsoft.hotel.domain.entity.param.HotelParam;
-import com.goodsoft.hotel.domain.entity.param.RepastOrderParam;
-import com.goodsoft.hotel.domain.entity.repastorder.Order;
+import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
+import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.exception.HotelDataBaseException;
 
@@ -21,10 +21,11 @@ public interface RepastOderService {
      * @param <T>
      * @return 查询数据
      * @throws Exception
-     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票
+     * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票已使用其它方式代替不必调用接口实现
      * 注：id为必传
      * 该接口涵盖了订单的所有信息
      */
+    @Deprecated
     <T> T queryOrderService(String id) throws Exception;
 
     /**
@@ -38,7 +39,7 @@ public interface RepastOderService {
      * @return 查询数据
      * @throws Exception
      */
-    <T> T queryOrderService(HotelParam param) throws Exception;
+    <T> T queryOrderService(HotelDTO param) throws Exception;
 
     /**
      * 通过订单号查询订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
@@ -56,11 +57,11 @@ public interface RepastOderService {
      * 返回该订单号用于添加商品明细或者修改订单
      * 该接口用于楼面开台生成新订单，以便点餐时获取开台订单数据
      *
-     * @param order 订单信息
+     * @param orderDO 订单信息
      * @return 下单状态
      * @throws Exception
      */
-    <T> T addOrderService(Order order) throws Exception;
+    <T> T addOrderService(OrderDO orderDO) throws Exception;
 
     /**
      * 餐饮订单商品添加（打单、落单、先落）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息
@@ -71,7 +72,7 @@ public interface RepastOderService {
      * @param msg 订单商品信息
      * @throws Exception
      */
-    void addOrderGoodsService(RepastOrderParam msg) throws HotelDataBaseException;
+    void addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException;
 
     /**
      * 餐饮预订单开台订单修改（开台修改订单）业务方法，用于处理预订之后的顾客临时调整用餐信息时,
@@ -81,17 +82,17 @@ public interface RepastOderService {
      * @return 更新结果
      * @throws Exception
      */
-    Status updateRepastOrderService(Order msg) throws Exception;
+    Status updateRepastOrderService(OrderDO msg) throws Exception;
 
     /**
      * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
      * 该接口用于收银员结算消费者消费信息，经过改接口的所有订单将不可进行任何操作。
      *
-     * @param order 订单结算信息
+     * @param orderDO 订单结算信息
      * @return 结算结果
      * @throws Exception
      */
-    Status checkoutRepastOrderService(Order order) throws Exception;
+    Status checkoutRepastOrderService(OrderDO orderDO) throws Exception;
 
     /**
      * 餐饮订单更新（反结账，迟付等）业务方法，用于前台收银相关订单结算错误回滚到可修改状态或迟付等

@@ -1,8 +1,8 @@
 package com.goodsoft.hotel.service;
 
-import com.goodsoft.hotel.domain.entity.param.HotelParam;
+import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
 import com.goodsoft.hotel.domain.entity.result.Status;
-import com.goodsoft.hotel.domain.entity.sys.Printer;
+import com.goodsoft.hotel.domain.entity.sys.PrinterDO;
 
 /**
  * description:
@@ -19,7 +19,7 @@ public interface SysService {
      * @return 打印机数据
      * @throws Exception
      */
-    <T> T queryPrinterService(HotelParam param) throws Exception;
+    <T> T queryPrinterService(HotelDTO param) throws Exception;
 
     /**
      * 添加系统打印机业务方法
@@ -28,7 +28,7 @@ public interface SysService {
      * @return 添加结果
      * @throws Exception
      */
-    Status addPrinterService(Printer msg) throws Exception;
+    Status addPrinterService(PrinterDO msg) throws Exception;
 
     /**
      * 更新打印机业务方法
@@ -37,7 +37,7 @@ public interface SysService {
      * @return 添加结果
      * @throws Exception
      */
-    Status updatePrinterService(Printer msg) throws Exception;
+    Status updatePrinterService(PrinterDO msg) throws Exception;
 
     /**
      * 删除打印机业务方法

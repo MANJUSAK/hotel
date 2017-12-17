@@ -1,6 +1,6 @@
 package com.goodsoft.hotel.service;
 
-import com.goodsoft.hotel.domain.entity.param.UserParam;
+import com.goodsoft.hotel.domain.entity.dto.UserDTO;
 
 /**
  * description:
@@ -12,7 +12,7 @@ import com.goodsoft.hotel.domain.entity.param.UserParam;
 public interface UserService {
 
     //查询用户信息（带部门）业务方法
-    <T> T queryUserMsgService(UserParam param) throws Exception;
+    <T> T queryUserMsgService(UserDTO param) throws Exception;
 
     //查询所有部门业务方法
     <T> T queryDeptNameService() throws Exception;

@@ -3822,7 +3822,7 @@ try {
 
 /**
  * For feature detection
- * @param {Function} fn The function to test for native support
+ * @dto {Function} fn The function to test for native support
  */
 function isNative( fn ) {
 	return rnative.test( fn + "" );
@@ -3850,7 +3850,7 @@ function createCache() {
 
 /**
  * Mark a function for special use by Sizzle
- * @param {Function} fn The function to mark
+ * @dto {Function} fn The function to mark
  */
 function markFunction( fn ) {
 	fn[ expando ] = true;
@@ -3859,7 +3859,7 @@ function markFunction( fn ) {
 
 /**
  * Support testing using an element
- * @param {Function} fn Passed the created div and expects a boolean result
+ * @dto {Function} fn Passed the created div and expects a boolean result
  */
 function assert( fn ) {
 	var div = document.createElement("div");
@@ -3986,7 +3986,7 @@ function Sizzle( selector, context, results, seed ) {
 
 /**
  * Detect xml
- * @param {Element|Object} elem An element or a document
+ * @dto {Element|Object} elem An element or a document
  */
 isXML = Sizzle.isXML = function( elem ) {
 	// documentElement is verified for cases where it doesn't yet exist
@@ -3997,7 +3997,7 @@ isXML = Sizzle.isXML = function( elem ) {
 
 /**
  * Sets document-related variables once based on the current document
- * @param {Element|Object} [doc] An element or document object to use to set the document
+ * @dto {Element|Object} [doc] An element or document object to use to set the document
  * @returns {Object} Returns the current document
  */
 setDocument = Sizzle.setDocument = function( node ) {
@@ -4485,7 +4485,7 @@ function createPositionalPseudo( fn ) {
 
 /**
  * Utility function for retrieving the text value of an array of DOM nodes
- * @param {Array|Element} elem
+ * @dto {Array|Element} elem
  */
 getText = Sizzle.getText = function( elem ) {
 	var node,
@@ -7385,7 +7385,7 @@ var
 	 * 1) They are useful to introduce custom dataTypes (see ajax/jsonp.js for an example)
 	 * 2) These are called:
 	 *    - BEFORE asking for a transport
-	 *    - AFTER param serialization (s.data is a string if s.processData is true)
+	 *    - AFTER dto serialization (s.data is a string if s.processData is true)
 	 * 3) key is the dataType
 	 * 4) the catchall symbol "*" can be used
 	 * 5) execution will start with transport dataType and THEN continue down to "*" if needed
@@ -7514,7 +7514,7 @@ jQuery.fn.load = function( url, params, callback ) {
 		callback = params;
 		params = undefined;
 
-	// Otherwise, build a param string
+	// Otherwise, build a dto string
 	} else if ( params && typeof params === "object" ) {
 		type = "POST";
 	}
@@ -7680,7 +7680,7 @@ jQuery.extend({
 		options = options || {};
 
 		var transport,
-			// URL without anti-cache param
+			// URL without anti-cache dto
 			cacheURL,
 			// Response headers
 			responseHeadersString,

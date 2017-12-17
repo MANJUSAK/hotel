@@ -9,20 +9,20 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-11 16:49
  */
-public class MenuMeans implements java.io.Serializable {
+public class MenuMeansDO implements java.io.Serializable {
 
     private static final long serialVersionUID = -6334216758539123420L;
     private String id;//编号
     private String tid;//部门类别编号
     private String stid;//小类编号
     private String cbid;//关联菜单表id
-    private int mid;//做法编号
+    private Integer mid;//做法编号
     private String mName;//做法名
     private String mdid;//做法编号，用于获取前台传入的做法编号
     private String tName;//部门类别（仅用于查询）
     private String stName;//小类（仅用于查询）
     private String cbName;//菜品名（仅用于查询）
-    private List<MenuMeansDetail> meansDetails;
+    private List<MenuMeansDetailDO> meansDetails;
 
     public String getId() {
         return id;
@@ -48,11 +48,11 @@ public class MenuMeans implements java.io.Serializable {
         this.stid = stid;
     }
 
-    public int getMid() {
+    public Integer getMid() {
         return mid;
     }
 
-    public void setMid(int mid) {
+    public void setMid(Integer mid) {
         this.mid = mid;
     }
 
@@ -104,33 +104,53 @@ public class MenuMeans implements java.io.Serializable {
         this.cbName = cbName;
     }
 
-    public List<MenuMeansDetail> getMeansDetails() {
+    public List<MenuMeansDetailDO> getMeansDetails() {
         return meansDetails;
     }
 
-    public void setMeansDetails(List<MenuMeansDetail> meansDetails) {
+    public void setMeansDetails(List<MenuMeansDetailDO> meansDetails) {
         this.meansDetails = meansDetails;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MenuMeans)) return false;
-        MenuMeans menuMeans = (MenuMeans) o;
-        return Objects.equals(id, menuMeans.id) &&
-                Objects.equals(tid, menuMeans.tid) &&
-                Objects.equals(stid, menuMeans.stid) &&
-                Objects.equals(cbid, menuMeans.cbid) &&
-                Objects.equals(mName, menuMeans.mName) &&
-                Objects.equals(tName, menuMeans.tName) &&
-                Objects.equals(stName, menuMeans.stName) &&
-                Objects.equals(cbName, menuMeans.cbName) &&
-                Objects.equals(mdid, menuMeans.mdid);
+        if (!(o instanceof MenuMeansDO)) return false;
+        MenuMeansDO that = (MenuMeansDO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(tid, that.tid) &&
+                Objects.equals(stid, that.stid) &&
+                Objects.equals(cbid, that.cbid) &&
+                Objects.equals(mid, that.mid) &&
+                Objects.equals(mName, that.mName) &&
+                Objects.equals(mdid, that.mdid) &&
+                Objects.equals(tName, that.tName) &&
+                Objects.equals(stName, that.stName) &&
+                Objects.equals(cbName, that.cbName) &&
+                Objects.equals(meansDetails, that.meansDetails);
+    }
+
+    @Override
+    public String toString() {
+        return "MenuMeansDO{" +
+                "id='" + id + '\'' +
+                ", tid='" + tid + '\'' +
+                ", stid='" + stid + '\'' +
+                ", cbid='" + cbid + '\'' +
+                ", mid=" + mid +
+                ", mName='" + mName + '\'' +
+                ", mdid='" + mdid + '\'' +
+                ", tName='" + tName + '\'' +
+                ", stName='" + stName + '\'' +
+                ", cbName='" + cbName + '\'' +
+                ", meansDetails=" + meansDetails +
+                '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, stid, cbid, mName, tName, stName, mdid, cbName);
+        return Objects.hash(id, tid, stid, cbid, mid, mName, mdid, tName, stName, cbName, meansDetails);
+
+
     }
 }

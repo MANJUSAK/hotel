@@ -4,11 +4,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.goodsoft.hotel.domain.dao.SysDao;
-import com.goodsoft.hotel.domain.entity.param.HotelParam;
+import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
-import com.goodsoft.hotel.domain.entity.sys.Printer;
+import com.goodsoft.hotel.domain.entity.sys.PrinterDO;
 import com.goodsoft.hotel.service.SysService;
 import com.goodsoft.hotel.util.UUIDUtil;
 import org.springframework.stereotype.Service;
@@ -39,11 +39,11 @@ public class SysServicelmpl implements SysService {
      * @throws Exception
      */
     @Override
-    public <T> T queryPrinterService(HotelParam param) throws Exception {
+    public <T> T queryPrinterService(HotelDTO param) throws Exception {
         Page<T> page = PageHelper.startPage(param.getPage(), param.getTotal());
-        List<Printer> list = this.dao.queryPrinterDao();
+        List<PrinterDO> list = this.dao.queryPrinterDao();
         if (list.size() > 0) {
-            PageInfo<Printer> data = new PageInfo<Printer>(list);
+            PageInfo<PrinterDO> data = new PageInfo<PrinterDO>(list);
             return (T) new Result(0, data);
         }
         return (T) new Status(StatusEnum.NO_DATA.getCODE(), StatusEnum.NO_DATA.getEXPLAIN());
@@ -58,7 +58,7 @@ public class SysServicelmpl implements SysService {
      */
     @Transactional
     @Override
-    public Status addPrinterService(Printer msg) throws Exception {
+    public Status addPrinterService(PrinterDO msg) throws Exception {
         msg.setId(this.uuid.getUUID().toString());
         int row = this.dao.addPrinterDao(msg);
         if (row > 0) {
@@ -76,7 +76,7 @@ public class SysServicelmpl implements SysService {
      */
     @Transactional
     @Override
-    public Status updatePrinterService(Printer msg) throws Exception {
+    public Status updatePrinterService(PrinterDO msg) throws Exception {
         int row = this.dao.updatePrinterDao(msg);
         if (row > 0) {
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
