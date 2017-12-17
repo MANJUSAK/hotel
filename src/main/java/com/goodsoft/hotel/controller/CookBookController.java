@@ -261,8 +261,8 @@ public class CookBookController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/menu/data.shtml", method = RequestMethod.POST)
     public Status addMenuService(MenuDTO msg) {
-        if (msg.getMenuDOS() != null) {
-            if (msg.getMenuDOS().size() > 0) {
+        if (msg.getMenu() != null) {
+            if (msg.getMenu().size() > 0) {
                 try {
                     return this.service.addMenuService(msg);
                 } catch (Exception e) {

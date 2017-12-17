@@ -15,7 +15,7 @@ public class MenuTypeDO implements java.io.Serializable {
     private String id;//编号
     private Integer tid;//类别编号
     private String tName;//类别名称
-    private List<MenuSubTypeDO> menuSubTypeDOS;//小类型实体容器
+    private List<MenuSubTypeDO> menuSubType;//小类型实体容器
 
     public String getId() {
         return id;
@@ -41,12 +41,12 @@ public class MenuTypeDO implements java.io.Serializable {
         this.tName = tName == null ? null : tName.trim();
     }
 
-    public List<MenuSubTypeDO> getMenuSubTypeDOS() {
-        return menuSubTypeDOS;
+    public List<MenuSubTypeDO> getMenuSubType() {
+        return menuSubType;
     }
 
-    public void setMenuSubTypeDOS(List<MenuSubTypeDO> menuSubTypeDOS) {
-        this.menuSubTypeDOS = menuSubTypeDOS;
+    public void setMenuSubType(List<MenuSubTypeDO> menuSubType) {
+        this.menuSubType = menuSubType;
     }
 
     @Override
@@ -57,12 +57,12 @@ public class MenuTypeDO implements java.io.Serializable {
         return Objects.equals(id, that.id) &&
                 Objects.equals(tid, that.tid) &&
                 Objects.equals(tName, that.tName) &&
-                Objects.equals(menuSubTypeDOS, that.menuSubTypeDOS);
+                Objects.equals(menuSubType, that.menuSubType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, tName, menuSubTypeDOS);
+        return Objects.hash(id, tid, tName, menuSubType);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class MenuTypeDO implements java.io.Serializable {
                 "id='" + id + '\'' +
                 ", tid=" + tid +
                 ", tName='" + tName + '\'' +
-                ", menuSubTypeDOS=" + menuSubTypeDOS +
+                ", menuSubTypeDOS=" + menuSubType +
                 '}';
     }
 }

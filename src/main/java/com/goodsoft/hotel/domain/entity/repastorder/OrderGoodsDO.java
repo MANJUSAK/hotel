@@ -33,7 +33,7 @@ public class OrderGoodsDO implements java.io.Serializable {
     private Double zkSum;//金额折
     private Integer isDiscount;//可折否（0为true/1为false）
     private String batch;//批次
-    private Double reDouble;//倍数
+    private Double redouble;//倍数
     private String ratedSeat;//客位
     private String operato;//点菜员
     private String dcTime;//点菜时间
@@ -41,7 +41,7 @@ public class OrderGoodsDO implements java.io.Serializable {
     private String menuType;//部门类别
     private Integer rePlay;//是否存在先落单（点餐之前先落单到厨房）[0为true/1为false]
     private String detailRemarks;//备注
-    private List<SetMealDetailDO> setMealDetailDOS;//套餐数据容器（仅用于查询）
+    private List<SetMealDetailDO> setMealDetail;//套餐数据容器（仅用于查询）
     private List<MenuCustomDO> setMealCustoms;//自定义套餐数据容器
 
     public OrderGoodsDO() {
@@ -172,12 +172,12 @@ public class OrderGoodsDO implements java.io.Serializable {
         this.zkSum = zkSum < 0 ? Math.abs(zkSum) : zkSum;
     }
 
-    public Double getReDouble() {
-        return reDouble;
+    public Double getRedouble() {
+        return redouble;
     }
 
-    public void setReDouble(Double reDouble) {
-        this.reDouble = reDouble < 0 ? Math.abs(reDouble) : reDouble;
+    public void setRedouble(Double redouble) {
+        this.redouble = redouble < 0 ? Math.abs(redouble) : redouble;
     }
 
     public String getRatedSeat() {
@@ -252,12 +252,12 @@ public class OrderGoodsDO implements java.io.Serializable {
         this.rePlay = rePlay;
     }
 
-    public List<SetMealDetailDO> getSetMealDetailDOS() {
-        return setMealDetailDOS;
+    public List<SetMealDetailDO> getSetMealDetail() {
+        return setMealDetail;
     }
 
-    public void setSetMealDetailDOS(List<SetMealDetailDO> setMealDetailDOS) {
-        this.setMealDetailDOS = setMealDetailDOS;
+    public void setSetMealDetail(List<SetMealDetailDO> setMealDetail) {
+        this.setMealDetail = setMealDetail;
     }
 
     public List<MenuCustomDO> getSetMealCustoms() {
@@ -290,7 +290,7 @@ public class OrderGoodsDO implements java.io.Serializable {
                 Objects.equals(zkSum, that.zkSum) &&
                 Objects.equals(isDiscount, that.isDiscount) &&
                 Objects.equals(batch, that.batch) &&
-                Objects.equals(reDouble, that.reDouble) &&
+                Objects.equals(redouble, that.redouble) &&
                 Objects.equals(ratedSeat, that.ratedSeat) &&
                 Objects.equals(operato, that.operato) &&
                 Objects.equals(dcTime, that.dcTime) &&
@@ -298,13 +298,13 @@ public class OrderGoodsDO implements java.io.Serializable {
                 Objects.equals(menuType, that.menuType) &&
                 Objects.equals(rePlay, that.rePlay) &&
                 Objects.equals(detailRemarks, that.detailRemarks) &&
-                Objects.equals(setMealDetailDOS, that.setMealDetailDOS) &&
+                Objects.equals(setMealDetail, that.setMealDetail) &&
                 Objects.equals(setMealCustoms, that.setMealCustoms);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, oid, tcid, zdyTcid, cbname, spNum, spec, unit, spPrice, jjMeans, means, detailZqSum, detailZhSum, discount, zkSum, isDiscount, batch, reDouble, ratedSeat, operato, dcTime, writeBill, menuType, rePlay, detailRemarks, setMealDetailDOS, setMealCustoms);
+        return Objects.hash(id, oid, tcid, zdyTcid, cbname, spNum, spec, unit, spPrice, jjMeans, means, detailZqSum, detailZhSum, discount, zkSum, isDiscount, batch, redouble, ratedSeat, operato, dcTime, writeBill, menuType, rePlay, detailRemarks, setMealDetail, setMealCustoms);
     }
 
     @Override
@@ -327,7 +327,7 @@ public class OrderGoodsDO implements java.io.Serializable {
                 ", zkSum=" + zkSum +
                 ", isDiscount=" + isDiscount +
                 ", batch='" + batch + '\'' +
-                ", reDouble=" + reDouble +
+                ", redouble=" + redouble +
                 ", ratedSeat='" + ratedSeat + '\'' +
                 ", operato='" + operato + '\'' +
                 ", dcTime='" + dcTime + '\'' +
@@ -335,7 +335,7 @@ public class OrderGoodsDO implements java.io.Serializable {
                 ", menuType='" + menuType + '\'' +
                 ", rePlay=" + rePlay +
                 ", detailRemarks='" + detailRemarks + '\'' +
-                ", setMealDetailDOS=" + setMealDetailDOS +
+                ", setMealDetailDOS=" + setMealDetail +
                 ", setMealCustoms=" + setMealCustoms +
                 '}';
     }

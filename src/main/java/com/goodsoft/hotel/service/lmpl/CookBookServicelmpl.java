@@ -294,10 +294,10 @@ public class CookBookServicelmpl implements CookBookService {
                 //类别数据添加
                 this.dao.addMenuTypeDao(msg);
             }
-            if (msg.getMenuSubTypeDOS() != null) {
-                int len = msg.getMenuSubTypeDOS().size();
+            if (msg.getMenuSubType() != null) {
+                int len = msg.getMenuSubType().size();
                 if (len > 0) {
-                    List<MenuSubTypeDO> msg1 = msg.getMenuSubTypeDOS();
+                    List<MenuSubTypeDO> msg1 = msg.getMenuSubType();
                     for (int i = 0; i < len; ++i) {
                         msg1.get(i).setId(this.uuid.getUUID("CY").toString());
                         //设置小类别表关联类别表id
@@ -327,7 +327,7 @@ public class CookBookServicelmpl implements CookBookService {
     public Status addMenuService(MenuDTO msg) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao dao = sqlSession.getMapper(CookBookDao.class);
-        List<MenuDO> menuDOS = msg.getMenuDOS();
+        List<MenuDO> menu = msg.getMenu();
         //获取类别编号用于关联类别表
         String tid = msg.getTid();
         //获取小类别编号用于关联小类别表
@@ -336,18 +336,18 @@ public class CookBookServicelmpl implements CookBookService {
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         //设置库存量数据集合容器
         List<InventoryDO> msg1 = new ArrayList<InventoryDO>();
-        for (int i = 0, len = menuDOS.size(); i < len; ++i) {
+        for (int i = 0, len = menu.size(); i < len; ++i) {
             //实例化库存量实体，用于设置菜单库存量数据
             InventoryDO inv = new InventoryDO();
             //设置菜单数据编号
             String id = this.uuid.getUUID("CY").toString();
             //文件上传
-            MultipartFile[] files = menuDOS.get(i).getFiles();
+            MultipartFile[] files = menu.get(i).getFiles();
             if (files != null) {
                 int arg = this.fileService.fileUploadService(files, "images", id);
                 switch (arg) {
                     case 0:
-                        menuDOS.get(i).setFileId(id);
+                        menu.get(i).setFileId(id);
                         break;
                     case 603:
                         return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
@@ -355,14 +355,14 @@ public class CookBookServicelmpl implements CookBookService {
                         return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
                 }
             }
-            menuDOS.get(i).setId(id);
-            menuDOS.get(i).setTid(tid);
-            menuDOS.get(i).setStid(stid);
+            menu.get(i).setId(id);
+            menu.get(i).setTid(tid);
+            menu.get(i).setStid(stid);
             //设置关联菜单表id
             inv.setId(id);
             inv.setTid(tid);
             inv.setStid(stid);
-            inv.setNum(menuDOS.get(i).getNum());
+            inv.setNum(menu.get(i).getNum());
             inv.setDate(date);
             msg1.add(inv);
         }
@@ -370,7 +370,7 @@ public class CookBookServicelmpl implements CookBookService {
             //库存量数据添加
             dao.addInventoryDao(msg1);
             //菜单数据添加
-            dao.addMenuDao(menuDOS);
+            dao.addMenuDao(menu);
             sqlSession.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -533,8 +533,8 @@ public class CookBookServicelmpl implements CookBookService {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
-            if (msg.getMenuSubTypeDOS() != null) {
-                List<MenuSubTypeDO> stype = msg.getMenuSubTypeDOS();
+            if (msg.getMenuSubType() != null) {
+                List<MenuSubTypeDO> stype = msg.getMenuSubType();
                 int len = stype.size();
                 if (len > 0) {
                     DatabasesDTO param = new DatabasesDTO();
@@ -589,7 +589,7 @@ public class CookBookServicelmpl implements CookBookService {
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         String tid = msg.getTid();
         String stid = msg.getStid();
-        List<MenuDO> menuDOS = msg.getMenuDOS();
+        List<MenuDO> menuDOS = msg.getMenu();
         InventoryDO inv = new InventoryDO();
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         DatabasesDTO param = new DatabasesDTO();

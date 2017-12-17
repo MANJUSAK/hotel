@@ -1,7 +1,6 @@
 package com.goodsoft.hotel.domain.entity.repastorder;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +47,7 @@ public class OrderDO implements java.io.Serializable {
     private Double orderPrice;//订单总价
     private String mdTime;//买单时间
     private String reason;//反结账或迟付等说明
-    private List<OrderGoodsDO> orderGoodDOS;//订单明细容器
+    private List<OrderGoodsDO> orderGoods;//订单明细容器
 
     public OrderDO() {
         this.ktTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -329,12 +328,12 @@ public class OrderDO implements java.io.Serializable {
 
     }
 
-    public List<OrderGoodsDO> getOrderGoodDOS() {
-        return orderGoodDOS;
+    public List<OrderGoodsDO> getOrderGoods() {
+        return orderGoods;
     }
 
-    public void setOrderGoodDOS(List<OrderGoodsDO> orderGoodDOS) {
-        this.orderGoodDOS = orderGoodDOS;
+    public void setOrderGoods(List<OrderGoodsDO> orderGoods) {
+        this.orderGoods = orderGoods;
     }
 
     @Override
@@ -375,12 +374,12 @@ public class OrderDO implements java.io.Serializable {
                 Objects.equals(orderPrice, orderDO.orderPrice) &&
                 Objects.equals(mdTime, orderDO.mdTime) &&
                 Objects.equals(reason, orderDO.reason) &&
-                Objects.equals(orderGoodDOS, orderDO.orderGoodDOS);
+                Objects.equals(orderGoods, orderDO.orderGoods);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, totalNum, mNum, consumer, ktTime, fwRate, ctType, salemanager, ktNum, personNum, ktShift, zdConsume, qdDiscount, department, partHall, vipNum, vipType, zdConsumeGist, discountSum, zqSum, aoh, operator, ktSb, isServiceCharge, isZdConsume, paymentType, status, remarks, placeNum, ctid, orderPrice, mdTime, reason, orderGoodDOS);
+        return Objects.hash(id, totalNum, mNum, consumer, ktTime, fwRate, ctType, salemanager, ktNum, personNum, ktShift, zdConsume, qdDiscount, department, partHall, vipNum, vipType, zdConsumeGist, discountSum, zqSum, aoh, operator, ktSb, isServiceCharge, isZdConsume, paymentType, status, remarks, placeNum, ctid, orderPrice, mdTime, reason, orderGoods);
     }
 
     @Override
@@ -419,7 +418,7 @@ public class OrderDO implements java.io.Serializable {
                 ", orderPrice=" + orderPrice +
                 ", mdTime='" + mdTime + '\'' +
                 ", reason='" + reason + '\'' +
-                ", orderGoodDOS=" + orderGoodDOS +
+                ", orderGoodDOS=" + orderGoods +
                 '}';
     }
 

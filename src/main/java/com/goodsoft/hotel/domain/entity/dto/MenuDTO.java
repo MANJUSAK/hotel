@@ -17,7 +17,7 @@ public class MenuDTO implements java.io.Serializable {
     private static final long serialVersionUID = -1090082481951956688L;
     private String tid;//部门类别编号
     private String stid;//小类编号
-    private List<MenuDO> menuDOS;//菜品数据
+    private List<MenuDO> menu;//菜品数据
 
     public String getTid() {
         return tid;
@@ -35,12 +35,12 @@ public class MenuDTO implements java.io.Serializable {
         this.stid = stid;
     }
 
-    public List<MenuDO> getMenuDOS() {
-        return menuDOS;
+    public List<MenuDO> getMenu() {
+        return menu;
     }
 
-    public void setMenuDOS(List<MenuDO> menuDOS) {
-        this.menuDOS = menuDOS;
+    public void setMenu(List<MenuDO> menu) {
+        this.menu = menu;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class MenuDTO implements java.io.Serializable {
         return "MenuDTO{" +
                 "tid='" + tid + '\'' +
                 ", stid='" + stid + '\'' +
-                ", menuDOS=" + menuDOS +
+                ", menu=" + menu +
                 '}';
     }
 }

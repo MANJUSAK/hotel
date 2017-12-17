@@ -82,7 +82,7 @@
         <foreach collection="list" item="item" separator=",">
             (#{item.id},#{item.oid},#{item.cbname},#{item.spNum},#{item.spec},#{item.spPrice},#{item.jjMeans},#{item.detailZqSum},
             #{item.detailZhSum},#{item.discount},#{item.zkSum},#{item.isDiscount},#{item.batch},#{item.redouble},#{item.ratedSeat},#{item.operato},
-            #{item.dcTime},#{item.writeBill},#{item.menuTypeDO},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means},#{item.zdyTcid},#{item.rePlay})
+            #{item.dcTime},#{item.writeBill},#{item.menuType},#{item.detailRemarks},#{item.unit},#{item.tcid},#{item.means},#{item.zdyTcid},#{item.rePlay})
         </foreach>
     </insert>
     <!--自定义菜品查询-->

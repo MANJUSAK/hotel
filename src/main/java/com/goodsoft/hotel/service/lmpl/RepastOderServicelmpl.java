@@ -82,7 +82,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                     if (tcid != null && !("".equals(tcid))) {
                         List<SetMealDetailDO> list2 = this.cbDao.querySetMealDetailDao(tcid);
                         if (list2.size() > 0) {
-                            list1.get(j).setSetMealDetailDOS(list2);
+                            list1.get(j).setSetMealDetail(list2);
                         }
                     }
                     //是否存在自定义套餐
@@ -94,7 +94,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                         }
                     }
                 }
-                data.setOrderGoodDOS(list1);
+                data.setOrderGoods(list1);
             }
             return (T) new Result(0, data);
         }
@@ -128,7 +128,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                         if (tcid != null && !("".equals(tcid))) {
                             List<SetMealDetailDO> list2 = this.cbDao.querySetMealDetailDao(tcid);
                             if (list2.size() > 0) {
-                                list1.get(j).setSetMealDetailDOS(list2);
+                                list1.get(j).setSetMealDetail(list2);
                             }
                         }
                         //是否存在自定义套餐
@@ -140,7 +140,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                             }
                         }
                     }
-                    list.get(i).setOrderGoodDOS(list1);
+                    list.get(i).setOrderGoods(list1);
                 }
             }
             PageInfo<OrderDO> data = new PageInfo<OrderDO>(list);
@@ -172,7 +172,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                     if (tcid != null && !("".equals(tcid))) {
                         List<SetMealDetailDO> list1 = this.cbDao.querySetMealDetailDao(tcid);
                         if (list1.size() > 0) {
-                            list.get(j).setSetMealDetailDOS(list1);
+                            list.get(j).setSetMealDetail(list1);
                         }
                     }
                     //是否存在自定义套餐
@@ -184,7 +184,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                         }
                     }
                 }
-                data.setOrderGoodDOS(list);
+                data.setOrderGoods(list);
             }
             return (T) new Result(0, data);
         }
@@ -237,35 +237,36 @@ public class RepastOderServicelmpl implements RepastOderService {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao orderDao = sqlSession.getMapper(RepastOrderDao.class);
         String id = msg.getId();
-        List<OrderGoodsDO> orderGoodDOS = msg.getMsg();
-        List<MenuCustomDO> menuCustomDOS = null;
+        List<OrderGoodsDO> orderGoods = msg.getMsg();
+        List<MenuCustomDO> menuCustom = null;
         int len1 = 0;
-        for (int i = 0, len = orderGoodDOS.size(); i < len; ++i) {
-            orderGoodDOS.get(i).setId(this.uuid.getUUID("CY").toString());
-            orderGoodDOS.get(i).setOid(id);
-            menuCustomDOS = orderGoodDOS.get(i).getSetMealCustoms();
+        for (int i = 0, len = orderGoods.size(); i < len; ++i) {
+            orderGoods.get(i).setId(this.uuid.getUUID("CY").toString());
+            orderGoods.get(i).setOid(id);
+            menuCustom = orderGoods.get(i).getSetMealCustoms();
             //是否存在自定义套餐
-            if (menuCustomDOS != null) {
-                len1 = menuCustomDOS.size();
+            if (menuCustom != null) {
+                len1 = menuCustom.size();
                 if (len1 > 0) {
                     String zdytcid = this.uuid.getUUID("CY").toString();
-                    orderGoodDOS.get(i).setZdyTcid(zdytcid);
+                    orderGoods.get(i).setZdyTcid(zdytcid);
                     for (int j = 0; j < len1; ++j) {
-                        menuCustomDOS.get(j).setId(this.uuid.getUUID("CY").toString());
-                        menuCustomDOS.get(j).setCustomId(zdytcid);
+                        menuCustom.get(j).setId(this.uuid.getUUID("CY").toString());
+                        menuCustom.get(j).setCustomId(zdytcid);
                     }
                 }
             }
         }
         try {
-            if (menuCustomDOS != null && len1 > 0) {
-                orderDao.addMenuCustomDao(menuCustomDOS);
+            if (menuCustom != null && len1 > 0) {
+                orderDao.addMenuCustomDao(menuCustom);
             }
-            orderDao.addRepastOrderGoodsDao(orderGoodDOS);
+            orderDao.addRepastOrderGoodsDao(orderGoods);
             orderDao.updateRepastOrderDao(msg);
             this.cydao.updateTableState(msg.getCtid(), "4");
             sqlSession.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             sqlSession.rollback();
             throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
         } finally {
