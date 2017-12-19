@@ -34,6 +34,9 @@ public interface BookingDao {
     //查询预定房间信息
     public List<QuickbookingRoomno> selectrQuickBookingRooms(String quiId);
 
+    //查询预订单所有已入住房间ID
+    public List<String> selectBookingNotEmptyRooms(String bookingno);
+
     //修改预定单中信息
     public Integer updateQuickBookingALL(Quickbooking Quickbooking);
 
@@ -61,8 +64,14 @@ public interface BookingDao {
     //修改预订单状态为全部入住
     public Integer updateReserveFlagAllByNo(String bookingNo);
 
+
+
+
+
     //通过预定单号查询预订Id
     public String selectBookIdByBookNo(String bookingNo);
+    //通过预定ID查询预订单号
+    public String selectBookNoByBookId(String bookId);
 
     //查询预订单所有房间状态
     public List<String> selectAllReserveRoomState(String bookId);
@@ -84,6 +93,8 @@ public interface BookingDao {
 
     //查询房间状态
     public String selectFlagByRoomId(@Param("roomId") String roomId);
+
+
 
     //修改预订状态
      Integer updateRoomFlagRuZhuBooking(String id);
@@ -108,6 +119,13 @@ public interface BookingDao {
     //查询预订类型
     public String  selectBookingMarkets(@Param("bookingno") String bookingno);
 
+    //查询预订单客人信息
+    public String selectBookingGuestName(String bookingno);
+
+    //查询预订单所有未入住房间信息
+    public List<QuickbookingRoomno> selectAllQuiNotPeckRoom(String bookid);
+
+
 
     /**
      * 退房修改客房状态
@@ -115,9 +133,14 @@ public interface BookingDao {
     public Integer updateRoomFlagTuifang(List list);
 
     /**
-     * 退房修改预订单状态
+     * 退房修改预订单状态为全部退房
      */
      public Integer updateBookingStateTuifang(String bookingId);
+
+    /**
+     * 退房修改预订单状态为部分退房
+     */
+     public Integer updateBookingStateTuifangBufen(String bookingId);
 
     /**
      * 查询预订单关联的所有房间号

@@ -1,6 +1,8 @@
 package com.goodsoft.hotel.controller.guestRoom;
 
 import com.goodsoft.hotel.controller.CookBookController;
+import com.goodsoft.hotel.domain.dao.guestRoom.BookingDao;
+import com.goodsoft.hotel.domain.dao.guestRoom.KfCheckOutDao;
 import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
 import com.goodsoft.hotel.domain.entity.restaurantReservation.PageBean;
@@ -35,6 +37,12 @@ public class RoomsController {
 
     @Resource
     private RoomSDao roomSDao;
+
+    @Resource
+    private BookingDao bookingDao;
+
+    @Resource
+    private KfCheckOutDao kfCheckOutDao;
 
     @Resource
     SqlSessionTemplate sqlSessionTemplate;
@@ -502,7 +510,7 @@ public class RoomsController {
 
     /**
      * 预定:预定页面中 点击房间号之后显示的页面,左边的列表
-     *
+     * 获取所有空房
      * @return 房间类型信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -518,12 +526,17 @@ public class RoomsController {
     }
 
 
+
+
+
+
+
+
     /**
      * * 预定:预定页面中 点击房间号之后显示的页面,右边的房间号
-     * 预定:传递空房信息  获取类型id 动态传递
-     * 根据选择的房间类型 查看空房信息
      *
-     * @param typeId 预定页面中 点击房间号之后显示的页面,左边的列表 复选框中的ID
+     * 获取所有空房
+     * @param typeId
      * @return 房间信息
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -537,7 +550,6 @@ public class RoomsController {
         } else if (typeId.length() == 0 || startdate.length() == 0 || enddate.length() == 0) {
             return map;
         }
-
         try {
             String[] arr = typeId.split(",");
             typeIds = new ArrayList<String>();
@@ -555,6 +567,42 @@ public class RoomsController {
         }
         return map;
     }
+
+
+    /**
+     * * 预定:预定页面中 点击房间号之后显示的页面,右边的房间号
+     *
+     *  获取所有已入住房间
+     * @param typeId
+     * @return 房间信息
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("floor/roomTypeName/notkong")
+    public Object getnotKongAll(String typeId, String startdate, String enddate) {
+        List<Map<String, Object>> list = null;
+        List<Map<String, Object>> map = new ArrayList<>();
+        List<String> typeIds = null;
+        if (typeId == null || startdate == null || enddate == null) {
+            return map;
+        } else if (typeId.length() == 0 || startdate.length() == 0 || enddate.length() == 0) {
+            return map;
+        }
+        try {
+            String[] arr = typeId.split(",");
+            typeIds = new ArrayList<String>();
+            for (int i = 0; i < arr.length; i++) {
+                typeIds.add(arr[i]);
+            }
+            map = this.roomSDao.selectKongMapperMarkets(typeIds);
+            System.out.println("map:" + map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
+        }
+        return map;
+    }
+
+
 
 
     /**
@@ -888,13 +936,28 @@ public class RoomsController {
     @RequestMapping("consume/record/insert")
     public Object insertRecord(@RequestBody KfconsumpRecord kfconsumpRecord){
 
-        if (kfconsumpRecord.getRoomno() == null || kfconsumpRecord.getProject()==null || kfconsumpRecord.getRoomid()==null || kfconsumpRecord.getBookingno()==null) {
+        if ( kfconsumpRecord.getProject()==null || kfconsumpRecord.getRoomid()==null || kfconsumpRecord.getBookingno()==null) {
             return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
         System.out.println(kfconsumpRecord);
 
+        //获取ID
         StringBuilder uuid = UUIDUtil.getInstance().getUUID();
         kfconsumpRecord.setId(uuid.toString());
+        //获取房间号
+        String roomNo=roomSDao.selectRoomNoByRoomId(kfconsumpRecord.getRoomid());
+        kfconsumpRecord.setRoomno(roomNo);
+        //判断是否是录入押金
+        if("押金".equals(kfconsumpRecord.getProject())) {
+            //获取此订单所有消费信息
+            List<KfconsumpRecord> kfconsumpRecords = roomSDao.selectXfConsumptionInfo(roomNo);
+            for (int i = 0; i < kfconsumpRecords.size(); i++) {
+                if ("押金".equals(kfconsumpRecords.get(0).getProject())) {
+                    return new Status(StatusEnum.DEFEAT.getCODE(), "不可重复录入押金");
+                }
+            }
+        }
+
         try {
             List list=new ArrayList();
             list.add(kfconsumpRecord);
@@ -934,20 +997,20 @@ public class RoomsController {
      * @param recordId
      * @return
      */
-    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("consume/record/deleteOne")
     public Object recordDelete(String recordId){
         if (recordId==null) {
             return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
         }
         try{
+            System.out.println("recordId:"+recordId);
             roomSDao.deleteOneXfConsumptionInfo(recordId);
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         }catch (Exception e){
             e.printStackTrace();
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
-
     }
 
 
@@ -970,6 +1033,104 @@ public class RoomsController {
            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
        }
     }
+
+    /**
+     * 查询房间所有消费记录
+     * @param bookingNo
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("consume/roomRecord/select")
+    public Object selectRoomRecord(String bookingNo,String roomId){
+
+        if(bookingNo==null || "".equals(bookingNo)|| roomId==null || "".equals(roomId)){
+            return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        try{
+            List<KfconsumpRecord> kfconsumpRecords = roomSDao.selectXfRoomConsumptionInfo(bookingNo,roomId);
+            return kfconsumpRecords;
+        }catch (Exception e){
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+
+    /**
+     * 查询房间所有消费记录
+     * @param bookId
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("consume/roomRecord/findRecord")
+    public Object selectRoomRecordByid(String bookId,String roomId){
+
+        if(bookId==null || "".equals(bookId)|| roomId==null || "".equals(roomId)){
+            return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        try{
+            String bookingNo=bookingDao.selectBookNoByBookId(bookId);
+            List<KfconsumpRecord> kfconsumpRecords = roomSDao.selectXfRoomConsumptionInfo(bookingNo,roomId);
+            return kfconsumpRecords;
+        }catch (Exception e){
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+
+    /**
+     * 查询房间所有消费记录
+     * @param bookId
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("consume/roomRecord/findRecordMultiple")
+    public Object selectRoomRecordByidMultiple(String bookId,String roomIds){
+
+        if(bookId==null || "".equals(bookId)|| roomIds==null || "".equals(roomIds)){
+            return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        try{
+            List list=new ArrayList();
+            String[] split = roomIds.split(",");
+            if(split.length==0){
+                return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+            }
+            for(int i=0;i<split.length;i++){
+                list.add(split[i]);
+            }
+            String bookingNo=bookingDao.selectBookNoByBookId(bookId);
+            Map map=new HashMap();
+            map.put("bookingNo",bookingNo);
+            map.put("list",list);
+            List<KfconsumpRecord> kfconsumpRecords = roomSDao.selectXfRoomConsumptionInfoMultiple(map);
+
+            //获取入住时间  计算房费
+            Map dates = kfCheckOutDao.selectBookingTime(bookingNo);
+            String startdate = (String)dates.get("startdate");
+            Date nowDate = new Date();
+            Date startDate = sf.parse(startdate);
+            Calendar calendar=Calendar.getInstance();
+            Calendar newCalendar=Calendar.getInstance();
+            calendar.setTime(startDate);
+            newCalendar.setTime(nowDate);
+            int i = newCalendar.get(Calendar.DAY_OF_MONTH);
+            int x=calendar.get(Calendar.DAY_OF_MONTH);
+            int checkTime=i-x >0? i-x :1;
+            for(KfconsumpRecord cr:kfconsumpRecords){
+                if("房费".equals(cr.getProject())){
+                 cr.setTotalPrice(String.valueOf(Integer.valueOf(cr.getUnitprice())*checkTime));
+                }
+            }
+
+            return kfconsumpRecords;
+        }catch (Exception e){
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
+
+
+
 
 }
 

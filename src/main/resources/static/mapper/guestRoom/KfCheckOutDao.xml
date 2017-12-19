@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.KfCheckOutDao">
 
 
@@ -13,5 +14,121 @@
     <select id="selectBookingCheckRooms" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
         select a.* from GS_QUICKBOOKING_ROOMNO a,gs_room b where a.roomid=b.id and b.flag!='空房' and  a.bookid=#{bookId}
     </select>
+
+    <!--修改客人信息状态为0 通过预定单号 -->
+    <update id="updateCustomerStateByBook" parameterType="java.lang.String">
+        update gs_guest set state='0' where bookid = #{bookid}
+    </update>
+
+    <!--修改客人信息状态为0  通过房间号-->
+    <update id="updateCustomerStateByRoom" parameterType="java.util.List">
+        update gs_guest set state='0' where roomid in
+        <foreach collection="list" open="(" item="item" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <!--修改财务信息状态为0  通过预定单-->
+    <update id="updateRecordStateByBook" parameterType="string">
+       update gs_kfconsump_record set state='0' where bookingno=#{_parameter}
+    </update>
+
+    <!--修改财务信息状态为0  通过房间ID-->
+    <update id="updateRecordStateByRoom" parameterType="java.util.Map">
+        update gs_kfconsump_record set state='0' where bookingno=#{bookingno}
+        and roomid in
+        <foreach collection="rooms" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <!--查询客房信息  对应预订单客房-->
+    <select id="selectRoomInfoPrice" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+        select a.roomno roomNo,a.typename typeName,a.doorlockid doorLockId,a.id roomId,
+        case when b.price is not null then b.price else a.houseprices end housePrices from (
+        select a.roomno,b.typename,a.doorlockid,a.id,b.typeid ,b.houseprices  from gs_room a,gs_roomtype b
+        where a.roomtype=b.typeId and a.id=#{_parameter}
+        ) a
+        left join REALTIMEHOUSEPRICE b on  a.typeid=b.typeid and b.time=date_format(now(),'%Y-%m-%d')
+    </select>
+
+    <!--查询多条客房信息  对应预订单客房-->
+    <select id="selectRoomInfoPriceList" parameterType="java.util.List" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+        select a.roomno roomNo,a.typename typeName,a.doorlockid doorLockId,a.id roomId,
+        case when b.price is not null then b.price else a.houseprices end housePrices from (
+        select a.roomno,b.typename,a.doorlockid,a.id,b.typeid ,b.houseprices  from gs_room a,gs_roomtype b
+        where a.roomtype=b.typeId and a.id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        ) a
+        left join REALTIMEHOUSEPRICE b on  a.typeid=b.typeid and b.time=date_format(now(),'%Y-%m-%d')
+    </select>
+
+
+
+
+    <!--修改预订单关联房间信息 -->
+    <update id="updateBookingRoomInfo" parameterType="java.util.Map">
+         update GS_QUICKBOOKING_ROOMNO set
+          ROOMNO = #{roomNo},
+          TYPENAME = #{typeName},
+          DOORLOCKID = #{doorLockId},
+          HOUSEPRICES = #{housePrices},
+          ROOMID = #{roomId}
+          where  BOOKID = #{bookId} and ROOMID=#{baseRoomId}
+    </update>
+
+    <!--修改客房消费信息roomid -->
+    <update id="updateRecordRoomId" parameterType="java.util.Map">
+        update gs_kfconsump_record
+        set roomid=#{roomId}
+        where bookingno=#{bookingno} and roomid=#{baseRoomId} and state=1
+    </update>
+
+    <!--修改客人信息roomid-->
+    <update id="updateGuestRoomId" parameterType="java.util.Map">
+        update gs_guest set
+        roomid=#{roomId}
+        where state=1 and bookid=#{bookId} and roomid=#{baseRoomId}
+    </update>
+
+    <!--修改客房状态-->
+    <update id="updateRoomFlag" parameterType="java.lang.String">
+       update gs_room set flag=#{flag} where id=#{id}
+    </update>
+
+     <!--批量修改客房状态  为空房 -->
+    <update id="updateRoomFlagEmpty" parameterType="java.util.List">
+        update gs_room SET flag = '空房' where id in
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <!--修改预订单状态-->
+    <update id="updateBookingFlag" parameterType="java.lang.String">
+        update gs_quickbooking set bookingflag=#{flag} where id=#{id}
+    </update>
+
+    <!--修改预订单结束时间-->
+    <update id="updateBookingEndTime" parameterType="string">
+        update GS_QUICKBOOKING set ENDDATE=#{enddate} where BOOKINGNO=#{bookingno}
+    </update>
+    <!--查询预订单开始与结束时间-->
+    <select id="selectBookingTime" parameterType="string" resultType="java.util.Map">
+        select startdate,enddate from GS_QUICKBOOKING where bookingno=#{_parameter}
+    </select>
+
+
+    <!--通过房间号查询当前订单ID-->
+    <select id="selectQuiRoomsByRoomNo" parameterType="java.lang.String" resultType="java.lang.String">
+      select a.id from GS_QUICKBOOKING a,GS_QUICKBOOKING_ROOMNO b where a.id =b.bookid
+      and (a.bookingflag='部分入住' or  a.bookingflag='全部入住' or  a.bookingflag='部分退房')
+      and b.roomno=#{_parameter}
+    </select>
+
 
 </mapper>

@@ -41,6 +41,7 @@ public class UUIDUtil {
         String str = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
         String str2 = str.substring(0, 2);
         return new StringBuilder(str.replace(str2, "GS"));
+
     }
 
     //生成前缀动态标识UUID

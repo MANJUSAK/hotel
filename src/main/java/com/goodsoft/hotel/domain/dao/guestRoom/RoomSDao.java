@@ -60,10 +60,11 @@ public interface RoomSDao {
     //   快速预定中的房态信息,左边的列表
     public List<Map<String, Object>> queryRoomALLMapper() throws Exception;
 
-    //   预定中 房间信息 通过左边的房间类型状态来判断
+    //   预定中 房间信息 通过左边的房间类型状态  获取所有空房
     public List<Map<String, Object>> selectKongMapper(List<String> typeIds) throws Exception;
 
-
+    //   预定中 房间信息 通过左边的房间类型状态  获取所有已入住房间
+    public List<Map<String,Object>> selectKongMapperMarkets(List<String> typeIds);
 
 
 
@@ -165,9 +166,31 @@ public interface RoomSDao {
 
     //查询订单所有消费记录
     public List<KfconsumpRecord> selectXfConsumptionInfo(String bookingno);
+    //查询单个房间消费信息
+    public  List<KfconsumpRecord> selectXfRoomConsumptionInfo(@Param("bookingNo") String bookingNo ,@Param("roomid") String roomid);
+
+    //查询多个房间消费消费信息
+    public List<KfconsumpRecord> selectXfRoomConsumptionInfoMultiple(Map map);
 
     //修改客房消费记录
     public Integer updateXfConsumptionInfo(KfconsumpRecord kfconsumpRecord);
 
+    //通过房间ID查询房间号
+    public String selectRoomNoByRoomId(String roomId);
 
+
+    //查询客房房价
+    public String selectRoomNowPrice(String roomId);
+
+
+    //查询所有今天以前的订单详情
+     public List<Quickbooking> selectPastQuickbooking();
+
+
+     //修改预订单状态
+    public Integer updateQuickbookingState(@Param("flag") String flag,@Param("id") String id);
+
+
+    //删除预订单关联房间
+     public Integer deleteQuickBookingRoom(@Param("bookid") String bookid,@Param("roomid") String roomid);
 }

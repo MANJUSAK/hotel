@@ -16,19 +16,16 @@ public class KfconsumpRecord {
     private String  paymentexplain;//付款说明
     private String  bookingno;     //预订单号
     private String  roomid ;       //房间id
-    private String  state ="1";        //状态 1:未结账  0:已结账
+    private String  state;      //状态 1:未结账  0:已结账
     private String  isgive;        //是否赠送
 
 
     private String totalPrice;          //总价格
 
     public String getTotalPrice() {
-        if(projectnumber!=null && unitprice!=null ){
-            return String.valueOf(Double.valueOf(unitprice)* Double.valueOf(projectnumber));
-        }else{
-            return "0";
-        }
+       return totalPrice;
     }
+
 
     public void setTotalPrice(String totalPrice) {
         this.totalPrice = totalPrice;
@@ -100,6 +97,9 @@ public class KfconsumpRecord {
 
     public void setProjectnumber(String projectnumber) {
         this.projectnumber = projectnumber;
+        if(this.unitprice!=null && this.projectnumber!=null){
+            this.totalPrice=String.valueOf(Double.valueOf(this.unitprice)*Double.valueOf(this.projectnumber));
+        }
     }
 
     public String getUnitprice() {
@@ -108,6 +108,9 @@ public class KfconsumpRecord {
 
     public void setUnitprice(String unitprice) {
         this.unitprice = unitprice;
+        if(this.unitprice!=null && this.projectnumber!=null){
+            this.totalPrice=String.valueOf(Double.valueOf(this.unitprice)*Double.valueOf(this.projectnumber));
+        }
     }
 
     public String getDiscount() {

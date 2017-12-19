@@ -30,7 +30,7 @@
             and b.status=#{state}
         </if>
         )b
-        on a.id=b.hall_id)ab left join (select * from GS_REPAST_ORDER where status=1) geo on ab.id=geo.ctid )et on
+        on a.id=b.hall_id)ab left join (select * from GS_REPAST_ORDER where status=1 or status=2) geo on ab.id=geo.ctid )et on
         rt.id=et.fenting_id
         )s
         left join

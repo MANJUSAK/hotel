@@ -2,6 +2,7 @@ package com.goodsoft.hotel.controller.guestRoom;
 
 import com.goodsoft.hotel.controller.CookBookController;
 import com.goodsoft.hotel.domain.dao.guestRoom.BookingDao;
+import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
 import com.goodsoft.hotel.domain.entity.result.Result;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -30,6 +31,8 @@ public class BookingController {
     private BookingDao bookingDao;
     @Resource
     private FloorRoomService floorRoomService;
+    @Resource
+    private RoomSDao roomSDao;
 
     //实例化日志管理工具类
     private Logger logger = LoggerFactory.getLogger(CookBookController.class);
@@ -149,10 +152,6 @@ public class BookingController {
         }
         return (T) new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
     }
-
-
-
-
 
 
 
@@ -510,31 +509,31 @@ public class BookingController {
         }
     }
 
-    /**
-     * 预定入住
-     *
-     * @param msg 接收传入的预定信息
-     * @return 响应结果
-     */
-    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
-    @RequestMapping("booking/bookingRuZhu")
-    public Status bookingRuZhu(@RequestBody BookingCheckIn msg){
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        List<String> list1 = new ArrayList<>();
-        Map<String, Object> map = null;
-        for (int i = 0; i < msg.getMsg().size(); i++){
-            list1.add(msg.getMsg().get(i).getRoomId());
-        }
-        //查询房间状态
-        list = this.bookingDao.selectRoomRuZhu(list1);
-        try {
-            String str = this.floorRoomService.updateRoomFlagRuZhuService(list);
-            return new Status(StatusEnum.SUCCESS.getCODE(), str);
-        } catch (Exception e){
-            e.printStackTrace();
-            return new Status(404, "失败");
-        }
-    }
+//    /**
+//     * 预定入住
+//     *
+//     * @param msg 接收传入的预定信息
+//     * @return 响应结果
+//     */
+//    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+//    @RequestMapping("booking/bookingRuZhu")
+//    public Status bookingRuZhu(@RequestBody BookingCheckIn msg){
+//        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+//        List<String> list1 = new ArrayList<>();
+//        Map<String, Object> map = null;
+//        for (int i = 0; i < msg.getMsg().size(); i++){
+//            list1.add(msg.getMsg().get(i).getRoomId());
+//        }
+//        //查询房间状态
+//        list = this.bookingDao.selectRoomRuZhu(list1);
+//        try {
+//            String str = this.floorRoomService.updateRoomFlagRuZhuService(list);
+//            return new Status(StatusEnum.SUCCESS.getCODE(), str);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            return new Status(404, "失败");
+//        }
+//    }
 
 
     /**
@@ -598,14 +597,13 @@ public class BookingController {
                 //判断房间是否已入住
                 if(!roomflag.equals("空房")){
                     return (T) new Status(40010, "房间已入住");
-                }
+               }
                    //判断是否有客人信息
                    List<String> documentNos = bookingDao.selectRoomGuestInfo(roomId);
                    if(documentNos.size()==0){
                        return (T) new Status(40010, "无客人信息");
                    }
 
-                //修改房间状态
                 //查询预订状态
                 String s = bookingDao.selectBookingMarkets(bookingNo);
                 roomFlagParam.put("markets",s);
@@ -631,10 +629,30 @@ public class BookingController {
                        //部分入住
                        bookingDao.updateReserveFlagByNo(bookingNo);
                    }
+                   //查询预订单客人姓名
+                   String guestName = bookingDao.selectBookingGuestName(bookingNo);
+                   //查询房间价格
+                    String price = roomSDao.selectRoomNowPrice(roomId);
+                   //添加房费消费信息
+                   KfconsumpRecord record=new KfconsumpRecord();
+                   record.setId(UUIDUtil.getInstance().getUUID().toString());
+                   record.setRoomno(roomNo);
+                   record.setGuestname(guestName);
+                   record.setProject("房费");
+                   record.setProjectnumber("1");
+                   record.setUnitprice(price);
+                   record.setBookingno(bookingNo);
+                   record.setRoomid(roomId);record.setState("1"); record.setIsgive("否");
+                   List list =new ArrayList();list.add(record);
+                   System.out.println("44444:"+record);
 
+                   roomSDao.insertXfConsumptionInfo(list);
                } else {
                    return (T) new Status(40010, "房间ID错误");
                }
+
+
+
 
            }catch (Exception e){
             e.printStackTrace();
@@ -723,55 +741,5 @@ public class BookingController {
         }
 
     }
-
-
-    /**
-     * ------------------------------------------
-     * 退房
-     * ------------------------------------------
-     */
-
-    /**
-     * 退房
-     * @param bookid
-     * @return
-     */
-    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
-    @RequestMapping("room/update/checkout")
-    public Object bookingTuifang(String bookid ,String roomno,String roomId){
-
-        //修改客人信息状态为0
-        //删除财务信息
-
-
-        try {
-        //传入预订id  预订单退房
-        if(bookid!=null && !"".equals(bookid)){
-            List<String> strings = bookingDao.selectBookingRooms(bookid);
-            if(strings.size()!=0){
-             bookingDao.updateRoomFlagTuifang(strings);
-             bookingDao.updateBookingStateTuifang(bookid);
-            }else{
-                return new Status(StatusEnum.NO_PARAM.getCODE(),"该订单无房间号");
-            }
-        //传入房间号 退房
-        }else if(roomno!=null && !"".equals(roomno)){
-             List<String> list=new ArrayList();
-             String[] split = roomno.split(",");
-             for(int i=0;i<split.length;i++){
-                 list.add(split[i]);
-             }
-             bookingDao.updateRoomFlagTuifang(list);
-        }else{
-            return new Status(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
-        }
-        }catch (Exception e){
-            e.printStackTrace();
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
-        }
-        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
-    }
-
-
 
 }

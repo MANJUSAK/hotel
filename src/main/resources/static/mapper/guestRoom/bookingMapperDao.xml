@@ -173,9 +173,9 @@
     </update>
 
 
-    <!--取消订单恢复   未使用-->
+    <!--取消订单恢复-->
     <update id="updateFlagQuXiaoHuiFuMapper" parameterType="java.lang.String">
-        update gs_quickbooking SET bookingFlag = '明确预订' , REASON=''  WHERE BOOKINGNO = #{_parameter}
+        update gs_quickbooking SET bookingFlag = '明确预定' , REASON=''  WHERE BOOKINGNO = #{_parameter}
     </update>
 
     <!--订单删除(修改状态)  未使用-->
@@ -249,6 +249,7 @@
     <select id="selectRoomGuestInfo" parameterType="java.lang.String" resultType="java.lang.String">
     select documentNo from  gs_guest where roomid=#{_parameter} and state=1
     </select>
+
 
     <!--判断预定房间号是否重复-->
     <select id="joinRoomIdResves" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -353,9 +354,20 @@
       select b.flag from gs_quickbooking_roomno a,gs_room b where a.roomid=b.id and a.bookid =#{_parameter}
     </select>
 
+    <!--查询预订单所有房间未入住房间信息-->
+    <select id="selectAllQuiNotPeckRoom" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+        select a.* from gs_quickbooking_roomno a,gs_room b where a.roomid=b.id and a.bookid =#{_parameter} and b.flag='空房'
+    </select>
+
+
     <!--通过预定单查询预订ID-->
     <select id="selectBookIdByBookNo" parameterType="string" resultType="string">
         select id from gs_quickbooking where bookingno=#{_parameter}
+    </select>
+
+    <!--通过预定单查询预订ID-->
+    <select id="selectBookNoByBookId" parameterType="string" resultType="string">
+        select bookingno from gs_quickbooking where id=#{_parameter}
     </select>
 
     <!--查询房间状态-->
@@ -366,6 +378,11 @@
      <!--查询预订单预订类型-->
     <select id="selectBookingMarkets" parameterType="string" resultType="string">
         select markets from  gs_quickbooking where bookingno=#{bookingno}
+    </select>
+
+    <!--查询预订单客人名-->
+    <select id="selectBookingGuestName" parameterType="string" resultType="string">
+        select guestname from  gs_quickbooking where bookingno=#{_parameter}
     </select>
 
 
@@ -379,17 +396,26 @@
         </foreach>
     </update>
 
-    <!--退房修改预订状态-->
+    <!--退房修改预订状态未全部退房-->
     <update id="updateBookingStateTuifang" parameterType="string">
-        update GS_QUICKBOOKING SET BOOKINGFLAG = '退房'  WHERE id=#{_parameter}
+        update GS_QUICKBOOKING SET BOOKINGFLAG = '全部退房'  WHERE id=#{_parameter}
+    </update>
+
+    <!--退房修改预订状态未全部退房-->
+    <update id="updateBookingStateTuifangBufen" parameterType="string">
+        update GS_QUICKBOOKING SET BOOKINGFLAG = '部分退房'  WHERE id=#{_parameter}
     </update>
 
 
-    <!--查询预订单所有房间信息-->
+    <!--查询预订单所有房间号-->
     <select id="selectBookingRooms" parameterType="java.lang.String" resultType="java.lang.String">
         select roomno from GS_QUICKBOOKING_ROOMNO where bookid=#{_parameter}
     </select>
 
+    <!--查询预订单所有已入住房间id-->
+    <select id="selectBookingNotEmptyRooms" parameterType="java.lang.String" resultType="java.lang.String">
+        select a.roomid from GS_QUICKBOOKING_ROOMNO a,GS_ROOM b where a.roomid=b.id and  a.bookid=#{_parameter} and b.flag!='空房'
+    </select>
 
 
     <!--公共信息发布添加-->

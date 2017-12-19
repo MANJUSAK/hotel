@@ -135,15 +135,18 @@
 
     <!--快速预定房间信息start-->
 
-    <!--快速预定的房态,左边的列表选择-->
+    <!--快速预定的房态,左边的列表选择    获取所有的空房信息 -->
     <select id="queryRoomALLMapper" resultType="java.util.Map">
         select a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME, case when b.price is null then a.HOUSEPRICES else b.price end  HOUSEPRICES,a.roomSum  from (
-        SELECT a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME,a.HOUSEPRICES,COUNT(b.FLAG) roomSum FROM gs_roomtype a,gs_room b
-        where a.typeid=b.ROOMTYPE AND b.FLAG='空房' GROUP BY a.typeid) a
+        SELECT a.ID,a.typeId,a.ROOMTYPE,a.TYPENAME,a.HOUSEPRICES,sum( case when b.FLAG='空房' then 1 else 0 end ) roomSum FROM gs_roomtype a,gs_room b
+        where a.typeid=b.ROOMTYPE  GROUP BY a.typeid) a
         left join REALTIMEHOUSEPRICE b on a.typeid=b.typeid and b.time=DATE_FORMAT(NOW(),'%Y-%m-%d')
     </select>
 
-    <!--根据房间类型id获取房间号-->
+
+
+
+    <!--根据房间类型id获取房间号  获取所有空房  -->
     <select id="selectKongMapper" resultType="java.util.Map">
         select a.id,a.roomid,a.roomno,a.doorLockId,case when b.price is null then a.housePrices else b.price end
         housePrices ,a.typename,a.typeid from (
@@ -156,6 +159,22 @@
         ) a
         left join REALTIMEHOUSEPRICE b on a.typeid=b.typeid and b.time=date_format(now(),'%Y-%m-%d')
     </select>
+
+
+    <!--根据房间类型id获取房间号  获取所有已入住房间  -->
+    <select id="selectKongMapperMarkets" resultType="java.util.Map">
+        select a.id,a.roomid,a.roomno,a.doorLockId,case when b.price is null then a.housePrices else b.price end
+        housePrices ,a.typename,a.typeid from (
+        SELECT a.id,a.roomid,a.roomno,a.doorLockId,b.housePrices,b.typename,b.typeid FROM gs_room a,gs_roomtype b where
+        a.ROOMTYPE=b.typeid AND a.FLAG!='空房'
+        AND b.typeId IN
+        <foreach collection="list" index="index" item="str" open="(" separator="," close=")">
+            #{str}
+        </foreach>
+        ) a
+        left join REALTIMEHOUSEPRICE b on a.typeid=b.typeid and b.time=date_format(now(),'%Y-%m-%d')
+    </select>
+
 
 
      <!--查询传入时间段内被预订的房间号 -->
@@ -321,7 +340,7 @@
         insert into gs_kfconsump_record values
         <foreach collection="list" separator="," item="item">
             (#{item.id},#{item.roomno},#{item.guestname},#{item.project},#{item.projectnumber},
-            #{item.unitprice},#{item.discount},#{item.paymentexplain},#{item.bookingno})
+            #{item.unitprice},#{item.discount},#{item.paymentexplain},#{item.bookingno},#{item.roomid},#{item.state},#{item.isgive})
         </foreach>
     </select>
 
@@ -336,10 +355,25 @@
     </delete>
 
 
-    <!--查询客房消费信息-->
+    <!--查询客房消费信息 全部订单-->
     <select id="selectXfConsumptionInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
        select * from gs_kfconsump_record where bookingno=#{_paramater} and state=1
     </select>
+
+    <!--查询客房消费信息 单个房间-->
+    <select id="selectXfRoomConsumptionInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
+        select * from gs_kfconsump_record where bookingno=#{bookingNo} and roomid=#{roomid} and state=1
+    </select>
+
+    <!--查询客房消费信息 多个房间-->
+    <select id="selectXfRoomConsumptionInfoMultiple" parameterType="java.util.Map" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
+        select * from gs_kfconsump_record where bookingno=#{bookingNo}  and state=1 and
+        roomid in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
 
     <!--修改客房消费记录-->
     <update id="updateXfConsumptionInfo" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
@@ -361,13 +395,44 @@
 
     <!--定时修改客房脏房净房状态-->
     <update id="updateRoomSflagTimer">
-         update gs_room set sflag='脏房' where roomno in (
-         select b.roomno from  gs_quickbooking a , gs_quickbooking_roomno b
-         where b.bookid=a.id  and a.startdate = date_format(now(),'%Y-%m-%d')  and a.bookingflag='预订入住' )
+         update gs_room set sflag='脏房' where flag!='空房'
     </update>
 
 
 
+    <!--通过房间id获取房间号-->
+    <select id="selectRoomNoByRoomId" parameterType="string" resultType="string">
+        select roomno from gs_room where id=#{_parameter}
+    </select>
+
+
+    <!--查询客房房价-->
+    <select id="selectRoomNowPrice" parameterType="string" resultType="string" >
+         select case when b.price is null then a.houseprices else b.price end from (
+         select b.houseprices,a.roomtype from gs_room a,GS_ROOMTYPE b  where a.roomtype=b.typeid and a.id=#{_parameter})a
+         left join
+         (select * from  REALTIMEHOUSEPRICE where time= date_format(now(),'%Y-%m-%d') )b
+         on a.roomtype=b.typeid
+    </select>
+
+
+
+      <!--查询所有今天以前的订单-->
+    <select id="selectPastQuickbooking" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        select * from GS_QUICKBOOKING where startdate &lt; date_format(now(),'%Y-%m-%d')
+    </select>
+
+
+    <!--修改预订单状态-->
+    <update id="updateQuickbookingState" parameterType="java.lang.String">
+        update GS_QUICKBOOKING set BOOKINGFLAG=#{flag} where id=#{id}
+    </update>
+
+
+    <!--删除预订单关联房间-->
+    <delete id="deleteQuickBookingRoom" parameterType="string">
+        delete from GS_QUICKBOOKING_ROOMNO where bookid=#{bookid} and roomid=#{roomid}
+    </delete>
 
 
 </mapper>
