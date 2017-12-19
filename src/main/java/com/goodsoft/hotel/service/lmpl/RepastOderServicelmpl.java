@@ -150,7 +150,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     }
 
     /**
-     * 通过订单号查询订单业务方法，用于开台跳转点餐页面获取该消费者订单信息
+     * 通过订单号查询订单业务方法，用于开台或加餐跳转点餐页面获取该消费者订单信息
      * 注：开台后必须获取开台订单信息（id必传，否则开台后无法打单）
      * 该接口为开台后获取订单信息接口
      *
@@ -159,8 +159,8 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @throws Exception
      */
     @Override
-    public <T> T queryOrderByIdService(String id) throws Exception {
-        OrderDO data = this.dao.queryRepastOrderByIdDao(id);
+    public <T> T queryOrderByIdService(String id, int status) throws Exception {
+        OrderDO data = this.dao.queryRepastOrderByIdDao(id, status);
         if (data != null) {
             //订单商品详情
             List<OrderGoodsDO> list = this.dao.queryRepastOrderGoodsDao(id);
@@ -202,7 +202,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Transactional
     @Override
-    public <T> T addOrderService(OrderDO orderDO) throws Exception {
+    public <T> T addOrderService(OrderDO order) throws Exception {
         String id = null;
         try {
             id = this.orderId.getOrderId().toString();
@@ -210,13 +210,13 @@ public class RepastOderServicelmpl implements RepastOderService {
             throw new HotelApplicationException(StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
         //预订编号
-        String ydid = orderDO.getId();
-        orderDO.setId(id);
-        orderDO.setStatus(1);
-        int row = this.dao.addRepastOrderDao(orderDO);
+        String ydid = order.getId();
+        order.setId(id);
+        order.setStatus(1);
+        int row = this.dao.addRepastOrderDao(order);
         if (row > 0) {
             this.cyReserveDao.updateAloneReserveState("3", ydid);
-            this.cydao.updateTableState(orderDO.getCtid(), "8");
+            this.cydao.updateTableState(order.getCtid(), "8");
             return (T) new Result(0, id);
         }
         return (T) new Status(StatusEnum.NO_ORDER.getCODE(), StatusEnum.NO_ORDER.getEXPLAIN());

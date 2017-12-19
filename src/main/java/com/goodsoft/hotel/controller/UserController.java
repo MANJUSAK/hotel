@@ -3,7 +3,6 @@ package com.goodsoft.hotel.controller;
 import com.goodsoft.hotel.domain.entity.dto.UserDTO;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
-import com.goodsoft.hotel.exception.HotelApplicationException;
 import com.goodsoft.hotel.service.UserService;
 import com.goodsoft.hotel.service.supp.OrderIdsupp;
 import org.slf4j.Logger;
@@ -51,12 +50,24 @@ public class UserController {
         }
     }
 
-    @RequestMapping("/test")
-    public <T> T test() throws HotelApplicationException {
-        /*LocalDateTime date = LocalDateTime.now();
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String strTime = date.format(timeFormatter);*/
-        return (T) null;
+    /**
+     * 用户登录接口
+     * 注：此接口只是单纯获取用户名用于跳转至工作流
+     *
+     * @param uName 用户名
+     * @param pwd   密码
+     * @param <T>
+     * @return Status or Result 响应结果
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping(value = "/login/data.shtml", method = RequestMethod.POST)
+    public <T> T getUserController(String uName, String pwd) {
+        try {
+            return this.service.getUserService(uName, pwd);
+        } catch (Exception e) {
+            this.logger.error(e.toString());
+            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
     }
 
 

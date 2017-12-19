@@ -85,9 +85,9 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/by/id/data.shtml")
-    public <T> T queryOrderController(String id) {
+    public <T> T queryOrderController(String id, int status) {
         try {
-            return this.service.queryOrderByIdService(id);
+            return this.service.queryOrderByIdService(id, status);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());

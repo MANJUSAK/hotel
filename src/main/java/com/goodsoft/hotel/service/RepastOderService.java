@@ -50,7 +50,7 @@ public interface RepastOderService {
      * @return 查询数据
      * @throws Exception
      */
-    <T> T queryOrderByIdService(String id) throws Exception;
+    <T> T queryOrderByIdService(String id, int status) throws Exception;
 
     /**
      * 餐饮预订开台订单添加（开台）业务方法，用于处理预订之后的点餐服务产生相应订单以便于收银获取相关订单数据信息
@@ -61,7 +61,7 @@ public interface RepastOderService {
      * @return 下单状态
      * @throws Exception
      */
-    <T> T addOrderService(OrderDO orderDO) throws Exception;
+    <T> T addOrderService(OrderDO order) throws Exception;
 
     /**
      * 餐饮订单商品添加（打单、落单、先落）业务方法，用于点餐服务产生相应订单以便于收银获取相关订单数据信息

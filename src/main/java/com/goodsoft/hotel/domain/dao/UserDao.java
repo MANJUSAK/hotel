@@ -1,7 +1,8 @@
 package com.goodsoft.hotel.domain.dao;
 
 import com.goodsoft.hotel.domain.entity.dto.UserDTO;
-import com.goodsoft.hotel.domain.entity.user.UserMsg;
+import com.goodsoft.hotel.domain.entity.user.UserDO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,9 +18,12 @@ import java.util.List;
 public interface UserDao {
 
     //查询用户信息（带部门）
-    List<UserMsg> queryUserMsgDao(UserDTO param) throws Exception;
+    List<UserDO> queryUserMsgDao(UserDTO param) throws Exception;
 
     //查询所有部门
     List<String> queryDeptNameDao() throws Exception;
+
+    //用户登录
+    String getUserDao(@Param("uName") String uName, @Param("pwd") String pwd) throws Exception;
 
 }

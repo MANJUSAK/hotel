@@ -242,7 +242,7 @@
                 AND SMNAME LIKE #{_keyWord}
             </if>
         </where>
-        ORDER BY SMID DESC
+        ORDER BY SMID ASC
     </select>
     <!--检查套餐中是否有相同菜品存在-->
     <select id="querySetMealDetailByNameDao" resultType="string">

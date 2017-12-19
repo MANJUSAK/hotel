@@ -37,11 +37,11 @@
         ORDER BY ID DESC
     </select>
     <!--餐饮订单查询(通过id，开台未打单的订单) 返回单条数据-->
-    <select id="queryRepastOrderByIdDao" parameterType="string"
+    <select id="queryRepastOrderByIdDao" parameterType="object"
             resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         SELECT
         <include refid="order_sql"/>
-        FROM gs_repast_order WHERE ID=#{id} AND STATUS=1 ORDER BY ID DESC
+        FROM gs_repast_order WHERE ID=#{id} AND STATUS=#{status} ORDER BY ID DESC
     </select>
     <!--餐饮订单查询(通过id和status) 返回单条数据 弃用-->
     <select id="queryRepastOrderDao" parameterType="object"
