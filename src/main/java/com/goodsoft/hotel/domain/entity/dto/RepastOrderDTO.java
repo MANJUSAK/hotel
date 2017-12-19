@@ -1,6 +1,6 @@
-package com.goodsoft.hotel.domain.entity.param;
+package com.goodsoft.hotel.domain.entity.dto;
 
-import com.goodsoft.hotel.domain.entity.repastorder.OrderGoods;
+import com.goodsoft.hotel.domain.entity.repastorder.OrderGoodsDO;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-17 14:21
  */
-public class RepastOrderParam implements java.io.Serializable {
+public class RepastOrderDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = 5280307344852398777L;
     private String id;//订单号
@@ -23,7 +23,7 @@ public class RepastOrderParam implements java.io.Serializable {
     private int mNum;//菜品分量合计
     private String aoh;//台号
     private int status;//订单状态（0支付/1下单/2打单/3超时未买单/4迟付/5取消/6反结）
-    private List<OrderGoods> msg;//用于接收前台传入的餐饮订单明细数据容器
+    private List<OrderGoodsDO> msg;//用于接收前台传入的餐饮订单明细数据容器
 
     public String getId() {
         return id;
@@ -90,11 +90,11 @@ public class RepastOrderParam implements java.io.Serializable {
         this.zqSum = zqSum;
     }
 
-    public List<OrderGoods> getMsg() {
+    public List<OrderGoodsDO> getMsg() {
         return msg;
     }
 
-    public void setMsg(List<OrderGoods> msg) {
+    public void setMsg(List<OrderGoodsDO> msg) {
         this.msg = msg;
     }
 
@@ -109,8 +109,8 @@ public class RepastOrderParam implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RepastOrderParam)) return false;
-        RepastOrderParam that = (RepastOrderParam) o;
+        if (!(o instanceof RepastOrderDTO)) return false;
+        RepastOrderDTO that = (RepastOrderDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(ctid, that.ctid) &&
                 Objects.equals(aoh, that.aoh);
@@ -119,5 +119,21 @@ public class RepastOrderParam implements java.io.Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, ctid, aoh);
+    }
+
+    @Override
+    public String toString() {
+        return "RepastOrderDTO{" +
+                "id='" + id + '\'' +
+                ", ctid='" + ctid + '\'' +
+                ", orderPrice=" + orderPrice +
+                ", discountSum=" + discountSum +
+                ", zqSum=" + zqSum +
+                ", totalNum=" + totalNum +
+                ", mNum=" + mNum +
+                ", aoh='" + aoh + '\'' +
+                ", status=" + status +
+                ", msg=" + msg +
+                '}';
     }
 }

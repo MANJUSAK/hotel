@@ -1,7 +1,7 @@
 package com.goodsoft.hotel.domain.dao;
 
-import com.goodsoft.hotel.domain.entity.sys.Printer;
-import com.goodsoft.hotel.domain.entity.sys.SerialNum;
+import com.goodsoft.hotel.domain.entity.sys.PrinterDO;
+import com.goodsoft.hotel.domain.entity.sys.SerialNumDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,16 +22,16 @@ public interface SysDao {
     String querySerialNumDao(@Param("date") String date, @Param("tp") int tp) throws Exception;
 
     //获取系统打印机
-    List<Printer> queryPrinterDao() throws Exception;
+    List<PrinterDO> queryPrinterDao() throws Exception;
 
     //记录流水号
-    int addSerialNumDao(SerialNum msg) throws Exception;
+    int addSerialNumDao(SerialNumDO msg) throws Exception;
 
     //添加系统打印机
-    int addPrinterDao(Printer msg) throws Exception;
+    int addPrinterDao(PrinterDO msg) throws Exception;
 
     //更换打印机
-    int updatePrinterDao(Printer msg) throws Exception;
+    int updatePrinterDao(PrinterDO msg) throws Exception;
 
     //删除打印机
     int deletePrinterDao(@Param("id") String... id) throws Exception;

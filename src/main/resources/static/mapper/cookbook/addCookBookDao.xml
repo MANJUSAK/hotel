@@ -7,7 +7,7 @@
     <!--第三方缓存技术 ehcache-->
     <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
     <!--菜单类型添加-->
-    <insert id="addMenuTypeDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuType">
+    <insert id="addMenuTypeDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuTypeDO">
         INSERT INTO gs_cookbook_type (ID,TNAME) VALUES (#{id},#{tName})
     </insert>
     <!--菜单子类型添加-->
@@ -50,7 +50,7 @@
         </foreach>
     </insert>
     <!--套餐数据添加-->
-    <insert id="addSetMealDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
+    <insert id="addSetMealDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.SetMealDO">
     INSERT INTO gs_cookbook_setmeal(ID,FILE_ID,SMNAME,TC_PRICE,SM_ID_DISCOUNT,IS_DD,SM_UNIT,TC_DISCOUNT)
     VALUES (#{id},#{fileId},#{smName},#{stPrice},#{isNo},#{isdd},#{smUnit},#{tcDiscount})
     </insert>

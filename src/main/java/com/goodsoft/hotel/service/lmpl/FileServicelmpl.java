@@ -70,9 +70,8 @@ public class FileServicelmpl implements FileService {
                             return 603;
                         }
                         // 判断文件格式是否正确 end
-                    } else {
-                        return 604;
                     }
+                    return 604;
                 }
                 // 判断文件格是否为空 end
                 break;
@@ -94,9 +93,8 @@ public class FileServicelmpl implements FileService {
                             return 603;
                         }
                         // 判断文件格式是否正确 end
-                    } else {
-                        return 604;
                     }
+                    return 604;
                 }
                 // 判断文件格是否为空 end
                 break;
@@ -118,9 +116,8 @@ public class FileServicelmpl implements FileService {
                             return 603;
                         }
                         // 判断文件格式是否正确 end
-                    } else {
-                        return 604;
                     }
+                    return 604;
                     //判断文件是否为空 end
                 }
                 break;

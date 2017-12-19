@@ -26,6 +26,7 @@ public enum StatusEnum {
     NO_PARAM_DATA(400404, "未获取到数据"),
     NO_GOODS(200404, "订单无效"),
     NO_ORDER(200404, "生成订单失败，无法开台"),
+    NO_USER(200404, "用户名与密码不匹配"),
     ERROR_ORDER(200500, "生成订单失败，无法开台"),
     DEL_ORDER(200404, "订单取消失败！没有该条订单数据信息"),
     PAYZ_THE_BILL(200404, "订单结算失败！没有该订单数据信息"),

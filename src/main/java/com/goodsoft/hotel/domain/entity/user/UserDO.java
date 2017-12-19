@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author 严彬荣 Created on 2017-12-03 10:12
  * @version V1.0
  */
-public class UserMsg implements java.io.Serializable {
+public class UserDO implements java.io.Serializable {
 
     private static final long serialVersionUID = -8244972055210567069L;
 
@@ -117,23 +117,40 @@ public class UserMsg implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserMsg)) return false;
-        UserMsg userMsg = (UserMsg) o;
-        return Objects.equals(id, userMsg.id) &&
-                Objects.equals(deptId, userMsg.deptId) &&
-                Objects.equals(userName, userMsg.userName) &&
-                Objects.equals(loginName, userMsg.loginName) &&
-                Objects.equals(sex, userMsg.sex) &&
-                Objects.equals(registerTime, userMsg.registerTime) &&
-                Objects.equals(deptName, userMsg.deptName) &&
-                Objects.equals(deptLevel, userMsg.deptLevel) &&
-                Objects.equals(parentId, userMsg.parentId) &&
-                Objects.equals(deptCode, userMsg.deptCode) &&
-                Objects.equals(createDate, userMsg.createDate);
+        if (!(o instanceof UserDO)) return false;
+        UserDO userDO = (UserDO) o;
+        return Objects.equals(id, userDO.id) &&
+                Objects.equals(deptId, userDO.deptId) &&
+                Objects.equals(userName, userDO.userName) &&
+                Objects.equals(loginName, userDO.loginName) &&
+                Objects.equals(sex, userDO.sex) &&
+                Objects.equals(registerTime, userDO.registerTime) &&
+                Objects.equals(deptName, userDO.deptName) &&
+                Objects.equals(deptLevel, userDO.deptLevel) &&
+                Objects.equals(parentId, userDO.parentId) &&
+                Objects.equals(deptCode, userDO.deptCode) &&
+                Objects.equals(createDate, userDO.createDate);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, deptId, userName, loginName, sex, registerTime, deptCode, deptName, deptLevel, parentId, createDate);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDO{" +
+                "id='" + id + '\'' +
+                ", deptId='" + deptId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", loginName='" + loginName + '\'' +
+                ", sex='" + sex + '\'' +
+                ", registerTime='" + registerTime + '\'' +
+                ", deptName='" + deptName + '\'' +
+                ", deptLevel='" + deptLevel + '\'' +
+                ", parentId='" + parentId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", deptCode='" + deptCode + '\'' +
+                '}';
     }
 }

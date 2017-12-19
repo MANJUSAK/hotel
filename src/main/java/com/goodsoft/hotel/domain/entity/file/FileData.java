@@ -93,6 +93,19 @@ public class FileData implements java.io.Serializable {
     public int hashCode() {
         return Objects.hash(fileId, path, bases, sort, fileName, newFileName, suffix);
     }
+
+    @Override
+    public String toString() {
+        return "FileData{" +
+                "fileId='" + fileId + '\'' +
+                ", path='" + path + '\'' +
+                ", bases='" + bases + '\'' +
+                ", sort='" + sort + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", newFileName='" + newFileName + '\'' +
+                ", suffix='" + suffix + '\'' +
+                '}';
+    }
 }
 
 

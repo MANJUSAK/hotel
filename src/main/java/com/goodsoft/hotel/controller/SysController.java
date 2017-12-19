@@ -1,9 +1,9 @@
 package com.goodsoft.hotel.controller;
 
-import com.goodsoft.hotel.domain.entity.param.HotelParam;
+import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
 import com.goodsoft.hotel.domain.entity.result.Status;
 import com.goodsoft.hotel.domain.entity.result.StatusEnum;
-import com.goodsoft.hotel.domain.entity.sys.Printer;
+import com.goodsoft.hotel.domain.entity.sys.PrinterDO;
 import com.goodsoft.hotel.service.SysService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class SysController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/find/printer/data.shtml", method = RequestMethod.GET)
-    public <T> T queryPrinterController(HotelParam param) {
+    public <T> T queryPrinterController(HotelDTO param) {
         try {
             return this.sysService.queryPrinterService(param);
         } catch (Exception e) {
@@ -55,7 +55,7 @@ public class SysController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/printer/data.shtml", method = RequestMethod.POST)
-    public Status addPrinterController(Printer msg) {
+    public Status addPrinterController(PrinterDO msg) {
         try {
             return this.sysService.addPrinterService(msg);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class SysController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/update/printer/data.shtml", method = RequestMethod.POST)
-    public Status updatePrinterController(Printer msg) {
+    public Status updatePrinterController(PrinterDO msg) {
         try {
             return this.sysService.updatePrinterService(msg);
         } catch (Exception e) {

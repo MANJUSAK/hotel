@@ -6,7 +6,7 @@
     <defaultCache
             name="gudou_hotel"
             maxElementsInMemory="1000"
-            maxElementsOnDisk="0"
+            maxElementsOnDisk="10000000"
             eternal="false"
             overflowToDisk="true"
             diskPersistent="false"

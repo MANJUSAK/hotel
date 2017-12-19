@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.domain.entity.param;
+package com.goodsoft.hotel.domain.entity.dto;
 
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author 严彬荣 Created on 2017-12-03 10:48
  * @version V1.0
  */
-public class UserParam implements java.io.Serializable {
+public class UserDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = 8354815646373900929L;
 
@@ -26,13 +26,20 @@ public class UserParam implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserParam)) return false;
-        UserParam userParam = (UserParam) o;
-        return Objects.equals(keyWord, userParam.keyWord);
+        if (!(o instanceof UserDTO)) return false;
+        UserDTO userDTO = (UserDTO) o;
+        return Objects.equals(keyWord, userDTO.keyWord);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(keyWord);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "keyWord='" + keyWord + '\'' +
+                '}';
     }
 }

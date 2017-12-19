@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.domain.entity.param;
+package com.goodsoft.hotel.domain.entity.dto;
 
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-11 17:07
  */
-public class HotelParam implements java.io.Serializable {
+public class HotelDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = -6999200450727024154L;
     private int page;//页码
@@ -125,8 +125,8 @@ public class HotelParam implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof HotelParam)) return false;
-        HotelParam that = (HotelParam) o;
+        if (!(o instanceof HotelDTO)) return false;
+        HotelDTO that = (HotelDTO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(stid, that.stid) &&
                 Objects.equals(tid, that.tid) &&
@@ -139,5 +139,23 @@ public class HotelParam implements java.io.Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, stid, tid, cbid, mid, keyWord, keyWord_1);
+    }
+
+    @Override
+    public String toString() {
+        return "HotelDTO{" +
+                "page=" + page +
+                ", total=" + total +
+                ", status=" + status +
+                ", setFindFile=" + setFindFile +
+                ", id='" + id + '\'' +
+                ", stid='" + stid + '\'' +
+                ", tid='" + tid + '\'' +
+                ", cbid='" + cbid + '\'' +
+                ", mid='" + mid + '\'' +
+                ", keyWord='" + keyWord + '\'' +
+                ", keyWord_1='" + keyWord_1 + '\'' +
+                ", isSub=" + isSub +
+                '}';
     }
 }

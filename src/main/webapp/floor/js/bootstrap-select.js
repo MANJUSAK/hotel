@@ -181,7 +181,7 @@
   /**
    * Remove all diatrics from the given text.
    * @access private
-   * @param {String} text
+   * @dto {String} text
    * @returns {String}
    */
   function normalizeToBase(text) {
@@ -452,10 +452,10 @@
 
       // Helper functions
       /**
-       * @param content
-       * @param [index]
-       * @param [classes]
-       * @param [optgroup]
+       * @dto content
+       * @dto [index]
+       * @dto [classes]
+       * @dto [optgroup]
        * @returns {string}
        */
       var generateLI = function (content, index, classes, optgroup) {
@@ -467,10 +467,10 @@
       };
 
       /**
-       * @param text
-       * @param [classes]
-       * @param [inline]
-       * @param [tokens]
+       * @dto text
+       * @dto [classes]
+       * @dto [inline]
+       * @dto [tokens]
        * @returns {string}
        */
       var generateA = function (text, classes, inline, tokens) {
@@ -580,7 +580,7 @@
     },
 
     /**
-     * @param [updateLi] defaults to true
+     * @dto [updateLi] defaults to true
      */
     render: function (updateLi) {
       var that = this,
@@ -657,8 +657,8 @@
     },
 
     /**
-     * @param [style]
-     * @param [status]
+     * @dto [style]
+     * @dto [status]
      */
     setStyle: function (style, status) {
       if (this.$element.attr('class')) {

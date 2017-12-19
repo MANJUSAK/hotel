@@ -8,11 +8,11 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-07 16:42
  */
-public class MenuSubType implements java.io.Serializable {
+public class MenuSubTypeDO implements java.io.Serializable {
 
     private static final long serialVersionUID = 1604565411882057472L;
     private String id;//编号
-    private int stid;//小类型编号
+    private Integer stid;//小类型编号
     private String tName;//部门类别（仅用于查询）
     private String stName;//小类型名称
     private String tid;//关联类别表id
@@ -27,11 +27,11 @@ public class MenuSubType implements java.io.Serializable {
         this.id = id == null ? " " : id.trim();
     }
 
-    public int getStid() {
+    public Integer getStid() {
         return stid;
     }
 
-    public void setStid(int stid) {
+    public void setStid(Integer stid) {
         this.stid = stid;
     }
 
@@ -70,17 +70,30 @@ public class MenuSubType implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MenuSubType)) return false;
-        MenuSubType that = (MenuSubType) o;
-        return stid == that.stid &&
-                Objects.equals(id, that.id) &&
+        if (!(o instanceof MenuSubTypeDO)) return false;
+        MenuSubTypeDO that = (MenuSubTypeDO) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(stid, that.stid) &&
+                Objects.equals(tName, that.tName) &&
                 Objects.equals(stName, that.stName) &&
-                Objects.equals(sbid, that.sbid) &&
-                Objects.equals(tid, that.tid);
+                Objects.equals(tid, that.tid) &&
+                Objects.equals(sbid, that.sbid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, stid, stName, stid, tid);
+        return Objects.hash(id, stid, tName, stName, tid, sbid);
+    }
+
+    @Override
+    public String toString() {
+        return "MenuSubTypeDO{" +
+                "id='" + id + '\'' +
+                ", stid=" + stid +
+                ", tName='" + tName + '\'' +
+                ", stName='" + stName + '\'' +
+                ", tid='" + tid + '\'' +
+                ", sbid='" + sbid + '\'' +
+                '}';
     }
 }

@@ -7,7 +7,7 @@
     <!--第三方缓存技术 ehcache-->
     <cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>
     <!--菜单子类型数据过滤-->
-    <resultMap id="menuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubType">
+    <resultMap id="menuSubtypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuSubTypeDO">
         <result property="stid" column="STID"/>
         <result property="id" column="ID"/>
         <result property="stName" column="STNAME"/>
@@ -24,7 +24,7 @@
         SELECT ID FROM gs_cookbook_type WHERE TNAME=#{tName}
     </select>
     <!--菜单类型数据查询-->
-    <resultMap id="menuTypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuType">
+    <resultMap id="menuTypeInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuTypeDO">
         <id column="TID" property="tid"/>
         <result column="ID" property="id"/>
         <result column="TNAME" property="tName"/>
@@ -34,7 +34,7 @@
     </select>
     <!--菜单子类型数据查询-->
     <select id="queryMenuSubtypeDao" resultMap="menuSubtypeInfo"
-            parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam">
+            parameterType="com.goodsoft.hotel.domain.entity.dto.HotelDTO">
         SELECT a.ID,b.ID TID,a.STID, a.STNAME,b.TNAME FROM gs_cookbook_subtype a LEFT JOIN gs_cookbook_type b
         ON
         a.TID=b.ID
@@ -69,7 +69,7 @@
         ORDER BY CBID DESC
     </select>
     <!--菜单数据查询-->
-    <resultMap id="menuInfo" type="com.goodsoft.hotel.domain.entity.cookbook.Menu">
+    <resultMap id="menuInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuDO">
         <id column="CBID" property="cbid"/>
         <result column="ID" property="id"/>
         <result property="tid" column="TID"/>
@@ -93,35 +93,41 @@
         <result column="SPEC4" property="spec4"/>
         <result column="SPEC5" property="spec5"/>
         <result column="COST_PRICE" property="costPrice"/>
+        <result column="PT_DRIVER_NAME" property="ptDriverName"/>
+        <result column="PT_PORT" property="ptPort"/>
     </resultMap>
-    <select id="queryMenuDetailDao" parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam"
+    <select id="queryMenuDetailDao" parameterType="com.goodsoft.hotel.domain.entity.dto.HotelDTO"
             resultMap="menuInfo">
-        select f.*,e.STNAME from (select ID,STNAME from gs_cookbook_subtype) e right join
+        select distinct m.*,p.PT_DRIVER_NAME,p.PT_PORT from
+        (select f.*,e.STNAME from (select ID,STNAME from gs_cookbook_subtype) e right join
         (select c.*,d.TNAME from (select a.ID,a.STID,A.TID,a.CBID,a.FILE_ID,a.CBNAME,a.UNIT,a.IS_DISCOUNT,
         a.IS_SUB,a.SPEC1,a.SPEC2,a.SPEC3,a.SPEC4,a.SPEC5,a.PRICE1,a.PRICE2,a.PRICE3,a.PRICE4,a.PRICE5,b.KC_DATE,b.KC_NUM,COST_PRICE
         from gs_cookbook a left join gs_cookbook_inventory b on a.ID = b.ID) c left join (select ID,TNAME
-        from gs_cookbook_type) d on c.TID=d.ID) f on e.ID=f.STID
+        from gs_cookbook_type) d on c.TID=d.ID) f on e.ID=f.STID) m
+        left join
+        (select PT_DRIVER_NAME,PT_PORT,PT_DEPT from gs_sys_printer) p
+        on m.TID=p.PT_DEPT
         <where>
             <if test="keyWord !=null and keyWord !=''">
                 <bind name="_keyWord" value="'%'+keyWord+'%'"/>
-                AND f.CBNAME LIKE #{_keyWord}
+                AND m.CBNAME LIKE #{_keyWord}
             </if>
             <if test="id != null and id !=''">
-                AND f.CBID=#{id}
+                AND m.CBID=#{id}
             </if>
             <if test="stid != null and stid !=''">
-                AND f.STID=#{stid}
+                AND m.STID=#{stid}
             </if>
             <if test="tid != null and tid !=''">
-                AND f.TID=#{tid}
+                AND m.TID=#{tid}
             </if>
             <if test="isSub &gt;0">
-                AND f.IS_SUB=#{isSub}
+                AND m.IS_SUB=#{isSub}
             </if>
         </where>
     </select>
     <!--菜单做法数据查询-->
-    <resultMap id="menuMeansInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuMeans">
+    <resultMap id="menuMeansInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDO">
         <id column="MID" property="mid"/>
         <result property="tid" column="TID"/>
         <result property="stid" column="STID"/>
@@ -132,7 +138,7 @@
         <result column="ID" property="id"/>
         <result column="MNAME" property="mName"/>
     </resultMap>
-    <select id="queryMenuMeansDao" parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam"
+    <select id="queryMenuMeansDao" parameterType="com.goodsoft.hotel.domain.entity.dto.HotelDTO"
             resultMap="menuMeansInfo">
         SELECT c.ID,c.CBID,c.STID,c.TID,c.MNAME,c.MID,c.CBNAME, d.STNAME,d.TNAME FROM
         (SELECT a.ID,a.CBID,a.STID,a.TID,a.MNAME,a.MID,b.CBNAME FROM gs_cookbook_means a LEFT JOIN
@@ -161,7 +167,7 @@
         </where>
     </select>
     <!--菜单做法详情数据查询-->
-    <resultMap id="menuMeansDetailInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetail">
+    <resultMap id="menuMeansDetailInfo" type="com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetailDO">
         <id column="MDID" property="mdid"/>
         <result column="ID" property="id"/>
         <result column="MDNAME" property="mdName"/>
@@ -174,7 +180,7 @@
         <result column="CBNAME" property="cbName"/>
         <result column="MNAME" property="mName"/>
     </resultMap>
-    <select id="queryMenuMeansDetailDao" parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam"
+    <select id="queryMenuMeansDetailDao" parameterType="com.goodsoft.hotel.domain.entity.dto.HotelDTO"
             resultMap="menuMeansDetailInfo">
         SELECT c.ID,c.CBID,c.STID,c.TID,c.MID,c.MDID,c.MDNAME,c.MNAME,c.CBNAME, d.STNAME,d.TNAME
         FROM
@@ -213,7 +219,7 @@
         SELECT ID FROM gs_cookbook_setmeal WHERE SMNAME=#{sName}
     </select>
     <!--套餐数据查询-->
-    <resultMap id="setMealInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMeal">
+    <resultMap id="setMealInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMealDO">
         <id property="smid" column="SMID"/>
         <result property="id" column="ID"/>
         <result property="smName" column="SMNAME"/>
@@ -225,7 +231,7 @@
         <result property="tcDiscount" column="TC_DISCOUNT"/>
     </resultMap>
     <select id="querySetMealDao" resultMap="setMealInfo"
-            parameterType="com.goodsoft.hotel.domain.entity.param.HotelParam">
+            parameterType="com.goodsoft.hotel.domain.entity.dto.HotelDTO">
         SELECT ID,SMID,FILE_ID,SMNAME,TC_PRICE,SM_ID_DISCOUNT,IS_DD,SM_UNIT,TC_DISCOUNT FROM gs_cookbook_setmeal
         <where>
             <if test="id !=null and id !=''">
@@ -236,14 +242,14 @@
                 AND SMNAME LIKE #{_keyWord}
             </if>
         </where>
-        ORDER BY SMID DESC
+        ORDER BY SMID ASC
     </select>
     <!--检查套餐中是否有相同菜品存在-->
     <select id="querySetMealDetailByNameDao" resultType="string">
         SELECT ID FROM gs_cookbook_setmeal_detal WHERE CBID=#{cbid} AND SMID=#{smid} AND TC_SPEC=#{spec}
     </select>
     <!--套餐详情数据查询-->
-    <resultMap id="setMealDetailInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMealDetail">
+    <resultMap id="setMealDetailInfo" type="com.goodsoft.hotel.domain.entity.cookbook.SetMealDetailDO">
         <result column="CBID" property="cbid"/>
         <result column="ID" property="id"/>
         <result column="SMID" property="smid"/>

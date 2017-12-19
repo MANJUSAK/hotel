@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-13 19:18
  */
-public class SetMealDetail implements java.io.Serializable {
+public class SetMealDetailDO implements java.io.Serializable {
 
     private static final long serialVersionUID = 6070489500037427371L;
     private String id;//编号
@@ -18,8 +18,8 @@ public class SetMealDetail implements java.io.Serializable {
     private String cbid;//关联菜单表id
     private String smid;//关联套餐表id
     private String tcSpec;//菜品规格
-    private double tcPrice;//菜品价格
-    private int tcNum;//套餐菜品数量
+    private Double tcPrice;//菜品价格
+    private Integer tcNum;//套餐菜品数量
     private String tName;//部门类别（仅用于查询）
     private String ptPort;//打印机端口号（仅用于查询）
     private String ptDriverName;//打印机驱动名称（仅用于查询）
@@ -77,19 +77,19 @@ public class SetMealDetail implements java.io.Serializable {
         this.tcSpec = tcSpec == null ? " " : tcSpec.trim();
     }
 
-    public double getTcPrice() {
+    public Double getTcPrice() {
         return tcPrice;
     }
 
-    public void setTcPrice(double tcPrice) {
+    public void setTcPrice(Double tcPrice) {
         this.tcPrice = tcPrice < 0 ? Math.abs(tcPrice) : tcPrice;
     }
 
-    public int getTcNum() {
+    public Integer getTcNum() {
         return tcNum;
     }
 
-    public void setTcNum(int tcNum) {
+    public void setTcNum(Integer tcNum) {
         this.tcNum = tcNum < 0 ? Math.abs(tcNum) : tcNum;
     }
 
@@ -160,25 +160,50 @@ public class SetMealDetail implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SetMealDetail)) return false;
-        SetMealDetail that = (SetMealDetail) o;
+        if (!(o instanceof SetMealDetailDO)) return false;
+        SetMealDetailDO that = (SetMealDetailDO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(tid, that.tid) &&
                 Objects.equals(stid, that.stid) &&
                 Objects.equals(cbid, that.cbid) &&
                 Objects.equals(smid, that.smid) &&
                 Objects.equals(tcSpec, that.tcSpec) &&
+                Objects.equals(tcPrice, that.tcPrice) &&
+                Objects.equals(tcNum, that.tcNum) &&
                 Objects.equals(tName, that.tName) &&
+                Objects.equals(ptPort, that.ptPort) &&
+                Objects.equals(ptDriverName, that.ptDriverName) &&
                 Objects.equals(stName, that.stName) &&
                 Objects.equals(cbName, that.cbName) &&
                 Objects.equals(unit, that.unit) &&
-                Objects.equals(ptPort, that.ptPort) &&
-                Objects.equals(ptDriverName, that.ptDriverName) &&
-                Objects.equals(fileId, that.fileId);
+                Objects.equals(fileId, that.fileId) &&
+                Objects.equals(picture, that.picture);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, stid, cbid, smid, tcSpec, tName, stName, cbName, unit, ptPort, ptDriverName, fileId);
+        return Objects.hash(id, tid, stid, cbid, smid, tcSpec, tcPrice, tcNum, tName, ptPort, ptDriverName, stName, cbName, unit, fileId, picture);
+    }
+
+    @Override
+    public String toString() {
+        return "SetMealDetailDO{" +
+                "id='" + id + '\'' +
+                ", tid='" + tid + '\'' +
+                ", stid='" + stid + '\'' +
+                ", cbid='" + cbid + '\'' +
+                ", smid='" + smid + '\'' +
+                ", tcSpec='" + tcSpec + '\'' +
+                ", tcPrice=" + tcPrice +
+                ", tcNum=" + tcNum +
+                ", tName='" + tName + '\'' +
+                ", ptPort='" + ptPort + '\'' +
+                ", ptDriverName='" + ptDriverName + '\'' +
+                ", stName='" + stName + '\'' +
+                ", cbName='" + cbName + '\'' +
+                ", unit='" + unit + '\'' +
+                ", fileId='" + fileId + '\'' +
+                ", picture=" + picture +
+                '}';
     }
 }

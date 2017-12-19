@@ -6,8 +6,9 @@ import javax.servlet.http.HttpServletRequest;
  * function 获取服务器域名工具类
  * <p>
  * date 2017.08.04
- * @author  manjusaka[manjusakachn@gmail.com]
- * @version v1.0
+ *
+ * @author manjusaka[manjusakachn@gmail.com]
+ * @version v1.1.2
  */
 public class DomainNameUtil {
 
@@ -40,14 +41,10 @@ public class DomainNameUtil {
         //判断服务器端口是否为80端开口 start
         if (request.getServerPort() == 80) {
             str = new StringBuilder(request.getScheme());
-            str.append("://");
-            str.append(request.getServerName());
+            str.append("://").append(request.getServerName());
         } else {
             str = new StringBuilder(request.getScheme());
-            str.append("://");
-            str.append(request.getServerName());
-            str.append(":");
-            str.append(request.getServerPort());
+            str.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
         }
         //判断服务器端口是否为80端开口 end
         return str;

@@ -11,7 +11,8 @@ import java.util.List;
 /**
  * function 文件上传工具类
  * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
- * @version v1.0
+ *
+ * @version v1.1.2
  */
 @SuppressWarnings("ALL")
 @Service
@@ -35,9 +36,7 @@ public class FileUploadUtil {
         sb.append(savePath);
         //自定义文件保存路径 start
         String str = "/hlfile/";
-        sb.append(str);
-        sb.append(fileType);
-        sb.append("/");
+        sb.append(str).append(fileType).append("/");
         //自定义文件保存路径 end
         //上传文件文件夹路径 start
         String str1 = sb.toString();
@@ -59,17 +58,12 @@ public class FileUploadUtil {
                 sb.delete(0, sb.length());
                 sb.append(str1);
             }
-            sb.append(var);
-            sb.append(suffix);
+            sb.append(var).append(suffix);
             //文件上传到服务器
             files[i].transferTo(new File(sb.toString()));
             //清空sb内容，重新存放文件相对路径以存放数据库 start
             sb.delete(0, sb.length());
-            sb.append(str);
-            sb.append(fileType);
-            sb.append("/");
-            sb.append(var);
-            sb.append(suffix);
+            sb.append(str).append(fileType).append("/").append(var).append(suffix);
             fileList.add(sb.toString());
             //清空sb内容，重新存放文件相对路径以存放数据库 end
         }

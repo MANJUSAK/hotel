@@ -8,7 +8,7 @@ import java.util.Objects;
  *
  * @author 严彬荣 Created on 2017-11-15 15:49
  */
-public class MenuMeansDetail implements java.io.Serializable {
+public class MenuMeansDetailDO implements java.io.Serializable {
 
     private static final long serialVersionUID = -320588136817271691L;
     private String id;//编号
@@ -16,7 +16,7 @@ public class MenuMeansDetail implements java.io.Serializable {
     private String stid;//小类编号
     private String cbid;//菜单编号
     private String mid;//做法明细编号
-    private int mdid;//关联做法表id
+    private Integer mdid;//关联做法表id
     private String mdName;//做法详情
     private String tName;//部门类别（仅用于查询）
     private String stName;//小类（仅用于查询）
@@ -64,11 +64,11 @@ public class MenuMeansDetail implements java.io.Serializable {
         this.mid = mid == null ? null : mid.trim();
     }
 
-    public int getMdid() {
+    public Integer getMdid() {
         return mdid;
     }
 
-    public void setMdid(int mdid) {
+    public void setMdid(Integer mdid) {
         this.mdid = mdid;
     }
 
@@ -115,22 +115,40 @@ public class MenuMeansDetail implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MenuMeansDetail)) return false;
-        MenuMeansDetail that = (MenuMeansDetail) o;
+        if (!(o instanceof MenuMeansDetailDO)) return false;
+        MenuMeansDetailDO that = (MenuMeansDetailDO) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(tid, that.tid) &&
                 Objects.equals(stid, that.stid) &&
                 Objects.equals(cbid, that.cbid) &&
                 Objects.equals(mid, that.mid) &&
+                Objects.equals(mdid, that.mdid) &&
+                Objects.equals(mdName, that.mdName) &&
                 Objects.equals(tName, that.tName) &&
                 Objects.equals(stName, that.stName) &&
                 Objects.equals(cbName, that.cbName) &&
-                Objects.equals(mName, that.mName) &&
-                Objects.equals(mdName, that.mdName);
+                Objects.equals(mName, that.mName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tid, stid, cbid, mid, mdName, tName, stName, cbName, mName);
+        return Objects.hash(id, tid, stid, cbid, mid, mdid, mdName, tName, stName, cbName, mName);
+    }
+
+    @Override
+    public String toString() {
+        return "MenuMeansDetailDO{" +
+                "id='" + id + '\'' +
+                ", tid='" + tid + '\'' +
+                ", stid='" + stid + '\'' +
+                ", cbid='" + cbid + '\'' +
+                ", mid='" + mid + '\'' +
+                ", mdid=" + mdid +
+                ", mdName='" + mdName + '\'' +
+                ", tName='" + tName + '\'' +
+                ", stName='" + stName + '\'' +
+                ", cbName='" + cbName + '\'' +
+                ", mName='" + mName + '\'' +
+                '}';
     }
 }

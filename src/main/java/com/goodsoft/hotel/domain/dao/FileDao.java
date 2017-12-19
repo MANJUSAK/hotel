@@ -2,6 +2,7 @@ package com.goodsoft.hotel.domain.dao;
 
 import com.goodsoft.hotel.domain.entity.file.FileData;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,5 +25,6 @@ public interface FileDao {
     public void saveFileDao(List<FileData> msg) throws Exception;
 
     //文件删除
+    @Async
     public void deleteFileDao(@Param("fileId") String... fileId) throws Exception;
 }

@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.domain.entity.param;
+package com.goodsoft.hotel.domain.entity.dto;
 
 import java.util.Objects;
 
@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author 严彬荣 Created on 2017-12-02 15:33
  * @version V1.0
  */
-public class DatabasesParam implements java.io.Serializable {
+public class DatabasesDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = -3161028603507663900L;
     private String table;//表名
@@ -71,8 +71,8 @@ public class DatabasesParam implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DatabasesParam)) return false;
-        DatabasesParam that = (DatabasesParam) o;
+        if (!(o instanceof DatabasesDTO)) return false;
+        DatabasesDTO that = (DatabasesDTO) o;
         return Objects.equals(table, that.table) &&
                 Objects.equals(column, that.column) &&
                 Objects.equals(id, that.id) &&
@@ -84,5 +84,17 @@ public class DatabasesParam implements java.io.Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(table, column, id, tid, stid, cbid);
+    }
+
+    @Override
+    public String toString() {
+        return "DatabasesDTO{" +
+                "table='" + table + '\'' +
+                ", column='" + column + '\'' +
+                ", id='" + id + '\'' +
+                ", tid='" + tid + '\'' +
+                ", stid='" + stid + '\'' +
+                ", cbid='" + cbid + '\'' +
+                '}';
     }
 }

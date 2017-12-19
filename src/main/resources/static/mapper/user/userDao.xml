@@ -5,7 +5,7 @@
 <!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.UserDao">
     <!--查询用户信息（带部门）-->
-    <resultMap id="userInfo" type="com.goodsoft.hotel.domain.entity.user.UserMsg">
+    <resultMap id="userInfo" type="com.goodsoft.hotel.domain.entity.user.UserDO">
         <result property="id" column="ID"/>
         <result property="userName" column="NAME"/>
         <result property="loginName" column="LOGIN_NAME"/>
@@ -18,10 +18,11 @@
         <result property="parentId" column="PARENT_ID"/>
         <result property="createDate" column="CREATEDATE"/>
     </resultMap>
-    <select id="queryUserMsgDao" parameterType="com.goodsoft.hotel.domain.entity.param.UserParam" resultMap="userInfo">
+    <select id="queryUserMsgDao" parameterType="com.goodsoft.hotel.domain.entity.dto.UserDTO" resultMap="userInfo">
         select c.*,d.DEPT_NAME,d.DEPT_LEVEL,d.DEPT_CODE,d.PARENT_ID,d.CREATEDATE from (select a.*,b.DEPT_ID from
         (select ID,NAME,LOGIN_NAME,SEX,REGISTER_TIME from to_horizon_user) a left join tor_horizon_user_dept b on
-        a.ID=b.USER_ID) c left join (select ID,DEPT_NAME,DEPT_LEVEL,DEPT_CODE,PARENT_ID,CREATEDATE,ORDER_NO from to_horizon_dept) d on c.DEPT_ID=d.ID
+        a.ID=b.USER_ID) c left join (select ID,DEPT_NAME,DEPT_LEVEL,DEPT_CODE,PARENT_ID,CREATEDATE,ORDER_NO from
+        to_horizon_dept) d on c.DEPT_ID=d.ID
         <where>
             <if test="keyWord !=null and keyWord !=''">
                 AND d.DEPT_NAME=#{keyWord}
@@ -30,7 +31,11 @@
     </select>
     <!--查询所有部门-->
     <select id="queryDeptNameDao" resultType="string">
-    select DEPT_NAME from to_horizon_dept where DEPT_LEVEL > 0
+    select DEPT_NAME from to_horizon_dept where DEPT_LEVEL >
+    </select>
+    <!--用户登录-->
+    <select id="getUserDao" parameterType="string" resultType="string">
+        SELECT LOGIN_NAME FROM to_horizon_user WHERE binary LOGIN_NAME=#{uName} AND PASSWORD=#{pwd};
     </select>
 </mapper>
         <!--mapper 用户数据获取 end -->

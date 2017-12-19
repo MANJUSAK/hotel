@@ -1,11 +1,10 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
-import com.goodsoft.hotel.domain.entity.param.UserParam;
+import com.goodsoft.hotel.domain.entity.dto.UserDTO;
 import com.goodsoft.hotel.domain.entity.restaurantReservation.*;
 import com.goodsoft.hotel.service.UserService;
 import com.goodsoft.hotel.util.UUIDUtil;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -38,10 +35,10 @@ public class CyReserveController {
     @RequestMapping("/reserve")
     public ModelAndView reserveHome(PageBean<FitReservation> pageBean,Integer sign,String state,String staetTime,String loginUser){
         ModelAndView model=new ModelAndView("views/restaurantReservation.jsp");
-        UserParam userParam=new UserParam();
-        userParam.setKeyWord("前台业务员");
+        UserDTO userDTO =new UserDTO();
+        userDTO.setKeyWord("前台业务员");
         try {
-            model.addObject("salesman", userService.queryUserMsgService(userParam));
+            model.addObject("salesman", userService.queryUserMsgService(userDTO));
         } catch (Exception e){
             e.printStackTrace();
         }
