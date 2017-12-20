@@ -1,9 +1,6 @@
 package com.goodsoft.hotel.service;
 
-import com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDO;
-import com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetailDO;
-import com.goodsoft.hotel.domain.entity.cookbook.MenuTypeDO;
-import com.goodsoft.hotel.domain.entity.cookbook.SetMealDO;
+import com.goodsoft.hotel.domain.entity.cookbook.*;
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
 import com.goodsoft.hotel.domain.entity.dto.MeansDTO;
 import com.goodsoft.hotel.domain.entity.dto.MenuDTO;
@@ -70,13 +67,13 @@ public interface CookBookService {
     Status addSetMealDetailService(SetMealDO msg) throws Exception;
 
     //菜单类别与小类数据更新
-    Status updateMenuTypeService(MenuTypeDO msg) throws HotelDataBaseException;
+    Status updateMenuTypeService(MenuSubTypeDO msg) throws Exception;
 
     //菜单数据、库存量数据更新
-    Status updateMenuService(MenuDTO msg) throws HotelDataBaseException;
+    Status updateMenuService(MenuDO msg) throws Exception;
 
     //菜单做法数据更新
-    Status updateMenuMeansService(MenuMeansDO msg) throws HotelDataBaseException;
+    Status updateMenuMeansService(MenuMeansDO msg) throws Exception;
 
     //菜单详细做法数据更新
     Status updateMenuMeansDetailService(MenuMeansDetailDO msg) throws Exception;
@@ -91,7 +88,7 @@ public interface CookBookService {
     Status deleteMenuSubTypeService(String... id) throws HotelDataBaseException;
 
     //菜单数据、库存量数据删除
-    Status deleteMenuService(String[] id, String fileId) throws HotelDataBaseException;
+    Status deleteMenuService(String[] id, String[] fileId) throws HotelDataBaseException;
 
     //菜单做法数据删除
     Status deleteMenuMeansService(String... id) throws HotelDataBaseException;
@@ -100,7 +97,7 @@ public interface CookBookService {
     Status deleteMenuMeansDetailService(String... id) throws Exception;
 
     //套餐数据删除
-    Status deleteSetMealService(String[] id, String fileId) throws HotelDataBaseException;
+    Status deleteSetMealService(String[] id, String[] fileId) throws HotelDataBaseException;
 
     //套餐明细数据删除
     Status deleteSetMealDetailService(String... id) throws Exception;

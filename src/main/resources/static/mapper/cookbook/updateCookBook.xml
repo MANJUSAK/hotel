@@ -18,8 +18,7 @@
     <update id="updateMenuDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuDO">
     UPDATE gs_cookbook SET
     TID = #{tid},STID = #{stid},CBNAME = #{cbName},UNIT = #{unit},IS_DISCOUNT = #{isNo},FILE_ID=#{fileId},
-    PRICE1 = #{price1},PRICE2 = #{price2},PRICE3 = #{price3},PRICE4 = #{price4},PRICE5 = #{price5},IS_SUB =#{isSub},
-    COST_PRICE=#{costPrice}
+    PRICE1 = #{price1},PRICE2 = #{price2},PRICE3 = #{price3},PRICE4 = #{price4},PRICE5 = #{price5},COST_PRICE=#{costPrice}
     WHERE ID = #{id};
     </update>
     <!--库存量更新-->

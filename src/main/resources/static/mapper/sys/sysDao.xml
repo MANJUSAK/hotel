@@ -4,7 +4,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
 <mapper namespace="com.goodsoft.hotel.domain.dao.SysDao">
-    <cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>
+    <!--<cache-ref namespace="com.goodsoft.hotel.domain.dao.CookBookDao"/>-->
     <!--查询当天流水号-->
     <select id="querySerialNumDao" resultType="string" parameterType="object">
         SELECT  max(max_serial) FROM gs_sys_serial_num where sys_date=#{date} and serl_type=#{tp}

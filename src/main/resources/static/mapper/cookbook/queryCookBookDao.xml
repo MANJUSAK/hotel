@@ -43,7 +43,7 @@
                 AND a.TID=#{tid}
             </if>
             <if test="id !=null and id!=''">
-                AND a.STID=#{id}
+                AND a.ID=#{id}
             </if>
         </where>
     </select>
@@ -113,7 +113,7 @@
                 AND m.CBNAME LIKE #{_keyWord}
             </if>
             <if test="id != null and id !=''">
-                AND m.CBID=#{id}
+                AND m.ID=#{id}
             </if>
             <if test="stid != null and stid !=''">
                 AND m.STID=#{stid}
@@ -153,7 +153,7 @@
                 AND c.MNAME LIKE #{_keyWord}
             </if>
             <if test="id != null and id !=''">
-                c.MID=#{id}
+                c.ID=#{id}
             </if>
             <if test="cbid != null and cbid !=''">
                 c.CBID=#{cbid}
@@ -210,7 +210,7 @@
                 AND c.MID=#{mid}
             </if>
             <if test="id !=null and id!=''">
-                AND c.MDID=#{id}
+                AND c.ID=#{id}
             </if>
         </where>
     </select>
@@ -235,7 +235,7 @@
         SELECT ID,SMID,FILE_ID,SMNAME,TC_PRICE,SM_ID_DISCOUNT,IS_DD,SM_UNIT,TC_DISCOUNT FROM gs_cookbook_setmeal
         <where>
             <if test="id !=null and id !=''">
-                AND SMID=#{id}
+                AND ID=#{id}
             </if>
             <if test="keyWord !=null and keyWord !=''">
                 <bind name="_keyWord" value="'%'+keyWord+'%'"/>

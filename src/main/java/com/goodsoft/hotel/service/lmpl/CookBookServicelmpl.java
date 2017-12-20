@@ -529,8 +529,14 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public Status updateMenuTypeService(MenuTypeDO msg) throws HotelDataBaseException {
-        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+    public Status updateMenuTypeService(MenuSubTypeDO msg) throws Exception {
+        int row = this.dao.updateMenuSubTypeDao(msg);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.UPDATE_DEFEAT.getCODE(), StatusEnum.UPDATE_DEFEAT.getEXPLAIN());
+        //下个版本实现
+        /*SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
             if (msg.getMenuSubType() != null) {
@@ -563,16 +569,21 @@ public class CookBookServicelmpl implements CookBookService {
                     }
                 }
             }
-            cbDao.updateMenuTypeDao(msg);
-            sqlSession.commit();
-        } catch (Exception e) {
-            sqlSession.rollback();
-            e.printStackTrace();
-            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
-        } finally {
-            sqlSession.close();
-        }
-        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+            //暂时不用以后会用
+            //cbDao.updateMenuTypeDao(msg);
+        sqlSession.commit();
+    } catch(
+    Exception e)
+    {
+        sqlSession.rollback();
+        e.printStackTrace();
+        throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
+    } finally
+
+    {
+        sqlSession.close();
+    }
+        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());*/
     }
 
     /**
@@ -584,77 +595,48 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     @Transactional
-    public Status updateMenuService(MenuDTO msg) throws HotelDataBaseException {
-        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
-        CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
+    public Status updateMenuService(MenuDO msg) throws Exception {
         String tid = msg.getTid();
         String stid = msg.getStid();
-        List<MenuDO> menuDOS = msg.getMenu();
         InventoryDO inv = new InventoryDO();
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         DatabasesDTO param = new DatabasesDTO();
-        try {
-            for (MenuDO menuDO : menuDOS) {
-                String newFileId = this.uuid.getUUID("CY").toString();
-                String fileId = menuDO.getFileId();
-                //文件上传
-                MultipartFile[] files = menuDO.getFiles();
-                if (files != null) {
-                    int arg = this.fileService.fileUploadService(files, "images", newFileId);
-                    switch (arg) {
-                        //存在文件更新则获取旧文件
-                        case 0:
-                            if (fileId != null && !("".equals(fileId))) {
-                                //异步处理删除数据文件，不影响业务流的完成
-                                try {
-                                    List<FileData> list = this.fileDao.queryFileDao(fileId);
-                                    //删除硬盘上的旧文件
-                                    this.deleteFile.deleteNAllFile(list);
-                                    //删除数据库旧文件存档数据
-                                    this.fileDao.deleteFileDao(fileId);
-                                } catch (Exception e) {
-                                    System.out.println(e.toString());
-                                }
-                            }
-                            break;
-                        case 603:
-                            return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
-                        case 601:
-                            return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+        //文件上传
+        MultipartFile[] files = msg.getFiles();
+        if (files != null) {
+            String newFileId = this.uuid.getUUID("CY").toString();
+            String fileId = msg.getFileId();
+            int arg = this.fileService.fileUploadService(files, "images", newFileId);
+            switch (arg) {
+                //存在文件更新则获取旧文件
+                case 0:
+                    if (fileId != null && !("".equals(fileId))) {
+                        //异步处理删除数据文件，不影响业务流的完成
+                        try {
+                            List<FileData> list = this.fileDao.queryFileDao(fileId);
+                            //删除硬盘上的旧文件
+                            this.deleteFile.deleteNAllFile(list);
+                            //删除数据库旧文件存档数据
+                            this.fileDao.deleteFileDao(fileId);
+                        } catch (Exception e) {
+                            System.out.println(e.toString());
+                        }
                     }
-                }
-                menuDO.setFileId(newFileId);
-                inv.setId(menuDO.getId());
-                inv.setTid(tid);
-                inv.setStid(stid);
-                inv.setNum(menuDO.getNum());
-                inv.setDate(date);
-                //设置需要更新数据字段和数据id
-                param.setColumn("CBID");
-                param.setId(menuDO.getId());
-                //设置需要更新的值
-                param.setTid(tid);
-                param.setStid(stid);
-                //更新做法表
-                param.setTable("gs_cookbook_means");
-                cbDao.updateCookBookAllDao(param);
-                //更新做法详情表
-                param.setTable("gs_cookbook_means_detal");
-                cbDao.updateCookBookAllDao(param);
-                //更新套餐明细表
-                param.setTable("gs_cookbook_setmeal_detalt");
-                cbDao.updateCookBookAllDao(param);
-                cbDao.updateInventoryDao(inv);
-                cbDao.updateMenuDao(menuDO);
+                    msg.setFileId(newFileId);
+                    break;
+                case 603:
+                    return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
+                case 601:
+                    return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
             }
-            sqlSession.commit();
-        } catch (Exception e) {
-            sqlSession.rollback();
-            e.printStackTrace();
-            throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
-        } finally {
-            sqlSession.close();
         }
+        inv.setId(msg.getId());
+        inv.setTid(tid);
+        inv.setStid(stid);
+        inv.setNum(msg.getNum());
+        inv.setDate(date);
+        this.dao.updateMenuDao(msg);
+        this.dao.updateInventoryDao(inv);
         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
 
@@ -667,8 +649,14 @@ public class CookBookServicelmpl implements CookBookService {
      */
     @Override
     @Transactional
-    public Status updateMenuMeansService(MenuMeansDO msg) throws HotelDataBaseException {
-        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+    public Status updateMenuMeansService(MenuMeansDO msg) throws Exception {
+        int row = this.dao.updateMenuMeansDao(msg);
+        if (row > 0) {
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        }
+        return new Status(StatusEnum.UPDATE_DEFEAT.getCODE(), StatusEnum.UPDATE_DEFEAT.getEXPLAIN());
+        //下个版本可能需要使用
+        /*SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         DatabasesDTO param = new DatabasesDTO();
         try {
@@ -692,7 +680,7 @@ public class CookBookServicelmpl implements CookBookService {
         } finally {
             sqlSession.close();
         }
-        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());*/
     }
 
     /**
@@ -792,7 +780,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public Status deleteMenuService(String[] id, String fileId) throws HotelDataBaseException {
+    public Status deleteMenuService(String[] id, String[] fileId) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
@@ -807,22 +795,24 @@ public class CookBookServicelmpl implements CookBookService {
             sqlSession.commit();
         } catch (Exception e) {
             sqlSession.rollback();
-            e.printStackTrace();
             throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
         } finally {
             sqlSession.close();
         }
         //异步处理删除数据文件，不影响业务流的完成
-        if (fileId != null && !("".equals(fileId))) {
-            try {
-                List<FileData> list = this.fileDao.queryFileDao(fileId);
-                //删除硬盘上的旧文件
-                this.deleteFile.deleteNAllFile(list);
+        try {
+            int len = fileId.length;
+            if (fileId != null && len > 0) {
+                for (int i = 0; i < len; ++i) {
+                    List<FileData> list = this.fileDao.queryFileDao(fileId[i]);
+                    //删除硬盘上的旧文件
+                    this.deleteFile.deleteNAllFile(list);
+                }
                 //删除数据库旧文件存档数据
                 this.fileDao.deleteFileDao(fileId);
-            } catch (Exception e) {
-                System.out.println(e.toString());
             }
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
@@ -878,7 +868,7 @@ public class CookBookServicelmpl implements CookBookService {
      * @throws Exception
      */
     @Override
-    public Status deleteSetMealService(String[] id, String fileId) throws HotelDataBaseException {
+    public Status deleteSetMealService(String[] id, String[] fileId) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         CookBookDao cbDao = sqlSession.getMapper(CookBookDao.class);
         try {
@@ -894,16 +884,19 @@ public class CookBookServicelmpl implements CookBookService {
             sqlSession.close();
         }
         //异步处理删除数据文件，不影响业务流的完成
-        if (fileId != null && !("".equals(fileId))) {
-            try {
-                List<FileData> list = this.fileDao.queryFileDao(fileId);
-                //删除硬盘上的旧文件
-                this.deleteFile.deleteNAllFile(list);
+        try {
+            int len = fileId.length;
+            if (fileId != null && len > 0) {
+                for (int i = 0; i < len; ++i) {
+                    List<FileData> list = this.fileDao.queryFileDao(fileId[i]);
+                    //删除硬盘上的旧文件
+                    this.deleteFile.deleteNAllFile(list);
+                }
                 //删除数据库旧文件存档数据
                 this.fileDao.deleteFileDao(fileId);
-            } catch (Exception e) {
-                System.out.println(e.toString());
             }
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
     }
