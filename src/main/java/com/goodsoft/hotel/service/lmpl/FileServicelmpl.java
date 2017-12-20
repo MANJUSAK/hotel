@@ -188,7 +188,7 @@ public class FileServicelmpl implements FileService {
             //文件信息保存 end
         } catch (Exception e) {
             this.logger.error(e.toString());
-            throw new HotelDataBaseException(StatusEnum.FILE_UPLOAD.getEXPLAIN());
+            throw new HotelDataBaseException(e.getMessage());
         } finally {
             //清除集合里的内容  避免数据混乱
             fileList.clear();
