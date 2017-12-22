@@ -6,7 +6,7 @@ import java.util.Objects;
  * description:
  * ===>菜单库存量实体
  *
- * @author 严彬荣 Created on 2017-11-13 9:24
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-13 9:24
  */
 public class InventoryDO implements java.io.Serializable {
 

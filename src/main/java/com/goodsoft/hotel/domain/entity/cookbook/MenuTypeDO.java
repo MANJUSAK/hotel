@@ -7,7 +7,7 @@ import java.util.Objects;
  * description:
  * ===>菜单类型实体
  *
- * @author 严彬荣 Created on 2017-11-11 16:47
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-11 16:47
  */
 public class MenuTypeDO implements java.io.Serializable {
 

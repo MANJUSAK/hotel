@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.service;
 
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.OrderDTO;
 import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -31,7 +32,7 @@ public interface RepastOderService {
     /**
      * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
-     * （status=0支付/1开台/2打单/3超时未买单/4迟付/5取消/6反结）
+     * （status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消）
      * 该接口涵盖了订单的所有信息
      *
      * @param param 查询条件
@@ -92,20 +93,21 @@ public interface RepastOderService {
      * @return 结算结果
      * @throws Exception
      */
-    Status checkoutRepastOrderService(OrderDO orderDO) throws Exception;
+    Status checkoutRepastOrderService(OrderDO order) throws Exception;
 
     /**
      * 餐饮订单更新（反结账，迟付等）业务方法，用于前台收银相关订单结算错误回滚到可修改状态或迟付等
-     * 1.该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
-     * 2.该接口用于前台收银员将此订单推迟支付
+     * 1.该业务方法用于前台收银员结算错误的订单之后将订单设置为可编辑状态
+     * 2.该业务方法用于前台收银员将此订单推迟支付
+     * 3.由于反结情况特殊需做特殊处理（status=2）
      *
      * @param oid    订单编号
      * @param reason 反结账，迟付等原因
-     * @param status 订单状态
+     * @param status 订单状态(status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消)
      * @return Status 结果
      * @throws Exception
      */
-    Status counterCheckoutService(String oid, int status, String reason) throws Exception;
+    Status counterCheckoutService(OrderDTO param) throws Exception;
 
     /**
      * 餐饮订单删除（取消订单）业务方法，用于预订单处于取消状态时删除该预订单所产生的记录数据

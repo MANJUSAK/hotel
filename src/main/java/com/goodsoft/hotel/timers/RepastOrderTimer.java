@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.timers;
 
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
+import com.goodsoft.hotel.domain.entity.dto.OrderDTO;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -48,18 +49,21 @@ public class RepastOrderTimer {
             List<Map> list = dao.queryKtOrderTimeDao();
             int len = list.size();
             if (len > 0) {
+                OrderDTO order = new OrderDTO();
                 for (Map map : list) {
                     if (getHourBetween((String) map.get("KT_TIME"))) {
-                        dao.updateOrderStatusDao((String) map.get("ID"), 3, null);
+                        order.setOid((String) map.get("ID"));
+                        order.setStatus(3);
+                        dao.updateOrderStatusDao(order);
                     }
                 }
                 sqlSession.commit();
-                System.out.println("获取订单状态定时检测成功");
+                this.logger.info(":订单状态定时检测成功");
             }
         } catch (Exception e) {
             sqlSession.rollback();
-            System.out.println("获取订单状态定时检测成功");
-            this.logger.error(e.getMessage());
+            System.out.println("订单状态定时检测失败");
+            this.logger.error("订单状态定时检测失败---" + e.getMessage());
         } finally {
             sqlSession.close();
         }
@@ -74,7 +78,7 @@ public class RepastOrderTimer {
         }
         long currentTime = System.currentTimeMillis();
         long timeBetween = currentTime - odTime;
-        int hourBetween = (int) timeBetween / (3600 * 1000);
+        int hourBetween = (int) (timeBetween / 3600000);
         System.out.println(hourBetween);
         return hourBetween > 5;
     }

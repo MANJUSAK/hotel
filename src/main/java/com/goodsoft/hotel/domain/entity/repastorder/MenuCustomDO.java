@@ -6,7 +6,7 @@ import java.util.Objects;
  * description:
  * ===>自定义菜品信息实体实体
  *
- * @author 严彬荣 Created on 2017-12-04 17:11
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-04 17:11
  * @version V1.0
  */
 public class MenuCustomDO implements java.io.Serializable {

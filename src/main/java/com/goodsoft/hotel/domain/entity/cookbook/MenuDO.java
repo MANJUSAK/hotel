@@ -10,7 +10,7 @@ import java.util.Objects;
  * description:
  * ===>菜单实体
  *
- * @author 严彬荣 Created on 2017-11-11 16:43
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-11 16:43
  */
 public class MenuDO implements java.io.Serializable {
 

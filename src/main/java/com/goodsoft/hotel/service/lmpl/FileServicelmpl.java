@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * function 文件上传业务接口实现类
  * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
- * version v1.1.2
+ * version v1.1.3
  */
 @SuppressWarnings("ALL")
 @Service
@@ -66,7 +66,8 @@ public class FileServicelmpl implements FileService {
                         // 获取文件名
                         String fileName = files[i].getOriginalFilename().toLowerCase();
                         // 判断文件格式是否正确 start
-                        if (!(fileName.endsWith("doc") || fileName.endsWith("docx") || fileName.endsWith("pdf"))) {
+                        boolean format = !(fileName.endsWith("doc") || fileName.endsWith("docx") || fileName.endsWith("pdf"));
+                        if (format) {
                             return 603;
                         }
                         // 判断文件格式是否正确 end
@@ -90,7 +91,8 @@ public class FileServicelmpl implements FileService {
                         // 获取文件名
                         String fileName = files[i].getOriginalFilename().toLowerCase();
                         // 判断文件格式是否正确 start
-                        if (!(fileName.endsWith("xlsx") || fileName.endsWith("xls"))) {
+                        boolean format = !(fileName.endsWith("xlsx") || fileName.endsWith("xls"));
+                        if (format) {
                             return 603;
                         }
                         // 判断文件格式是否正确 end
@@ -114,7 +116,8 @@ public class FileServicelmpl implements FileService {
                         // 获取文件名
                         String fileName = files[i].getOriginalFilename().toLowerCase();
                         // 判断文件格式是否正确 start
-                        if (!(fileName.endsWith("jpg") || fileName.endsWith("jpeg") || fileName.endsWith("png") || fileName.endsWith("gif"))) {
+                        boolean format = !(fileName.endsWith("jpg") || fileName.endsWith("jpeg") || fileName.endsWith("png") || fileName.endsWith("gif"));
+                        if (format) {
                             return 603;
                         }
                         // 判断文件格式是否正确 end

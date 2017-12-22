@@ -13,7 +13,7 @@ import java.util.Map;
  * description:
  * ===>
  *
- * @author 严彬荣 Created on 2017-11-07 16:34
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:34
  */
 @Repository
 public interface CookBookDao {

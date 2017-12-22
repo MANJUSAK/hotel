@@ -10,7 +10,7 @@ import java.util.Objects;
  * description:
  * ===>餐饮订单实体
  *
- * @author 严彬荣 Created on 2017-11-17 10:07
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 10:07
  */
 public class OrderDO implements java.io.Serializable {
     private static final long serialVersionUID = -5502168041100514292L;
@@ -40,7 +40,7 @@ public class OrderDO implements java.io.Serializable {
     private Integer isServiceCharge;//收服务费（0为true/1为false）
     private Integer isZdConsume;//记最低消费（0为true/1为false）
     private String paymentType;//支付方式
-    private Integer status;//订单状态（0支付/1下单/2打单/3超时未买单/4迟付/5取消/6反结）
+    private Integer status;//订单状态（0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消）
     private String remarks;//备注
     private Integer placeNum;//席数
     private String ctid;//餐台编号

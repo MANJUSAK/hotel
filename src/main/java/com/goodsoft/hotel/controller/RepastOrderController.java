@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.OrderDTO;
 import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -56,7 +57,7 @@ public class RepastOrderController {
     /**
      * 餐饮订单查询接口，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
-     * （status=0支付/1开台/2打单/3超时未买单/4迟付/5取消/6反结）
+     * （status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消）
      * 该接口涵盖了订单的所有信息
      *
      * @param param 可传入参数：page 页码、total 总记录数
@@ -170,9 +171,9 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status checkoutOrderController(OrderDO orderDO) {
+    public Status checkoutOrderController(OrderDO order) {
         try {
-            return this.service.checkoutRepastOrderService(orderDO);
+            return this.service.checkoutRepastOrderService(order);
         } catch (Exception e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
@@ -191,13 +192,17 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/counter/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status counterCheckoutController(String oid, int status, String reason) {
-        try {
-            return this.service.counterCheckoutService(oid, status, reason);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+    public Status counterCheckoutController(OrderDTO param) {
+        boolean pm = (param.getOid() != null && param.getOid() != "" && param.getStatus() > 0);
+        if (pm) {
+            try {
+                return this.service.counterCheckoutService(param);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            }
         }
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能为oid为空或null、status小于0");
     }
 
     /**

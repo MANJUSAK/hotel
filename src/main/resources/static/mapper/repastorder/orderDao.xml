@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--@author 严彬荣，version v1.0-->
+<!--@author manjusaka[manjusakachn@gmail.com]，version v1.0-->
 <!--mapper 餐饮订单管理 start -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
@@ -134,7 +134,7 @@
         WHERE ID = #{id}
     </update>
     <!--修改订单状态，用于反结账或订单超时-->
-    <update id="updateOrderStatusDao" parameterType="object">
+    <update id="updateOrderStatusDao" parameterType="com.goodsoft.hotel.domain.entity.dto.OrderDTO">
         UPDATE gs_repast_order
         <set>
             <if test="status &gt;0">

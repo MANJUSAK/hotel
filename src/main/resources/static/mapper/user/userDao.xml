@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--@author 严彬荣，version v1.0-->
+<!--@author manjusaka[manjusakachn@gmail.com]，version v1.0-->
 <!--mapper 用户数据获取 start -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
@@ -35,7 +35,7 @@
     </select>
     <!--用户登录-->
     <select id="getUserDao" parameterType="string" resultType="string">
-        SELECT LOGIN_NAME FROM to_horizon_user WHERE binary LOGIN_NAME=#{uName} AND PASSWORD=#{pwd};
+        SELECT LOGIN_NAME FROM to_horizon_user WHERE LOGIN_NAME=#{uName} AND PASSWORD=#{pwd} AND ACTIVE=1;
     </select>
 </mapper>
         <!--mapper 用户数据获取 end -->

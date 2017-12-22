@@ -7,7 +7,7 @@ import java.util.Objects;
  * description:
  * ===>套餐内容实体
  *
- * @author 严彬荣 Created on 2017-11-13 19:18
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-13 19:18
  */
 public class SetMealDetailDO implements java.io.Serializable {
 

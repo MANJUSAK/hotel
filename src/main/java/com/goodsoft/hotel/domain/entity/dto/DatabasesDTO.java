@@ -7,7 +7,7 @@ import java.util.Objects;
  * ===>数据库操作参数辅助工具实体类
  * 用于通用方法下获取数据库表、字段等数据
  *
- * @author 严彬荣 Created on 2017-12-02 15:33
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-02 15:33
  * @version V1.0
  */
 public class DatabasesDTO implements java.io.Serializable {

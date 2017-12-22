@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
-<!--@author 严彬荣，version v1.0-->
+<!--@author manjusaka[manjusakachn@gmail.com]，version v1.1.2-->
 <!--文件管理mapper start-->
 <mapper namespace="com.goodsoft.hotel.domain.dao.FileDao">
     <!--使用mybatis二级缓存-->

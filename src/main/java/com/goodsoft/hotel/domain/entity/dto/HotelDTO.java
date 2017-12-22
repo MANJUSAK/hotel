@@ -7,7 +7,7 @@ import java.util.Objects;
  * ===>系统参数辅助类
  * 用于前台条件查询时参入后台参数的定义
  *
- * @author 严彬荣 Created on 2017-11-11 17:07
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-11 17:07
  */
 public class HotelDTO implements java.io.Serializable {
 

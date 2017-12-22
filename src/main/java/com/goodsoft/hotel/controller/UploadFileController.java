@@ -30,17 +30,25 @@ public class UploadFileController {
 
     /**
      * 文件上传接口
+     * 此接口只支持图片、文档和表格文件上传且文件不宜过大（图片限制1.5M以内、表格10M以内、文档30M以内）
+     * 若是其它超大文件，请走ftp文件上传接口
      *
-     * @param files 文件
-     * @param var   文件标识，用于获取上传文件数据
+     * @param files  文件
+     * @param flag   文件标识，用于获取上传文件数据
+     * @param f_type 文件类型（默认获取图片jpg、jpeg、gif、png）
+     *               1.f_type=document 获取文档（pdf、doc、docx）
+     *               2.f_type=excel 获取表格（xls、xlsx）
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/upload/files/data.shtml", method = RequestMethod.POST)
-    public Status uploadFileController(@RequestParam("files") MultipartFile[] files, String var) {
+    public Status uploadFileController(@RequestParam("files") MultipartFile[] files, String f_type, String flag) {
+        if (f_type == null || "".equals(f_type)) {
+            f_type = "images";
+        }
         try {
-            if (files != null && var != null && !("".equals(var))) {
-                int status = this.service.fileUploadService(files, "images", var);
+            if (files != null && flag != null && !("".equals(flag))) {
+                int status = this.service.fileUploadService(files, f_type, flag);
                 switch (status) {
                     case 0:
                         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
@@ -54,7 +62,7 @@ public class UploadFileController {
                         return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
                 }
             }
-            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "files、var为空或为null");
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能是files、flag为null或为空");
         } catch (HotelDataBaseException e) {
             this.logger.error(e.toString());
             return new Status(StatusEnum.FILE_UPLOAD.getCODE(), StatusEnum.FILE_UPLOAD.getEXPLAIN());

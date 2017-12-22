@@ -9,6 +9,7 @@ import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
 import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetailDO;
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.OrderDTO;
 import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
 import com.goodsoft.hotel.domain.entity.repastorder.MenuCustomDO;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
@@ -104,7 +105,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     /**
      * 餐饮订单查询业务方法，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
-     * （status=0支付/1开台/2打单/3超时未买单/4迟付/5取消/6反结）
+     * （status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消）
      * 该接口涵盖了订单的所有信息
      *
      * @param param 查询条件
@@ -300,13 +301,13 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @throws Exception
      */
     @Override
-    public Status checkoutRepastOrderService(OrderDO orderDO) throws Exception {
-        orderDO.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        int row = this.dao.checkoutRepastOrderDao(orderDO);
+    public Status checkoutRepastOrderService(OrderDO order) throws Exception {
+        order.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        int row = this.dao.checkoutRepastOrderDao(order);
         if (row > 0) {
             //更新餐台状态为清洁中
             try {
-                this.cydao.updateTableState(orderDO.getCtid(), "7");
+                this.cydao.updateTableState(order.getCtid(), "7");
             } catch (Exception e) {
             }
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
@@ -316,23 +317,50 @@ public class RepastOderServicelmpl implements RepastOderService {
 
     /**
      * 餐饮订单更新（反结账，迟付等）业务方法，用于前台收银相关订单结算错误回滚到可修改状态或迟付等
-     * 1.该接口用于前台收银员结算错误的订单之后将订单设置为可编辑状态
-     * 2.该接口用于前台收银员将此订单推迟支付
+     * 1.该业务方法用于前台收银员结算错误的订单之后将订单设置为可编辑状态
+     * 2.该业务方法用于前台收银员将此订单推迟支付
+     * 3.由于反结情况特殊需做特殊处理（status=6）
      *
      * @param oid    订单编号
      * @param reason 反结账，迟付等原因
-     * @param status 订单状态
+     * @param status 订单状态(status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消)
      * @return Status 结果
      * @throws Exception
      */
     @Override
     @Transactional
-    public Status counterCheckoutService(String oid, int status, String reason) throws Exception {
-        int row = this.dao.updateOrderStatusDao(oid, status, reason);
-        if (row > 0) {
-            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+    public Status counterCheckoutService(OrderDTO param) throws Exception {
+        switch (param.getStatus()) {
+            case 2:
+                OrderDO order = param.getOrder();
+                if (order != null) {
+                    if (order.getMdTime() == null || order.getMdTime() == "") {
+                        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因是mdTime为空或为null");
+                    }
+                } else {
+                    return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "未获取到订单数据");
+                }
+                long mdTime = new SimpleDateFormat("yyyy-HH-dd HH:mm:ss").parse(order.getMdTime()).getTime();
+                long nowTime = System.currentTimeMillis();
+                long timeBetween = nowTime - mdTime;
+                int hourBetween = (int) (timeBetween / 3600000);
+                if (hourBetween > 0 && hourBetween <= 1) {
+                    int row = this.dao.checkoutRepastOrderDao(order);
+                    if (row > 0) {
+                        this.cydao.updateTableState(order.getCtid(), "4");
+                        return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                    }
+                    return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
+                }
+                return new Status(StatusEnum.ORDER_TIME_OUT.getCODE(), StatusEnum.ORDER_TIME_OUT.getEXPLAIN());
+            default:
+                int row = this.dao.updateOrderStatusDao(param);
+                if (row > 0) {
+                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                }
+                return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
+
         }
-        return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
     }
 
     /**
