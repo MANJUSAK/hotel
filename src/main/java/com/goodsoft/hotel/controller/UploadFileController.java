@@ -35,7 +35,7 @@ public class UploadFileController {
      *
      * @param files  文件
      * @param flag   文件标识，用于获取上传文件数据
-     * @param f_type 文件类型（默认获取图片jpg、jpeg、gif、png）
+     * @param f_type 文件类型（默认获取图片，格式为jpg、jpeg、gif、png、bmp）
      *               1.f_type=document 获取文档（pdf、doc、docx）
      *               2.f_type=excel 获取表格（xls、xlsx）
      * @return 响应结果

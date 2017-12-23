@@ -52,7 +52,7 @@ public class RepastOrderTimer {
                 OrderDTO order = new OrderDTO();
                 for (Map map : list) {
                     if (getHourBetween((String) map.get("KT_TIME"))) {
-                        order.setOid((String) map.get("ID"));
+                        order.setId((String) map.get("ID"));
                         order.setStatus(3);
                         dao.updateOrderStatusDao(order);
                     }

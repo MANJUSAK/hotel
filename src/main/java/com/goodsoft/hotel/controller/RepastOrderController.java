@@ -87,13 +87,16 @@ public class RepastOrderController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/by/id/data.shtml")
     public <T> T queryOrderController(String id, int status) {
-        try {
-            return this.service.queryOrderByIdService(id, status);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        boolean param = (id != null && !("".equals(id)) && status > 0);
+        if (param) {
+            try {
+                return this.service.queryOrderByIdService(id, status);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            }
         }
-
+        return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能是id为null或为空或status不为数字");
     }
 
     /**
@@ -106,13 +109,16 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/order/data.shtml", method = RequestMethod.POST)
-    public <T> T addOrderService(OrderDO orderDO) {
-        try {
-            return this.service.addOrderService(orderDO);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return (T) new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
+    public <T> T addOrderService(OrderDO order) {
+        if (order != null) {
+            try {
+                return this.service.addOrderService(order);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return (T) new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
+            }
         }
+        return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
     }
 
     /**
@@ -171,13 +177,16 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status checkoutOrderController(OrderDO order) {
-        try {
-            return this.service.checkoutRepastOrderService(order);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+    public Status checkoutOrderController(@RequestBody OrderDO order) {
+        if (order != null) {
+            try {
+                return this.service.checkoutRepastOrderService(order);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+            }
         }
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
     }
 
     /**
@@ -192,8 +201,8 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/counter/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status counterCheckoutController(OrderDTO param) {
-        boolean pm = (param.getOid() != null && param.getOid() != "" && param.getStatus() > 0);
+    public Status counterCheckoutController(@RequestBody OrderDTO param) {
+        boolean pm = (param.getId() != null && param.getId() != "" && param.getStatus() > 0);
         if (pm) {
             try {
                 return this.service.counterCheckoutService(param);

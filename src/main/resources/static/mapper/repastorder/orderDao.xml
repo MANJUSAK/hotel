@@ -24,11 +24,21 @@
                 AND ID=#{id}
             </if>
             <if test="keyWord !=null and keyWord !=''">
-                <bind name="_key" value="'%'+keyWord+'%'"/>
+                <bind name="_key" value="keyWord+'%'"/>
                 AND AOH LIKE #{_key}
             </if>
             <if test="keyWord_1 !=null and keyWord_1 !=''">
                 AND KT_SHIFT = #{keyWord_1}
+            </if>
+            <if test="date !=null and date !=''">
+                <bind name="_dt" value="date+'%'"/>
+                AND MD_TIME LIKE #{_dt}
+            </if>
+            <if test="startDate !=null and startDate !=''">
+                AND date_format(MD_TIME,'%Y-%m-%d')&gt;=#{startDate}
+            </if>
+            <if test="endDate !=null and endDate !=''">
+                AND date_format(MD_TIME,'%Y-%m-%d')&lt;= #{endDate}
             </if>
             <if test="status &gt;=0">
                 AND STATUS=#{status}
@@ -48,11 +58,11 @@
             resultType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         SELECT
         <include refid="order_sql"/>
-        FROM gs_repast_order WHERE ID=#{id} AND STATUS=#{status} ORDER BY ID DESC
+        FROM gs_repast_order WHERE ID=#{id} AND STATUS=#{status}
     </select>
     <!--查询打单还未结账时的订单时间(用于定时器)-->
     <select id="queryKtOrderTimeDao" resultType="map">
-        SELECT ID,KT_TIME FROM gs_repast_order WHERE  STATUS=2 ORDER BY ID DESC
+        SELECT ID,KT_TIME FROM gs_repast_order WHERE  STATUS=2
     </select>
     <!--餐饮订单添加-->
     <insert id="addRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
@@ -116,8 +126,8 @@
     <update id="checkoutRepastOrderDao" parameterType="com.goodsoft.hotel.domain.entity.repastorder.OrderDO">
         UPDATE gs_repast_order
         <set>
-            <if test="totalNum &gt;0">TOTAL_NUM = #{totalNum},</if>
-            <if test="mNum &gt;0">M_NUM = #{mNum},</if>
+            <if test="totalNum !=null">TOTAL_NUM = #{totalNum},</if>
+            <if test="mNum !=null">M_NUM = #{mNum},</if>
             <if test="qdDiscount !=null and qdDiscount !=''">QD_DISCOUNT = #{qdDiscount},</if>
             <if test="vipNum !=null and vipNum !=''">VIP_NUM = #{vipNum},</if>
             <if test="vipType !=null and vipType !=''">VIP_TYPE =#{vipType},</if>
@@ -125,11 +135,11 @@
             <if test="zqSum !=null and zqSum !=''">ZQ_SUM = #{zqSum},</if>
             <if test="paymentType !=null and paymentType !=''">PAYMENT_TYPE = #{paymentType},</if>
             <if test="ktNum !=null and ktNum !=''">KT_NUM=#{ktNum},</if>
-            <if test="partHall !=null and partHall !=''">PART_HALL= #{partHall},</if>
+            <!--<if test="partHall !=null and partHall !=''">PART_HALL= #{partHall},</if>-->
             <if test="placeNum !=null and placeNum !=''">PLACE_NUM= #{placeNum},</if>
-            <if test="ctid !=null and ctid !=''">AOH= #{aoh},CTID=#{ctid},</if>
-            <if test="orderPrice &gt;0">ORDER_PRICE=#{orderPrice},</if>
-            <if test="status &gt;=0 ">STATUS = #{status}</if>
+            <!--<if test="ctid !=null and ctid !=''">AOH= #{aoh},CTID=#{ctid},</if>-->
+            <if test="orderPrice !=null">ORDER_PRICE=#{orderPrice},</if>
+            <if test="status !=null ">STATUS = #{status},MD_TIME=#{mdTime}</if>
         </set>
         WHERE ID = #{id}
     </update>

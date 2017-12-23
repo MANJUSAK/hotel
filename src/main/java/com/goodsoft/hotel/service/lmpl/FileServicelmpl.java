@@ -116,7 +116,7 @@ public class FileServicelmpl implements FileService {
                         // 获取文件名
                         String fileName = files[i].getOriginalFilename().toLowerCase();
                         // 判断文件格式是否正确 start
-                        boolean format = !(fileName.endsWith("jpg") || fileName.endsWith("jpeg") || fileName.endsWith("png") || fileName.endsWith("gif"));
+                        boolean format = !(fileName.endsWith("jpg") || fileName.endsWith("bmp") || fileName.endsWith("jpeg") || fileName.endsWith("png") || fileName.endsWith("gif"));
                         if (format) {
                             return 603;
                         }

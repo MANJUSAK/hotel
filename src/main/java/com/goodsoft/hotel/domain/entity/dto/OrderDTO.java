@@ -1,7 +1,5 @@
 package com.goodsoft.hotel.domain.entity.dto;
 
-import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
-
 import java.util.Objects;
 
 /**
@@ -15,17 +13,18 @@ public class OrderDTO implements java.io.Serializable {
 
     private static final long serialVersionUID = -3252192817044579371L;
 
-    private String oid;//订单编号
+    private String id;//订单编号
     private String reason;//订单更改原因
     private int status;//订单状态
-    private OrderDO order;//订单
+    private String ctid;//餐台id
+    private String mdTime;//买单时间
 
-    public String getOid() {
-        return oid;
+    public String getId() {
+        return id;
     }
 
-    public void setOid(String oid) {
-        this.oid = oid;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getReason() {
@@ -44,12 +43,20 @@ public class OrderDTO implements java.io.Serializable {
         this.status = status;
     }
 
-    public OrderDO getOrder() {
-        return order;
+    public String getCtid() {
+        return ctid;
     }
 
-    public void setOrder(OrderDO order) {
-        this.order = order;
+    public void setCtid(String ctid) {
+        this.ctid = ctid;
+    }
+
+    public String getMdTime() {
+        return mdTime;
+    }
+
+    public void setMdTime(String mdTime) {
+        this.mdTime = mdTime;
     }
 
     @Override
@@ -57,22 +64,26 @@ public class OrderDTO implements java.io.Serializable {
         if (this == o) return true;
         if (!(o instanceof OrderDTO)) return false;
         OrderDTO orderDTO = (OrderDTO) o;
-        return Objects.equals(oid, orderDTO.oid) &&
-                Objects.equals(reason, orderDTO.reason);
+        return status == orderDTO.status &&
+                Objects.equals(id, orderDTO.id) &&
+                Objects.equals(reason, orderDTO.reason) &&
+                Objects.equals(ctid, orderDTO.ctid) &&
+                Objects.equals(mdTime, orderDTO.mdTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(oid, reason);
+        return Objects.hash(id, reason, status, ctid, mdTime);
     }
 
     @Override
     public String toString() {
         return "OrderDTO{" +
-                "oid='" + oid + '\'' +
+                "id='" + id + '\'' +
                 ", reason='" + reason + '\'' +
                 ", status=" + status +
-                ", order=" + order +
+                ", ctid='" + ctid + '\'' +
+                ", mdTime='" + mdTime + '\'' +
                 '}';
     }
 }

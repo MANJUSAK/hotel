@@ -36,7 +36,7 @@ public enum StatusEnum {
     INSERT_DEFEAT(200404, "添加失败！保存数据无效"),
     NO_PARAM(400400, "传入参数错误或缺少参数！"),
     NO_FILE(100404, "文件不能为空"),
-    FILE_FORMAT(100603, "文件格式不正确，图片格式为jpg、png、jpeg、gif，文档格式为pdf、doc、docx，表格格式为xlsx、xls"),
+    FILE_FORMAT(100603, "文件格式不正确，图片格式为jpg、png、jpeg、gif、bmp，文档格式为pdf、doc、docx，表格格式为xlsx、xls"),
     FILE_SIZE(100601, "文件大小不符合要求，图片大小最大为1.5M，文档大小最大为30M,表格大小最大为10M"),
     FILE_UPLOAD(100600, "文件上传失败"),
     QT_FIND_ERROR(101100, "获取失败"),

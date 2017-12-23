@@ -16,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * description:
- * ===>生成订单号工具类
+ * ===>生成订单号业务辅助类
  *
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 14:44
  * @version V1.0

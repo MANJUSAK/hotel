@@ -332,22 +332,17 @@ public class RepastOderServicelmpl implements RepastOderService {
     public Status counterCheckoutService(OrderDTO param) throws Exception {
         switch (param.getStatus()) {
             case 2:
-                OrderDO order = param.getOrder();
-                if (order != null) {
-                    if (order.getMdTime() == null || order.getMdTime() == "") {
-                        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因是mdTime为空或为null");
-                    }
-                } else {
-                    return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "未获取到订单数据");
+                if (param.getMdTime() == null || param.getMdTime() == "") {
+                    return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因是mdTime为空或为null");
                 }
-                long mdTime = new SimpleDateFormat("yyyy-HH-dd HH:mm:ss").parse(order.getMdTime()).getTime();
+                long mdTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(param.getMdTime()).getTime();
                 long nowTime = System.currentTimeMillis();
                 long timeBetween = nowTime - mdTime;
                 int hourBetween = (int) (timeBetween / 3600000);
-                if (hourBetween > 0 && hourBetween <= 1) {
-                    int row = this.dao.checkoutRepastOrderDao(order);
+                if (hourBetween >= 0 && hourBetween <= 1) {
+                    int row = this.dao.updateOrderStatusDao(param);
                     if (row > 0) {
-                        this.cydao.updateTableState(order.getCtid(), "4");
+                        this.cydao.updateTableState(param.getCtid(), "4");
                         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                     }
                     return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
