@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.controller;
 
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.OrderDTO;
 import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
 import com.goodsoft.hotel.domain.entity.result.Status;
@@ -56,7 +57,7 @@ public class RepastOrderController {
     /**
      * 餐饮订单查询接口，用于获取餐饮所有订单数据信息
      * 注：无参状态下默认查询已结算的所有订单，前台查询订单状态需传入status字段
-     * （status=0支付/1开台/2打单/3超时未买单/4迟付/5取消/6反结）
+     * （status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消）
      * 该接口涵盖了订单的所有信息
      *
      * @param param 可传入参数：page 页码、total 总记录数
@@ -86,13 +87,16 @@ public class RepastOrderController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping("/query/order/by/id/data.shtml")
     public <T> T queryOrderController(String id, int status) {
-        try {
-            return this.service.queryOrderByIdService(id, status);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        boolean param = (id != null && !("".equals(id)) && status > 0);
+        if (param) {
+            try {
+                return this.service.queryOrderByIdService(id, status);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            }
         }
-
+        return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能是id为null或为空或status不为数字");
     }
 
     /**
@@ -105,13 +109,16 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/add/order/data.shtml", method = RequestMethod.POST)
-    public <T> T addOrderService(OrderDO orderDO) {
-        try {
-            return this.service.addOrderService(orderDO);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return (T) new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
+    public <T> T addOrderService(OrderDO order) {
+        if (order != null) {
+            try {
+                return this.service.addOrderService(order);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return (T) new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
+            }
         }
+        return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
     }
 
     /**
@@ -127,10 +134,15 @@ public class RepastOrderController {
     @RequestMapping(value = "/add/order/goods/data.shtml", method = RequestMethod.POST)
     public Status addOrderService(@RequestBody RepastOrderDTO msg) {
         if (msg.getMsg() != null) {
+            String id = msg.getId();
+            String ctid = msg.getCtid();
+            boolean isExistOrder = (id == null || "".equals(id) || ctid == null || "".equals(ctid));
+            if (isExistOrder) {
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "id或ctid为空或为null");
+            }
             if (msg.getMsg().size() > 0) {
                 try {
-                    this.service.addOrderGoodsService(msg);
-                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                    return this.service.addOrderGoodsService(msg);
                 } catch (HotelDataBaseException e) {
                     this.logger.error(e.toString());
                     return new Status(StatusEnum.DEFEAT.getCODE(), e.toString());
@@ -138,7 +150,7 @@ public class RepastOrderController {
             }
             return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
         }
-        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "未获取到订单信息");
     }
 
     /**
@@ -156,7 +168,7 @@ public class RepastOrderController {
             return this.service.updateRepastOrderService(orderDO);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
     }
@@ -170,13 +182,16 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status checkoutOrderController(OrderDO orderDO) {
-        try {
-            return this.service.checkoutRepastOrderService(orderDO);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+    public Status checkoutOrderController(@RequestBody OrderDO order) {
+        if (order != null) {
+            try {
+                return this.service.checkoutRepastOrderService(order);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+            }
         }
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
     }
 
     /**
@@ -191,13 +206,17 @@ public class RepastOrderController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/counter/checkout/order/data.shtml", method = RequestMethod.POST)
-    public Status counterCheckoutController(String oid, int status, String reason) {
-        try {
-            return this.service.counterCheckoutService(oid, status, reason);
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+    public Status counterCheckoutController(@RequestBody OrderDTO param) {
+        boolean pm = (param.getId() != null && param.getId() != "" && param.getStatus() > 0);
+        if (pm) {
+            try {
+                return this.service.counterCheckoutService(param);
+            } catch (Exception e) {
+                this.logger.error(e.toString());
+                return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+            }
         }
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能为oid为空或null、status小于0");
     }
 
     /**

@@ -9,7 +9,7 @@ import java.util.Objects;
  * description:
  * ===>菜品数据实体辅助类
  *
- * @author 严彬荣 Created on 2017-11-30 11:08
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-30 11:08
  * @version V1.0
  */
 public class MenuDTO implements java.io.Serializable {

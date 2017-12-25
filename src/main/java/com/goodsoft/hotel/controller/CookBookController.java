@@ -1,9 +1,6 @@
 package com.goodsoft.hotel.controller;
 
-import com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDO;
-import com.goodsoft.hotel.domain.entity.cookbook.MenuMeansDetailDO;
-import com.goodsoft.hotel.domain.entity.cookbook.MenuTypeDO;
-import com.goodsoft.hotel.domain.entity.cookbook.SetMealDO;
+import com.goodsoft.hotel.domain.entity.cookbook.*;
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
 import com.goodsoft.hotel.domain.entity.dto.MeansDTO;
 import com.goodsoft.hotel.domain.entity.dto.MenuDTO;
@@ -369,17 +366,16 @@ public class CookBookController {
     }
 
     /**
-     * 部门类别更新接口
+     * 小类更新接口
      * 注意：该接口下将会更新与该部门下关联的基本数据
      * （如：小类更新到其它部门那么该小类下所有关联数据都将会更新到更新的部门）
-     * 传入数据必须为json
      *
      * @param msg 更新数据
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
-    @RequestMapping(value = "/update/menu/type/data.shtml", method = RequestMethod.POST)
-    public Status updateMenuType(@RequestBody MenuTypeDO msg) {
+    @RequestMapping(value = "/update/menu/sub/type/data.shtml", method = RequestMethod.POST)
+    public Status updateMenuType(MenuSubTypeDO msg) {
         try {
             return this.service.updateMenuTypeService(msg);
         } catch (Exception e) {
@@ -398,7 +394,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/update/menu/data.shtml", method = RequestMethod.POST)
-    public Status updateMenuContorller(MenuDTO msg) {
+    public Status updateMenuContorller(MenuDO msg) {
         try {
             return this.service.updateMenuService(msg);
         } catch (Exception e) {
@@ -495,7 +491,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/menu/data.shtml", method = RequestMethod.GET)
-    public Status deleteMenuContorller(String[] id, String fileId) {
+    public Status deleteMenuContorller(String[] id, String[] fileId) {
         if (id != null && id.length > 0) {
             try {
                 return this.service.deleteMenuService(id, fileId);
@@ -557,7 +553,7 @@ public class CookBookController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
     @RequestMapping(value = "/delete/set/meal/data.shtml", method = RequestMethod.GET)
-    public Status deleteSetMealController(String[] id, String fileId) {
+    public Status deleteSetMealController(String[] id, String[] fileId) {
         if (id != null && id.length > 0) {
             try {
                 return this.service.deleteSetMealService(id, fileId);

@@ -6,7 +6,7 @@ import java.util.Objects;
  * description:
  * ===>菜单做法明细实体
  *
- * @author 严彬荣 Created on 2017-11-15 15:49
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 15:49
  */
 public class MenuMeansDetailDO implements java.io.Serializable {
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--@author 严彬荣，version v1.0-->
+<!--@author manjusaka[manjusakachn@gmail.com]，version v1.0-->
 <!--mapper 菜单管理数据更新 start -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
@@ -18,8 +18,7 @@
     <update id="updateMenuDao" parameterType="com.goodsoft.hotel.domain.entity.cookbook.MenuDO">
     UPDATE gs_cookbook SET
     TID = #{tid},STID = #{stid},CBNAME = #{cbName},UNIT = #{unit},IS_DISCOUNT = #{isNo},FILE_ID=#{fileId},
-    PRICE1 = #{price1},PRICE2 = #{price2},PRICE3 = #{price3},PRICE4 = #{price4},PRICE5 = #{price5},IS_SUB =#{isSub},
-    COST_PRICE=#{costPrice}
+    PRICE1 = #{price1},PRICE2 = #{price2},PRICE3 = #{price3},PRICE4 = #{price4},PRICE5 = #{price5},COST_PRICE=#{costPrice}
     WHERE ID = #{id};
     </update>
     <!--库存量更新-->

@@ -6,7 +6,7 @@ import java.util.Objects;
  * function 返回结果集实体
  * <p>
  * date 2017.06.19
- * author 严彬荣
+ * author manjusaka[manjusakachn@gmail.com]
  * version v1.0
  */
 public class Result implements java.io.Serializable {

@@ -9,7 +9,7 @@ import java.util.Objects;
  * description:
  * ===>餐饮订单明细辅助实体类
  *
- * @author 严彬荣 Created on 2017-11-17 14:21
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 14:21
  */
 public class RepastOrderDTO implements java.io.Serializable {
 

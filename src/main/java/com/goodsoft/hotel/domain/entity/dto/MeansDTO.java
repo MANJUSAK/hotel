@@ -9,7 +9,7 @@ import java.util.Objects;
  * description:
  * ===>做法辅助实体，用于前台获取做法数据信息
  *
- * @author 严彬荣 Created on 2017-11-24 17:00
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-24 17:00
  */
 public class MeansDTO implements java.io.Serializable {
 

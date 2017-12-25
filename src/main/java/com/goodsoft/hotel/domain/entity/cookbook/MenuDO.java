@@ -10,7 +10,7 @@ import java.util.Objects;
  * description:
  * ===>菜单实体
  *
- * @author 严彬荣 Created on 2017-11-11 16:43
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-11 16:43
  */
 public class MenuDO implements java.io.Serializable {
 
@@ -19,7 +19,7 @@ public class MenuDO implements java.io.Serializable {
     private Integer cbid;//菜单编号
     private String tid;//关联类别表id
     private String stid;//关联小类别表id
-    private String fileId;//关联文件表fileId
+    private String fileId = "";//关联文件表fileId
     private String cbName;//菜名
     private String tName;//部门类别（仅用于查询）
     private String stName;//小类（仅用于查询）
@@ -37,7 +37,7 @@ public class MenuDO implements java.io.Serializable {
     private String spec4;//规格4
     private String spec5;//规格5
     private Double costPrice;//成本价格
-    private Integer isSub;//是否存在小类（0为true/1为false）
+    private Integer isSub = 0;//是否存在小类（0为true/1为false）
     private String ptPort;//打印机端口号（仅用于查询）
     private String ptDriverName;//打印机端口号（仅用于查询）
     private List<String> picture;//菜品图片文件（用于查询）
@@ -48,7 +48,7 @@ public class MenuDO implements java.io.Serializable {
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+        this.id = id == null ? " " : id.trim();
     }
 
     public Integer getCbid() {
@@ -64,7 +64,7 @@ public class MenuDO implements java.io.Serializable {
     }
 
     public void setTid(String tid) {
-        this.tid = tid == null ? null : tid.trim();
+        this.tid = tid == null ? " " : tid.trim();
     }
 
     public String getStid() {
@@ -72,10 +72,10 @@ public class MenuDO implements java.io.Serializable {
     }
 
     public void setStid(String stid) {
-        if ("".equals(stid) || stid == null) {
-            isSub = 1;
+        if (stid == null || "".equals(stid)) {
+            this.isSub = 1;
         }
-        this.stid = stid == null ? null : stid.trim();
+        this.stid = stid == null ? " " : stid.trim();
     }
 
     public String getFileId() {
@@ -107,7 +107,7 @@ public class MenuDO implements java.io.Serializable {
     }
 
     public void setCbName(String cbName) {
-        this.cbName = cbName == null ? null : cbName.trim();
+        this.cbName = cbName == null ? " " : cbName.trim();
     }
 
     public Integer getNum() {

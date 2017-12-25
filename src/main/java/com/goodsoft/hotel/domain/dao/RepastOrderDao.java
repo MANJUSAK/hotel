@@ -1,6 +1,7 @@
 package com.goodsoft.hotel.domain.dao;
 
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.OrderDTO;
 import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
 import com.goodsoft.hotel.domain.entity.repastorder.MenuCustomDO;
 import com.goodsoft.hotel.domain.entity.repastorder.OrderDO;
@@ -15,7 +16,7 @@ import java.util.Map;
  * description:
  * ===>餐饮菜单管理操作数据库接口类
  *
- * @author 严彬荣 Created on 2017-11-15 9:27
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:27
  * @version V1.0
  */
 @Repository
@@ -64,7 +65,7 @@ public interface RepastOrderDao {
     int checkoutRepastOrderDao(OrderDO msg) throws Exception;
 
     //反结账
-    int updateOrderStatusDao(@Param("id") String id, @Param("status") int status, @Param("reason") String reason) throws Exception;
+    int updateOrderStatusDao(OrderDTO param) throws Exception;
 
     //餐饮订单商品更新（用于结算订单）
     int updateRepastOrderGoodsDao(List<OrderGoodsDO> msg) throws Exception;

@@ -6,7 +6,7 @@ import java.util.Objects;
  * description:
  * ===>用户检索参数辅助实体
  *
- * @author 严彬荣 Created on 2017-12-03 10:48
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-03 10:48
  * @version V1.0
  */
 public class UserDTO implements java.io.Serializable {

@@ -7,7 +7,7 @@ import java.util.Objects;
  * ===>系统参数辅助类
  * 用于前台条件查询时参入后台参数的定义
  *
- * @author 严彬荣 Created on 2017-11-11 17:07
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-11 17:07
  */
 public class HotelDTO implements java.io.Serializable {
 
@@ -23,7 +23,10 @@ public class HotelDTO implements java.io.Serializable {
     private String mid;//做法编号
     private String keyWord;//关键字
     private String keyWord_1;//关键字1
-    private int isSub;//菜品是否存在小类（0为true/1为false）
+    private String date;//当天时间
+    private String startDate;//开始时间
+    private String endDate;//结算时间
+    private int isSub;//数据是否存在分类（0为true/1为false）
 
 
     public int getPage() {
@@ -122,23 +125,50 @@ public class HotelDTO implements java.io.Serializable {
         this.keyWord_1 = keyWord_1 == null ? null : keyWord_1.trim();
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date == null ? null : date.trim();
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate == null ? null : startDate.trim();
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate == null ? null : endDate.trim();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof HotelDTO)) return false;
-        HotelDTO that = (HotelDTO) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(stid, that.stid) &&
-                Objects.equals(tid, that.tid) &&
-                Objects.equals(cbid, that.cbid) &&
-                Objects.equals(keyWord, that.keyWord) &&
-                Objects.equals(keyWord_1, that.keyWord_1) &&
-                Objects.equals(mid, that.mid);
+        HotelDTO hotelDTO = (HotelDTO) o;
+        return Objects.equals(id, hotelDTO.id) &&
+                Objects.equals(stid, hotelDTO.stid) &&
+                Objects.equals(tid, hotelDTO.tid) &&
+                Objects.equals(cbid, hotelDTO.cbid) &&
+                Objects.equals(mid, hotelDTO.mid) &&
+                Objects.equals(keyWord, hotelDTO.keyWord) &&
+                Objects.equals(keyWord_1, hotelDTO.keyWord_1) &&
+                Objects.equals(date, hotelDTO.date) &&
+                Objects.equals(startDate, hotelDTO.startDate) &&
+                Objects.equals(endDate, hotelDTO.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, stid, tid, cbid, mid, keyWord, keyWord_1);
+        return Objects.hash(id, stid, tid, cbid, mid, keyWord, keyWord_1, date, startDate, endDate);
     }
 
     @Override
@@ -155,6 +185,9 @@ public class HotelDTO implements java.io.Serializable {
                 ", mid='" + mid + '\'' +
                 ", keyWord='" + keyWord + '\'' +
                 ", keyWord_1='" + keyWord_1 + '\'' +
+                ", date='" + date + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
                 ", isSub=" + isSub +
                 '}';
     }

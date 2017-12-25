@@ -6,7 +6,7 @@ import java.util.Objects;
  * description:
  * ===>菜单子类型数据过滤实体
  *
- * @author 严彬荣 Created on 2017-11-07 16:42
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:42
  */
 public class MenuSubTypeDO implements java.io.Serializable {
 
