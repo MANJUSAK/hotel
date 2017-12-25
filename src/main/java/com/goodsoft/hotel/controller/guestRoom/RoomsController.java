@@ -232,14 +232,14 @@ public class RoomsController {
                     }
                 }
                 //客房是否有预订信息 并判断时间
-                if ("明确预订".equals(list.get(i).getBookingflag()) && list.get(i).getStartdate() != null && list.get(i).getStartdate().equals(day)) {
+                if ("明确预定".equals(list.get(i).getBookingflag()) && list.get(i).getStartdate() != null && list.get(i).getStartdate().equals(day)) {
                     list.get(i).setCflag("预抵");
                 } else {
                     if (cflag != null && cflag == 1) {
                         continue;
                     }
                 }
-                if (list.get(i).getEnddate() != null && list.get(i).getBookingflag() != null && list.get(i).getEnddate().equals(day) && list.get(i).getBookingflag().equals("预订入住")) {
+                if (list.get(i).getEnddate() != null && list.get(i).getBookingflag() != null && list.get(i).getEnddate().equals(day) && (list.get(i).getBookingflag().equals("部分入住") || list.get(i).getBookingflag().equals("全部入住"))) {
                     list.get(i).setCflag("预离");
                 } else {
                     if (cflag != null && cflag == 2) {
@@ -314,14 +314,14 @@ public class RoomsController {
                         }
 
                         //客房是否有预订信息 并判断时间
-                        if ("明确预订".equals(list.get(j).getBookingflag()) && list.get(j).getStartdate() != null && list.get(j).getStartdate().equals(day)) {
+                        if ("明确预定".equals(list.get(j).getBookingflag()) && list.get(j).getStartdate() != null && list.get(j).getStartdate().equals(day)) {
                             list.get(j).setCflag("预抵");
                         } else {
                             if (cflag != null && cflag == 1) {
                                 continue;
                             }
                         }
-                        if (list.get(j).getEnddate() != null && list.get(j).getBookingflag() != null && list.get(j).getEnddate().equals(day) && list.get(j).getBookingflag().equals("预订入住")) {
+                        if (list.get(j).getEnddate() != null && list.get(j).getBookingflag() != null && list.get(j).getEnddate().equals(day) && (list.get(j).getBookingflag().equals("部分入住") || list.get(j).getBookingflag().equals("全部入住"))) {
                             list.get(j).setCflag("预离");
                         } else {
                             if (cflag != null && cflag == 2) {
@@ -391,6 +391,37 @@ public class RoomsController {
         }
         return null;
     }
+
+
+//    查询房间所有基本信息与预订单信息
+      @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+      @RequestMapping("room/details")
+      public Object getRoomDetails(String roomid){
+        if(roomid==null){
+            return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+          Map returnMap =new HashMap();
+        try {
+            //查询房间所有基本信息
+            Map map = roomSDao.selectRoomBaseInfo(roomid);
+            if(map==null){
+                return new Result(StatusEnum.NO_DATA.getCODE(),"房间ID无效");
+            }
+            returnMap.put("room",map);
+            //查询房间所有预订信息
+            List<Quickbooking> quickbookings = roomSDao.selectRoomRetBooking(roomid);
+            returnMap.put("booking",quickbookings);
+
+
+            return new Result(StatusEnum.SUCCESS.getCODE(),returnMap);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+      }
+
 
 
     /**

@@ -57,9 +57,15 @@ public class FloorRoomServiceImpl implements FloorRoomService {
         //返回map
         Map<String, String> map = new HashMap<String, String>();
 
-        //判断房间号是否重复预定
-        Map paramMap = new HashMap();
-        paramMap.put("startdate", quickbooking.getStartDate());
+//        //判断房间号是否重复预定
+//        for(int i=0;i<quickbooking.getRoomno().size();i++){
+//            Integer integer = bookingDao.joinRoomRepeat(quickbooking.getRoomno().get(i).getRoomNo(), quickbooking.getStartDate());
+//            if(integer>0){
+//            map.put("bookingNo", quickbooking.getRoomno().get(i).getRoomNo()+"已被预订");
+//            return map;
+//            }
+//        }
+
 
         String uuid = UUIDUtil.getInstance().getUUID().toString();
         String bookingNo = this.getNumber("QT");

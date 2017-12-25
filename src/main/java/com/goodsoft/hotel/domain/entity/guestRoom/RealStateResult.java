@@ -22,6 +22,7 @@ public class RealStateResult {
     private String     yflag ="0" ;    //标识(预留 ?)
 
     //以下不确定数据   cflag为预抵 附带以下信息
+    private String     bookid;       //预订单id
     private String     bookingno ;   //预订单号
     private String     guestname ;   //预订客人名
     private String     startdate;    //预订入住时间
@@ -33,6 +34,15 @@ public class RealStateResult {
 
 
     public RealStateResult(){
+    }
+
+
+    public String getBookid() {
+        return bookid;
+    }
+
+    public void setBookid(String bookid) {
+        this.bookid = bookid;
     }
 
     public String getYflag() {

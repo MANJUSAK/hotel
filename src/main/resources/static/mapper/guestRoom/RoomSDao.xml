@@ -29,9 +29,9 @@
         ) a
         left join
         (
-        select a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid ,a.bookingflag from
+        select a.id bookid,a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid ,a.bookingflag from
         gs_quickbooking a,gs_quickbooking_roomno b
-        where a.id=b.bookid and (a.bookingflag='明确预定' or a.bookingflag='预订入住')
+        where a.id=b.bookid and (a.bookingflag='明确预定')
         )b
         on a.id =b.roomid
     </select>
@@ -42,11 +42,31 @@
      where b.bookid=a.id  and a.startdate &gt; date_format(now(),'%Y-%m-%d') and a.bookingflag='明确预定'
     </select>
 
+    <!--获取房间所有预订信息-->
+    <select id="selectRoomRetBooking" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        select a.* from GS_QUICKBOOKING a,GS_QUICKBOOKING_ROOMNO b
+        where a.id=b.bookid and a.bookingflag='明确预定' and b.roomid=#{roomid}
+    </select>
+
+    <!--获取房间所有已入住预订信息-->
+    <select id="selectRoomLetBooking" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        select a.* from GS_QUICKBOOKING a,GS_QUICKBOOKING_ROOMNO b
+        where a.id=b.bookid and (a.bookingflag='部分入住' or a.bookingflag='全部入住') and b.roomid=#{roomid}
+    </select>
+
     <!--获取所有楼层id-->
     <select id="selectFloorIdAll" resultType="java.lang.Integer">
         select floorid from gs_floor
     </select>
 
+
+    <!--获取房间所有基本信息-->
+    <select id="selectRoomBaseInfo" parameterType="string" resultType="java.util.Map">
+        select a.BUILDINGNAME buildingcode,b.FLOORNAME floorcode,c.TYPENAME roomtype,d.id,d.roomno,d.cname
+        from gs_building a,gs_floor b,GS_ROOMTYPE c,gs_room d
+        where a.BUILDID=d.BUILDINGCODE and b.FLOORID=d.FLOORCODE and c.typeId=d.ROOMTYPE
+        and d.id=#{_parameter}
+    </select>
 
     <!--select a.*,b.* from (-->
     <!--select s.buildingname,s.floorname,s.typeid,s.typename,case when g.price is null then s.houseprices else g.price end houseprices,-->
@@ -360,12 +380,18 @@
        select * from gs_kfconsump_record where bookingno=#{_paramater} and state=1
     </select>
 
-    <!--查询客房消费信息 单个房间-->
+    <!--查询客房未付款消费信息 单个房间-->
     <select id="selectXfRoomConsumptionInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
         select * from gs_kfconsump_record where bookingno=#{bookingNo} and roomid=#{roomid} and state=1
     </select>
 
-    <!--查询客房消费信息 多个房间-->
+    <!--查询订单全部已付款消费信息-->
+    <select id="selectRoomConsumptionInfo" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
+        select * from gs_kfconsump_record where bookingno=#{bookingNo} and state=0
+    </select>
+
+
+    <!--查询客房未付款消费信息 多个房间-->
     <select id="selectXfRoomConsumptionInfoMultiple" parameterType="java.util.Map" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumpRecord">
         select * from gs_kfconsump_record where bookingno=#{bookingNo}  and state=1 and
         roomid in
@@ -373,6 +399,8 @@
             #{item}
         </foreach>
     </select>
+
+
 
 
     <!--修改客房消费记录-->
@@ -433,6 +461,8 @@
     <delete id="deleteQuickBookingRoom" parameterType="string">
         delete from GS_QUICKBOOKING_ROOMNO where bookid=#{bookid} and roomid=#{roomid}
     </delete>
+
+
 
 
 </mapper>

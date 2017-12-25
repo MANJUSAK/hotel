@@ -297,4 +297,38 @@ public class KfCheckOutController {
     }
 
 
+    /**
+     * 获取多个房间类型/价格信息
+     * @param roomid
+     * @param <T>
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("rooms/select/info")
+    @ResponseBody
+    public <T>T selectRoomInfo(String roomid){
+        if(roomid==null){
+            return (T)new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        try{
+            String[] ids = roomid.split(",");
+            if(ids.length==0){
+                return (T)new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+            }
+            List list=new ArrayList();
+            for(int i=0;i<ids.length;i++){
+                list.add(ids[i]);
+            }
+            List list1 = kfCheckOutDao.selectRoomInfoPriceList(list);
+            return (T) new Result(StatusEnum.SUCCESS.getCODE(),list1);
+        }catch (Exception e){
+            return (T) new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+
+
+
+    }
+
+
 }

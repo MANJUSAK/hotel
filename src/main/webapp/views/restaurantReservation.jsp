@@ -176,11 +176,20 @@ UserServicelmpl userService=new UserServicelmpl();
         </script>
 
         <div class="input-group"style="width: 299px;float: left;margin-left:252px">
-            <input type="text" class="form-control">
+            <input id="searchInput" type="text" class="form-control" <c:if test="${not empty customerName}">value="${customerName}"</c:if>>
             <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">搜索</button>
+                        <button id="search" class="btn btn-default" type="button">搜索</button>
                     </span>
         </div>
+        <script>
+            //搜索
+            $("#search").on("click",function(){
+                var sear=$("#searchInput").val();
+                if(sear!=null && sear!=''){
+                    window.location.href="<%=basePath%>/reserve?sign=${sign}<c:if test="${not empty staetTime}">&staetTime=1</c:if><c:if test="${state!=null}">&state=${state}</c:if>&customerName="+sear;
+                }
+            });
+        </script>
 
         <button name="update" type="button" class="jnog btn btn-info">修改</button>
         <button name="delete" type="button" class="jnog btn btn-info">取消</button>
@@ -390,11 +399,13 @@ UserServicelmpl userService=new UserServicelmpl();
                             <span style="position: relative;top: -45px;">备　　注：</span><textarea style="width: 748px;height: 100px;resize: none;" name="remarks"></textarea>
                             <div class="linediv"></div>
                             <span>入单时间：</span>
-                            <div class="input-group date form_datetime" id="startpicker" style="display:inline;margin:0">
-                                <input class="customDate"  readonly = "readonly" style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="entry_date">
-                                <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-5px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-9px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                            </div>
+                            <input class="customDate"  readonly = "readonly" style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="entry_date">
+
+                        <%--<div class="input-group date form_datetime" id="startpicker" style="display:inline;margin:0">--%>
+                                <%--<input class="customDate"  readonly = "readonly" style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="entry_date">--%>
+                                <%--<span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-5px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>--%>
+                                <%--<span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-9px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>--%>
+                            <%--</div>--%>
                             <div class="linediv"></div>
                             <span>入席时间：</span>
                             <div id="ruxishijian" class=" input-group date form_datetime"  style="display:inline;margin:0">
@@ -403,7 +414,7 @@ UserServicelmpl userService=new UserServicelmpl();
                                 <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-9px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
                             <%--<input class="date ruxitime notnull sknotnull" name="atthe_time" type="datetime-local" />--%>
-                            <span>结束日期：</span>
+                            <span>结束时间：</span>
                             <div id="jieshushijian" class="input-group date form_datetime"  style="display:inline;margin:0">
                                 <input class="notnull sknotnull" style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="end_date">
                                 <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-5px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
@@ -442,7 +453,7 @@ UserServicelmpl userService=new UserServicelmpl();
                                         <th>分厅</th>
                                         <th>餐台</th>
                                         <th>入席时间</th>
-                                        <th>结束日期</th>
+                                        <th>结束时间</th>
                                         <th>市别</th>
                                         <th>状态</th>
                                     </tr>
@@ -489,7 +500,7 @@ UserServicelmpl userService=new UserServicelmpl();
                                 <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-5px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                 <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-9px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
-                            <span>结束日期：</span>
+                            <span>结束时间：</span>
                             <div  class=" input-group date form_datetime jruxishijian"  style="display:inline;margin:0">
                                 <input class="notnull jxnotnull" style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="endDate">
                                 <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-5px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
@@ -589,7 +600,7 @@ UserServicelmpl userService=new UserServicelmpl();
                                         <th>分厅</th>
                                         <th>餐台</th>
                                         <th>入席时间</th>
-                                        <th>结束日期</th>
+                                        <th>结束时间</th>
                                         <th>市别</th>
                                         <th>状态</th>
                                     </tr>
@@ -633,14 +644,14 @@ UserServicelmpl userService=new UserServicelmpl();
                             <span>车　　位：</span><input name="parkingLot" type="text" />
                             <div class="linediv"></div>
                             <%--<span>入席时间：</span><input name="attheTime" type="datetime-local" />--%>
-                            <%--<span>结束日期：</span><input name="endDate" type="datetime-local" />--%>
+                            <%--<span>结束时间：</span><input name="endDate" type="datetime-local" />--%>
                             <span>入席时间：</span>
                             <div  class=" input-group date form_datetime jruxishijian"  style="display:inline;margin:0">
                                 <input class="notnull yhnotnull" style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="attheTime">
                                 <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-5px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                 <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-9px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
-                            <span>结束日期：</span>
+                            <span>结束时间：</span>
                             <div  class=" input-group date form_datetime jruxishijian"  style="display:inline;margin:0">
                             <input class="notnull yhnotnull" style="width:172px;clear: both;margin:0;position:relative;left:-4px;"  type="text" name="endDate">
                             <span  style="display:inline;padding:3px 5px;margin:0;position:relative;left:-5px;top:-2px;" class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
@@ -711,7 +722,7 @@ UserServicelmpl userService=new UserServicelmpl();
                                         <th>分厅</th>
                                         <th>餐台</th>
                                         <th>入席时间</th>
-                                        <th>结束日期</th>
+                                        <th>结束时间</th>
                                         <th>市别</th>
                                         <th>状态</th>
                                     </tr>
@@ -771,6 +782,7 @@ UserServicelmpl userService=new UserServicelmpl();
         </c:if>
 
 
+        //获取当前时间
         function getNowFormatDate() {
             var date = new Date();
             var seperator1 = "-";
@@ -795,14 +807,17 @@ UserServicelmpl userService=new UserServicelmpl();
     var halls = ''; //分厅
     var hallTables = ''; //餐台
 
-    //    //时间控件
+        var newDate = new Date();
+        var DriguTime = newDate.toJSON();
+        //    //时间控件
         $('.form_datetime').datetimepicker({
             format:'yyyy-mm-dd hh:ii:00',
             autoclose : true,
             language : 'zh-CN',
             pickerPosition : 'bottom-left',
             todayBtn : false,
-            viewSelect : 'hour'
+            viewSelect : 'hour',
+            startDate :new Date(DriguTime)
         });
 
    //查看当天或全部
@@ -893,7 +908,7 @@ UserServicelmpl userService=new UserServicelmpl();
                 '<th>分厅</th>'+
                 '<th>餐台</th>'+
                 '<th>入席时间</th>'+
-                '<th>结束日期</th>'+
+                '<th>结束时间</th>'+
                 '<th>市别</th>'+
                 '<th>状态</th>'+
                 '</tr>');
@@ -901,7 +916,7 @@ UserServicelmpl userService=new UserServicelmpl();
                 '<th>分厅</th>'+
                 '<th>餐台</th>'+
                 '<th>入席时间</th>'+
-                '<th>结束日期</th>'+
+                '<th>结束时间</th>'+
                 '<th>市别</th>'+
                 '<th>状态</th>'+
                 '</tr>');
@@ -909,7 +924,7 @@ UserServicelmpl userService=new UserServicelmpl();
                 '<th>分厅</th>'+
                 '<th>餐台</th>'+
                 '<th>入席时间</th>'+
-                '<th>结束日期</th>'+
+                '<th>结束时间</th>'+
                 '<th>市别</th>'+
                 '<th>状态</th>'+
                 '</tr>');

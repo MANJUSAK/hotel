@@ -2,6 +2,7 @@ package com.goodsoft.hotel.controller.guestRoom;
 
 import com.goodsoft.hotel.controller.CookBookController;
 import com.goodsoft.hotel.domain.dao.guestRoom.BookingDao;
+import com.goodsoft.hotel.domain.dao.guestRoom.KfCheckOutDao;
 import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;
 import com.goodsoft.hotel.domain.entity.guestRoom.*;
 import com.goodsoft.hotel.domain.entity.result.Result;
@@ -34,6 +35,9 @@ public class BookingController {
     @Resource
     private RoomSDao roomSDao;
 
+    @Resource
+    private KfCheckOutDao kfCheckOutDao;
+
     //实例化日志管理工具类
     private Logger logger = LoggerFactory.getLogger(CookBookController.class);
 
@@ -61,7 +65,7 @@ public class BookingController {
     }
 
     /**
-     * 添加快速预定的信息接口--正式接口
+     * 添加预定的信息接口--正式接口
      *
      * @param quickbooking 获取前台传递的类
      * @return
@@ -77,15 +81,45 @@ public class BookingController {
             return map;
         } catch (Exception e) {
             e.printStackTrace();
-            map.put("error", "错误");
+            map.put("bookingNo", "数据库服务器错误");
             return map;
+        }
+    }
+
+
+
+
+    /**
+     * 查询单条订单信息
+     * @param roomid 房间ID
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("booking/roomid/selectOne")
+    public Object bookingSelectByRoomNo(String roomid){
+            if(roomid==null){
+                return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+            }
+
+        try {
+            String bookid = bookingDao.selectBookingIdByRoomId(roomid);
+            if(bookid==null){
+                return new Result(StatusEnum.NO_PARAM.getCODE(),"房间无订单号");
+            }
+            Quickbooking quickbooking = bookingDao.selectReserveInfo(bookid);
+            List<QuickbookingRoomno> quickbookingRoomnos = bookingDao.selectReserveRoomsAll(bookid);
+            quickbooking.setRoomno(quickbookingRoomnos);
+            return new Result(StatusEnum.SUCCESS.getCODE(),quickbooking);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
 
 
     /**
      * 查询单条预订详细信息
-     * @param bookingId
+     * @param bookingId   预订id
      * @return
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -105,6 +139,9 @@ public class BookingController {
         }
         return quickbooking;
     }
+
+
+
 
 
     /**
@@ -551,10 +588,12 @@ public class BookingController {
         if(guest.getGuestName()==null ||guest.getDocumentNo()==null ||"".equals(guest.getGuestName()) || "".equals(guest.getDocumentNo())){
             return (T) new Status(40010,"客人名或证件号为空");
         }
-        //判断客人信息数量
-        List<String> documentNos = bookingDao.selectRoomGuestInfo(guest.getRoomId());
-        if(documentNos.size()==5){
-            return (T) new Status(40010,"入住人数已满");
+        //查询订单内全全部客人信息证件号码
+        List<String> documentNos = bookingDao.selectRoomGuestInfo(guest.getBookId());
+        //查询同一房间所有入住证件号码
+        List<String> strings = bookingDao.selectBookingRoomGuestInfo(guest.getBookId(), guest.getRoomId());
+        if(strings.size()>=5){
+            return (T) new Status(40010,"房间入住人数已满");
         }
         //判断客人信息重复
         for(String s:documentNos){
@@ -573,7 +612,59 @@ public class BookingController {
         return (T) new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
     }
 
+    /**
+     * 修改客人信息
+     * @param guest
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("booking/updateGuest")
+    public Object updateGuestInfo(@RequestBody Guest guest){
 
+        if(guest.getDocumentNo()==null || guest.getBookId()==null || guest.getGuestName()==null || guest.getAddress()==null){
+            return new Status(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        System.out.println("classes:"+guest);
+        try{
+            Integer integer = bookingDao.updateGuestMapper(guest);
+            return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+
+    }
+
+
+    /**
+     * 查询单条客人信息
+     * @param bookid  预订ID
+     * @param roomid  客房id
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("booking/selectOne/guest")
+    public Object getOneGuestInfo(String bookid,String roomid,String documentno){
+
+        if(bookid==null || roomid==null){
+            return new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+
+        try{
+           List<Guest> guest = bookingDao.selectOneGuestByRoom(bookid, roomid,documentno);
+            if(guest==null || guest.size()==0){
+                return new Result(StatusEnum.DEFEAT.getCODE(),"未查询到客人信息");
+            }
+
+            return new Result(StatusEnum.SUCCESS.getCODE(),guest.get(0));
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+
+    }
 
     /**
      * 入住
@@ -589,6 +680,9 @@ public class BookingController {
            return (T) new Status(40010,StatusEnum.NO_PARAM.getEXPLAIN());
        }
            try {
+               //查询预订单ID
+               String reserveId = bookingDao.selectBookIdByBookNo(bookingNo);
+
                 //修改房间状态参数map
                 Map roomFlagParam = new HashMap();
                //获取房间状态
@@ -599,7 +693,7 @@ public class BookingController {
                     return (T) new Status(40010, "房间已入住");
                }
                    //判断是否有客人信息
-                   List<String> documentNos = bookingDao.selectRoomGuestInfo(roomId);
+                   List<String> documentNos = bookingDao.selectBookingRoomGuestInfo(reserveId,roomId);
                    if(documentNos.size()==0){
                        return (T) new Status(40010, "无客人信息");
                    }
@@ -611,8 +705,7 @@ public class BookingController {
                 //修改客房状态
                 bookingDao.updateRoomFlagRuZhu(roomFlagParam);
 
-                //查询预订单ID
-                String reserveId = bookingDao.selectBookIdByBookNo(bookingNo);
+
                 //查询预订所有房间状态
                 List<String> flags = bookingDao.selectAllReserveRoomState(reserveId);
                 int x=0;

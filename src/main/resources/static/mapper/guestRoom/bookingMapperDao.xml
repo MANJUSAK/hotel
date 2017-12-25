@@ -85,6 +85,12 @@
         select a.* from GS_QUICKBOOKING_ROOMNO a,gs_room b where a.roomid=b.id and b.flag='空房' and  a.bookid=#{bookId}
     </select>
 
+    <!--查询预订所有房间信息-->
+    <select id="selectReserveRoomsAll" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.QuickbookingRoomno">
+        select a.* from GS_QUICKBOOKING_ROOMNO a,gs_room b where a.roomid=b.id and  a.bookid=#{bookId}
+    </select>
+
+
     <!--&lt;!&ndash;查询预订单的房间号码&ndash;&gt;-->
     <!--<select id="findRoomNoMapper" parameterType="java.lang.String" resultType="java.util.List">-->
         <!--select ROOMNO from gs_room WHERE ROOMNO IN-->
@@ -245,11 +251,38 @@
 #{vipId},#{roomId},#{customertype},#{state})
     </insert>
 
-    <!--查询同一房间客人信息-->
+    <!--修改客人信息-->
+    <update id="updateGuestMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Guest">
+        update gs_guest set
+        nickname=#{nickName},englishname=#{englishName},marital=#{marital},nationality=#{nationality},
+        languages= #{languages},cardtype=#{cardType},ethnic=#{ethnic},nativeplace=#{nativePlace},
+        occupation=#{occupation},birthday=#{birthDay},workunit=#{workUnit},cityproper=#{cityProper},
+        post=#{post},regional=#{regional},stopcause=#{stopCause},postalcode=#{postalCode},address=#{address},
+        officephone= #{officePhone},phonenumber=#{phoneNumber},telephone=#{telePhone},visaagency=#{visaAgency},
+        visatype=#{visaType},visanumber=#{visaNumber},visadate=#{visaDate},periodvalidity=#{periodValidity},
+        entrytime= #{entryTime},entryports=#{entryPorts},newspapertype=#{newsPaperType},religiousbelief=#{religiousBelief},
+        secondcard= #{secondCard},comefrom=#{comeFrom},arrivalflight=#{arrivalFlight},wheretogo=#{whereToGo},
+        leaveflight=#{leaveFlight},positions=#{positions},cartype=#{carType},carplatenumber=#{carPlateNumber},
+        specialdemand=#{specialDemand},hobby=#{hobby},taboo=#{taboo},
+        vipid=#{vipId},CUSTOMERTYPE=#{customertype},state=#{state}
+        where bookid=#{bookId} and documentno=#{documentNo}
+
+    </update>
+
+    <!--查询同一订单客人信息-->
     <select id="selectRoomGuestInfo" parameterType="java.lang.String" resultType="java.lang.String">
-    select documentNo from  gs_guest where roomid=#{_parameter} and state=1
+    select documentNo from  gs_guest where bookid=#{_parameter} and state=1
     </select>
 
+    <!--查询同一房间客人信息-->
+    <select id="selectBookingRoomGuestInfo" parameterType="java.lang.String" resultType="java.lang.String">
+        select documentNo from  gs_guest where bookid=#{bookid} and roomid=#{roomid} and state=1
+    </select>
+
+    <!--查询单条客人信息-->
+    <select id="selectOneGuestByRoom" parameterType="string" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Guest">
+        select  * from gs_guest where bookid=#{bookid} and roomid=#{roomid} and documentno=#{documentno}
+    </select>
 
     <!--判断预定房间号是否重复-->
     <select id="joinRoomIdResves" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -459,5 +492,12 @@
     </update>
 
 
+
+    <!--通过房间id查询订单ID-->
+    <select id="selectBookingIdByRoomId" parameterType="string" resultType="string">
+        select a.id from GS_QUICKBOOKING a,GS_QUICKBOOKING_ROOMNO b where a.id =b.bookid
+        and (a.bookingflag='部分入住' or  a.bookingflag='全部入住' or  a.bookingflag='部分退房')
+        and b.roomid=#{_parameter}
+    </select>
 
 </mapper>

@@ -166,8 +166,11 @@ public interface RoomSDao {
 
     //查询订单所有消费记录
     public List<KfconsumpRecord> selectXfConsumptionInfo(String bookingno);
-    //查询单个房间消费信息
+    //查询单个房间未付款消费信息
     public  List<KfconsumpRecord> selectXfRoomConsumptionInfo(@Param("bookingNo") String bookingNo ,@Param("roomid") String roomid);
+
+    //查询单个房间所有消费信息
+    public List<KfconsumpRecord> selectRoomConsumptionInfo(@Param("bookingNo") String bookingNo);
 
     //查询多个房间消费消费信息
     public List<KfconsumpRecord> selectXfRoomConsumptionInfoMultiple(Map map);
@@ -178,6 +181,11 @@ public interface RoomSDao {
     //通过房间ID查询房间号
     public String selectRoomNoByRoomId(String roomId);
 
+    //查询房间所有预订信息
+    public List<Quickbooking> selectRoomRetBooking(@Param("roomid") String bookid);
+
+    //查询房间基本信息
+    public Map selectRoomBaseInfo(String roomid);
 
     //查询客房房价
     public String selectRoomNowPrice(String roomId);

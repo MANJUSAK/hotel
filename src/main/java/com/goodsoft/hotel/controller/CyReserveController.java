@@ -33,7 +33,7 @@ public class CyReserveController {
 
     //预订主页面
     @RequestMapping("/reserve")
-    public ModelAndView reserveHome(PageBean<FitReservation> pageBean,Integer sign,String state,String staetTime,String loginUser){
+    public ModelAndView reserveHome(PageBean<FitReservation> pageBean,Integer sign,String state,String staetTime,String loginUser,String customerName){
         ModelAndView model=new ModelAndView("views/restaurantReservation.jsp");
         UserDTO userDTO =new UserDTO();
         userDTO.setKeyWord("前台业务员");
@@ -59,6 +59,11 @@ public class CyReserveController {
             paramMap.put("staetTime",formatDate(new Date()));
         }else{
             model.addObject("staetTime",staetTime);
+        }
+
+        if(customerName!=null){
+            paramMap.put("customerName",customerName);
+            model.addObject("customerName",customerName);
         }
 
         paramMap.put("limit",pageBean.getCurrentPage()*pageBean.getPageSize()-pageBean.getPageSize());

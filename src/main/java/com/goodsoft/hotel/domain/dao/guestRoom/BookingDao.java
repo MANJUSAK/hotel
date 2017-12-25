@@ -99,8 +99,11 @@ public interface BookingDao {
     //修改预订状态
      Integer updateRoomFlagRuZhuBooking(String id);
 
-     //查询房间入住客人证件号码
-     public List<String> selectRoomGuestInfo(String roomid);
+     //查询订单入住客人证件号码
+     public List<String> selectRoomGuestInfo(String bookid);
+
+     //查询客房入住客人证件号码
+    public List<String> selectBookingRoomGuestInfo(@Param("bookid") String bookid,@Param("roomid") String roomid);
 
     //会员信息添加
     public void addVipCardMapper(VipCard vipCard);
@@ -110,9 +113,11 @@ public interface BookingDao {
 
     //查询预订信息
     public  Quickbooking selectReserveInfo(@Param("id") String id);
-    //查询预订房间信息
+    //查询未入住预订房间信息
     public List<QuickbookingRoomno> selectReserveRooms(@Param("bookId") String bookId);
 
+    //查询全部预订房间信息
+    public List<QuickbookingRoomno> selectReserveRoomsAll(@Param("bookId") String bookId);
     //删除预订房间信息
     public Integer deleteBookdingRoomAll(@Param("bookId") String bookId);
 
@@ -122,9 +127,19 @@ public interface BookingDao {
     //查询预订单客人信息
     public String selectBookingGuestName(String bookingno);
 
+    //查询单条客人信息
+    public List<Guest> selectOneGuestByRoom(@Param("bookid") String bookid ,@Param("roomid") String roomid,@Param("documentno") String documentno);
+
+    //修改客人信息
+    public Integer updateGuestMapper(Guest guest);
+
+
     //查询预订单所有未入住房间信息
     public List<QuickbookingRoomno> selectAllQuiNotPeckRoom(String bookid);
 
+
+    //通过房间ID查询预订单ID
+    public String selectBookingIdByRoomId(String roomid);
 
 
     /**
@@ -164,6 +179,8 @@ public interface BookingDao {
 
     //通过预定单号查询所有房间信息
     public List<Map> selectReserveRoomsBybookNo(String bookNo);
+
+
 
     /**
      * 会员卡查询

@@ -37,6 +37,9 @@
         <if test="staetTime !=null and staetTime!=''">
             and ATTHE_TIME &gt; #{staetTime}
         </if>
+        <if test="customerName!=null and customerName!=''">
+            and customer_name like '%${customerName}%'
+        </if>
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
         </if>
@@ -98,6 +101,9 @@
         <if test="staetTime !=null and staetTime!=''">
             and ATTHE_TIME &gt; #{staetTime}
         </if>
+        <if test="customerName!=null and customerName!=''">
+            and customer_name like '%${customerName}%'
+        </if>
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
         </if>
@@ -131,6 +137,9 @@
         </if>
         <if test="staetTime !=null and staetTime!=''">
             and ATTHE_TIME &gt; #{staetTime}
+        </if>
+        <if test="customerName!=null and customerName!=''">
+            and customer_name like '%${customerName}%'
         </if>
         <if test="limit!=null and length!=null">
             limit #{limit},#{length}
