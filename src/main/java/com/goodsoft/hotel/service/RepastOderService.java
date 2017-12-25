@@ -73,7 +73,7 @@ public interface RepastOderService {
      * @param msg 订单商品信息
      * @throws Exception
      */
-    void addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException;
+    Status addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException;
 
     /**
      * 餐饮预订单开台订单修改（开台修改订单）业务方法，用于处理预订之后的顾客临时调整用餐信息时,

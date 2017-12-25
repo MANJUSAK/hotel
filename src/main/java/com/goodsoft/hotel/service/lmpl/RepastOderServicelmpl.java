@@ -234,7 +234,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Transactional
     @Override
-    public void addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException {
+    public Status addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao orderDao = sqlSession.getMapper(RepastOrderDao.class);
         String id = msg.getId();
@@ -264,10 +264,13 @@ public class RepastOderServicelmpl implements RepastOderService {
             }
             orderDao.addRepastOrderGoodsDao(orderGoods);
             orderDao.updateRepastOrderDao(msg);
-            this.cydao.updateTableState(msg.getCtid(), "4");
+            int row = this.cydao.updateTableState(msg.getCtid(), "4");
+            if (row == 0) {
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "不能获取餐台信息");
+            }
             sqlSession.commit();
+            return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
-            e.printStackTrace();
             sqlSession.rollback();
             throw new HotelDataBaseException(StatusEnum.DATABASE_ERROR.getEXPLAIN());
         } finally {
@@ -341,6 +344,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                 int hourBetween = (int) (timeBetween / 3600000);
                 if (hourBetween >= 0 && hourBetween <= 1) {
                     int row = this.dao.updateOrderStatusDao(param);
+
                     if (row > 0) {
                         this.cydao.updateTableState(param.getCtid(), "4");
                         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());

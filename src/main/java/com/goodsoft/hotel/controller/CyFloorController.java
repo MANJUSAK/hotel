@@ -289,7 +289,6 @@ public class CyFloorController {
                 sqlSession.commit();
                 return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
             } catch (Exception e) {
-                e.printStackTrace();
                 sqlSession.rollback();
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             } finally {

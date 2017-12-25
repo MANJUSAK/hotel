@@ -134,10 +134,15 @@ public class RepastOrderController {
     @RequestMapping(value = "/add/order/goods/data.shtml", method = RequestMethod.POST)
     public Status addOrderService(@RequestBody RepastOrderDTO msg) {
         if (msg.getMsg() != null) {
+            String id = msg.getId();
+            String ctid = msg.getCtid();
+            boolean isExistOrder = (id == null || "".equals(id) || ctid == null || "".equals(ctid));
+            if (isExistOrder) {
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "id或ctid为空或为null");
+            }
             if (msg.getMsg().size() > 0) {
                 try {
-                    this.service.addOrderGoodsService(msg);
-                    return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                    return this.service.addOrderGoodsService(msg);
                 } catch (HotelDataBaseException e) {
                     this.logger.error(e.toString());
                     return new Status(StatusEnum.DEFEAT.getCODE(), e.toString());
@@ -145,7 +150,7 @@ public class RepastOrderController {
             }
             return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
         }
-        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN());
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "未获取到订单信息");
     }
 
     /**
@@ -163,7 +168,7 @@ public class RepastOrderController {
             return this.service.updateRepastOrderService(orderDO);
         } catch (Exception e) {
             this.logger.error(e.toString());
-            return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
     }
