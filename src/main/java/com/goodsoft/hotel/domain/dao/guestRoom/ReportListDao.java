@@ -1,9 +1,6 @@
 package com.goodsoft.hotel.domain.dao.guestRoom;
 
-import com.goodsoft.hotel.domain.entity.guestRoom.Building;
-import com.goodsoft.hotel.domain.entity.guestRoom.Floors;
-import com.goodsoft.hotel.domain.entity.guestRoom.Room;
-import com.goodsoft.hotel.domain.entity.guestRoom.RoomType;
+import com.goodsoft.hotel.domain.entity.guestRoom.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +12,8 @@ import java.util.List;
 @Repository
 public interface ReportListDao {
 
+    // 查询出预定的信息
+    public List<Quickbooking> findBookingListMapper(String bookid) throws Exception;
 
 
 }

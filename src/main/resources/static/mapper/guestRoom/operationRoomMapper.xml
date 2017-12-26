@@ -31,6 +31,12 @@
         select  floorid,floorname from  gs_floor
     </select>
 
+    <!--查询楼层信息,根据建筑ID-->
+    <select id="queryFloorAllIdMapper" parameterType="java.lang.String" resultType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
+        select  floorid,floorname from  gs_floor where floorCode=#{_parameter}
+    </select>
+
+
     <!--查询房间类型信息-->
     <select id="queryRoomTypeMapper" resultType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
         select typeid,typeName from gs_roomtype;
@@ -47,24 +53,31 @@
 
     <!--修改建筑名-->
     <update id="updateBuildingMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Building">
-        update gs_building set buildingname=#{buildingName} where buildid=#{buildId} OR id = #{id}
+        update gs_building set
+        <if test="buildingName !=null">buildingname=#{buildingName}</if>
+        where buildid=#{buildId} OR id = #{id}
     </update>
 
     <!--修改楼层名-->
     <update id="updateFloorsMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Floors">
-        update gs_floor
-        <set>
-            <if test="floorName !=null">floorname = #{floorName},</if>
-            <if test="floorCode !=null">floorcode = #{floorCode}</if>
-        </set>
+        update gs_floor set
+        <if test="floorName !=null">floorname = #{floorName}</if>
         where floorid = #{floorId} OR id = #{id}
     </update>
 
     <!--修改房间类型名-->
     <update id="updateRoomTypeMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.RoomType">
-        update gs_roomtype set typename = #{typeName} where typeId = #{typeId} OR id = #{id}
+        update gs_roomtype set
+        <if test="typeName !=null">typename = #{typeName}</if>
+        where typeId = #{typeId} OR id = #{id}
     </update>
 
+    <!--修改房间前获取页面信息-->
+    <select id="queryRoomAllMapper" parameterType="java.lang.String" resultType="java.util.Map">
+        select a.id,a.roomId,b.buildingName,a.buildingCode,c.floorName,a.floorCode,d.typeName,a.roomType,a.roomNo,a.cName,a.stdPax,a.maxPax,a.remark from
+            gs_room a,gs_building b,gs_floor c,gs_roomtype d
+        where a.buildingcode = b.buildid and a.floorcode = c.floorid and a.roomtype = d.typeid and a.id =#{_parameter}
+    </select>
     <!--修改房间 信息-->
     <update id="updateRoomMapper" parameterType="com.goodsoft.hotel.domain.entity.guestRoom.Room">
         update gs_room set
@@ -113,7 +126,7 @@
 
     <!--删除楼层关联房间-->
     <delete id="deleteFloorRoomMapper" parameterType="java.util.List">
-         delete from gs_room where floorcode in
+        delete from gs_room where floorcode in
         <foreach collection="list" item="item" open="(" close=")" separator=",">
             #{item}
         </foreach>

@@ -11,6 +11,9 @@ import com.goodsoft.hotel.service.OperationRoomsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 房间建筑,楼层,房间类型,房间的增加,删除,修改操作
@@ -49,7 +52,7 @@ public class OperationRoomController {
      *
      * @return 建筑详情
      */
-    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("room/operation/getBuild")
     public Object getBuild() {
         try {
@@ -104,9 +107,14 @@ public class OperationRoomController {
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("room/operation/getFloor")
-    public Object getFloor() {
+    public Object getFloor(String buildId) {
         try {
-            return this.operationRoomDao.queryFloorAllMapper();
+            if(buildId !=null && !("".equals(buildId))){
+                return this.operationRoomDao.queryFloorAllIdMapper(buildId);
+            }else{
+                return this.operationRoomDao.queryFloorAllMapper();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return new Status(StatusEnum.QT_FIND_ERROR.getCODE(), StatusEnum.QT_FIND_ERROR.getEXPLAIN());
@@ -123,6 +131,48 @@ public class OperationRoomController {
     public Object getRoomType() {
         try {
             return this.operationRoomDao.queryRoomTypeMapper();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Status(StatusEnum.QT_FIND_ERROR.getCODE(), StatusEnum.QT_FIND_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 获取三个下拉框信息
+     *
+     * @return 返回三个下拉框信息
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("room/operation/getAll")
+    public Object getAll() {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Object buildings = this.operationRoomDao.queryBuildAllMapper();
+            map.put("buildings", buildings);
+            List<Floors> floors = this.operationRoomDao.queryFloorAllMapper();
+            map.put("floors", floors);
+            List<RoomType> roomTypes = this.operationRoomDao.queryRoomTypeMapper();
+            map.put("roomTypes", roomTypes);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Status(StatusEnum.QT_FIND_ERROR.getCODE(), StatusEnum.QT_FIND_ERROR.getEXPLAIN());
+        }
+    }
+
+    /**
+     * 获取房间信息页面信息
+     *
+     * @return 返回房间信息
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+    @RequestMapping("room/operation/getRoomAll")
+    public Object getRoomAll(String id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<Map> list = this.operationRoomDao.queryRoomAllMapper(id);
+            map.put("date", list);
+            return map;
         } catch (Exception e) {
             e.printStackTrace();
             return new Status(StatusEnum.QT_FIND_ERROR.getCODE(), StatusEnum.QT_FIND_ERROR.getEXPLAIN());
@@ -277,14 +327,14 @@ public class OperationRoomController {
     /**
      * 删除房间信息
      *
-     * @param id 前台获取到的ID
+     * @param roomId 前台获取到的roomId
      * @return 返回响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping("room/operation/deleteRoom")
-    public Status deleteRoom(String id) {
+    public Status deleteRoom(String roomId) {
         try {
-            String str = this.operationRoomsService.deleteRoom(id);
+            String str = this.operationRoomsService.deleteRoom(roomId);
             return new Status(StatusEnum.SUCCESS.getCODE(), str);
         } catch (Exception e) {
             e.printStackTrace();
