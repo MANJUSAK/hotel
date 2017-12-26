@@ -4,8 +4,11 @@
 
 <mapper namespace="com.goodsoft.hotel.domain.dao.guestRoom.ReportListDao">
 
-
-
+    <!--查询预定的信息-->
+    <select id="findBookingListMapper" parameterType="java.lang.String"
+            resultType="com.goodsoft.hotel.domain.entity.guestRoom.Quickbooking">
+        select * from gs_quickbooking where bookid=#{_parameter} and bookingflag='取消'
+    </select>
 
 
 </mapper>

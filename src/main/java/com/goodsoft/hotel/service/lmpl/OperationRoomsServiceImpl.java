@@ -96,8 +96,6 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
     @Transactional
     @Override
     public String addRoom(Room room) {
-        System.out.println(room.toString());
-
         String uuid = UUIDUtil.getInstance().getUUID("QT").toString();
         room.setId(uuid);
         Integer x = 0;
@@ -299,8 +297,6 @@ public class OperationRoomsServiceImpl implements OperationRoomsService {
         } else {
             list.add(str);
         }
-
-
         return list;
     }
 
