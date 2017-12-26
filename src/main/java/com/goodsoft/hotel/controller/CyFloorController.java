@@ -171,21 +171,34 @@ public class CyFloorController {
                     }
 
                     //判断餐台是否在清洁中  清洁超过20分钟修改状态
-                    if(String.valueOf(infos.get(i).get("status")).equals("7")){
+                    if(String.valueOf(infos.get(i).get("status")).equals("7")) {
                         Calendar mddate = Calendar.getInstance();
                         Calendar nowdate = Calendar.getInstance();
                         //查询餐台买单时间
-                        String mdTime = cyFloorDao.selectOrderMdTime(String.valueOf(infos.get(i).get("id")));
-                        Date parse = sf.parse(mdTime);
-                        Date newDate =new Date();
-                        mddate.setTime(parse);
-                        nowdate.setTime(newDate);
-                        long timeInMillis = nowdate.getTimeInMillis();
-                        long timeInMillis1 = mddate.getTimeInMillis();
-                        if(((timeInMillis-timeInMillis1)/(1000*60))>20){
-                            infos.get(i).put("status", "1");
-                            mapper.updateTableState(String.valueOf(infos.get(i).get("id")), "1");
+                        List<String> mdTime = cyFloorDao.selectOrderMdTime(String.valueOf(infos.get(i).get("id")));
+                        if(mdTime!=null && mdTime.size()!=0) {
+                            boolean flag = true;
+                            for (int x = 0; x < mdTime.size(); x++) {
+                                if(mdTime.get(x)!=null) {
+                                    Date parse = sf.parse(mdTime.get(x));
+                                    Date newDate = new Date();
+                                    mddate.setTime(parse);
+                                    nowdate.setTime(newDate);
+                                    long timeInMillis = nowdate.getTimeInMillis();
+                                    long timeInMillis1 = mddate.getTimeInMillis();
+                                    if (((timeInMillis - timeInMillis1) / (1000 * 60)) < 20) {
+                                        flag = false;
+                                    }
+                                }else{
+                                    flag = false;
+                                }
+                            }
+                            if (flag) {
+                                infos.get(i).put("status", "1");
+                                mapper.updateTableState(String.valueOf(infos.get(i).get("id")), "1");
+                            }
                         }
+
                     }
 
 
@@ -216,23 +229,38 @@ public class CyFloorController {
                             }
 
                             //判断餐台是否在清洁中  清洁超过20分钟修改状态
-                            if(String.valueOf(infos.get(j).get("status")).equals("7")){
-                                //查询餐台买单时间
-                                String mdTime = cyFloorDao.selectOrderMdTime(String.valueOf(infos.get(j).get("id")));
+                            if(String.valueOf(infos.get(j).get("status")).equals("7")) {
 
-                                Calendar mddate = Calendar.getInstance();
-                                Calendar nowdate = Calendar.getInstance();
-                                Date parse = sf.parse(mdTime);
-                                Date newDate =new Date();
-                                mddate.setTime(parse);
-                                nowdate.setTime(newDate);
-                                long timeInMillis = nowdate.getTimeInMillis();
-                                long timeInMillis1 = mddate.getTimeInMillis();
-                                if(((timeInMillis-timeInMillis1)/(1000*60))>20){
-                                    infos.get(j).put("status", "1");
-                                    mapper.updateTableState(String.valueOf(infos.get(j).get("id")), "1");
+                                //查询餐台买单时间
+                                List<String> mdTime = cyFloorDao.selectOrderMdTime(String.valueOf(infos.get(j).get("id")));
+                                if(mdTime!=null && mdTime.size()!=0) {
+                                    boolean flag = true;
+                                    Calendar mddate = Calendar.getInstance();
+                                    Calendar nowdate = Calendar.getInstance();
+                                    for (int m = 0; m < mdTime.size(); m++) {
+                                        if(mdTime.get(m)!=null) {
+                                            Date newDate = new Date();
+                                            nowdate.setTime(newDate);
+                                            long millis = nowdate.getTimeInMillis();
+
+                                            Date parse = sf.parse(mdTime.get(m));
+                                            mddate.setTime(parse);
+                                            long millis2 = mddate.getTimeInMillis();
+                                            if (((millis - millis2) / (1000 * 60)) < 20) {
+                                                flag = false;
+                                            }
+                                        }else{
+                                            flag = false;
+                                        }
+                                    }
+                                    if (flag) {
+                                        infos.get(j).put("status", "1");
+                                        mapper.updateTableState(String.valueOf(infos.get(j).get("id")), "1");
+                                    }
                                 }
+
                             }
+
 
                             fMap.add(infos.get(j));
                             infos.set(j, null);

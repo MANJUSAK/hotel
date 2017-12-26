@@ -463,6 +463,23 @@
     </delete>
 
 
+    <update id="updateRoomSflagAndFlag" parameterType="java.util.Map">
+    update gs_room
+       <set>
+            <if test="sflag!=null and  sflag!=''">
+                sflag=#{sflag}
+            </if>
+            <if test="flag!=null and  flag!=''">
+                flag=#{flag}
+            </if>
+       </set>
+     where id in
+        <foreach collection="roomids" separator="," item="item" open="(" close=")" >
+            #{item}
+        </foreach>
+
+    </update>
+
 
 
 </mapper>

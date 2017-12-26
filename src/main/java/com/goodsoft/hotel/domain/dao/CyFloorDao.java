@@ -40,6 +40,6 @@ public interface CyFloorDao {
     public List<Diningtable> selectFreeTables(@Param("tableId") String tableId);
 
     //查询餐台买单时间
-    public String selectOrderMdTime(@Param("tableId") String tableId);
+    public List<String> selectOrderMdTime(@Param("tableId") String tableId);
 
 }

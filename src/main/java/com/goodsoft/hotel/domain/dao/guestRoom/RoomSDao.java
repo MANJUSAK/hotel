@@ -201,4 +201,8 @@ public interface RoomSDao {
 
     //删除预订单关联房间
      public Integer deleteQuickBookingRoom(@Param("bookid") String bookid,@Param("roomid") String roomid);
+
+
+     //修改客房sflag 和flag
+     public Integer updateRoomSflagAndFlag(Map map);
 }

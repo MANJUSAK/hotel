@@ -1160,6 +1160,53 @@ public class RoomsController {
     }
 
 
+    /**
+     * 修改房间状态
+     * @param roomid  房间id
+     * @param flag     空房 散客 团体 维修
+     * @param sflag    脏房净房
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("room/updateFlags")
+    public Object updateRoomSflagAndFlag(String roomid ,String flag ,String sflag){
+
+        if(roomid==null || roomid.length()==0){
+            System.out.println("1111");
+            return new Status(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }else if(flag==null && sflag==null){
+            System.out.println("2222");
+            return new Status(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+
+        try{
+            Map<String,Object> param=new HashMap();
+            List<String> roomids =new ArrayList<String>();
+            String[] split = roomid.split(",");
+            if(split.length==0){
+                return new Status(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+            }
+            for(int i=0;i<split.length;i++){
+                roomids.add(split[i]);
+            }
+
+            param.put("roomids",roomids);
+            param.put("flag",flag);
+            param.put("sflag",sflag);
+            Integer integer = roomSDao.updateRoomSflagAndFlag(param);
+            if(integer>0){
+                return  new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+            }else{
+                return  new Status(StatusEnum.DEFEAT.getCODE(),"修改失败");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+
+    }
+
 
 
 

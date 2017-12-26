@@ -81,6 +81,6 @@
 
     <!--查询订单买单时间-->
     <select id="selectOrderMdTime" parameterType="string" resultType="string">
-        select md_time from GS_REPAST_ORDER where status =0 and ctid = #{tableId}
+        select md_time from GS_REPAST_ORDER where (status =0 or status=4) and ctid = #{tableId}
     </select>
 </mapper>
