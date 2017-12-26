@@ -170,6 +170,25 @@ public class CyFloorController {
                         }
                     }
 
+                    //判断餐台是否在清洁中  清洁超过20分钟修改状态
+                    if(String.valueOf(infos.get(i).get("status")).equals("7")){
+                        Calendar mddate = Calendar.getInstance();
+                        Calendar nowdate = Calendar.getInstance();
+                        //查询餐台买单时间
+                        String mdTime = cyFloorDao.selectOrderMdTime(String.valueOf(infos.get(i).get("id")));
+                        Date parse = sf.parse(mdTime);
+                        Date newDate =new Date();
+                        mddate.setTime(parse);
+                        nowdate.setTime(newDate);
+                        long timeInMillis = nowdate.getTimeInMillis();
+                        long timeInMillis1 = mddate.getTimeInMillis();
+                        if(((timeInMillis-timeInMillis1)/(1000*60))>20){
+                            infos.get(i).put("status", "1");
+                            mapper.updateTableState(String.valueOf(infos.get(i).get("id")), "1");
+                        }
+                    }
+
+
                     fMap.add(infos.get(i));
                     for (int j = i + 1; j < infos.size(); j++) {
                         if (infos.get(j) != null && infos.get(i).get("hall_name").equals(infos.get(j).get("hall_name"))) {
@@ -195,6 +214,26 @@ public class CyFloorController {
                                     mapper.updateOrderStatusDao(String.valueOf(infos.get(j).get("orderNumber")));
                                 }
                             }
+
+                            //判断餐台是否在清洁中  清洁超过20分钟修改状态
+                            if(String.valueOf(infos.get(j).get("status")).equals("7")){
+                                //查询餐台买单时间
+                                String mdTime = cyFloorDao.selectOrderMdTime(String.valueOf(infos.get(j).get("id")));
+
+                                Calendar mddate = Calendar.getInstance();
+                                Calendar nowdate = Calendar.getInstance();
+                                Date parse = sf.parse(mdTime);
+                                Date newDate =new Date();
+                                mddate.setTime(parse);
+                                nowdate.setTime(newDate);
+                                long timeInMillis = nowdate.getTimeInMillis();
+                                long timeInMillis1 = mddate.getTimeInMillis();
+                                if(((timeInMillis-timeInMillis1)/(1000*60))>20){
+                                    infos.get(j).put("status", "1");
+                                    mapper.updateTableState(String.valueOf(infos.get(j).get("id")), "1");
+                                }
+                            }
+
                             fMap.add(infos.get(j));
                             infos.set(j, null);
                         }
@@ -269,6 +308,7 @@ public class CyFloorController {
 
 
     /**
+     * 换台
      * @param orderId      订单编号
      * @param currentTable 当前餐台id
      * @param transTable   换至餐台id

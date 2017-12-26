@@ -39,4 +39,7 @@ public interface CyFloorDao {
     //查询当前厅所有空闲餐台
     public List<Diningtable> selectFreeTables(@Param("tableId") String tableId);
 
+    //查询餐台买单时间
+    public String selectOrderMdTime(@Param("tableId") String tableId);
+
 }
