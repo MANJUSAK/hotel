@@ -140,7 +140,7 @@ public class RepastOrderController {
             if (isExistOrder) {
                 return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "id或ctid为空或为null");
             }
-            if (msg.getMsg().size() > 0) {
+            if (msg.getMsg().size() > 0 || msg.getStatus() == 2) {
                 try {
                     return this.service.addOrderGoodsService(msg);
                 } catch (HotelDataBaseException e) {
@@ -207,7 +207,7 @@ public class RepastOrderController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/counter/checkout/order/data.shtml", method = RequestMethod.POST)
     public Status counterCheckoutController(@RequestBody OrderDTO param) {
-        boolean pm = (param.getId() != null && param.getId() != "" && param.getStatus() > 0);
+        boolean pm = (param.getId() != null && param.getId() != "" && param.getStatus() > 0 && param.getCtid() != null && param.getCtid() != "");
         if (pm) {
             try {
                 return this.service.counterCheckoutService(param);
@@ -216,7 +216,7 @@ public class RepastOrderController {
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
-        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能为oid为空或null、status小于0");
+        return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能为oid或ctid为空或null、status小于0");
     }
 
     /**

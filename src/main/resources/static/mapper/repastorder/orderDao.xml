@@ -151,7 +151,10 @@
                 STATUS = #{status},
             </if>
             <if test="reason !=null and reason !=''">
-                REASON=#{reason}
+                REASON=#{reason},
+            </if>
+            <if test="mdTime !=null and mdTime !=''">
+                MD_TIME=#{mdTime},
             </if>
         </set>
         WHERE ID=#{id}

@@ -240,8 +240,9 @@ public class RepastOderServicelmpl implements RepastOderService {
         String id = msg.getId();
         List<OrderGoodsDO> orderGoods = msg.getMsg();
         List<MenuCustomDO> menuCustom = null;
+        int len = orderGoods.size();
         int len1 = 0;
-        for (int i = 0, len = orderGoods.size(); i < len; ++i) {
+        for (int i = 0; i < len; ++i) {
             orderGoods.get(i).setId(this.uuid.getUUID("CY").toString());
             orderGoods.get(i).setOid(id);
             menuCustom = orderGoods.get(i).getSetMealCustoms();
@@ -262,11 +263,15 @@ public class RepastOderServicelmpl implements RepastOderService {
             if (menuCustom != null && len1 > 0) {
                 orderDao.addMenuCustomDao(menuCustom);
             }
-            orderDao.addRepastOrderGoodsDao(orderGoods);
+            if (len > 0) {
+                orderDao.addRepastOrderGoodsDao(orderGoods);
+            }
             orderDao.updateRepastOrderDao(msg);
-            int row = this.cydao.updateTableState(msg.getCtid(), "4");
-            if (row == 0) {
-                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "不能获取餐台信息");
+            if (msg.getStatus() == 2) {
+                int row = this.cydao.updateTableState(msg.getCtid(), "4");
+                if (row == 0) {
+                    return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "不能获取餐台信息");
+                }
             }
             sqlSession.commit();
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
@@ -353,8 +358,10 @@ public class RepastOderServicelmpl implements RepastOderService {
                 }
                 return new Status(StatusEnum.ORDER_TIME_OUT.getCODE(), StatusEnum.ORDER_TIME_OUT.getEXPLAIN());
             default:
+                param.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 int row = this.dao.updateOrderStatusDao(param);
                 if (row > 0) {
+                    this.cydao.updateTableState(param.getCtid(), "7");
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 }
                 return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
