@@ -3,6 +3,7 @@ package com.goodsoft.hotel.config.mybatis;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.pagehelper.PageInterceptor;
 import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +33,7 @@ public class MybatisConfig {
         //使用缓存
         configuration.setCacheEnabled(true);
         //懒加载
-        configuration.setLazyLoadingEnabled(true);
+        configuration.setLazyLoadingEnabled(false);
         configuration.setAggressiveLazyLoading(false);
         //单一语句返回多结果集
         configuration.setMultipleResultSetsEnabled(true);
@@ -50,6 +51,8 @@ public class MybatisConfig {
         configuration.setLogImpl(org.apache.ibatis.logging.slf4j.Slf4jImpl.class);
         //支持自动生成主键
         configuration.setUseGeneratedKeys(true);
+        //对于批量更新操作缓存SQL以提高性能
+        configuration.setDefaultExecutorType(ExecutorType.REUSE);
         //mybatis日志前缀
         configuration.setLogPrefix("hotel");
         //设置返回数据默认大小（可重写）
