@@ -12,7 +12,7 @@ import java.util.List;
  * function 文件上传工具类
  * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
  *
- * @version v1.1.2
+ * @version v1.1.3
  */
 @SuppressWarnings("ALL")
 @Service

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * function 文件上传业务接口
  * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
- * version v1.0
+ * version v1.1.3
  */
 public interface FileService {
     //文件上传业务处理
