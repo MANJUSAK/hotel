@@ -175,7 +175,7 @@ public class CookBookServicelmpl implements CookBookService {
         if (len > 0) {
             if (param.getSetFindFile() == 0) {
                 for (int i = 0; i < len; ++i) {
-                    List<String> picture = this.fileService.getFileData(request, list.get(i).getId());
+                    List<String> picture = this.fileService.getFileDataServicelmpl(request, list.get(i).getId());
                     list.get(i).setPicture(picture);
                 }
             }
@@ -243,11 +243,11 @@ public class CookBookServicelmpl implements CookBookService {
                 List<SetMealDetailDO> detailList = this.dao.querySetMealDetailDao(list.get(i).getId());
                 int len1 = detailList.size();
                 if (param.getSetFindFile() == 0) {
-                    List<String> url = this.fileService.getFileData(request, list.get(i).getFileId());
+                    List<String> url = this.fileService.getFileDataServicelmpl(request, list.get(i).getFileId());
                     list.get(i).setPicture(url);
                     if (len1 > 0) {
                         for (int j = 0; j < len1; ++j) {
-                            List<String> sturl = this.fileService.getFileData(request, detailList.get(j).getFileId());
+                            List<String> sturl = this.fileService.getFileDataServicelmpl(request, detailList.get(j).getFileId());
                             detailList.get(j).setPicture(sturl);
                         }
                     }
@@ -344,7 +344,7 @@ public class CookBookServicelmpl implements CookBookService {
             //文件上传
             MultipartFile[] files = menu.get(i).getFiles();
             if (files != null) {
-                int arg = this.fileService.fileUploadService(files, "images", id);
+                int arg = this.fileService.fileUploadServicelmpl(files, "images", id);
                 switch (arg) {
                     case 0:
                         menu.get(i).setFileId(id);
@@ -454,7 +454,7 @@ public class CookBookServicelmpl implements CookBookService {
                 //文件上传
                 MultipartFile[] files = msg.getFiles();
                 if (files != null) {
-                    int arg = this.fileService.fileUploadService(files, "images", id);
+                    int arg = this.fileService.fileUploadServicelmpl(files, "images", id);
                     switch (arg) {
                         case 0:
                             msg.setFileId(id);
@@ -606,7 +606,7 @@ public class CookBookServicelmpl implements CookBookService {
         if (files != null) {
             String newFileId = this.uuid.getUUID("CY").toString();
             String fileId = msg.getFileId();
-            int arg = this.fileService.fileUploadService(files, "images", newFileId);
+            int arg = this.fileService.fileUploadServicelmpl(files, "images", newFileId);
             switch (arg) {
                 //存在文件更新则获取旧文件
                 case 0:

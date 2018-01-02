@@ -17,6 +17,7 @@ public class FileData implements java.io.Serializable {
     private String fileName;//原文件名
     private String newFileName;//新文件名
     private String suffix;//文件后缀
+    private String time;//文件保存时间
 
     @Transient
     public String getFileId() {
@@ -75,6 +76,14 @@ public class FileData implements java.io.Serializable {
         this.newFileName = newFileName;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,12 +95,13 @@ public class FileData implements java.io.Serializable {
                 Objects.equals(sort, fileData.sort) &&
                 Objects.equals(fileName, fileData.fileName) &&
                 Objects.equals(newFileName, fileData.newFileName) &&
+                Objects.equals(time, fileData.time) &&
                 Objects.equals(suffix, fileData.suffix);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fileId, path, bases, sort, fileName, newFileName, suffix);
+        return Objects.hash(fileId, path, bases, sort, fileName, newFileName, suffix, time);
     }
 
     @Override
@@ -104,6 +114,7 @@ public class FileData implements java.io.Serializable {
                 ", fileName='" + fileName + '\'' +
                 ", newFileName='" + newFileName + '\'' +
                 ", suffix='" + suffix + '\'' +
+                ", time='" + time + '\'' +
                 '}';
     }
 }
