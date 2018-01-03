@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class FileUploadUtil {
 
-    //实例化公共集合类用以存储文件相对路径
-    private List<String> fileList = new ArrayList<String>();
     //实例化UUID工具类
     private UUIDUtil uuid = UUIDUtil.getInstance();
 
@@ -32,6 +30,7 @@ public class FileUploadUtil {
      * @return 文件保存相对路径
      */
     public List<String> fileUpload(MultipartFile[] files, String fileType, String savePath) throws IOException {
+        List<String> fileList = new ArrayList<String>();
         StringBuilder sb = new StringBuilder();
         sb.append(savePath);
         //自定义文件保存路径 start

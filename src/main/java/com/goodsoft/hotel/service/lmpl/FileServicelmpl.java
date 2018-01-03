@@ -130,8 +130,6 @@ public class FileServicelmpl implements FileService {
             this.logger.error(e.toString());
             throw new HotelDataBaseException(e.getMessage());
         } finally {
-            //清除集合里的内容  避免数据混乱
-            fileList.clear();
             sqlSession.close();
         }
         //文件保存 end
