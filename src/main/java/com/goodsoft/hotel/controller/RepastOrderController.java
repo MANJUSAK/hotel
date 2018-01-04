@@ -187,6 +187,7 @@ public class RepastOrderController {
             try {
                 return this.service.checkoutRepastOrderService(order);
             } catch (Exception e) {
+                e.printStackTrace();
                 this.logger.error(e.toString());
                 return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
             }

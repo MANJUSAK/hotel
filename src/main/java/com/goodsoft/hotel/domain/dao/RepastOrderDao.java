@@ -25,7 +25,6 @@ public interface RepastOrderDao {
     //餐饮订单查询
     List<OrderDO> queryRepastOrdersDao(HotelDTO param) throws Exception;
 
-
     /**
      * 餐饮订单查询(单条) 用于打印小票已使用其它方式代替不必调用接口实现
      *
@@ -45,6 +44,9 @@ public interface RepastOrderDao {
 
     //自定义菜品（套餐）查询
     List<MenuCustomDO> queryMenuCustomDao(@Param("id") String id) throws Exception;
+
+    //通过一卡通id获取房间编号
+    Map<String, String> getRoomIdDao(@Param("cardId") String cardId) throws RuntimeException;
 
     //餐饮订单下单
     int addRepastOrderDao(OrderDO msg) throws Exception;

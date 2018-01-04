@@ -7,8 +7,10 @@ import com.goodsoft.hotel.domain.dao.CookBookDao;
 import com.goodsoft.hotel.domain.dao.CyFloorDao;
 import com.goodsoft.hotel.domain.dao.CyReserveDao;
 import com.goodsoft.hotel.domain.dao.RepastOrderDao;
+import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;
 import com.goodsoft.hotel.domain.entity.cookbook.SetMealDetailDO;
 import com.goodsoft.hotel.domain.entity.dto.HotelDTO;
+import com.goodsoft.hotel.domain.entity.dto.OneCardDTO;
 import com.goodsoft.hotel.domain.entity.dto.OrderDTO;
 import com.goodsoft.hotel.domain.entity.dto.RepastOrderDTO;
 import com.goodsoft.hotel.domain.entity.repastorder.MenuCustomDO;
@@ -30,8 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * description:
@@ -51,6 +55,8 @@ public class RepastOderServicelmpl implements RepastOderService {
     private CyReserveDao cyReserveDao;
     @Resource
     private CookBookDao cbDao;
+    @Resource
+    private RoomSDao roomSDao;
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
     //实例化订单编号生成工具类
@@ -310,8 +316,35 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Override
     public Status checkoutRepastOrderService(OrderDO order) throws Exception {
+        //插入数据标识
+        Integer row = 0;
+        //一卡通支付时将订单打到一卡通，消费者退房时统一结算
+        if (order.getPaymentType() == 6) {
+            String roomId = order.getRoomId();
+            if (roomId == null || "".equals(roomId)) {
+                return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：roomId为空或为null");
+            }
+            Map<String, String> room = this.dao.getRoomIdDao(roomId);
+            boolean payType = room != null && room.size() > 0;
+            if (payType) {
+                List<OneCardDTO> list = new ArrayList<OneCardDTO>();
+                OneCardDTO oc = new OneCardDTO();
+                oc.setId(this.uuid.getUUID("CY").toString());
+                oc.setRoomno(room.get("roomno"));
+                String id = room.get("id");
+                oc.setRoomid(id);
+                //获取一卡通id保存到该消费者当前消费的订单中，以便于后期关联使用
+                order.setRoomId(id);
+                oc.setBookingno(room.get("bookingno"));
+                oc.setDiscount(String.valueOf(order.getQdDiscount()));
+                oc.setGuestname(order.getConsumer());
+                oc.setUnitprice(String.valueOf(order.getOrderPrice()));
+                list.add(oc);
+                this.roomSDao.insertXfConsumptionInfo(list);
+            }
+        }
         order.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        int row = this.dao.checkoutRepastOrderDao(order);
+        row = this.dao.checkoutRepastOrderDao(order);
         if (row > 0) {
             //更新餐台状态为清洁中
             try {
