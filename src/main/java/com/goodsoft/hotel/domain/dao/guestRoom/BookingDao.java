@@ -141,6 +141,8 @@ public interface BookingDao {
     //通过房间ID查询预订单ID
     public String selectBookingIdByRoomId(String roomid);
 
+    //通过身份证号码查询订单ID 与房间Id
+    public List<Map<String,String>> selectBookIdByDocumentno(String documentno);
 
     /**
      * 退房修改客房状态

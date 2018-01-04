@@ -352,7 +352,7 @@
 
     <!--获取所有消费项目-->
     <select id="selectXfProjectAll" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumerProjects">
-        select * from  gs_kfconsumer_projects
+        select * from  gs_kfconsumer_projects  where department='客房'
     </select>
 
     <!--插入客房消费记录-->
@@ -431,6 +431,11 @@
     <!--通过房间id获取房间号-->
     <select id="selectRoomNoByRoomId" parameterType="string" resultType="string">
         select roomno from gs_room where id=#{_parameter}
+    </select>
+
+    <!--通过房间id获取房间号 与门锁id-->
+    <select id="selectRoomNoAndLockByRoomId" parameterType="string" resultType="java.util.Map">
+        select roomno,doorlockid from gs_room where id =#{_parameter}
     </select>
 
 

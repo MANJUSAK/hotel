@@ -432,28 +432,28 @@ public class BookingController {
         }
         return quickbookings;
     }
-
-    /**
-     * 添加客人信息
-     *
-     * @param guest
-     * @return
-     */
-    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
-    @RequestMapping("booking/addGuest")
-    public Status addGuest(@RequestBody Guest guest) {
-
-        System.out.println(guest);
-        StringBuilder uuid = UUIDUtil.getInstance().getUUID();
-        guest.setId(uuid.toString());
-        try {
-            bookingDao.addGuestMapper(guest);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
-        }
-        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
-    }
+//
+//    /**
+//     * 添加客人信息
+//     *
+//     * @param guest
+//     * @return
+//     */
+//    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
+//    @RequestMapping("booking/addGuest")
+//    public Status addGuest(@RequestBody Guest guest) {
+//
+//        System.out.println(guest);
+//        StringBuilder uuid = UUIDUtil.getInstance().getUUID();
+//        guest.setId(uuid.toString());
+//        try {
+//            bookingDao.addGuestMapper(guest);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new Status(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+//        }
+//        return new Status(StatusEnum.SUCCESS.getCODE(),StatusEnum.SUCCESS.getEXPLAIN());
+//    }
 
 
     //获取标准时间格式   ---还没使用
@@ -662,7 +662,6 @@ public class BookingController {
             e.printStackTrace();
             return new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
-
 
     }
 

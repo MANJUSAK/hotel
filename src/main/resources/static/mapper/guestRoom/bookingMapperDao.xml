@@ -500,4 +500,11 @@
         and b.roomid=#{_parameter}
     </select>
 
+    <!--通过身份证号码查询订单ID 与 房间Id-->
+    <select id="selectBookIdByDocumentno" parameterType="java.lang.String" resultType="java.util.Map">
+     select bookid,roomid from gs_guest where documentno =#{_parameter} and state='1'
+     </select>
+
+
+
 </mapper>

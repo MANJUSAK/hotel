@@ -77,6 +77,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
             qr.setBookId(uuid);
         }
         map.put("bookingNo", bookingNo);
+        map.put("bookId",uuid);
         this.bookingDao.insertQuickBooking(quickbooking);
         this.bookingDao.insertQuickBookingRoom(quickbooking.getRoomno());
         return map;

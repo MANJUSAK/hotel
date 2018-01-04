@@ -102,6 +102,7 @@ public class CookBookController {
     public <T> T queryMenuStypeController(HotelDTO param) {
         try {
             return this.service.queryMenuStypeService(param);
+
         } catch (Exception e) {
             this.logger.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());

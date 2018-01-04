@@ -181,6 +181,9 @@ public interface RoomSDao {
     //通过房间ID查询房间号
     public String selectRoomNoByRoomId(String roomId);
 
+    //通过房间ID查询房间号和门锁ID
+    public Map selectRoomNoAndLockByRoomId(String roomid);
+
     //查询房间所有预订信息
     public List<Quickbooking> selectRoomRetBooking(@Param("roomid") String bookid);
 

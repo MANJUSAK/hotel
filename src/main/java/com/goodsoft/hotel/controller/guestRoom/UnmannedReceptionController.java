@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +87,47 @@ public class UnmannedReceptionController {
         }
 
     }
-    
+
+
+    /**
+     * 传入身份证号查询订单信息
+     * @param documentno
+     * @param <T>
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("unmanned/select/booking")
+    @ResponseBody
+    public <T> T selectBookingInfo(String documentno){
+        if(documentno==null){
+            return (T) new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        try {
+            //查询订单ID与房间id
+            List<Map<String, String>> maps = bookingDao.selectBookIdByDocumentno(documentno);
+            if (maps == null || maps.size() == 0) {
+                return (T) new Result(StatusEnum.DEFEAT.getCODE(), "未查找到订单信息");
+            }
+            String bookid = maps.get(0).get("bookid");
+            String roomid = maps.get(0).get("roomid");
+
+            //查询订单编号
+            String bookNo = bookingDao.selectBookNoByBookId(bookid);
+            //查询房间号和门锁ID
+            Map roomNoAndLock = roomSDao.selectRoomNoAndLockByRoomId(roomid);
+            //查询订单开始间和结束时间
+            Map map = kfCheckOutDao.selectBookingTime(bookNo);
+            roomNoAndLock.put("roomid", roomid);
+            roomNoAndLock.put("bookNo", bookNo);
+            roomNoAndLock.put("bookid", bookid);
+            roomNoAndLock.put("startdate",map.get("startdate"));
+            roomNoAndLock.put("enddate", map.get("enddate"));
+
+            return (T) new Result(StatusEnum.SUCCESS.getCODE(), roomNoAndLock);
+        }catch (Exception e){
+            return (T) new Result(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
+
 
 }
