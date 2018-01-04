@@ -43,12 +43,13 @@ public class UploadFileController {
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.POST)
     @RequestMapping(value = "/upload/files/data.shtml", method = RequestMethod.POST)
     public Status uploadFileController(@RequestParam("files") MultipartFile[] files, String f_type, String flag) {
-        if (f_type == null || "".equals(f_type)) {
+        if (f_type == null || "".equals(f_type))
             f_type = "images";
-        }
+        if (flag == null || "".equals(flag))
+            flag = this.uuid.getUUID("WZ").toString();
         try {
-            if (files != null && flag != null && !("".equals(flag))) {
-                int status = this.service.fileUploadService(files, f_type, flag);
+            if (files != null && !("".equals(flag))) {
+                int status = this.service.fileUploadServicelmpl(files, f_type, flag);
                 switch (status) {
                     case 0:
                         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());

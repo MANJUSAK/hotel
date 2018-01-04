@@ -39,7 +39,7 @@ public class OrderDO implements java.io.Serializable {
     private String ktSb;//开台市别
     private Integer isServiceCharge;//收服务费（0为true/1为false）
     private Integer isZdConsume;//记最低消费（0为true/1为false）
-    private String paymentType;//支付方式
+    private Integer paymentType;//支付方式(1为现金/2支付宝/3微信/4信用卡/5银行卡)
     private Integer status;//订单状态（0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消）
     private String remarks;//备注
     private Integer placeNum;//席数
@@ -271,12 +271,12 @@ public class OrderDO implements java.io.Serializable {
         this.ktSb = ktSb;
     }
 
-    public String getPaymentType() {
+    public Integer getPaymentType() {
         return paymentType;
     }
 
-    public void setPaymentType(String paymentType) {
-        this.paymentType = paymentType == null ? "" : paymentType.trim();
+    public void setPaymentType(Integer paymentType) {
+        this.paymentType = paymentType < 0 ? Math.abs(paymentType) : paymentType;
     }
 
     public String getRemarks() {

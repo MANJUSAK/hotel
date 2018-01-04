@@ -8,6 +8,9 @@ import com.goodsoft.hotel.service.FileService;
 import com.goodsoft.hotel.util.DomainNameUtil;
 import com.goodsoft.hotel.util.FileUploadUtil;
 import com.goodsoft.hotel.util.GetOsNameUtil;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +37,8 @@ public class FileServicelmpl implements FileService {
     private FileUploadUtil fileUploadUtil;
     @Resource
     private FileDao dao;
+    @Resource
+    private SqlSessionTemplate sqlSessionTemplate;
     //实例化服务器域名地址工具类
     private DomainNameUtil domainName = DomainNameUtil.getInstance();
     //实例化获取操作系统类型工具类
@@ -50,9 +57,94 @@ public class FileServicelmpl implements FileService {
      */
     @Override
     @Transactional
-    public int fileUploadService(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException {
-        int len = files.length;
+    public int fileUploadServicelmpl(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException {
+        int checkCode = checkFileFormatAndSize(fileType, files);
+        if (checkCode != 0) {
+            return checkCode;
+        }
+        //文件保存根目录
+        String var1 = null;
+        if (this.getOsNameUtil.getOsName()) {
+            //Linux文件路径
+            var1 = "/usr/hotel";
+        } else {
+            //windows文件路径
+            var1 = "D:/hotel";
+        }
+        //文件保存 start
+        List<String> fileList = null;
+        SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
+        FileDao fileDao = sqlSession.getMapper(FileDao.class);
+        try {
+            //保存文件到服务器并获取文件相对路径
+            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            fileList = this.fileUploadUtil.fileUpload(files, fileType, var1);
+            String sort = null;
+            //获取文件类型 start
+            switch (fileType) {
+                case "images":
+                    sort = "images";
+                    break;
+                case "document":
+                    sort = "document";
+                    break;
+                case "excel":
+                    sort = "excel";
+                    break;
+                default:
+                    sort = "filed_under";
+                    break;
+            }
+            //获取文件类型 end
+            //文件信息保存 start
+            for (int i = 0, length = fileList.size(); i < length; ++i) {
+                FileData file = new FileData();
+                //设置文件编号
+                file.setFileId(fileId);
+                //设置根目录
+                file.setBases(var1);
+                //设置文件类别
+                file.setSort(sort);
+                //截取新文件名字符位置
+                int j = fileList.get(i).lastIndexOf("/") + 1;
+                //截取文件后缀字符位置
+                int s = files[i].getOriginalFilename().lastIndexOf(".");
+                //获取文件新命名
+                file.setNewFileName(fileList.get(i).substring(j, fileList.get(i).length()));
+                //获取原文件名
+                String fileName = files[i].getOriginalFilename();
+                file.setFileName(fileName);
+                //获取文件后缀
+                file.setSuffix(fileName.substring(s, fileName.length()));
+                //设置文件路径
+                file.setPath(fileList.get(i));
+                //文件保存时间
+                file.setTime(time);
+                fileDao.saveFileDao(file);
+            }
+            sqlSession.commit();
+            return 0;
+            //文件信息保存 end
+        } catch (Exception e) {
+            sqlSession.rollback();
+            this.logger.error(e.toString());
+            throw new HotelDataBaseException(e.getMessage());
+        } finally {
+            sqlSession.close();
+        }
+        //文件保存 end
+    }
+
+    /**
+     * 检查文件大小和格式，本类的私有方法
+     *
+     * @param fileType 文件类型
+     * @param files    文件
+     * @return int  文件检查码[601：文件大小不符，603：文件格式不正确，604：文件为空]
+     */
+    private int checkFileFormatAndSize(String fileType, MultipartFile[] files) {
         //判断文件是图片还是文档 start
+        int len = files.length;
         switch (fileType) {
             case "document":
                 for (int i = 0; i < len; ++i) {
@@ -129,74 +221,7 @@ public class FileServicelmpl implements FileService {
                 break;
             //图片文件类型检查 end
         }
-        //文件保存根目录
-        String var1 = null;
-        if (this.getOsNameUtil.getOsName()) {
-            //Linux文件路径
-            var1 = "/usr/hotel";
-        } else {
-            //windows文件路径
-            var1 = "D:/hotel";
-        }
-        //文件保存 start
-        List<String> fileList = null;
-        try {
-            //初始化文件保存集合
-            List<FileData> list = new ArrayList<FileData>();
-            //保存文件到服务器并获取文件相对路径
-            fileList = this.fileUploadUtil.fileUpload(files, fileType, var1);
-            String sort = null;
-            //获取文件类型 start
-            switch (fileType) {
-                case "images":
-                    sort = "images";
-                    break;
-                case "document":
-                    sort = "document";
-                    break;
-                case "excel":
-                    sort = "excel";
-                    break;
-                default:
-                    sort = "filed_under";
-                    break;
-            }
-            //获取文件类型 end
-            //文件信息保存 start
-            for (int i = 0, length = fileList.size(); i < length; ++i) {
-                FileData file = new FileData();
-                //设置文件编号
-                file.setFileId(fileId);
-                //设置根目录
-                file.setBases(var1);
-                //设置文件类别
-                file.setSort(sort);
-                //截取新文件名字符位置
-                int j = fileList.get(i).lastIndexOf("/") + 1;
-                //截取文件后缀字符位置
-                int s = files[i].getOriginalFilename().lastIndexOf(".");
-                //获取文件新命名
-                file.setNewFileName(fileList.get(i).substring(j, fileList.get(i).length()));
-                //获取原文件名
-                String fileName = files[i].getOriginalFilename();
-                file.setFileName(fileName);
-                //获取文件后缀
-                file.setSuffix(fileName.substring(s, fileName.length()));
-                //设置文件路径
-                file.setPath(fileList.get(i));
-                list.add(file);
-            }
-            this.dao.saveFileDao(list);
-            return 0;
-            //文件信息保存 end
-        } catch (Exception e) {
-            this.logger.error(e.toString());
-            throw new HotelDataBaseException(e.getMessage());
-        } finally {
-            //清除集合里的内容  避免数据混乱
-            fileList.clear();
-        }
-        //文件保存 end
+        return 0;
     }
 
     /**
@@ -208,7 +233,8 @@ public class FileServicelmpl implements FileService {
      * @throws HotelDataBaseException
      */
     @Override
-    public List<String> getFileData(HttpServletRequest request, String fileId) throws HotelDataBaseException {
+    public List<String> getFileDataServicelmpl(HttpServletRequest request, String fileId) throws
+            HotelDataBaseException {
         //获取服务器域名地址
         String var = this.domainName.getServerDomainName(request).toString();
         StringBuilder sb = new StringBuilder();

@@ -15,7 +15,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * function 系统访问数据信息增强工具类
+ * function 系统访问数据信息增强工具类-aop
  * Created by  manjusaka[manjusakachn@gmail.com] on 2017/9/22.
  * version v1.0
  */

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
-<!--@author manjusaka[manjusakachn@gmail.com]，version v1.1.2-->
+<!--@author manjusaka[manjusakachn@gmail.com]，version v1.1.3-->
 <!--文件管理mapper start-->
 <mapper namespace="com.goodsoft.hotel.domain.dao.FileDao">
     <!--使用mybatis二级缓存-->
@@ -17,21 +17,19 @@
     <!--文件查询结果映射 end-->
     <!--文件查询sql start-->
     <select id="queryFileDao" parameterType="java.lang.String" resultMap="fileData">
-        SELECT `path`,`bases` FROM gs_file_data WHERE fileId=#{fileId}
+        SELECT path,bases FROM gs_file_data WHERE fileId=#{fileId}
     </select>
     <!--文件查询sql end-->
     <!--单文件查询sql start-->
     <select id="queryFileOneDao" parameterType="java.lang.String" resultMap="fileData">
-        SELECT `path`,`bases` FROM gs_file_data WHERE fileId=#{fileId}
+        SELECT path,bases FROM gs_file_data WHERE fileId=#{fileId}
     </select>
     <!--单文件查询sql end-->
     <!--文件信息保存sql start-->
     <insert id="saveFileDao" parameterType="java.util.List">
-        insert into gs_file_data (`fileId`,`path`,`bases`,`sort`,`fileName`,`newFileName`,`suffix`)
+        insert into gs_file_data (fileId,path,bases,sort,fileName,newFileName,suffix,file_time)
         values
-        <foreach collection="list" index="index" item="item" separator=",">
-            (#{item.fileId},#{item.path},#{item.bases},#{item.sort},#{item.fileName},#{item.newFileName},#{item.suffix})
-        </foreach>
+        (#{fileId},#{path},#{bases},#{sort},#{fileName},#{newFileName},#{suffix},#{time})
     </insert>
     <!--文件信息保存sql end-->
     <!--文件删除sql start-->
