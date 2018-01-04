@@ -318,7 +318,7 @@ public class RepastOderServicelmpl implements RepastOderService {
     public Status checkoutRepastOrderService(OrderDO order) throws Exception {
         //插入数据标识
         Integer row = 0;
-        //一卡通支付时将订单打到一卡通，消费者退房时统一结算
+        //一卡通结算支付时将订单打到一卡通，消费者退房时统一结算
         if (order.getPaymentType() == 6) {
             String roomId = order.getRoomId();
             if (roomId == null || "".equals(roomId)) {
@@ -329,7 +329,7 @@ public class RepastOderServicelmpl implements RepastOderService {
             if (payType) {
                 List<OneCardDTO> list = new ArrayList<OneCardDTO>();
                 OneCardDTO oc = new OneCardDTO();
-                oc.setId(this.uuid.getUUID("CY").toString());
+                oc.setId(order.getId());
                 oc.setRoomno(room.get("roomno"));
                 String id = room.get("id");
                 oc.setRoomid(id);
@@ -382,8 +382,8 @@ public class RepastOderServicelmpl implements RepastOderService {
                 int hourBetween = (int) (timeBetween / 3600000);
                 if (hourBetween >= 0 && hourBetween <= 1) {
                     int row = this.dao.updateOrderStatusDao(param);
-
                     if (row > 0) {
+                        this.dao.deleteOneCardDao(param.getId());
                         this.cydao.updateTableState(param.getCtid(), "4");
                         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                     }

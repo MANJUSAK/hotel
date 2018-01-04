@@ -179,5 +179,9 @@
     <update id="deleteRepastOrderDao" parameterType="string">
         UPDATE gs_repast_order SET  STATUS=5 WHERE ID=#{id}
     </update>
+    <!--反结时删除写入到一卡通的订单deleteOneCardDao-->
+    <delete id="deleteOneCardDao" parameterType="string">
+        delete from gs_kfconsump_record where ID=#{id}
+    </delete>
 </mapper>
         <!--mapper 餐饮订单管理 end -->

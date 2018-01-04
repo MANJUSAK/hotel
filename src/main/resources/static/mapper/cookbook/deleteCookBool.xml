@@ -27,122 +27,122 @@
     </sql>
     <!--部门类别删除-->
     <delete id="deleteMenuTypeDao" parameterType="java.util.Arrays">
-        DELETE FROM `gs_cookbook_type` WHERE `ID`
+        DELETE FROM gs_cookbook_type WHERE ID
         <include refid="delete_relevance"/>
     </delete>
     <!--小类删除-->
     <delete id="deleteMenuSubTypeDao" parameterType="object">
-        DELETE FROM `gs_cookbook_subtype` WHERE
+        DELETE FROM gs_cookbook_subtype WHERE
         <if test="rel ==0">
-            `ID`
+            ID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==1">
-            `TID`
+            TID
             <include refid="delete_relevance"/>
         </if>
     </delete>
     <!--菜品删除-->
     <delete id="deleteMenuDao" parameterType="object">
-        DELETE FROM `gs_cookbook` WHERE
+        DELETE FROM gs_cookbook WHERE
         <if test="rel ==0">
-            `ID`
+            ID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==1">
-            `TID`
+            TID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==2">
-            `STID`
+            STID
             <include refid="delete_relevance"/>
         </if>
         ;
-        DELETE FROM `gs_cookbook_inventory`
+        DELETE FROM gs_cookbook_inventory
         WHERE
         <if test="rel ==0">
-            `ID`
+            ID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==1">
-            `TID`
+            TID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==2">
-            `STID`
+            STID
             <include refid="delete_relevance"/>
         </if>
     </delete>
     <!--菜品做法删除-->
     <delete id="deleteMenuMeansDao" parameterType="object">
-        DELETE FROM `gs_cookbook_means` WHERE
+        DELETE FROM gs_cookbook_means WHERE
         <if test="rel ==0">
-            `ID`
+            ID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==1">
-            `TID`
+            TID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==2">
-            `STID`
+            STID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==3">
-            `CBID`
+            CBID
             <include refid="delete_relevance"/>
         </if>
     </delete>
     <!--菜品做法明细删除-->
     <delete id="deleteMenuMeansDetailDao" parameterType="object">
-        DELETE FROM `gs_cookbook_means_detal` WHERE
+        DELETE FROM gs_cookbook_means_detal WHERE
         <if test="rel ==0">
-            `ID`
+            ID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==1">
-            `TID`
+            TID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==2">
-            `STID`
+            STID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==3">
-            `CBID`
+            CBID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==4">
-            `MID`
+            MID
             <include refid="delete_relevance"/>
         </if>
     </delete>
     <!--套餐删除-->
     <delete id="deleteSetMealDao" parameterType="java.util.Arrays">
-        DELETE FROM `gs_cookbook_setmeal` WHERE `ID`
+        DELETE FROM gs_cookbook_setmeal WHERE ID
         <include refid="delete_relevance"/>
     </delete>
     <!--套餐明细删除-->
     <delete id="deleteSetMealDetailDao" parameterType="object">
-        DELETE FROM `gs_cookbook_setmeal_detal` WHERE
+        DELETE FROM gs_cookbook_setmeal_detal WHERE
         <if test="rel ==0">
-            `ID`
+            ID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==1">
-            `SMID`
+            SMID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==10">
-            `TID`
+            TID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==11">
-            `STID`
+            STID
             <include refid="delete_relevance"/>
         </if>
         <if test="rel ==12">
-            `CBID`
+            CBID
             <include refid="delete_relevance"/>
         </if>
     </delete>

@@ -75,4 +75,7 @@ public interface RepastOrderDao {
     //餐饮订单取消
     int deleteRepastOrderDao(@Param("id") String id) throws Exception;
 
+    //反结时删除写入到一卡通的订单
+    int deleteOneCardDao(@Param("id") String id) throws RuntimeException;
+
 }
