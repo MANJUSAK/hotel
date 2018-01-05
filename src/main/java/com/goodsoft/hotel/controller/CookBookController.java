@@ -137,7 +137,7 @@ public class CookBookController {
      *
      * @param request 请求
      * @param param   可传入参数：page 页码、total 总记录数
-     *                id 菜品编号（注：赋值id传入数据为菜品编号cbid而非数据编号id）、
+     *                id 菜品编号、
      *                stid 小类编号、tid 部门类别编号、keyWord 菜品名称、isSub 无小类时必传值为1、
      *                setFindFile 是否查询图片数据
      * @return 响应结果
@@ -157,7 +157,7 @@ public class CookBookController {
      * 菜单做法查询接口，用于前台点餐时做法数据展示或添加菜单数据用于定位做法详情
      *
      * @param param 可传入参数：page 页码、total 总记录数
-     *              id 做法编号（注：赋值id传入数据为做法编号mid而非数据编号id）、
+     *              id 做法编号、
      *              stid 小类编号、tid 部门类别编号、keyWord 做法名称、cbid 菜品编号
      * @return 响应结果
      */
@@ -177,7 +177,7 @@ public class CookBookController {
      * 菜单做法详情查询接口，用于前台点餐时具体做法数据展示
      *
      * @param param 可传入参数：page 页码、total 总记录数
-     *              id 做法详情编号（注：赋值id传入数据为做法详情编号mdid而非数据编号id）、
+     *              id 做法详情编号、
      *              stid 小类编号、tid 部门类别编号、keyWord 做法名称、cbid 菜品编号、mid 做法编号
      * @return 响应结果
      */
@@ -217,7 +217,7 @@ public class CookBookController {
      *
      * @param request 请求
      * @param param   可传入参数：page 页码、total 总记录数
-     *                id 套餐编号（注：赋值id传入数据为套餐编号smid而非数据编号id）、keyWord 套餐名称
+     *                id 套餐编号、keyWord 套餐名称
      *                setFindFile 是否查询图片数据
      * @return 响应结果
      */

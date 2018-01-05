@@ -121,7 +121,7 @@ public interface CookBookDao {
     int deleteMenuMeansDetailDao(@Param("id") String[] id, @Param("rel") int rel) throws Exception;
 
     //套餐删除
-    int deleteSetMealDao(String... id) throws Exception;
+    int deleteSetMealDao(@Param("id") String... id) throws Exception;
 
     //套餐明细删除
     int deleteSetMealDetailDao(@Param("id") String[] id, @Param("rel") int rel) throws Exception;
