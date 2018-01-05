@@ -59,7 +59,6 @@ public class RepastOderServicelmpl implements RepastOderService {
     private RoomSDao roomSDao;
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
-    //实例化订单编号生成工具类
     @Resource
     private OrderIdsupp orderId;
     //实例化UUID工具类
@@ -67,6 +66,8 @@ public class RepastOderServicelmpl implements RepastOderService {
 
 
     /**
+     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票已使用其它方式代替不必调用接口实现
+     *
      * @param id 订单编号
      * @return 查询数据
      * @throws Exception
@@ -161,7 +162,8 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 注：开台后必须获取开台订单信息（id必传，否则开台后无法打单）
      * 该接口为开台后获取订单信息接口
      *
-     * @param id 订单编号
+     * @param id     订单编号
+     * @param status 订单状态
      * @return 查询数据
      * @throws Exception
      */
@@ -236,7 +238,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 注：打单调用该业务方法时需额外传入status=2（必传）
      *
      * @param msg 订单商品信息
-     * @throws Exception
+     * @throws HotelDataBaseException
      */
     @Transactional
     @Override
@@ -316,8 +318,6 @@ public class RepastOderServicelmpl implements RepastOderService {
      */
     @Override
     public Status checkoutRepastOrderService(OrderDO order) throws Exception {
-        //插入数据标识
-        Integer row = 0;
         //一卡通结算支付时将订单打到一卡通，消费者退房时统一结算
         if (order.getPaymentType() == 6) {
             String roomId = order.getRoomId();
@@ -341,10 +341,12 @@ public class RepastOderServicelmpl implements RepastOderService {
                 oc.setUnitprice(String.valueOf(order.getOrderPrice()));
                 list.add(oc);
                 this.roomSDao.insertXfConsumptionInfo(list);
+            } else {
+                return new Status(StatusEnum.NO_ONECARD.getCODE(), StatusEnum.NO_ONECARD.getEXPLAIN());
             }
         }
         order.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        row = this.dao.checkoutRepastOrderDao(order);
+        int row = this.dao.checkoutRepastOrderDao(order);
         if (row > 0) {
             //更新餐台状态为清洁中
             try {
@@ -360,11 +362,9 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 餐饮订单更新（反结账，迟付等）业务方法，用于前台收银相关订单结算错误回滚到可修改状态或迟付等
      * 1.该业务方法用于前台收银员结算错误的订单之后将订单设置为可编辑状态
      * 2.该业务方法用于前台收银员将此订单推迟支付
-     * 3.由于反结情况特殊需做特殊处理（status=6）
+     * 3.由于反结情况特殊需做特殊处理（status=2）
      *
-     * @param oid    订单编号
-     * @param reason 反结账，迟付等原因
-     * @param status 订单状态(status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消)
+     * @param param [oid:订单编号/reason 反结账，迟付等原因/status 订单状态(status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消)]
      * @return Status 结果
      * @throws Exception
      */
@@ -380,23 +380,29 @@ public class RepastOderServicelmpl implements RepastOderService {
                 long nowTime = System.currentTimeMillis();
                 long timeBetween = nowTime - mdTime;
                 int hourBetween = (int) (timeBetween / 3600000);
+                //超过一个小后不允许反结账
                 if (hourBetween >= 0 && hourBetween <= 1) {
                     int row = this.dao.updateOrderStatusDao(param);
                     if (row > 0) {
-                        this.dao.deleteOneCardDao(param.getId());
+                        //如果反结订单属于一卡通，则删除一卡通反结前的订单
+                        if (param.getPayType() == 6) {
+                            this.dao.deleteOneCardDao(param.getId());
+                        }
                         this.cydao.updateTableState(param.getCtid(), "4");
                         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                     }
                     return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
                 }
                 return new Status(StatusEnum.ORDER_TIME_OUT.getCODE(), StatusEnum.ORDER_TIME_OUT.getEXPLAIN());
-            default:
+            case 4:
                 param.setMdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 int row = this.dao.updateOrderStatusDao(param);
                 if (row > 0) {
                     this.cydao.updateTableState(param.getCtid(), "7");
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 }
+                return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
+            default:
                 return new Status(StatusEnum.NO_GOODS.getCODE(), StatusEnum.NO_GOODS.getEXPLAIN());
 
         }

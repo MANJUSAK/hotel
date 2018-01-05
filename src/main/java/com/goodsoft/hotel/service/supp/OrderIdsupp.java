@@ -27,7 +27,7 @@ public class OrderIdsupp {
     @Resource
     private SysDao dao;
     //实例化日志管理工具类
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     //实例化时期格式化工具类
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     //实例化lock，防止线程出现安全性问题
@@ -77,7 +77,7 @@ public class OrderIdsupp {
             this.dao.addSerialNumDao(sn);
             return sb;
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             throw new HotelApplicationException("生成订单号失败");
         } finally {
             this.lock.unlock();
@@ -129,7 +129,7 @@ public class OrderIdsupp {
             this.dao.addSerialNumDao(sn);
             return sb;
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             throw new HotelApplicationException("生成订单号失败");
         } finally {
             this.lock.unlock();

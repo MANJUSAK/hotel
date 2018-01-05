@@ -18,6 +18,8 @@ import com.goodsoft.hotel.exception.HotelDataBaseException;
 public interface RepastOderService {
 
     /**
+     * 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票已使用其它方式代替不必调用接口实现
+     *
      * @param id  订单编号
      * @param <T>
      * @return 查询数据
@@ -47,7 +49,8 @@ public interface RepastOderService {
      * 注：开台后必须获取开台订单信息（id必传，否则开台后无法打单）
      * 该接口为开台后获取订单信息接口
      *
-     * @param id 订单编号
+     * @param status 订单状态
+     * @param id     订单编号
      * @return 查询数据
      * @throws Exception
      */
@@ -71,7 +74,8 @@ public interface RepastOderService {
      * 注：打单调用该业务方法时需额外传入status=2（必传）
      *
      * @param msg 订单商品信息
-     * @throws Exception
+     * @return Status 结果
+     * @throws HotelDataBaseException
      */
     Status addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException;
 
@@ -101,9 +105,7 @@ public interface RepastOderService {
      * 2.该业务方法用于前台收银员将此订单推迟支付
      * 3.由于反结情况特殊需做特殊处理（status=2）
      *
-     * @param oid    订单编号
-     * @param reason 反结账，迟付等原因
-     * @param status 订单状态(status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消)
+     * @param param [oid:订单编号/reason 反结账，迟付等原因/status 订单状态(status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消)]
      * @return Status 结果
      * @throws Exception
      */

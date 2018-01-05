@@ -29,7 +29,7 @@ public class CookBookController {
     @Resource
     private CookBookService service;
     //实例化日志管理工具类
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 部门类别数据查询接口，用于前台下拉框或其他方式查询部门类别、
@@ -44,7 +44,7 @@ public class CookBookController {
         try {
             return this.service.queryTypeService();
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
@@ -63,7 +63,7 @@ public class CookBookController {
         try {
             return this.service.queryMenuStypeService(tid);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
@@ -82,7 +82,7 @@ public class CookBookController {
         try {
             return this.service.queryMenuTypeService(param);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
@@ -104,7 +104,7 @@ public class CookBookController {
             return this.service.queryMenuStypeService(param);
 
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -123,7 +123,7 @@ public class CookBookController {
         try {
             return this.service.queryMenuService(stid, tid);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
@@ -148,7 +148,7 @@ public class CookBookController {
         try {
             return this.service.queryMenuDetailService(param, request);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
@@ -167,7 +167,7 @@ public class CookBookController {
         try {
             return this.service.queryMenuMeansService(param);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
 
@@ -187,7 +187,7 @@ public class CookBookController {
         try {
             return this.service.queryMenuMeansDetailService(param);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
@@ -204,7 +204,7 @@ public class CookBookController {
         try {
             return this.service.querySetMealByNameService(sName);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return e.getMessage();
         }
     }
@@ -227,7 +227,7 @@ public class CookBookController {
         try {
             return this.service.querySetMealService(request, param);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.SERVER_ERROR.getCODE(), StatusEnum.SERVER_ERROR.getEXPLAIN());
         }
     }
@@ -245,7 +245,7 @@ public class CookBookController {
             this.service.addMenuTypeService(msg);
             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -264,7 +264,7 @@ public class CookBookController {
                 try {
                     return this.service.addMenuService(msg);
                 } catch (Exception e) {
-                    this.logger.error(e.toString());
+                    this.LOG.error(e.toString());
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), e.getMessage());
                 }
             }
@@ -288,7 +288,7 @@ public class CookBookController {
                     this.service.addMenuMeansService(msg);
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 } catch (Exception e) {
-                    this.logger.error(e.toString());
+                    this.LOG.error(e.toString());
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             }
@@ -312,7 +312,7 @@ public class CookBookController {
                     this.service.addMenuMeansDetailService(msg);
                     return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                 } catch (Exception e) {
-                    this.logger.error(e.toString());
+                    this.LOG.error(e.toString());
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             }
@@ -337,7 +337,7 @@ public class CookBookController {
                 try {
                     return this.service.addSetMealService(msg);
                 } catch (Exception e) {
-                    this.logger.error(e.toString());
+                    this.LOG.error(e.toString());
                     return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
                 }
             }
@@ -359,7 +359,7 @@ public class CookBookController {
             try {
                 return this.service.addSetMealDetailService(msg);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -380,7 +380,7 @@ public class CookBookController {
         try {
             return this.service.updateMenuTypeService(msg);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -399,7 +399,7 @@ public class CookBookController {
         try {
             return this.service.updateMenuService(msg);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -418,7 +418,7 @@ public class CookBookController {
         try {
             return this.service.updateMenuMeansService(msg);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -435,7 +435,7 @@ public class CookBookController {
         try {
             return this.service.updateMenuMeansDetailService(msg);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
@@ -455,7 +455,7 @@ public class CookBookController {
             try {
                 return this.service.deleteMenuTypeService(id);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -476,7 +476,7 @@ public class CookBookController {
             try {
                 return this.service.deleteMenuSubTypeService(id);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -497,7 +497,7 @@ public class CookBookController {
             try {
                 return this.service.deleteMenuService(id, fileId);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -518,7 +518,7 @@ public class CookBookController {
             try {
                 return this.service.deleteMenuMeansService(id);
             } catch (HotelDataBaseException e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -538,7 +538,7 @@ public class CookBookController {
             try {
                 return this.service.deleteMenuMeansDetailService(id);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -559,7 +559,7 @@ public class CookBookController {
             try {
                 return this.service.deleteSetMealService(id, fileId);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -579,7 +579,7 @@ public class CookBookController {
             try {
                 return this.service.deleteSetMealDetailService(id);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 public class ControllerAop {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     //匹配com.goodsoft.plantlet.controller包及其子包下的所有类的所有方法
     @Pointcut("execution(* com.goodsoft.hotel.controller.*..*(..))")
@@ -40,7 +40,7 @@ public class ControllerAop {
         String method = request.getMethod();
         String queryString = request.getQueryString();
         String ip = GetIPUtil.getIP(request);
-        logger.info("ip:{} 请求信息：,url:{},method:{},params:{}", ip, url, method, queryString);
+        this.LOG.info("ip:{} 请求信息：,url:{},method:{},params:{}", ip, url, method, queryString);
     }
 
 }
