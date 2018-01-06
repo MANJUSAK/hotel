@@ -100,6 +100,11 @@
             resultType="com.goodsoft.hotel.domain.entity.repastorder.MenuCustomDO">
     SELECT * FROM gs_cookbook_custom  WHERE CUSTOM_ID=#{id}
     </select>
+    <!--通过一卡通id获取房间信息-->
+    <select id="getRoomIdDao" parameterType="string" resultType="map">
+    select a.roomno,a.id ,b.bookingno from gs_room a,GS_QUICKBOOKING b, GS_QUICKBOOKING_ROOMNO c
+    where a.id =c.roomid and b.id =c.bookid  and a.flag!='空房' and (b.bookingflag='部分入住' or b.bookingflag='全部入住') and a.doorlockid =#{cardId}
+    </select>
     <!--自定义菜品添加-->
     <insert id="addMenuCustomDao" parameterType="list">
         INSERT INTO gs_cookbook_custom (ID, CUSTOM_ID, CBNAME, SPEC, PRICE, UNIT, NUM, TNAME) VALUES
@@ -137,8 +142,8 @@
             <if test="ktNum !=null and ktNum !=''">KT_NUM=#{ktNum},</if>
             <!--<if test="partHall !=null and partHall !=''">PART_HALL= #{partHall},</if>-->
             <if test="placeNum !=null and placeNum !=''">PLACE_NUM= #{placeNum},</if>
-            <!--<if test="ctid !=null and ctid !=''">AOH= #{aoh},CTID=#{ctid},</if>-->
             <if test="orderPrice !=null">ORDER_PRICE=#{orderPrice},</if>
+            <if test="roomId !=null">ROOM_ID=#{roomId},</if>
             <if test="status !=null ">STATUS = #{status},MD_TIME=#{mdTime}</if>
         </set>
         WHERE ID = #{id}
@@ -174,5 +179,9 @@
     <update id="deleteRepastOrderDao" parameterType="string">
         UPDATE gs_repast_order SET  STATUS=5 WHERE ID=#{id}
     </update>
+    <!--反结时删除写入到一卡通的订单deleteOneCardDao-->
+    <delete id="deleteOneCardDao" parameterType="string">
+        delete from gs_kfconsump_record where ID=#{id}
+    </delete>
 </mapper>
         <!--mapper 餐饮订单管理 end -->

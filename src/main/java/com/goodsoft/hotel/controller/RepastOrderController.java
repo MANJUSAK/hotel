@@ -29,7 +29,7 @@ public class RepastOrderController {
     @Resource
     private RepastOderService service;
     //实例化日志管理工具类
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**
      * @param id 订单编号
@@ -48,7 +48,7 @@ public class RepastOrderController {
             }
             return (T) new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
@@ -70,7 +70,7 @@ public class RepastOrderController {
         try {
             return this.service.queryOrderService(param);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
@@ -92,7 +92,7 @@ public class RepastOrderController {
             try {
                 return this.service.queryOrderByIdService(id, status);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -114,7 +114,7 @@ public class RepastOrderController {
             try {
                 return this.service.addOrderService(order);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return (T) new Status(StatusEnum.ERROR_ORDER.getCODE(), StatusEnum.ERROR_ORDER.getEXPLAIN());
             }
         }
@@ -144,7 +144,7 @@ public class RepastOrderController {
                 try {
                     return this.service.addOrderGoodsService(msg);
                 } catch (HotelDataBaseException e) {
-                    this.logger.error(e.toString());
+                    this.LOG.error(e.toString());
                     return new Status(StatusEnum.DEFEAT.getCODE(), e.toString());
                 }
             }
@@ -167,7 +167,7 @@ public class RepastOrderController {
         try {
             return this.service.updateRepastOrderService(orderDO);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
 
@@ -187,7 +187,7 @@ public class RepastOrderController {
             try {
                 return this.service.checkoutRepastOrderService(order);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
             }
         }
@@ -212,7 +212,7 @@ public class RepastOrderController {
             try {
                 return this.service.counterCheckoutService(param);
             } catch (Exception e) {
-                this.logger.error(e.toString());
+                this.LOG.error(e.toString());
                 return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
             }
         }
@@ -232,7 +232,7 @@ public class RepastOrderController {
         try {
             return this.service.deteleRepastOrderServicr(id);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DEFEAT.getCODE(), StatusEnum.DEFEAT.getEXPLAIN());
         }
     }

@@ -18,8 +18,6 @@ public class KfconsumpRecord {
     private String  roomid ;       //房间id
     private String  state;         //状态 1:未结账  0:已结账
     private String  isgive;        //是否赠送
-
-
     private String totalPrice;     //总价格
 
     public String getTotalPrice() {

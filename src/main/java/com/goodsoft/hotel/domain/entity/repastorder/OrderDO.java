@@ -15,6 +15,7 @@ import java.util.Objects;
 public class OrderDO implements java.io.Serializable {
     private static final long serialVersionUID = -5502168041100514292L;
     private String id;//订单编号(客账号)
+    private String roomId;//房间id
     private Integer totalNum;//数量合计
     private Integer mNum;//菜品分量合计
     private String consumer;//客人姓名
@@ -39,7 +40,7 @@ public class OrderDO implements java.io.Serializable {
     private String ktSb;//开台市别
     private Integer isServiceCharge;//收服务费（0为true/1为false）
     private Integer isZdConsume;//记最低消费（0为true/1为false）
-    private Integer paymentType;//支付方式(1为现金/2支付宝/3微信/4信用卡/5银行卡)
+    private Integer paymentType;//支付方式(1为现金/2支付宝/3微信/4信用卡/5银行卡/6一卡通)
     private Integer status;//订单状态（0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消）
     private String remarks;//备注
     private Integer placeNum;//席数
@@ -61,6 +62,14 @@ public class OrderDO implements java.io.Serializable {
 
     public void setId(String id) {
         this.id = id == null ? "" : id.trim();
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
     public Integer getTotalNum() {
@@ -342,6 +351,7 @@ public class OrderDO implements java.io.Serializable {
         if (!(o instanceof OrderDO)) return false;
         OrderDO orderDO = (OrderDO) o;
         return Objects.equals(id, orderDO.id) &&
+                Objects.equals(roomId, orderDO.roomId) &&
                 Objects.equals(totalNum, orderDO.totalNum) &&
                 Objects.equals(mNum, orderDO.mNum) &&
                 Objects.equals(consumer, orderDO.consumer) &&
@@ -379,13 +389,14 @@ public class OrderDO implements java.io.Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, totalNum, mNum, consumer, ktTime, fwRate, ctType, salemanager, ktNum, personNum, ktShift, zdConsume, qdDiscount, department, partHall, vipNum, vipType, zdConsumeGist, discountSum, zqSum, aoh, operator, ktSb, isServiceCharge, isZdConsume, paymentType, status, remarks, placeNum, ctid, orderPrice, mdTime, reason, orderGoods);
+        return Objects.hash(id, roomId, totalNum, mNum, consumer, ktTime, fwRate, ctType, salemanager, ktNum, personNum, ktShift, zdConsume, qdDiscount, department, partHall, vipNum, vipType, zdConsumeGist, discountSum, zqSum, aoh, operator, ktSb, isServiceCharge, isZdConsume, paymentType, status, remarks, placeNum, ctid, orderPrice, mdTime, reason, orderGoods);
     }
 
     @Override
     public String toString() {
         return "OrderDO{" +
                 "id='" + id + '\'' +
+                ", roomId='" + roomId + '\'' +
                 ", totalNum=" + totalNum +
                 ", mNum=" + mNum +
                 ", consumer='" + consumer + '\'' +
@@ -410,7 +421,7 @@ public class OrderDO implements java.io.Serializable {
                 ", ktSb='" + ktSb + '\'' +
                 ", isServiceCharge=" + isServiceCharge +
                 ", isZdConsume=" + isZdConsume +
-                ", paymentType='" + paymentType + '\'' +
+                ", paymentType=" + paymentType +
                 ", status=" + status +
                 ", remarks='" + remarks + '\'' +
                 ", placeNum=" + placeNum +
@@ -418,7 +429,7 @@ public class OrderDO implements java.io.Serializable {
                 ", orderPrice=" + orderPrice +
                 ", mdTime='" + mdTime + '\'' +
                 ", reason='" + reason + '\'' +
-                ", orderGoodDOS=" + orderGoods +
+                ", orderGoods=" + orderGoods +
                 '}';
     }
 

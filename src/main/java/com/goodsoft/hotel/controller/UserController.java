@@ -31,7 +31,7 @@ public class UserController {
     @Resource
     private OrderIdsupp od;
     //实例化日志管理工具类
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 查询用户信息（带部门）接口
@@ -45,7 +45,7 @@ public class UserController {
         try {
             return this.service.queryUserMsgService(param);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -65,7 +65,7 @@ public class UserController {
         try {
             return this.service.getUserService(uName, pwd);
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -82,7 +82,7 @@ public class UserController {
         try {
             return this.service.queryDeptNameService();
         } catch (Exception e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }

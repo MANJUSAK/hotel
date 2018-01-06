@@ -26,7 +26,7 @@ public class UploadFileController {
     private FileService service;
     private UUIDUtil uuid = UUIDUtil.getInstance();
     //实例化日志管理类
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 文件上传接口
@@ -65,7 +65,7 @@ public class UploadFileController {
             }
             return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能是files、flag为null或为空");
         } catch (HotelDataBaseException e) {
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.FILE_UPLOAD.getCODE(), StatusEnum.FILE_UPLOAD.getEXPLAIN());
         }
     }

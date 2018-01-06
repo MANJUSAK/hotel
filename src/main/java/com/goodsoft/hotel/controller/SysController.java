@@ -27,7 +27,7 @@ import javax.annotation.Resource;
 public class SysController {
     @Resource
     private SysService sysService;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 获取系统打印机接口
@@ -42,7 +42,7 @@ public class SysController {
             return this.sysService.queryPrinterService(param);
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return (T) new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -60,7 +60,7 @@ public class SysController {
             return this.sysService.addPrinterService(msg);
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -78,7 +78,7 @@ public class SysController {
             return this.sysService.updatePrinterService(msg);
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }
@@ -99,7 +99,7 @@ public class SysController {
             return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：id的值为null或为空");
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.error(e.toString());
+            this.LOG.error(e.toString());
             return new Status(StatusEnum.DATABASE_ERROR.getCODE(), StatusEnum.DATABASE_ERROR.getEXPLAIN());
         }
     }

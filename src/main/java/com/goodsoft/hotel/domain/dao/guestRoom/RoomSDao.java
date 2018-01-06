@@ -26,7 +26,7 @@ public interface RoomSDao {
     public List<RealStateResult> queryFloorRoomMapper(Map map) throws Exception;
 
     //获取所有有预订的房间列表
-    public List<Map<String,String>> selectRoomReservesAll();
+    public List<Map<String, String>> selectRoomReservesAll();
 
     //获取所有楼层id
     public List<Integer> selectFloorIdAll();
@@ -34,7 +34,7 @@ public interface RoomSDao {
     //  获取房间总条数
     public Integer queryFloorRoomCountMapper(Map map) throws Exception;
 
-   //查询实时房价
+    //查询实时房价
     public ArrayList<Map> selectImmediateRoomPrice();
 
     //房态 右边下拉框 楼层信息
@@ -51,7 +51,7 @@ public interface RoomSDao {
     public List<Map<String, Object>> queryRoomTypeGetRoomMapper(String roomType) throws Exception;
 
     //查询传入时间段内被预订的房间号
-    public List<String> selectReserveRoomByDate(@Param("startdate") String startdate ,@Param("enddate") String enddate) ;
+    public List<String> selectReserveRoomByDate(@Param("startdate") String startdate, @Param("enddate") String enddate);
 
 
     //房态右边的条件查询
@@ -64,9 +64,7 @@ public interface RoomSDao {
     public List<Map<String, Object>> selectKongMapper(List<String> typeIds) throws Exception;
 
     //   预定中 房间信息 通过左边的房间类型状态  获取所有已入住房间
-    public List<Map<String,Object>> selectKongMapperMarkets(List<String> typeIds);
-
-
+    public List<Map<String, Object>> selectKongMapperMarkets(List<String> typeIds);
 
 
     /*
@@ -88,7 +86,6 @@ public interface RoomSDao {
     public void addRoomPricesMapper(RoomPrices roomPrices) throws Exception;
 
 
-
     //建筑信息添加
     public void insertBuild(Building building) throws Exception;
 
@@ -102,48 +99,47 @@ public interface RoomSDao {
     /**
      * 定时修改房间脏房净房状态
      */
-     public void updateRoomSflagTimer();
+    public void updateRoomSflagTimer();
 
     /**
      * 修改房间sflag
      */
-     public Integer updateRoomSflag(@Param("sflag") String sflag,@Param("roomnos") List<String> roomnos);
+    public Integer updateRoomSflag(@Param("sflag") String sflag, @Param("roomnos") List<String> roomnos);
 
     /**
      * 添加实时房价
      */
-     public Integer insertRoomRealTimePrice(List<RealTimeRoomPrice> list);
+    public Integer insertRoomRealTimePrice(List<RealTimeRoomPrice> list);
 
     /**
      * 查询实时房价
      */
-     public List<RealTimeRoomPrice> selectRoomRealTimePrice(@Param("time") String time);
+    public List<RealTimeRoomPrice> selectRoomRealTimePrice(@Param("time") String time);
 
     /**
      * 修改实时房价
      */
-      public Integer updateRoomRealTimePrice(RealTimeRoomPrice realTimeRoomPrice);
+    public Integer updateRoomRealTimePrice(RealTimeRoomPrice realTimeRoomPrice);
 
-     /**
-      *判断实时房价是否存在
-      */
-     public Integer joinRoomRealTimePrice(RealTimeRoomPrice realTimeRoomPrice);
+    /**
+     * 判断实时房价是否存在
+     */
+    public Integer joinRoomRealTimePrice(RealTimeRoomPrice realTimeRoomPrice);
 
     /**
      * 删除错误房价
      */
-     public Integer deleteErrorRoomRealTimePrice();
+    public Integer deleteErrorRoomRealTimePrice();
 
     /**
      * 删除过期实时房价
      */
-      public Integer deleteLastRealTimePrice();
+    public Integer deleteLastRealTimePrice();
 
     /**
      * 删除全部房价
      */
-      public Integer deleteAllRealTimePrice();
-
+    public Integer deleteAllRealTimePrice();
 
      /**
       * 传入房间ID查询房间价格  综合实时房价
@@ -153,11 +149,11 @@ public interface RoomSDao {
 
  /**
      * ----------------------------------------------
-     *                消费项目
+     * 消费项目
      * ----------------------------------------------
      */
 
-     //获取所有消费项目
+    //获取所有消费项目
     public List<KfconsumerProjects> selectXfProjectAll();
 
     //插入客房消费记录
@@ -171,8 +167,9 @@ public interface RoomSDao {
 
     //查询订单所有消费记录
     public List<KfconsumpRecord> selectXfConsumptionInfo(String bookingno);
+
     //查询单个房间未付款消费信息
-    public  List<KfconsumpRecord> selectXfRoomConsumptionInfo(@Param("bookingNo") String bookingNo ,@Param("roomid") String roomid);
+    public List<KfconsumpRecord> selectXfRoomConsumptionInfo(@Param("bookingNo") String bookingNo, @Param("roomid") String roomid);
 
     //查询单个房间所有消费信息
     public List<KfconsumpRecord> selectRoomConsumptionInfo(@Param("bookingNo") String bookingNo);
@@ -200,17 +197,17 @@ public interface RoomSDao {
 
 
     //查询所有今天以前的订单详情
-     public List<Quickbooking> selectPastQuickbooking();
+    public List<Quickbooking> selectPastQuickbooking();
 
 
-     //修改预订单状态
-    public Integer updateQuickbookingState(@Param("flag") String flag,@Param("id") String id);
+    //修改预订单状态
+    public Integer updateQuickbookingState(@Param("flag") String flag, @Param("id") String id);
 
 
     //删除预订单关联房间
-     public Integer deleteQuickBookingRoom(@Param("bookid") String bookid,@Param("roomid") String roomid);
+    public Integer deleteQuickBookingRoom(@Param("bookid") String bookid, @Param("roomid") String roomid);
 
 
-     //修改客房sflag 和flag
-     public Integer updateRoomSflagAndFlag(Map map);
+    //修改客房sflag 和flag
+    public Integer updateRoomSflagAndFlag(Map map);
 }

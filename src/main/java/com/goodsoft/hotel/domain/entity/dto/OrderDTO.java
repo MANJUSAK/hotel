@@ -18,6 +18,7 @@ public class OrderDTO implements java.io.Serializable {
     private int status;//订单状态
     private String ctid;//餐台id
     private String mdTime;//买单时间
+    private int payType;//订单支付方式
 
     public String getId() {
         return id;
@@ -59,6 +60,14 @@ public class OrderDTO implements java.io.Serializable {
         this.mdTime = mdTime;
     }
 
+    public int getPayType() {
+        return payType;
+    }
+
+    public void setPayType(int payType) {
+        this.payType = payType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,6 +93,7 @@ public class OrderDTO implements java.io.Serializable {
                 ", status=" + status +
                 ", ctid='" + ctid + '\'' +
                 ", mdTime='" + mdTime + '\'' +
+                ", payType=" + payType +
                 '}';
     }
 }

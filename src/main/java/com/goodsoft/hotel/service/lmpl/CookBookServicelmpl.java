@@ -463,6 +463,8 @@ public class CookBookServicelmpl implements CookBookService {
                             return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
                         case 601:
                             return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                        default:
+                            break;
                     }
                 }
                 for (int i = 0, len = mealDetails.size(); i < len; ++i) {
@@ -628,6 +630,8 @@ public class CookBookServicelmpl implements CookBookService {
                     return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
                 case 601:
                     return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                default:
+                    break;
             }
         }
         inv.setId(msg.getId());
@@ -801,15 +805,17 @@ public class CookBookServicelmpl implements CookBookService {
         }
         //异步处理删除数据文件，不影响业务流的完成
         try {
-            int len = fileId.length;
-            if (fileId != null && len > 0) {
-                for (int i = 0; i < len; ++i) {
-                    List<FileData> list = this.fileDao.queryFileDao(fileId[i]);
-                    //删除硬盘上的旧文件
-                    this.deleteFile.deleteNAllFile(list);
+            if (fileId != null) {
+                int len = fileId.length;
+                if (len > 0) {
+                    for (int i = 0; i < len; ++i) {
+                        List<FileData> list = this.fileDao.queryFileDao(fileId[i]);
+                        //删除硬盘上的旧文件
+                        this.deleteFile.deleteNAllFile(list);
+                    }
+                    //删除数据库旧文件存档数据
+                    this.fileDao.deleteFileDao(fileId);
                 }
-                //删除数据库旧文件存档数据
-                this.fileDao.deleteFileDao(fileId);
             }
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -885,15 +891,17 @@ public class CookBookServicelmpl implements CookBookService {
         }
         //异步处理删除数据文件，不影响业务流的完成
         try {
-            int len = fileId.length;
-            if (fileId != null && len > 0) {
-                for (int i = 0; i < len; ++i) {
-                    List<FileData> list = this.fileDao.queryFileDao(fileId[i]);
-                    //删除硬盘上的旧文件
-                    this.deleteFile.deleteNAllFile(list);
+            if (fileId != null) {
+                int len = fileId.length;
+                if (len > 0) {
+                    for (int i = 0; i < len; ++i) {
+                        List<FileData> list = this.fileDao.queryFileDao(fileId[i]);
+                        //删除硬盘上的旧文件
+                        this.deleteFile.deleteNAllFile(list);
+                    }
+                    //删除数据库旧文件存档数据
+                    this.fileDao.deleteFileDao(fileId);
                 }
-                //删除数据库旧文件存档数据
-                this.fileDao.deleteFileDao(fileId);
             }
         } catch (Exception e) {
             System.out.println(e.toString());
