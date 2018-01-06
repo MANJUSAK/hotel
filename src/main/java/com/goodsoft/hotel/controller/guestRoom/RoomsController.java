@@ -344,7 +344,7 @@ public class RoomsController {
                             }
                         }
                         //判断是否过滤预留
-                        if (yflag != null && yflag == 1) {
+                        if (yflag != null && yflag == 1) {;
                             if ("0".equals(list.get(j).getYflag())) {
                                 continue;
                             }

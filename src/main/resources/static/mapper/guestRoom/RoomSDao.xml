@@ -31,7 +31,7 @@
         (
         select a.id bookid,a.bookingno,a.guestname,a.startdate,a.enddate,a.teamname,a.remark,b.roomid ,a.bookingflag from
         gs_quickbooking a,gs_quickbooking_roomno b
-        where a.id=b.bookid and (a.bookingflag='明确预定')
+        where a.id=b.bookid and (a.bookingflag='明确预定') and a.startdate &gt;= date_format(now(),'%Y-%m-%d')
         )b
         on a.id =b.roomid
     </select>
@@ -349,6 +349,14 @@
         delete from   REALTIMEHOUSEPRICE
     </delete>
 
+    <!--查询房间价格  综合实时房价-->
+    <select id="selectRoomPriceComprehensive" parameterType="string" resultType="string">
+        select case when b.price is null then a.houseprices else b.price end houseprices  from (
+        select b.typeid ,b.houseprices from gs_room a ,gs_roomtype b where a.roomtype =b.typeid  and  a.id=#{_parameter}
+        )a left join
+       (select *  from  REALTIMEHOUSEPRICE where time=date_format(now(),'%Y-%m-%d') ) b
+        on a.typeid =b.typeid
+    </select>
 
     <!--获取所有消费项目-->
     <select id="selectXfProjectAll" resultType="com.goodsoft.hotel.domain.entity.guestRoom.KfconsumerProjects">
@@ -435,7 +443,7 @@
 
     <!--通过房间id获取房间号 与门锁id-->
     <select id="selectRoomNoAndLockByRoomId" parameterType="string" resultType="java.util.Map">
-        select roomno,doorlockid from gs_room where id =#{_parameter}
+        select a.roomno,a.doorlockid,b.typename from gs_room a,gs_roomtype b  where a.roomtype=b.typeid and  a.id=#{_parameter}
     </select>
 
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,5 +130,56 @@ public class UnmannedReceptionController {
         }
     }
 
+
+    /**
+     * 传入门锁ID 查询订单信息
+     * @param doorlock
+     * @param <T>
+     * @return
+     */
+    @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
+    @RequestMapping("unmanned/select/doorlock")
+    @ResponseBody
+    public <T> T selectReserveByLock(String doorlock){
+        if(doorlock==null || "".equals(doorlock)){
+            return (T) new Result(StatusEnum.NO_PARAM.getCODE(),StatusEnum.NO_PARAM.getEXPLAIN());
+        }
+        try{
+            //查询订单id 和房间id
+            Map map = bookingDao.selectBookIdByDoorLock(doorlock);
+            if(map==null || map.get("id")==null || "".equals(map.get("id"))){
+                return (T) new Result(StatusEnum.DEFEAT.getCODE(),"此卡无订单信息");
+            }
+            String bookid =String.valueOf(map.get("id"));
+            String roomid =String.valueOf(map.get("roomid"));
+            //查询预订单信息
+            Quickbooking quickbooking = bookingDao.selectReserveInfo(bookid);
+            //查询预订单房间号
+            List<QuickbookingRoomno> quickbookingRoomnos1 = kfCheckOutDao.selectBookingCheckRooms(bookid);
+
+            List<QuickbookingRoomno> optionRoom = new ArrayList<QuickbookingRoomno>();
+            if (quickbookingRoomnos1.size() == 0) {
+                return (T) new Result(StatusEnum.NO_PARAM.getCODE(), "订单无入住房间");
+            }else{
+                //遍历房间信息  删除多余房间
+                for(int i=0;i<quickbookingRoomnos1.size();i++){
+                    if(quickbookingRoomnos1.get(i).getRoomId().equals(roomid)){
+                        //查询房间价格
+                        String price = roomSDao.selectRoomPriceComprehensive(quickbookingRoomnos1.get(i).getRoomId());
+                        quickbookingRoomnos1.get(i).setHousePrices(price);
+                        optionRoom.add(quickbookingRoomnos1.get(i));
+                    }
+                }
+            }
+            quickbooking.setRoomno(optionRoom);
+
+
+            return (T) new Result(StatusEnum.SUCCESS.getCODE(),quickbooking);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return (T) new Result(StatusEnum.DATABASE_ERROR.getCODE(),StatusEnum.DATABASE_ERROR.getEXPLAIN());
+        }
+    }
 
 }

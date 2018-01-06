@@ -145,8 +145,13 @@ public interface RoomSDao {
       public Integer deleteAllRealTimePrice();
 
 
+     /**
+      * 传入房间ID查询房间价格  综合实时房价
+      */
+      public String selectRoomPriceComprehensive(String roomid);
 
-    /**
+
+ /**
      * ----------------------------------------------
      *                消费项目
      * ----------------------------------------------
@@ -156,7 +161,7 @@ public interface RoomSDao {
     public List<KfconsumerProjects> selectXfProjectAll();
 
     //插入客房消费记录
-    public Integer insertXfConsumptionInfo(List<KfconsumpRecord> kfconsumpRecords);
+    public Integer insertXfConsumptionInfo(List kfconsumpRecords);
 
     //删除客房消费记录
     public Integer deleteXfConsumptionInfo(@Param("bookingno") String bookingno);

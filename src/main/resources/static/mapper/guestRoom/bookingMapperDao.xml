@@ -505,6 +505,12 @@
      select bookid,roomid from gs_guest where documentno =#{_parameter} and state='1'
      </select>
 
+    <!--传入门锁ID查询订单ID-->
+    <select id="selectBookIdByDoorLock" parameterType="string" resultType="java.util.Map">
+     select b.id,c.roomid from gs_room a,GS_QUICKBOOKING b, GS_QUICKBOOKING_ROOMNO c
+     where a.id =c.roomid and b.id =c.bookid  and a.flag!='空房' and (b.bookingflag='部分入住' or b.bookingflag='全部入住')
+      and a.doorlockid =#{_parameter}
+    </select>
 
 
 </mapper>
