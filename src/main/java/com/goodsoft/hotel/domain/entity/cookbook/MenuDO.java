@@ -303,34 +303,35 @@ public class MenuDO implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "MenuDO{" +
-                "id='" + id + '\'' +
-                ", cbid=" + cbid +
-                ", tid='" + tid + '\'' +
-                ", stid='" + stid + '\'' +
-                ", fileId='" + fileId + '\'' +
-                ", cbName='" + cbName + '\'' +
-                ", tName='" + tName + '\'' +
-                ", stName='" + stName + '\'' +
-                ", price1=" + price1 +
-                ", price2=" + price2 +
-                ", price3=" + price3 +
-                ", price4=" + price4 +
-                ", price5=" + price5 +
-                ", num=" + num +
-                ", unit='" + unit + '\'' +
-                ", isNo=" + isNo +
-                ", spec1='" + spec1 + '\'' +
-                ", spec2='" + spec2 + '\'' +
-                ", spec3='" + spec3 + '\'' +
-                ", spec4='" + spec4 + '\'' +
-                ", spec5='" + spec5 + '\'' +
-                ", costPrice=" + costPrice +
-                ", isSub=" + isSub +
-                ", ptPort='" + ptPort + '\'' +
-                ", ptDriverName='" + ptDriverName + '\'' +
-                ", picture=" + picture +
-                ", files=" + Arrays.toString(files) +
-                '}';
+        final StringBuffer sb = new StringBuffer("MenuDO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", cbid=").append(cbid);
+        sb.append(", tid='").append(tid).append('\'');
+        sb.append(", stid='").append(stid).append('\'');
+        sb.append(", fileId='").append(fileId).append('\'');
+        sb.append(", cbName='").append(cbName).append('\'');
+        sb.append(", tName='").append(tName).append('\'');
+        sb.append(", stName='").append(stName).append('\'');
+        sb.append(", price1=").append(price1);
+        sb.append(", price2=").append(price2);
+        sb.append(", price3=").append(price3);
+        sb.append(", price4=").append(price4);
+        sb.append(", price5=").append(price5);
+        sb.append(", num=").append(num);
+        sb.append(", unit='").append(unit).append('\'');
+        sb.append(", isNo=").append(isNo);
+        sb.append(", spec1='").append(spec1).append('\'');
+        sb.append(", spec2='").append(spec2).append('\'');
+        sb.append(", spec3='").append(spec3).append('\'');
+        sb.append(", spec4='").append(spec4).append('\'');
+        sb.append(", spec5='").append(spec5).append('\'');
+        sb.append(", costPrice=").append(costPrice);
+        sb.append(", isSub=").append(isSub);
+        sb.append(", ptPort='").append(ptPort).append('\'');
+        sb.append(", ptDriverName='").append(ptDriverName).append('\'');
+        sb.append(", picture=").append(picture);
+        sb.append(", files=").append(files == null ? "null" : Arrays.asList(files).toString());
+        sb.append('}');
+        return sb.toString();
     }
 }

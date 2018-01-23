@@ -93,8 +93,7 @@ public class CookBookController {
      * 传参 tid 则会自动过滤
      * 不传参 默认查询所有
      *
-     * @param param 可传入参数：page 页码、total 总记录数、tid 部门类别编号、
-     *              id 小类编号（注：赋值id传入数据为小类编号stid而非数据编号id）
+     * @param param 可传入参数：page 页码、total 总记录数、tid 部门类别编号、id 小类编号
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -114,7 +113,7 @@ public class CookBookController {
      * 无分页
      *
      * @param tid  部门类别编号
-     * @param stid 菜单字类型编号
+     * @param stid 菜单类型编号
      * @return 响应结果
      */
     @CrossOrigin(origins = "*", maxAge = 3600, methods = RequestMethod.GET)
@@ -233,7 +232,7 @@ public class CookBookController {
     }
 
     /**
-     * 菜单类别与小类数据添加接口
+     * 菜品部门类别与小类数据添加接口
      *
      * @param msg 类别与小类别数据（存在一对多关系，前台需传入json格式数据。）
      * @return 响应结果
@@ -347,7 +346,7 @@ public class CookBookController {
     }
 
     /**
-     * 现有套餐中增加菜品接口
+     * 现有套餐中增加菜品接口(待用)
      *
      * @param msg 菜品数据
      * @return 响应结果

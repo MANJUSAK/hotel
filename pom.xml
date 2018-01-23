@@ -148,7 +148,7 @@
         <plugins>
             <plugin>
                 <!--导出jar包组件-->
-                <!-- <groupId>org.springframework.boot</groupId>
+                 <!--<groupId>org.springframework.boot</groupId>
                  <artifactId>spring-boot-maven-plugin</artifactId>-->
                 <!--war包导出组件-->
                 <groupId>org.apache.maven.plugins</groupId>

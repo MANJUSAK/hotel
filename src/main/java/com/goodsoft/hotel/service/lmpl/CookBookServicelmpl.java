@@ -353,6 +353,8 @@ public class CookBookServicelmpl implements CookBookService {
                         return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
                     case 601:
                         return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                    default:
+                        break;
                 }
             }
             menu.get(i).setId(id);

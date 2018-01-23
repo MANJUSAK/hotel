@@ -40,7 +40,7 @@ public class RepastOrderTimer {
      *
      */
     @Scheduled(cron = "0 30 4 * * ?")
-    //@Scheduled(cron = "0/5 * * * * ?")
+    //@Scheduled(cron = "0/10 * * * * ?")
     @Transactional
     public void orderTimeoutService() {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
@@ -58,8 +58,8 @@ public class RepastOrderTimer {
                     }
                 }
                 sqlSession.commit();
-                this.logger.info(":订单状态定时检测成功");
             }
+            this.logger.info("订单状态定时检测成功!检查超时订单数为" + len + "条");
         } catch (Exception e) {
             sqlSession.rollback();
             System.out.println("订单状态定时检测失败");
@@ -79,7 +79,6 @@ public class RepastOrderTimer {
         long currentTime = System.currentTimeMillis();
         long timeBetween = currentTime - odTime;
         int hourBetween = (int) (timeBetween / 3600000);
-        System.out.println(hourBetween);
         return hourBetween > 5;
     }
 

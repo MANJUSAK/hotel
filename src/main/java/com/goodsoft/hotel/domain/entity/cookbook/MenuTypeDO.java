@@ -14,7 +14,7 @@ public class MenuTypeDO implements java.io.Serializable {
     private static final long serialVersionUID = 6309767747012396344L;
     private String id;//编号
     private Integer tid;//类别编号
-    private String tName;//类别名称
+    private String tName;//部门类别名称
     private List<MenuSubTypeDO> menuSubType;//小类型实体容器
 
     public String getId() {

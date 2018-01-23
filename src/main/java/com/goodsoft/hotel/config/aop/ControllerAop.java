@@ -40,7 +40,7 @@ public class ControllerAop {
         String method = request.getMethod();
         String queryString = request.getQueryString();
         String ip = GetIPUtil.getIP(request);
-        this.LOG.info("ip:{} 请求信息：,url:{},method:{},params:{}", ip, url, method, queryString);
+        this.LOG.info("用户请求接口信息--->ip:{} ,url:{},method:{},params:{}", ip, url, method, queryString);
     }
 
 }
