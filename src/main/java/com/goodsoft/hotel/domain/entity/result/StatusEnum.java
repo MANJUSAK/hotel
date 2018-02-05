@@ -1,21 +1,26 @@
 package com.goodsoft.hotel.domain.entity.result;
 
 /**
- * function 系统响应状态提示枚举类
+ * function
  * description:
- * 1.0代表程序运行正常
- * 2.100xx代表应用服务器提示状态码。
- * 3.200xx代表数据库服务器提示状态码
- * 4.xx500代表程序异常
- * 5.xx404代表无数据异常
- * 6.xx400代表参数异常
- * 7.xx502代表客户端操作异常
- * 8.400xx代表前台异常
+ * ===>系统响应状态提示枚举类
+ * 1、0代表程序运行正常
+ * 2、100xx代表应用服务器提示状态码。
+ * 3、200xx代表数据库服务器提示状态码
+ * 4、xx500代表程序异常
+ * 5、xx404代表无数据异常
+ * 6、xx400代表参数异常
+ * 7、xx502代表客户端操作异常
+ * 8、400xx代表前台异常
  * <p>
- * Created by manjusaka[manjusakachn@gmail.com] on 2017/7/24.
- * version v1.0
+ *
+ * @author manjusaka[manjusakachn@gmail.com] on 2017/7/24.
+ * @version v1.0
  */
 public enum StatusEnum {
+    /**
+     * 枚举描述信息
+     */
     SUCCESS(0, "成功"),
     SERVER_ERROR(100500, "应用服务器发生异常"),
     DATABASE_ERROR(200500, "数据库服务器发生异常"),

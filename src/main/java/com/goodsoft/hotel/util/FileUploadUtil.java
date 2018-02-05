@@ -10,16 +10,21 @@ import java.util.List;
 
 /**
  * function 文件上传工具类
- * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
  *
- * @version v1.1.3
+ * @author manjusaka[manjusakachn@gmail.com] on 2017/8/4.
+ * @version v1.1.4
  */
-@SuppressWarnings("ALL")
 @Service
 public class FileUploadUtil {
 
-    //实例化UUID工具类
+    /**
+     * 实例化UUID工具类
+     */
     private UUIDUtil uuid = UUIDUtil.getInstance();
+    /**
+     * 文件根路径
+     */
+    private final static String STR = "/htfile/";
 
     /**
      * 文件上传辅助方法
@@ -30,18 +35,17 @@ public class FileUploadUtil {
      * @return 文件保存相对路径
      */
     public List<String> fileUpload(MultipartFile[] files, String fileType, String savePath) throws IOException {
-        List<String> fileList = new ArrayList<String>();
+        List<String> fileList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         sb.append(savePath);
         //自定义文件保存路径 start
-        String str = "/hlfile/";
-        sb.append(str).append(fileType).append("/");
+        sb.append(STR).append(fileType).append("/");
         //自定义文件保存路径 end
         //上传文件文件夹路径 start
         String str1 = sb.toString();
         File folder = new File(str1);
-        if (!folder.exists()) {
-            folder.mkdirs();
+        if (!folder.exists() && !folder.mkdirs()) {
+            throw new IOException("创建文件夹失败!");
         }
         //上传文件文件夹路径 end
         //文件保存 start
@@ -62,7 +66,7 @@ public class FileUploadUtil {
             files[i].transferTo(new File(sb.toString()));
             //清空sb内容，重新存放文件相对路径以存放数据库 start
             sb.delete(0, sb.length());
-            sb.append(str).append(fileType).append("/").append(var).append(suffix);
+            sb.append(STR).append(fileType).append("/").append(var).append(suffix);
             fileList.add(sb.toString());
             //清空sb内容，重新存放文件相对路径以存放数据库 end
         }

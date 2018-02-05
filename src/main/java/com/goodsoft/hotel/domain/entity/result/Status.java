@@ -3,17 +3,23 @@ package com.goodsoft.hotel.domain.entity.result;
 import java.util.Objects;
 
 /**
- * function 状态信息提示返回结果集实体
+ * description:
+ * ===>状态信息提示返回结果集实体
  * <p>
- * date 2017.06.19
- * author manjusaka[manjusakachn@gmail.com]
- * version v1.0
+ *
+ * @author manjusaka[manjusakachn@gmail.com]
+ * @version v1.0
+ * @date 2017.06.19
  */
 public class Status implements java.io.Serializable {
     private static final long serialVersionUID = 8179717412450576971L;
-    //状态码
+    /**
+     * 状态码
+     */
     private int errorCode;
-    //描述
+    /**
+     * 状态码描述
+     */
     private String msg;
 
     public Status(int errorCode, String msg) {

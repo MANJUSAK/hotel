@@ -28,7 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 public class CookBookController {
     @Resource
     private CookBookService service;
-    //实例化日志管理工具类
+    /**
+     * 实例化日志管理工具类
+     */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**

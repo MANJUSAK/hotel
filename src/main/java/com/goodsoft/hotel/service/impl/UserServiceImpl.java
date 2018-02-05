@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.service.lmpl;
+package com.goodsoft.hotel.service.impl;
 
 import com.goodsoft.hotel.domain.dao.UserDao;
 import com.goodsoft.hotel.domain.entity.dto.UserDTO;
@@ -22,7 +22,7 @@ import java.util.List;
  */
 @SuppressWarnings("ALL")
 @Service
-public class UserServicelmpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Resource
     private UserDao dao;
@@ -34,7 +34,7 @@ public class UserServicelmpl implements UserService {
      * @param param 查询条件
      * @param <T>
      * @return 查询结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryUserMsgService(UserDTO param) throws Exception {
@@ -50,7 +50,7 @@ public class UserServicelmpl implements UserService {
      *
      * @param <T>
      * @return 查询结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryDeptNameService() throws Exception {
@@ -69,7 +69,7 @@ public class UserServicelmpl implements UserService {
      * @param pwd   密码
      * @param <T>
      * @return 登录结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T getUserService(String uName, String pwd) throws Exception {

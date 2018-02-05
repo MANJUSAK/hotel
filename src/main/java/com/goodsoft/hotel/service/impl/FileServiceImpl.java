@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.service.lmpl;
+package com.goodsoft.hotel.service.impl;
 
 import com.goodsoft.hotel.domain.dao.FileDao;
 import com.goodsoft.hotel.domain.entity.file.FileData;
@@ -26,12 +26,13 @@ import java.util.List;
 
 /**
  * function 文件上传业务接口实现类
- * Created by  manjusaka[manjusakachn@gmail.com] on 2017/8/4.
+ *
+ * @author manjusaka[manjusakachn@gmail.com] on 2017/8/4.
  * version v1.1.3
  */
 @SuppressWarnings("ALL")
 @Service
-public class FileServicelmpl implements FileService {
+public class FileServiceImpl implements FileService {
 
     @Resource
     private FileUploadUtil fileUploadUtil;
@@ -39,12 +40,18 @@ public class FileServicelmpl implements FileService {
     private FileDao dao;
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
-    //实例化服务器域名地址工具类
+    /**
+     * 实例化服务器域名地址工具类
+     */
     private DomainNameUtil domainName = DomainNameUtil.getInstance();
-    //实例化获取操作系统类型工具类
+    /**
+     * 实例化获取操作系统类型工具类
+     */
     private GetOsNameUtil getOsNameUtil = GetOsNameUtil.getInstance();
-    //实例化日志管理
-    private final Logger logger = LoggerFactory.getLogger(FileServicelmpl.class);
+    /**
+     * 实例化日志管理
+     */
+    private final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
     /**
      * 文件上传业务处理方法
@@ -53,17 +60,17 @@ public class FileServicelmpl implements FileService {
      * @param fileType 上传文件类型（图片、文档等），
      * @param fileId   文件编号（用于查询文件）。
      * @return int 文件上传处理状态（0为成功，其余都失败）
-     * @throws Exception
+     * @throws HotelDataBaseException 异常
      */
     @Override
-    @Transactional
-    public int fileUploadServicelmpl(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException {
+    @Transactional(rollbackFor = HotelDataBaseException.class)
+    public int fileUploadServiceImpl(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException {
         int checkCode = checkFileFormatAndSize(fileType, files);
         if (checkCode != 0) {
             return checkCode;
         }
         //文件保存根目录
-        String var1 = null;
+        String var1;
         if (this.getOsNameUtil.getOsName()) {
             //Linux文件路径
             var1 = "/usr/hotel";
@@ -230,10 +237,10 @@ public class FileServicelmpl implements FileService {
      * @param request 请求
      * @param fileId  文件编号
      * @return 文件数据
-     * @throws HotelDataBaseException
+     * @throws HotelDataBaseException 异常
      */
     @Override
-    public List<String> getFileDataServicelmpl(HttpServletRequest request, String fileId) throws
+    public List<String> getFileDataServiceImpl(HttpServletRequest request, String fileId) throws
             HotelDataBaseException {
         //获取服务器域名地址
         String var = this.domainName.getServerDomainName(request).toString();

@@ -7,7 +7,7 @@ import java.util.Objects;
  * ===>工作流人员架构组织实体
  * 用于非工作流环境下获取人员信息
  *
- * @author 严彬荣 Created on 2017-12-03 10:12
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-03 10:12
  * @version V1.0
  */
 public class UserDO implements java.io.Serializable {

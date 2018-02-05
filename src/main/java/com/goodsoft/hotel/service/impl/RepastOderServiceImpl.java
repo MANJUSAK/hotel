@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.service.lmpl;
+package com.goodsoft.hotel.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -46,7 +46,7 @@ import java.util.Map;
  */
 @SuppressWarnings("ALL")
 @Service
-public class RepastOderServicelmpl implements RepastOderService {
+public class RepastOderServiceImpl implements RepastOderService {
     @Resource
     private RepastOrderDao dao;
     @Resource
@@ -61,8 +61,18 @@ public class RepastOderServicelmpl implements RepastOderService {
     private SqlSessionTemplate sqlSessionTemplate;
     @Resource
     private OrderIdsupp orderId;
-    //实例化UUID工具类
+    /**
+     * 实例化UUID工具类
+     */
     private UUIDUtil uuid = UUIDUtil.getInstance();
+    /**
+     * 打单状态
+     */
+    private final int STATUS_2 = 2;
+    /**
+     * 支付方式为一卡通
+     */
+    private final int STATUS_6 = 6;
 
 
     /**
@@ -70,7 +80,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      *
      * @param id 订单编号
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      * @deprecated 餐饮订单查询单条业务方法，获取餐饮订单数据信息用于打印机打票已使用其它方式代替不必调用接口实现
      * 注：id为必传
      * 该接口涵盖了订单的所有信息
@@ -117,7 +127,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      *
      * @param param 查询条件
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryOrderService(HotelDTO param) throws Exception {
@@ -165,7 +175,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      * @param id     订单编号
      * @param status 订单状态
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryOrderByIdService(String id, int status) throws Exception {
@@ -205,11 +215,11 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 返回该订单号用于添加商品明细或者修改订单
      * 该接口用于楼面开台生成新订单，以便点餐时获取开台订单数据
      *
-     * @param orderDO 订单信息
+     * @param order 订单信息
      * @return 下单状态
-     * @throws Exception
+     * @throws Exception 异常
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public <T> T addOrderService(OrderDO order) throws Exception {
         String id = null;
@@ -238,9 +248,9 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 注：打单调用该业务方法时需额外传入status=2（必传）
      *
      * @param msg 订单商品信息
-     * @throws HotelDataBaseException
+     * @throws HotelDataBaseException 异常
      */
-    @Transactional
+    @Transactional(rollbackFor = HotelDataBaseException.class)
     @Override
     public Status addOrderGoodsService(RepastOrderDTO msg) throws HotelDataBaseException {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
@@ -275,7 +285,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                 orderDao.addRepastOrderGoodsDao(orderGoods);
             }
             orderDao.updateRepastOrderDao(msg);
-            if (msg.getStatus() == 2) {
+            if (msg.getStatus() == this.STATUS_2) {
                 int row = this.cydao.updateTableState(msg.getCtid(), "4");
                 if (row == 0) {
                     return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "不能获取餐台信息");
@@ -297,7 +307,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      *
      * @param msg 订单信息
      * @return 更新结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public Status updateRepastOrderService(OrderDO msg) throws Exception {
@@ -312,14 +322,14 @@ public class RepastOderServicelmpl implements RepastOderService {
      * 餐饮订单更新（结算订单）业务方法，用于前台收银结算相关订单
      * 该接口用于收银员结算消费者消费信息，经过改接口的所有订单将不可进行任何操作。
      *
-     * @param orderDO 订单结算信息
+     * @param order 订单结算信息
      * @return 结算结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public Status checkoutRepastOrderService(OrderDO order) throws Exception {
         //一卡通结算支付时将订单打到一卡通，消费者退房时统一结算
-        if (order.getPaymentType() == 6) {
+        if (order.getPaymentType() == this.STATUS_6) {
             String roomId = order.getRoomId();
             if (roomId == null || "".equals(roomId)) {
                 return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因：roomId为空或为null");
@@ -366,10 +376,10 @@ public class RepastOderServicelmpl implements RepastOderService {
      *
      * @param param [oid:订单编号/reason 反结账，迟付等原因/status 订单状态(status=0支付/1开台/2打单或反结/3超时未买单/4迟付/5取消)]
      * @return Status 结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Status counterCheckoutService(OrderDTO param) throws Exception {
         switch (param.getStatus()) {
             case 2:
@@ -385,7 +395,7 @@ public class RepastOderServicelmpl implements RepastOderService {
                     int row = this.dao.updateOrderStatusDao(param);
                     if (row > 0) {
                         //如果反结订单属于一卡通，则删除一卡通反结前的订单
-                        if (param.getPayType() == 6) {
+                        if (param.getPayType() == this.STATUS_6) {
                             this.dao.deleteOneCardDao(param.getId());
                         }
                         this.cydao.updateTableState(param.getCtid(), "4");
@@ -413,7 +423,7 @@ public class RepastOderServicelmpl implements RepastOderService {
      *
      * @param id 订单编号
      * @return 删除结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public Status deteleRepastOrderServicr(String id) throws Exception {

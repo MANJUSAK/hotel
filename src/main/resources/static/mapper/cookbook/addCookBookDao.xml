@@ -19,7 +19,7 @@
     </insert>
     <!--菜单添加-->
     <insert id="addMenuDao" parameterType="list">
-        INSERT INTO gudou_1.gs_cookbook
+        INSERT INTO gs_cookbook
         (ID,TID,STID,CBNAME,UNIT,IS_DISCOUNT,spec1,spec2,spec3,
         spec4,spec5,PRICE1,PRICE2,PRICE3,PRICE4,PRICE5,FILE_ID,IS_SUB,COST_PRICE)
         VALUES

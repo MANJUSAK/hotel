@@ -21,18 +21,25 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 14:44
  * @version V1.0
  */
-@SuppressWarnings("ALL")
-@Service
+@Service("OrderIdsupp")
 public class OrderIdsupp {
     @Resource
     private SysDao dao;
-    //实例化日志管理工具类
+    /**
+     * 实例化日志管理工具类
+     */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
-    //实例化时期格式化工具类
+    /**
+     * 实例化时期格式化工具类
+     */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-    //实例化lock，防止线程出现安全性问题
+    /**
+     * 实例化lock，防止线程出现安全性问题
+     */
     private Lock lock = new ReentrantLock();
-    //初始化增长id
+    /**
+     * 初始化增长id
+     */
     private static int serial_num = 0;
     private static int serial_num1 = 0;
 
@@ -40,12 +47,12 @@ public class OrderIdsupp {
      * 流水号生成策略（无参）
      *
      * @return StringBuilder 流水号
-     * @throws HotelApplicationException
+     * @throws HotelApplicationException 应用程序异常
      */
-    @Transactional
+    @Transactional(rollbackFor = HotelApplicationException.class)
     public StringBuilder getOrderId() throws HotelApplicationException {
         this.lock.lock();
-        StringBuilder sb = null;
+        StringBuilder sb;
         Date date = new Date();
         String dateStr = this.dateFormat.format(date);
         SerialNumDO sn = new SerialNumDO();
@@ -92,12 +99,12 @@ public class OrderIdsupp {
      * @param var1 类型
      * @param arg  类型编码
      * @return StringBuilder 流水号
-     * @throws HotelApplicationException
+     * @throws HotelApplicationException 应用程序异常
      */
-    @Transactional
+    @Transactional(rollbackFor = HotelApplicationException.class)
     public StringBuilder getOrderId(String var, String var1, int arg) throws HotelApplicationException {
         this.lock.lock();
-        StringBuilder sb = null;
+        StringBuilder sb;
         Date date = new Date();
         String dateStr = this.dateFormat.format(date);
         SerialNumDO sn = new SerialNumDO();

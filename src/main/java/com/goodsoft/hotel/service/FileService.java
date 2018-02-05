@@ -13,8 +13,8 @@ import java.util.List;
  */
 public interface FileService {
     //文件上传业务处理
-    int fileUploadServicelmpl(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException;
+    int fileUploadServiceImpl(MultipartFile[] files, String fileType, String fileId) throws HotelDataBaseException;
 
     //获取文件数据业务方法
-    List<String> getFileDataServicelmpl(HttpServletRequest request, String fileId) throws HotelDataBaseException;
+    List<String> getFileDataServiceImpl(HttpServletRequest request, String fileId) throws HotelDataBaseException;
 }

@@ -28,8 +28,14 @@ public class RepastOrderController {
 
     @Resource
     private RepastOderService service;
-    //实例化日志管理工具类
+    /**
+     * 实例化日志管理工具类
+     */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
+    /**
+     * 订单状态
+     */
+    private static final int STATUS_2 = 2;
 
     /**
      * @param id 订单编号
@@ -140,7 +146,7 @@ public class RepastOrderController {
             if (isExistOrder) {
                 return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "id或ctid为空或为null");
             }
-            if (msg.getMsg().size() > 0 || msg.getStatus() == 2) {
+            if (msg.getMsg().size() > 0 || msg.getStatus() == STATUS_2) {
                 try {
                     return this.service.addOrderGoodsService(msg);
                 } catch (HotelDataBaseException e) {

@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.service.lmpl;
+package com.goodsoft.hotel.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -21,12 +21,12 @@ import java.util.List;
  * description:
  * ===>系统组件业务接口实现类,设置系统功能属性
  *
- * @author  manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 16:18
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 16:18
  * @version V1.0
  */
 @SuppressWarnings("ALL")
 @Service
-public class SysServicelmpl implements SysService {
+public class SysServiceImpl implements SysService {
     @Resource
     private SysDao dao;
     private UUIDUtil uuid = UUIDUtil.getInstance();
@@ -36,7 +36,7 @@ public class SysServicelmpl implements SysService {
      *
      * @param param 分页信息
      * @return Result 打印机数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryPrinterService(HotelDTO param) throws Exception {
@@ -54,9 +54,9 @@ public class SysServicelmpl implements SysService {
      *
      * @param msg 打印机数据
      * @return 添加结果
-     * @throws Exception
+     * @throws Exception 异常
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Status addPrinterService(PrinterDO msg) throws Exception {
         msg.setId(this.uuid.getUUID().toString());
@@ -72,9 +72,9 @@ public class SysServicelmpl implements SysService {
      *
      * @param msg 打印机数据
      * @return 添加结果
-     * @throws Exception
+     * @throws Exception 异常
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Status updatePrinterService(PrinterDO msg) throws Exception {
         int row = this.dao.updatePrinterDao(msg);
@@ -89,10 +89,10 @@ public class SysServicelmpl implements SysService {
      *
      * @param id 数据id
      * @return 添加结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Status deletePrinterService(String... id) throws Exception {
         int row = this.dao.deletePrinterDao(id);
         if (row > 0) {

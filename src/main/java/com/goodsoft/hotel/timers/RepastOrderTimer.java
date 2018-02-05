@@ -33,15 +33,17 @@ public class RepastOrderTimer {
 
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
-    //实例化日志管理工具类
+    /**
+     * 实例化日志管理工具类
+     */
     private Logger logger = LoggerFactory.getLogger(RepastOrderTimer.class);
 
     /**
-     *
+     * 超时订单定时任务
      */
+    /*@Scheduled(cron = "0/10 * * * * ?")*/
     @Scheduled(cron = "0 30 4 * * ?")
-    //@Scheduled(cron = "0/10 * * * * ?")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void orderTimeoutService() {
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         RepastOrderDao dao = sqlSession.getMapper(RepastOrderDao.class);
@@ -69,6 +71,12 @@ public class RepastOrderTimer {
         }
     }
 
+    /**
+     * 时间判断
+     *
+     * @param hour 时间
+     * @return true/false
+     */
     private boolean getHourBetween(String hour) {
         long odTime = 0;
         try {

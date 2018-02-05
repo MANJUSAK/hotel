@@ -16,21 +16,18 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 数据库连接池配置
+ * description:
+ * ===>数据库连接池配置
  * <p>
- * DruidDBConfig类被@Configuration标注，用作配置信息；
+ * DruidDbConfig类被@Configuration标注，用作配置信息；
  * DataSource对象被@Bean声明，为Spring容器所管理，
+ * primary：表示这里定义的DataSource将覆盖其他来源的DataSource。
  *
- * @author manjusaka[manjusakachn@gmail.com]
- *         jdbc.url=${jdbc.url}
- *         最新的支持方式如下:
- *         jdbc.url=@jdbc.url@
- * @version v1.0
- * @primary 表示这里定义的DataSource将覆盖其他来源的DataSource。
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-7-19 16:27
+ * @version v1.1.5
  */
-@SuppressWarnings("ALL")
 @Configuration
-public class DruidDBConfig {
+public class DruidDbConfig {
     @Resource
     private WallFilter wallFilter;
     private final Logger logger = Logger.getLogger(this.getClass());
@@ -77,8 +74,15 @@ public class DruidDBConfig {
     @Value("${spring.datasource.logAbandoned}")
     private boolean logAbandoned;
 
-    @Bean // 声明其为Bean实例
-    @Primary // 在同样的DataSource中，首先使用被标注的DataSource
+    /**
+     * 配置数据源
+     * Primary:在同样的DataSource中，首先使用被标注的DataSource
+     *
+     * @return DruidDataSource
+     */
+    @SuppressWarnings({"unchecked", "ArraysAsListWithZeroOrOneArgument"})
+    @Primary
+    @Bean
     public DruidDataSource dataSource() {
         DruidDataSource datasource = new DruidDataSource();
         datasource.setUrl(this.dbUrl);
@@ -115,7 +119,9 @@ public class DruidDBConfig {
         return datasource;
     }
 
-    //允许批量更新
+    /**
+     * 允许数据源批量更新
+     */
     @Bean
     public WallConfig wallConfig() {
         WallConfig wallConfig = new WallConfig();
@@ -123,7 +129,9 @@ public class DruidDBConfig {
         return wallConfig;
     }
 
-    //注入过滤器
+    /**
+     * 注入过滤器
+     */
     @Bean
     @DependsOn
     public WallFilter wallFilter(WallConfig wallConfig) {

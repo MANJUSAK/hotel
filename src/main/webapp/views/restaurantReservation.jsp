@@ -7,11 +7,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="com.goodsoft.hotel.service.lmpl.UserServicelmpl" %>
+<%@ page import="com.goodsoft.hotel.service.impl.UserServiceImpl" %>
 <%
 String path=request.getContextPath();
 String basePath = request.getScheme()+"://" +request.getServerName()+":" +request.getServerPort()+path+"/" ;
-UserServicelmpl userService=new UserServicelmpl();
+UserServiceImpl userService=new UserServiceImpl();
 %>
 
 <html lang="en">

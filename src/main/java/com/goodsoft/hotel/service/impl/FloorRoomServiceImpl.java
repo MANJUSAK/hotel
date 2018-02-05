@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.service.lmpl;
+package com.goodsoft.hotel.service.impl;
 
 import com.goodsoft.hotel.domain.dao.guestRoom.BookingDao;
 import com.goodsoft.hotel.domain.dao.guestRoom.RoomSDao;

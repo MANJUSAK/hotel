@@ -15,10 +15,10 @@ import java.util.concurrent.Executor;
 
 /**
  * description:
- * ===>线程池配置类
+ * ===>线程池配置文件
  *
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-12 10:58
- * @version v1.0
+ * @version v1.1.2
  */
 @Configuration
 @EnableAsync

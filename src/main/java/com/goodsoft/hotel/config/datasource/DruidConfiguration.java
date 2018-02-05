@@ -8,12 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 数据库监控配置
+ * description:
+ * ===>数据库监控配置
  * <p>
  * 这样的方式不需要添加注解：@ServletComponentScan
- * Created by  manjusaka[manjusakachn@gmail.com] on 2017/7/19.
  *
- * @version v1.0
+ * @author manjusaka[manjusakachn@gmail.com] Created on 2017-7-19 16:30
+ * @version v1.1.5
  */
 @Configuration
 public class DruidConfiguration {
@@ -23,7 +24,7 @@ public class DruidConfiguration {
      * @return servletRegistrationBean（数据源监控配置）
      */
     @Bean
-    public ServletRegistrationBean DruidStatViewServle() {
+    public ServletRegistrationBean druidStatViewServelt() {
         //org.springframework.boot.context.embedded.ServletRegistrationBean提供类的进行注册.
         ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new StatViewServlet(), "/dataMonitoring/*");
         //添加初始化参数：initParams
@@ -31,7 +32,7 @@ public class DruidConfiguration {
         /*servletRegistrationBean.addInitParameter("allow", "*");*/
         //IP黑名单 (存在共同时，deny优先于allow) : 如果满足deny的话提示:无权访问.
         //servletRegistrationBean.addInitParameter("deny", "127.0.0.1");
-        //登录查看信息的账号密码.
+        //登录查看信息的账号密码
         servletRegistrationBean.addInitParameter("loginUsername", "admin");
         servletRegistrationBean.addInitParameter("loginPassword", "goodsoft");
         //备用地址

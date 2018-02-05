@@ -1,4 +1,4 @@
-package com.goodsoft.hotel.service.lmpl;
+package com.goodsoft.hotel.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -42,8 +42,8 @@ import java.util.Map;
  * @version V1.0
  */
 @SuppressWarnings("ALL")
-@Service
-public class CookBookServicelmpl implements CookBookService {
+@Service("CookBookServiceImpl")
+public class CookBookServiceImpl implements CookBookService {
 
     @Resource
     private CookBookDao dao;
@@ -55,7 +55,9 @@ public class CookBookServicelmpl implements CookBookService {
     private FileDao fileDao;
     @Resource
     private DeleteFileUtil deleteFile;
-    //实例化UUID工具类
+    /**
+     * 实例化UUID工具类
+     */
     private UUIDUtil uuid = UUIDUtil.getInstance();
 
 
@@ -63,9 +65,9 @@ public class CookBookServicelmpl implements CookBookService {
      * 部门类别数据查询业务方法，用于前台下拉框或其他方式查询部门类别,
      * 无分页
      *
-     * @param <T>
+     * @param <T> 泛型
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryTypeService() throws Exception {
@@ -80,9 +82,9 @@ public class CookBookServicelmpl implements CookBookService {
      * 前台下拉框菜单小类数据过滤业务方法
      *
      * @param tid 菜单类型编号
-     * @param <T>
+     * @param <T> 泛型
      * @return 过滤数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryMenuStypeService(String tid) throws Exception {
@@ -115,11 +117,10 @@ public class CookBookServicelmpl implements CookBookService {
      * 查询菜品小类，用于前台点餐时小类的数据展示或添加菜单数据用于定位菜名业务方法
      * 该方法下当查询小类为空时自动获取不存在小类的菜品
      *
-     * @param tid  菜单类型编号
-     * @param page 参数信息
-     * @param <T>
+     * @param param [mid  做法编号、page 页数、total 总条数]
+     * @param <T>   泛型
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryMenuStypeService(HotelDTO param) throws Exception {
@@ -144,7 +145,7 @@ public class CookBookServicelmpl implements CookBookService {
      * 前台下拉框菜单或多选框数据查询业务方法
      *
      * @param stid 菜单字类型编号
-     * @param <T>
+     * @param <T>  泛型
      * @return 查询数据
      * @throws Exception
      */
@@ -160,12 +161,10 @@ public class CookBookServicelmpl implements CookBookService {
     /**
      * 菜单数据查询，用于前台点餐时菜单数据的展示业务方法
      *
-     * @param stid 类别编号
-     * @param tid  小类别编号
-     * @param page 分页数据
-     * @param <T>
+     * @param param [stid 类别编号、tid  小类别编号、page 分页数据]
+     * @param <T>   泛型
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryMenuDetailService(HotelDTO param, HttpServletRequest request) throws Exception {
@@ -175,7 +174,7 @@ public class CookBookServicelmpl implements CookBookService {
         if (len > 0) {
             if (param.getSetFindFile() == 0) {
                 for (int i = 0; i < len; ++i) {
-                    List<String> picture = this.fileService.getFileDataServicelmpl(request, list.get(i).getId());
+                    List<String> picture = this.fileService.getFileDataServiceImpl(request, list.get(i).getId());
                     list.get(i).setPicture(picture);
                 }
             }
@@ -188,11 +187,10 @@ public class CookBookServicelmpl implements CookBookService {
     /**
      * 菜单做法查询，用于前台点餐时做法数据展示或添加菜单数据用于定位做法详情业务方法
      *
-     * @param cbid 菜单编号
-     * @param page 参数信息
-     * @param <T>
+     * @param param [page 页数、total 总条数]
+     * @param <T>   泛型
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryMenuMeansService(HotelDTO param) throws Exception {
@@ -208,11 +206,10 @@ public class CookBookServicelmpl implements CookBookService {
     /**
      * 菜单做法详情查询，用于前台点餐时具体做法数据展示业务方法
      *
-     * @param mid  做法编号
-     * @param page 参数信息
-     * @param <T>
+     * @param param [mid  做法编号、page 页数、total 总条数]
+     * @param <T>   泛型
      * @return 查询数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T queryMenuMeansDetailService(HotelDTO param) throws Exception {
@@ -228,10 +225,11 @@ public class CookBookServicelmpl implements CookBookService {
     /**
      * 餐饮套餐查询业务方法，用于前台点餐时具体获取套餐系列菜品以及获取套餐具体明细
      *
-     * @param page 参数信息
-     * @param <T>
+     * @param param   参数信息
+     * @param request 请求
+     * @param <T>     泛型
      * @return 查询结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public <T> T querySetMealService(HttpServletRequest request, HotelDTO param) throws Exception {
@@ -243,11 +241,11 @@ public class CookBookServicelmpl implements CookBookService {
                 List<SetMealDetailDO> detailList = this.dao.querySetMealDetailDao(list.get(i).getId());
                 int len1 = detailList.size();
                 if (param.getSetFindFile() == 0) {
-                    List<String> url = this.fileService.getFileDataServicelmpl(request, list.get(i).getFileId());
+                    List<String> url = this.fileService.getFileDataServiceImpl(request, list.get(i).getFileId());
                     list.get(i).setPicture(url);
                     if (len1 > 0) {
                         for (int j = 0; j < len1; ++j) {
-                            List<String> sturl = this.fileService.getFileDataServicelmpl(request, detailList.get(j).getFileId());
+                            List<String> sturl = this.fileService.getFileDataServiceImpl(request, detailList.get(j).getFileId());
                             detailList.get(j).setPicture(sturl);
                         }
                     }
@@ -267,7 +265,7 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param sName 套餐名
      * @return 套餐id
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public String querySetMealByNameService(String sName) throws Exception {
@@ -278,8 +276,8 @@ public class CookBookServicelmpl implements CookBookService {
     /**
      * 菜单类别与小类数据添加
      *
-     * @param msg1 菜单类别及小类数据
-     * @throws Exception
+     * @param msg 菜单类别及小类数据
+     * @throws HotelDataBaseException 异常
      */
     @Override
     public void addMenuTypeService(MenuTypeDO msg) throws HotelDataBaseException {
@@ -321,7 +319,7 @@ public class CookBookServicelmpl implements CookBookService {
      * 菜单数据、库存量数据添加
      *
      * @param msg 菜单数据及库存量数据
-     * @throws Exception
+     * @throws HotelDataBaseException 异常
      */
     @Override
     public Status addMenuService(MenuDTO msg) throws HotelDataBaseException {
@@ -344,7 +342,7 @@ public class CookBookServicelmpl implements CookBookService {
             //文件上传
             MultipartFile[] files = menu.get(i).getFiles();
             if (files != null) {
-                int arg = this.fileService.fileUploadServicelmpl(files, "images", id);
+                int arg = this.fileService.fileUploadServiceImpl(files, "images", id);
                 switch (arg) {
                     case 0:
                         menu.get(i).setFileId(id);
@@ -388,10 +386,10 @@ public class CookBookServicelmpl implements CookBookService {
      * 菜单做法数据添加
      *
      * @param msg 菜单做法数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void addMenuMeansService(MeansDTO msg) throws Exception {
         String tid = msg.getTid();
         String stid = msg.getStid();
@@ -411,9 +409,9 @@ public class CookBookServicelmpl implements CookBookService {
      * 菜单详细做法数据添加
      *
      * @param msg 菜单详细做法数据
-     * @throws Exception
+     * @throws Exception 异常
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void addMenuMeansDetailService(MenuMeansDO msg) throws Exception {
         if (msg != null) {
@@ -439,7 +437,7 @@ public class CookBookServicelmpl implements CookBookService {
      * 套餐数据添加,包含有套餐明细数据
      *
      * @param msg 套餐数据
-     * @throws Exception
+     * @throws HotelDataBaseException 异常
      */
     @Override
     public Status addSetMealService(SetMealDO msg) throws HotelDataBaseException {
@@ -456,7 +454,7 @@ public class CookBookServicelmpl implements CookBookService {
                 //文件上传
                 MultipartFile[] files = msg.getFiles();
                 if (files != null) {
-                    int arg = this.fileService.fileUploadServicelmpl(files, "images", id);
+                    int arg = this.fileService.fileUploadServiceImpl(files, "images", id);
                     switch (arg) {
                         case 0:
                             msg.setFileId(id);
@@ -490,8 +488,9 @@ public class CookBookServicelmpl implements CookBookService {
                         mealDetails.remove(i);
                         --i;
                         len = mealDetails.size();
-                        if (len == 0)
+                        if (len == 0) {
                             return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
+                        }
                     }
                 }
             }
@@ -513,7 +512,7 @@ public class CookBookServicelmpl implements CookBookService {
      * 现有套餐中增加菜品业务方法
      *
      * @param msg 增加菜品数据
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public Status addSetMealDetailService(SetMealDO msg) throws Exception {
@@ -530,7 +529,7 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param msg 更新数据
      * @return 更新结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public Status updateMenuTypeService(MenuSubTypeDO msg) throws Exception {
@@ -595,10 +594,10 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param msg 更新数据
      * @return 更新结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Status updateMenuService(MenuDO msg) throws Exception {
         String tid = msg.getTid();
         String stid = msg.getStid();
@@ -610,7 +609,7 @@ public class CookBookServicelmpl implements CookBookService {
         if (files != null) {
             String newFileId = this.uuid.getUUID("CY").toString();
             String fileId = msg.getFileId();
-            int arg = this.fileService.fileUploadServicelmpl(files, "images", newFileId);
+            int arg = this.fileService.fileUploadServiceImpl(files, "images", newFileId);
             switch (arg) {
                 //存在文件更新则获取旧文件
                 case 0:
@@ -651,10 +650,10 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param msg 更新数据
      * @return 更新结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Status updateMenuMeansService(MenuMeansDO msg) throws Exception {
         int row = this.dao.updateMenuMeansDao(msg);
         if (row > 0) {
@@ -694,10 +693,10 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param msg 更新数据
      * @return 更新结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Status updateMenuMeansDetailService(MenuMeansDetailDO msg) throws Exception {
         int row = this.dao.updateMenuMeansDetailDao(msg);
         if (row > 0) {
@@ -716,7 +715,7 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param id 数据编号
      * @return 删除结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public Status deleteMenuTypeService(String... id) throws HotelDataBaseException {
@@ -750,7 +749,7 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param id 数据id
      * @return 删除结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     @Override
     public Status deleteMenuSubTypeService(String... id) throws HotelDataBaseException {
@@ -783,7 +782,7 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param id 数据编号
      * @return 删除结果
-     * @throws Exception
+     * @throws HotelDataBaseException 异常
      */
     @Override
     public Status deleteMenuService(String[] id, String[] fileId) throws HotelDataBaseException {
@@ -830,7 +829,7 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param id 数据编号
      * @return 删除结果
-     * @throws Exception
+     * @throws HotelDataBaseException 异常
      */
     @Override
     public Status deleteMenuMeansService(String... id) throws HotelDataBaseException {
@@ -856,9 +855,9 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param id 数据编号
      * @return 删除结果
-     * @throws Exception
+     * @throws Exception 异常
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Status deleteMenuMeansDetailService(String... id) throws Exception {
         int row = this.dao.deleteMenuMeansDetailDao(id, 0);
@@ -873,7 +872,7 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param id 数据编号
      * @return 删除结果
-     * @throws Exception
+     * @throws HotelDataBaseException 异常
      */
     @Override
     public Status deleteSetMealService(String[] id, String[] fileId) throws HotelDataBaseException {
@@ -916,9 +915,9 @@ public class CookBookServicelmpl implements CookBookService {
      *
      * @param id 数据编号
      * @return 删除结果
-     * @throws Exception
+     * @throws Exception 异常
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Status deleteSetMealDetailService(String... id) throws Exception {
         int row = this.dao.deleteSetMealDetailDao(id, 0);

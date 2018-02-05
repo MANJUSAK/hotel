@@ -6,10 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * function 配置mybatis包扫描
- * Created by manjusaka[manjusakachn@gmail.com] on 2017/8/3.
+ * description:
+ * ===> mybatis包扫描配置文件
  *
- * @version v1.0
+ * @author manjusaka[manjusakachn@gmail.com] Created by on 2017/8/3.
+ * @version v1.1.5
  */
 @Configuration
 @AutoConfigureAfter(MybatisConfig.class)

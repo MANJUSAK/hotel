@@ -23,8 +23,9 @@ public class DomainNameUtil {
     public static DomainNameUtil getInstance() {
         if (instance == null) {
             synchronized (DomainNameUtil.class) {
-                if (instance == null)
+                if (instance == null) {
                     instance = new DomainNameUtil();
+                }
             }
         }
         return instance;
@@ -37,7 +38,7 @@ public class DomainNameUtil {
      * @return 服务器域名
      */
     public StringBuilder getServerDomainName(HttpServletRequest request) {
-        StringBuilder str = null;
+        StringBuilder str;
         //判断服务器端口是否为80端开口 start
         if (request.getServerPort() == 80) {
             str = new StringBuilder(request.getScheme());

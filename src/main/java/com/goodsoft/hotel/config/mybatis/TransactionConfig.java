@@ -12,10 +12,11 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 import javax.annotation.Resource;
 
 /**
- * function mybatis事务管理配置
- * Created by manjusaka[manjusakachn@gmail.com] on 2017/8/3.
+ * description:
+ * ===> mybatis事务管理配置文件
  *
- * @version v1.0
+ * @author manjusaka[manjusakachn@gmail.com] Created by on 2017/8/3.
+ * @version v1.1.5
  */
 @Configuration
 public class TransactionConfig implements TransactionManagementConfigurer {

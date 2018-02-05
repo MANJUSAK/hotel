@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * ===>系统组件访问接口实现类,设置系统功能属性
  *
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-09 16:35
- * @version V1.0
+ * @version V1.1.0
  */
 @SuppressWarnings("ALL")
 @RestController
@@ -27,6 +27,9 @@ import javax.annotation.Resource;
 public class SysController {
     @Resource
     private SysService sysService;
+    /**
+     * 实例化日志管理类
+     */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**

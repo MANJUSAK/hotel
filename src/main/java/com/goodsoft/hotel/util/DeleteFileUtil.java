@@ -9,8 +9,8 @@ import java.util.List;
 
 /**
  * function 文件删除工具类
- * Created by  manjusaka[manjusakachn@gmail.com] on 2017/9/11.
  *
+ * @author manjusaka[manjusakachn@gmail.com] on 2017/9/11.
  * @version v1.1.2
  */
 @SuppressWarnings("ALL")
@@ -21,7 +21,6 @@ public class DeleteFileUtil {
      * 多文件文件删除方法(无返回值)
      *
      * @param list 文件数据
-     * @return boolean
      */
     @Async
     public void deleteNAllFile(List<FileData> list) {
@@ -63,7 +62,6 @@ public class DeleteFileUtil {
      * 单文件文件删除方法(无返回值)
      *
      * @param fileData 文件数据
-     * @return boolean
      */
     @Async
     public void deleteNFile(FileData fileData) {

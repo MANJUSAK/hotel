@@ -17,26 +17,37 @@ public class UUIDUtil {
      **/
     private volatile static UUIDUtil instance;
 
-    //将构造方法私有化
+    /**
+     * 将构造方法私有化
+     */
     private UUIDUtil() {
     }
 
-    // 定义一个共有的静态方法，返回该类型实例
+    /**
+     * 定义一个共有的静态方法，返回该类型实例
+     *
+     * @return UUIDUtil
+     */
     public static UUIDUtil getInstance() {
         // 对象实例化时与否判断（不使用同步代码块，instance不等于null时，直接返回对象，提高运行效率）
         if (instance == null) {
             // 同步代码块（对象未初始化时，使用同步代码块，保证多线程访问时对象在第一次创建后，不再重复被创建）
             synchronized (UUIDUtil.class) {
                 // 未初始化，则初始instance变量
-                if (instance == null)
+                if (instance == null) {
                     instance = new UUIDUtil();
+                }
             }
         }
         return instance;
     }
 
 
-    //生成前缀固定标识UUID
+    /**
+     * 生成前缀固定标识UUID
+     *
+     * @return StringBuilder
+     */
     public StringBuilder getUUID() {
         String str = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
         String str2 = str.substring(0, 2);
@@ -44,7 +55,11 @@ public class UUIDUtil {
 
     }
 
-    //生成前缀动态标识UUID
+    /**
+     * 生成前缀动态标识UUID
+     *
+     * @return StringBuilder
+     */
     public StringBuilder getUUID(String var) {
         String str = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
         String str2 = str.substring(0, 2);

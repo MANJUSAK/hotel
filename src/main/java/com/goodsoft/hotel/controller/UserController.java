@@ -30,7 +30,9 @@ public class UserController {
     private UserService service;
     @Resource
     private OrderIdsupp od;
-    //实例化日志管理工具类
+    /**
+     * 实例化日志管理工具类
+     */
     private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     /**

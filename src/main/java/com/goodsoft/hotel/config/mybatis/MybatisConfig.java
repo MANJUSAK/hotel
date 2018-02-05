@@ -15,10 +15,11 @@ import javax.annotation.Resource;
 import java.util.Properties;
 
 /**
- * function mybatis配置属性
- * Created by manjusaka[manjusakachn@gmail.com] on 2017/8/3.
+ * description:
+ * ===> mybatis配置文件
  *
- * @version v1.0
+ * @author manjusaka[manjusakachn@gmail.com] Created by on 2017/8/3.
+ * @version v1.1.5
  */
 @EnableTransactionManagement
 @Configuration
@@ -74,7 +75,7 @@ public class MybatisConfig {
         //设置映射对象别名
         /*sqlSessionFactory.setTypeAliasesPackage("com.goodsoft.plantlet.domain.entity");*/
         //设置数据库厂商标识
-       /* sqlSessionFactory.setDatabaseIdProvider();*/
+        /* sqlSessionFactory.setDatabaseIdProvider();*/
         return sqlSessionFactory;
     }
 
