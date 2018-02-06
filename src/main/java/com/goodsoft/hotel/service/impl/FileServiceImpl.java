@@ -51,7 +51,19 @@ public class FileServiceImpl implements FileService {
     /**
      * 实例化日志管理
      */
-    private final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    /**
+     * 时间格式
+     */
+    private final static String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
+    /**
+     * windows 保存路径
+     */
+    private final static String WINPATH = "D:/hotel";
+    /**
+     * Linux 保存路径
+     */
+    private final static String LINPATH = "/usr/hotel";
 
     /**
      * 文件上传业务处理方法
@@ -73,35 +85,19 @@ public class FileServiceImpl implements FileService {
         String var1;
         if (this.getOsNameUtil.getOsName()) {
             //Linux文件路径
-            var1 = "/usr/hotel";
+            var1 = LINPATH;
         } else {
             //windows文件路径
-            var1 = "D:/hotel";
+            var1 = WINPATH;
         }
         //文件保存 start
-        List<String> fileList = null;
+        List<String> fileList;
         SqlSession sqlSession = this.sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH);
         FileDao fileDao = sqlSession.getMapper(FileDao.class);
         try {
             //保存文件到服务器并获取文件相对路径
-            String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            String time = new SimpleDateFormat(DATEFORMAT).format(new Date());
             fileList = this.fileUploadUtil.fileUpload(files, fileType, var1);
-            String sort = null;
-            //获取文件类型 start
-            switch (fileType) {
-                case "images":
-                    sort = "images";
-                    break;
-                case "document":
-                    sort = "document";
-                    break;
-                case "excel":
-                    sort = "excel";
-                    break;
-                default:
-                    sort = "filed_under";
-                    break;
-            }
             //获取文件类型 end
             //文件信息保存 start
             for (int i = 0, length = fileList.size(); i < length; ++i) {
@@ -111,7 +107,7 @@ public class FileServiceImpl implements FileService {
                 //设置根目录
                 file.setBases(var1);
                 //设置文件类别
-                file.setSort(sort);
+                file.setSort(setFileType(fileType));
                 //截取新文件名字符位置
                 int j = fileList.get(i).lastIndexOf("/") + 1;
                 //截取文件后缀字符位置
@@ -140,6 +136,27 @@ public class FileServiceImpl implements FileService {
             sqlSession.close();
         }
         //文件保存 end
+    }
+
+    /**
+     * 设置文件类别
+     */
+    private String setFileType(String type) {
+        String sort;
+        switch (type) {
+            case "images":
+                sort = "images";
+                return sort;
+            case "document":
+                sort = "document";
+                return sort;
+            case "excel":
+                sort = "excel";
+                return sort;
+            default:
+                sort = "filed_under";
+                return sort;
+        }
     }
 
     /**

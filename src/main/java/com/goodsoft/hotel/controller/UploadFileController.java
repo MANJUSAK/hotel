@@ -52,22 +52,22 @@ public class UploadFileController {
             flag = this.uuid.getUUID("WZ").toString();
         }
         try {
-            if (files != null && !("".equals(flag))) {
+            if (files != null) {
                 int status = this.service.fileUploadServiceImpl(files, f_type, flag);
                 switch (status) {
                     case 0:
                         return new Status(StatusEnum.SUCCESS.getCODE(), StatusEnum.SUCCESS.getEXPLAIN());
                     case 601:
-                        return new Status(StatusEnum.FILE_SIZE.getCODE(), StatusEnum.FILE_SIZE.getEXPLAIN());
+                        return new Status(StatusEnum.FILE_SIZE.getCODE(), "本次上传文件类型为" + f_type + "!因此" + StatusEnum.FILE_SIZE.getEXPLAIN());
                     case 603:
-                        return new Status(StatusEnum.FILE_FORMAT.getCODE(), StatusEnum.FILE_FORMAT.getEXPLAIN());
+                        return new Status(StatusEnum.FILE_FORMAT.getCODE(), "本次上传文件类型为" + f_type + "!因此" + StatusEnum.FILE_FORMAT.getEXPLAIN());
                     case 604:
                         return new Status(StatusEnum.NO_FILE.getCODE(), StatusEnum.NO_FILE.getEXPLAIN());
                     default:
                         return new Status(StatusEnum.ERROR.getCODE(), StatusEnum.ERROR.getEXPLAIN());
                 }
             }
-            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能是files、flag为null或为空");
+            return new Status(StatusEnum.NO_PARAM.getCODE(), StatusEnum.NO_PARAM.getEXPLAIN() + "原因可能是files为null或为空");
         } catch (HotelDataBaseException e) {
             this.LOG.error(e.toString());
             return new Status(StatusEnum.FILE_UPLOAD.getCODE(), StatusEnum.FILE_UPLOAD.getEXPLAIN());

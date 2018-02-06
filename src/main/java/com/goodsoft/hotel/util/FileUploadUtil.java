@@ -31,7 +31,7 @@ public class FileUploadUtil {
      *
      * @param files    上传的文件，
      * @param fileType 上传文件类型（图片、文档等），
-     * @param savePath 文件保存截取服务器根目录。
+     * @param savePath 文件保存服务器根目录。
      * @return 文件保存相对路径
      */
     public List<String> fileUpload(MultipartFile[] files, String fileType, String savePath) throws IOException {
