@@ -25,7 +25,7 @@ import java.util.List;
  * @version V1.0
  */
 @SuppressWarnings("ALL")
-@Service
+@Service("sysServiceImpl")
 public class SysServiceImpl implements SysService {
     @Resource
     private SysDao dao;

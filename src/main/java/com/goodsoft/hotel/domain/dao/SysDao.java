@@ -15,7 +15,7 @@ import java.util.List;
  * @author manjusaka Created on 2017-12-05 11:50
  * @version V1.0
  */
-@Repository
+@Repository("sysDao")
 public interface SysDao {
 
     //查询当天流水中最大值

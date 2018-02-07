@@ -14,7 +14,7 @@ import java.util.List;
  * @author 严彬荣 Created on 2017-12-03 10:44
  * @version V1.0
  */
-@Repository
+@Repository("userDao")
 public interface UserDao {
 
     //查询用户信息（带部门）

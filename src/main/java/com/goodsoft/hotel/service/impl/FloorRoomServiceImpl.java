@@ -33,6 +33,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
 
     /**
      * 公共信息发布   添加
+     *
      * @param gsPublicMsgIssuance
      * @throws Exception
      */
@@ -77,7 +78,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
             qr.setBookId(uuid);
         }
         map.put("bookingNo", bookingNo);
-        map.put("bookId",uuid);
+        map.put("bookId", uuid);
         this.bookingDao.insertQuickBooking(quickbooking);
         this.bookingDao.insertQuickBookingRoom(quickbooking.getRoomno());
         return map;
@@ -102,7 +103,7 @@ public class FloorRoomServiceImpl implements FloorRoomService {
                 mapper.updateRoomFlagRuZhuBooking(String.valueOf(list.get(i).get("ids")));
             }
             sqlSession.commit();
-        } catch (Exception e){
+        } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
             System.out.println(e.getMessage());
@@ -114,9 +115,9 @@ public class FloorRoomServiceImpl implements FloorRoomService {
     }
 
 
-
     /**
      * 预订单生成预定单号
+     *
      * @return 预定单号
      */
     public String getNumber(String str) {
@@ -142,7 +143,8 @@ public class FloorRoomServiceImpl implements FloorRoomService {
 
     /**
      * 预定单生成登记号
-     * @return  登记号
+     *
+     * @return 登记号
      */
     public String getNubmer() {
         //当天的时间戳

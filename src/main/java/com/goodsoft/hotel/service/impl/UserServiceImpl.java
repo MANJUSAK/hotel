@@ -21,7 +21,7 @@ import java.util.List;
  * @version V1.0
  */
 @SuppressWarnings("ALL")
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl implements UserService {
 
     @Resource

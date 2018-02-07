@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-07 16:34
  */
-@Repository
+@Repository("cookBookDao")
 public interface CookBookDao {
 
     //菜单子类型数据过滤查询

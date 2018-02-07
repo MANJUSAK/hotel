@@ -12,7 +12,7 @@ import java.util.List;
  * Created by manjusaka[manjusakachn@gmail.com] on 2017/8/4.
  * version v1.1.3
  */
-@Repository
+@Repository("fileDao")
 public interface FileDao {
 
     //文件查询

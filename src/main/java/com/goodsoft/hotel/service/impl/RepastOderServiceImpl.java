@@ -45,7 +45,7 @@ import java.util.Map;
  * @version V1.0
  */
 @SuppressWarnings("ALL")
-@Service
+@Service("repastOderServiceImpl")
 public class RepastOderServiceImpl implements RepastOderService {
     @Resource
     private RepastOrderDao dao;

@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version V1.0
  */
 @SuppressWarnings("ALL")
-@RestController
+@RestController("cookBookController")
 @RequestMapping("/cookbook")
 public class CookBookController {
     @Resource

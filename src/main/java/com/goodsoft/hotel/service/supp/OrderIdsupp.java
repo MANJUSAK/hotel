@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-17 14:44
  * @version V1.0
  */
-@Service("OrderIdsupp")
+@Service("orderIdsupp")
 public class OrderIdsupp {
     @Resource
     private SysDao dao;

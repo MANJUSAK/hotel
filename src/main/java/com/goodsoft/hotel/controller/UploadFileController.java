@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-20 20:53
  * @version V1.1.2
  */
-@RestController
+@RestController("uploadFileController")
 @RequestMapping("/list")
 public class UploadFileController {
     @Resource

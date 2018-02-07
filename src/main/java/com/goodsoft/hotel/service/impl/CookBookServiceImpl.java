@@ -42,7 +42,7 @@ import java.util.Map;
  * @version V1.0
  */
 @SuppressWarnings("ALL")
-@Service("CookBookServiceImpl")
+@Service("cookBookServiceImpl")
 public class CookBookServiceImpl implements CookBookService {
 
     @Resource

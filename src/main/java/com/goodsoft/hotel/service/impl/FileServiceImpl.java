@@ -31,7 +31,7 @@ import java.util.List;
  * version v1.1.3
  */
 @SuppressWarnings("ALL")
-@Service
+@Service("fileServiceImpl")
 public class FileServiceImpl implements FileService {
 
     @Resource
@@ -63,7 +63,7 @@ public class FileServiceImpl implements FileService {
     /**
      * Linux 保存路径
      */
-    private final static String LINPATH = "/usr/hotel";
+    private final static String LINPATH = "/home/hotel";
 
     /**
      * 文件上传业务处理方法

@@ -19,7 +19,7 @@ import java.util.Map;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-15 9:27
  * @version V1.0
  */
-@Repository
+@Repository("repastOrderDao")
 public interface RepastOrderDao {
 
     //餐饮订单查询

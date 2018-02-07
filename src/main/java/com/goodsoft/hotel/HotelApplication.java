@@ -23,7 +23,7 @@ public class HotelApplication implements CommandLineRunner {
     /**
      * 实例化日志管理
      */
-    private final Logger logger = LoggerFactory.getLogger(HotelApplication.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static long startTime = 0L;
     private static long endTime = 0L;
     private static double between = 0.0;

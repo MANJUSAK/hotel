@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  * @version V1.1.0
  */
 @SuppressWarnings("ALL")
-@RestController
+@RestController("sysController")
 @RequestMapping("/sys")
 public class SysController {
     @Resource

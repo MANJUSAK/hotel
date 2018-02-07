@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  * @version V1.0
  */
 @SuppressWarnings("ALL")
-@RestController
+@RestController("userController")
 @RequestMapping("/user")
 public class UserController {
 
