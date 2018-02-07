@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @author manjusaka[manjusakachn@gmail.com] Created by on 2017/8/3.
  * @version v1.1.5
  */
-@Configuration
+@Configuration("transactionConfig")
 public class TransactionConfig implements TransactionManagementConfigurer {
     @Resource
     private DruidDataSource druidDataSource;
@@ -28,7 +28,7 @@ public class TransactionConfig implements TransactionManagementConfigurer {
         return new DataSourceTransactionManager(druidDataSource);
     }
 
-    @Bean
+    @Bean(name = "sqlSessionTemplate")
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }

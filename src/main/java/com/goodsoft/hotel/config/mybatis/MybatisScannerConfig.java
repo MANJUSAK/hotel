@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @author manjusaka[manjusakachn@gmail.com] Created by on 2017/8/3.
  * @version v1.1.5
  */
-@Configuration
+@Configuration("mybatisScannerConfig")
 @AutoConfigureAfter(MybatisConfig.class)
 public class MybatisScannerConfig {
 

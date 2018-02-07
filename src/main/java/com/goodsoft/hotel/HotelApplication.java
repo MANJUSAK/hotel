@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -17,7 +19,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "com.goodsoft.hotel.*")
 @ServletComponentScan(basePackages = "com.goodsoft.hotel.config.*")
 @SpringBootApplication
-public class HotelApplication implements CommandLineRunner {
+public class HotelApplication extends SpringBootServletInitializer implements CommandLineRunner {
 
 
     /**
@@ -31,10 +33,27 @@ public class HotelApplication implements CommandLineRunner {
     private final static String SEC = "S";
     private final static String MSEC = "MS";
 
+    /**
+     * 系统内置服务器启动入口
+     *
+     * @param args 参数
+     */
     public static void main(String[] args) {
         startTime = System.currentTimeMillis();
         System.out.println("=================>正在启动系统！请等待...<==============");
         SpringApplication.run(HotelApplication.class, args);
+    }
+
+    /**
+     * 系统外置服务器启动入口
+     *
+     * @param application 程序启动实例
+     * @return SpringApplicationBuilder
+     */
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        startTime = System.currentTimeMillis();
+        return application.sources(HotelApplication.class);
     }
 
     @Override

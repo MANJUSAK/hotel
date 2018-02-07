@@ -16,14 +16,14 @@ import org.springframework.context.annotation.Configuration;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-7-19 16:30
  * @version v1.1.5
  */
-@Configuration
+@Configuration("druidConfiguration")
 public class DruidConfiguration {
     /**
      * 注册一个StatViewServlet
      *
      * @return servletRegistrationBean（数据源监控配置）
      */
-    @Bean
+    @Bean(name = "druidStatViewServelt")
     public ServletRegistrationBean druidStatViewServelt() {
         //org.springframework.boot.context.embedded.ServletRegistrationBean提供类的进行注册.
         ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new StatViewServlet(), "/dataMonitoring/*");
@@ -47,7 +47,7 @@ public class DruidConfiguration {
      *
      * @return FilterRegistrationBean
      */
-    @Bean
+    @Bean(name = "druidStatFilter")
     public FilterRegistrationBean druidStatFilter() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
         //添加过滤规则.

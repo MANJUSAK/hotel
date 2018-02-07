@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author manjusaka[manjusakachn@gmail.com] Created by on 2017/8/24.
  * @version v1.1.0
  */
-//@Controller
+//@Controller("systemError")
 public class SystemError implements ErrorController {
     private static final String ERRORPAHT = "/error";
 

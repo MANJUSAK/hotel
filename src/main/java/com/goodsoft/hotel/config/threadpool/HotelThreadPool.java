@@ -20,12 +20,12 @@ import java.util.concurrent.Executor;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-11-12 10:58
  * @version v1.1.2
  */
-@Configuration
+@Configuration("hotelThreadPool")
 @EnableAsync
 public class HotelThreadPool implements AsyncConfigurer, SchedulingConfigurer {
 
-    @Bean
-    public ThreadPoolTaskScheduler taskScheduler() {
+    @Bean(name = "hotelTaskScheduler")
+    public ThreadPoolTaskScheduler hotelTaskScheduler() {
         //定时器线程池调度器配置
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(10);
@@ -55,7 +55,7 @@ public class HotelThreadPool implements AsyncConfigurer, SchedulingConfigurer {
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
-        TaskScheduler taskScheduler = this.taskScheduler();
+        TaskScheduler taskScheduler = this.hotelTaskScheduler();
         scheduledTaskRegistrar.setTaskScheduler(taskScheduler);
     }
 }

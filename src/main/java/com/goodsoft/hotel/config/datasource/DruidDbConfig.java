@@ -26,7 +26,7 @@ import java.util.List;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-7-19 16:27
  * @version v1.1.5
  */
-@Configuration
+@Configuration("druidDbConfig")
 public class DruidDbConfig {
     @Resource
     private WallFilter wallFilter;
@@ -82,8 +82,8 @@ public class DruidDbConfig {
      */
     @SuppressWarnings({"unchecked", "ArraysAsListWithZeroOrOneArgument"})
     @Primary
-    @Bean
-    public DruidDataSource dataSource() {
+    @Bean(name = "druidDataSource")
+    public DruidDataSource druidDataSource() {
         DruidDataSource datasource = new DruidDataSource();
         datasource.setUrl(this.dbUrl);
         datasource.setUsername(this.username);
@@ -122,7 +122,7 @@ public class DruidDbConfig {
     /**
      * 允许数据源批量更新
      */
-    @Bean
+    @Bean(name = "wallConfig")
     public WallConfig wallConfig() {
         WallConfig wallConfig = new WallConfig();
         wallConfig.setMultiStatementAllow(true);
@@ -132,7 +132,7 @@ public class DruidDbConfig {
     /**
      * 注入过滤器
      */
-    @Bean
+    @Bean(name = "wallFilter")
     @DependsOn
     public WallFilter wallFilter(WallConfig wallConfig) {
         WallFilter wallFilter = new WallFilter();

@@ -20,7 +20,7 @@ import java.util.List;
  * @author manjusaka[manjusakachn@gmail.com] Created on 2017-12-28 10:06
  * @version 1.1.1
  */
-@Configuration
+@Configuration("webMvcConfigurer")
 public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
     /**
      * 自定义系统主页

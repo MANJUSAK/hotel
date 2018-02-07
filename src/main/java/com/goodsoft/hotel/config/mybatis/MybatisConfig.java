@@ -22,7 +22,7 @@ import java.util.Properties;
  * @version v1.1.5
  */
 @EnableTransactionManagement
-@Configuration
+@Configuration("mybatisConfig")
 public class MybatisConfig {
 
     @Resource

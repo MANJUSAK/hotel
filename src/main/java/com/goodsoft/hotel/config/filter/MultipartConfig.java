@@ -13,7 +13,7 @@ import javax.servlet.MultipartConfigElement;
  * @author manjusaka[manjusakachn@gmail.com] on 2017/8/7.
  * @version v1.1.0
  */
-@Configuration
+@Configuration("multipartConfig")
 public class MultipartConfig {
     /**
      * 最大值
@@ -21,7 +21,7 @@ public class MultipartConfig {
     private final static String MAXIMUM = "50MB";
 
 
-    @Bean
+    @Bean(name = "multipartConfigElement")
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory multipartConfig = new MultipartConfigFactory();
         //单次上传文件总数
