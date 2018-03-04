@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 //@Controller("systemError")
 public class SystemError implements ErrorController {
     private static final String ERRORPAHT = "/error";
+    private static final String REDIRECT = "redirect:/home.html";
 
     @RequestMapping(value = ERRORPAHT)
     public String handleError() {
-        return "redirect:/home.html";
+        return REDIRECT;
     }
 
     @Override

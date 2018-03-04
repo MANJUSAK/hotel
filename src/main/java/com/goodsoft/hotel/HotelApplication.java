@@ -25,7 +25,7 @@ public class HotelApplication extends SpringBootServletInitializer implements Co
     /**
      * 实例化日志管理
      */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     private static long startTime = 0L;
     private static long endTime = 0L;
     private static double between = 0.0;
@@ -62,9 +62,9 @@ public class HotelApplication extends SpringBootServletInitializer implements Co
         between = endTime - startTime;
         if (between > MS) {
             between = between / MS;
-            this.logger.info("=================>系统启动成功!启动用时：" + between + SEC + "<==============");
+            this.LOG.info("=================>系统启动成功!启动用时：" + between + SEC + "<==============");
         } else {
-            this.logger.info("=================>系统启动成功!启动用时：" + between + MSEC + "<==============");
+            this.LOG.info("=================>系统启动成功!启动用时：" + between + MSEC + "<==============");
         }
         System.out.println("=================>系统启动成功，请使用！<==============");
     }

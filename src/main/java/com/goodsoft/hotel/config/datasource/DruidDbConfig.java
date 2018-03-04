@@ -30,7 +30,7 @@ import java.util.List;
 public class DruidDbConfig {
     @Resource
     private WallFilter wallFilter;
-    private final Logger logger = Logger.getLogger(this.getClass());
+    private final Logger LOG = Logger.getLogger(this.getClass());
     @Value("${spring.datasource.url}")
     private String dbUrl;
     @Value("${spring.datasource.username}")
@@ -114,7 +114,7 @@ public class DruidDbConfig {
         try {
             datasource.setFilters(filters);
         } catch (SQLException e) {
-            this.logger.error(e);
+            this.LOG.error(e);
         }
         return datasource;
     }
