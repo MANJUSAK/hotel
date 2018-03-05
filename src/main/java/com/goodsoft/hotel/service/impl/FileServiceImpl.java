@@ -8,6 +8,7 @@ import com.goodsoft.hotel.service.FileService;
 import com.goodsoft.hotel.util.DomainNameUtil;
 import com.goodsoft.hotel.util.FileUploadUtil;
 import com.goodsoft.hotel.util.GetOsNameUtil;
+import com.goodsoft.hotel.util.GetPropertiesUtil;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -59,11 +60,11 @@ public class FileServiceImpl implements FileService {
     /**
      * windows 保存路径
      */
-    private final static String WINPATH = "D:/hotel";
+    private final static String WINPATH = "winPath";
     /**
      * Linux 保存路径
      */
-    private final static String LINPATH = "/home/hotel";
+    private final static String LINPATH = "linPath";
 
     /**
      * 文件上传业务处理方法
@@ -81,14 +82,15 @@ public class FileServiceImpl implements FileService {
         if (checkCode != 0) {
             return checkCode;
         }
+        GetPropertiesUtil.readProperties("filePath.properties");
         //文件保存根目录
         String var1;
         if (this.getOsNameUtil.getOsName()) {
             //Linux文件路径
-            var1 = LINPATH;
+            var1 = GetPropertiesUtil.getProperty(LINPATH);
         } else {
             //windows文件路径
-            var1 = WINPATH;
+            var1 = GetPropertiesUtil.getProperty(WINPATH);
         }
         //文件保存 start
         List<String> fileList;

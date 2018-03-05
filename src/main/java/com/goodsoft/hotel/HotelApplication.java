@@ -53,6 +53,7 @@ public class HotelApplication extends SpringBootServletInitializer implements Co
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         startTime = System.currentTimeMillis();
+        System.out.println("=================>正在启动系统！请等待...<==============");
         return application.sources(HotelApplication.class);
     }
 
